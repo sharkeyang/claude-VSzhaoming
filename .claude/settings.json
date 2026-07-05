@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read(d:/@VSwork/**/*)",
+      "Write(d:/@VSwork/**/*)",
+      "Edit(d:/@VSwork/**/*)",
+      "Glob(d:/@VSwork/**/*)",
+      "Grep(d:/@VSwork/**/*)"
+    ],
+    "defaultMode": "bypassPermissions",
+    "skipDangerousModePermissionPrompt": true,
+    "additionalDirectories": [
+      "C:\\Users\\SharkWork\\AppData\\Local\\Temp",
+      "c:\\Users\\SharkWork\\OneDrive\\@IWBR\\@计划\\@VSwork\\VS昭明计划VBA优化\\.claude"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"d:/@VSwork/VS昭明计划VBA优化/.claude/fix_ps1_encoding.py\""
+          }
+        ]
+      }
+    ],
+    "Stop": []
+  }
+}

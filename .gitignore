@@ -1,0 +1,30 @@
+# Excel backups
+昭明计划VS优化_*.xlsm
+# Excel temp lock files (keep in gitignore)
+~$*.xlsm
+~$*.xlsx
+*.xlsm.backup
+
+# All xlsm files (binary, track only source)
+*.xlsm
+
+# Excel archives
+照明计划归档/
+昭明月度MMMM/
+*MMM*.xlsx
+
+# Python cache
+__pycache__/
+*.pyc
+
+# History
+.history/
+
+# Command log
+command_log.txt
+
+# CLAUDE
+.claude/
+
+# VBA source directory (track individual files, not the dir)
+昭明计划VS优化_vba/
