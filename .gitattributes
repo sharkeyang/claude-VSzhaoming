@@ -1,0 +1,11 @@
+# Git 属性
+# 核心目标：防止 .bas 文件被文本编辑器误处理
+*.bas    text eol=crlf
+*.ps1    text eol=crlf
+*.py     text eol=lf
+*.md     text eol=crlf
+*.xlsm   binary
+*.xlsx   binary
+*.csv    text eol=crlf
+*.txt    text eol=crlf
+*.json   text eol=crlf
