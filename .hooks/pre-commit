@@ -1,0 +1,66 @@
+#!/bin/sh
+# Pre-commit hook: 自动修复 .bas 文件空行 + 检查污染
+# 安装: ln -sf ../../.hooks/pre-commit .git/hooks/pre-commit
+# 或在 Windows 上运行: python .hooks/install_hooks.py
+
+CHANGED=$(git diff --cached --name-only --diff-filter=ACM | grep '\.bas$')
+if [ -z "$CHANGED" ]; then
+    exit 0
+fi
+
+echo "[pre-commit] 检查 .bas 文件空行污染..."
+
+# 找到项目根目录
+ROOT=$(git rev-parse --show-toplevel)
+
+for f in $CHANGED; do
+    FP="$ROOT/$f"
+    if [ ! -f "$FP" ]; then
+        continue
+    fi
+
+    TOTAL=$(wc -l < "$FP")
+    if [ "$TOTAL" -eq 0 ]; then
+        continue
+    fi
+
+    # 使用 Python 修复空行 + 计算比例
+    RESULT=$(python -c "
+import re
+with open('$FP', 'r', encoding='utf-8') as fh:
+    content = fh.read()
+original = content
+# 压缩 3+ 连续空行 -> 1 个
+content = re.sub(r'\n[ \t]*\n[ \t]*\n[ \t]*', '\n\n', content)
+content = re.sub(r'\r\n[ \t]*\r\n[ \t]*\r\n[ \t]*', '\r\n\r\n', content)
+if content != original:
+    with open('$FP', 'w', encoding='utf-8') as fh:
+        fh.write(content)
+    print('FIXED')
+lines = content.split('\n')
+blank = sum(1 for l in lines if l.strip() == '')
+ratio = int(blank * 100 / len(lines)) if len(lines) > 0 else 0
+print(f'RATIO:{ratio}:{blank}:{len(lines)}')
+")
+
+    if echo "$RESULT" | grep -q "FIXED"; then
+        echo "  [修复] $f: 压缩了连续空行"
+        git add "$FP"
+    fi
+
+    RATIO=$(echo "$RESULT" | grep "RATIO:" | cut -d: -f2)
+    BLANK=$(echo "$RESULT" | grep "RATIO:" | cut -d: -f3)
+    TOTAL=$(echo "$RESULT" | grep "RATIO:" | cut -d: -f4)
+
+    if [ "$RATIO" -gt 30 ] 2>/dev/null; then
+        echo ""
+        echo "!!! ERROR: $f 空行比例 $RATIO% ($BLANK/$TOTAL) !!!"
+        echo "  .bas 文件被 VSCode 保存污染了，已自动修复。"
+        echo "  请重新 git add 后再提交。"
+        echo ""
+        exit 1
+    fi
+done
+
+echo "[pre-commit] .bas 文件检查通过"
+exit 0

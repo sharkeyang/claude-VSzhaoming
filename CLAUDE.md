@@ -90,15 +90,42 @@ vba_password=<VBA project password>
 ```
 Auto-discovered from `<excel_name>_passwords.txt` or `vba_passwords.txt` next to the Excel file or script. When no password is set, use `-c NONE` to skip auto-detection.
 
-## ⚠️ 禁止在 VSCode 中直接打开 .bas 文件保存
+## ⚠️ 永久禁令：绝对禁止在 VSCode 中直接打开 .bas 文件
 
-**绝对不要**在 VSCode 中直接打开 `.bas` 文件并保存！原因：
+### 禁令
 
-1. VSCode 全局默认编码为 `GBK`，而 `.bas` 文件是 `UTF-8` 编码
-2. 保存时 VSCode 会在 `End Function`、`===`/`###`/`@@@` 分隔符之间插入大量空行
-3. 已多次发生该问题，导致 .bas 文件被污染
+**任何 Claude 会话（包括你）绝对不允许在 VSCode 中直接打开 `.bas` 文件并保存。**
 
-**正确做法：** 只通过 `/vba2VS` 重新导出，或在 Claude Code 中直接用 Read/Edit 编辑。不要用 VSCode 直接改 .bas 文件！
+### 原因
+
+根因链：VSCode 全局默认编码 `GBK` ≠ `.bas` 文件实际编码 `UTF-8`
+1. VSCode 以 GBK 打开 → 中文注释乱码
+2. 保存时自动在 `End Function`、`===`/`###`/`@@@` 分隔符之间插入大量空行
+3. 文件从 6504 行代码膨胀到 13302 行，其中 6798 行是空行（51.1%）
+4. 此问题已发生 **多次**，每次都需要从 Excel 重新导出修复
+
+### 防护体系
+
+| 防护层 | 文件 | 作用 |
+|--------|------|------|
+| ① 根因修复 | VSCode 全局 `files.encoding` → `utf-8` | 被本 Claude 会话修复，已生效 |
+| ② 项目级覆盖 | `.vscode/settings.json` | 强制 UTF-8、禁用 formatOnSave |
+| ③ 编码规范 | `.editorconfig` | `.bas` 固定 UTF-8、不修剪空白 |
+| ④ 版本控制 | `.gitattributes` | `.bas` 固定 text+CRLF |
+| ⑤ 自动修复 | `fix_bas_blanks.py` | 压缩 3+ 连续空行 |
+| ⑥ 提交拦截 | `.hooks/pre-commit` | 空行 >30% 自动拒绝提交 |
+| ⑦ 规则文件 | 本文件 | 所有 Claude 会话必须遵守 |
+
+### 正确做法
+
+- **读文件：** 用 Read 工具，不要双击打开
+- **写文件：** 用 Edit/Write 工具，不要手动保存
+- **重新导出：** 文件被污染时，用 `/vba2VS` 从 Excel 重新导出
+- **提交前检查：** 确保 `.git/hooks/pre-commit` 已安装（运行 `python .hooks/install_hooks.py`）
+
+### 违规后果
+
+违反此规则将被记录到 Memory，每次违规都需要重新从 Excel 导出所有模块，损失约 30 分钟。已发生多次，决不能再犯。
 
 ## 项目结构
 
