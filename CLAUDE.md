@@ -90,6 +90,16 @@ vba_password=<VBA project password>
 ```
 Auto-discovered from `<excel_name>_passwords.txt` or `vba_passwords.txt` next to the Excel file or script. When no password is set, use `-c NONE` to skip auto-detection.
 
+## ⚠️ 禁止在 VSCode 中直接打开 .bas 文件保存
+
+**绝对不要**在 VSCode 中直接打开 `.bas` 文件并保存！原因：
+
+1. VSCode 全局默认编码为 `GBK`，而 `.bas` 文件是 `UTF-8` 编码
+2. 保存时 VSCode 会在 `End Function`、`===`/`###`/`@@@` 分隔符之间插入大量空行
+3. 已多次发生该问题，导致 .bas 文件被污染
+
+**正确做法：** 只通过 `/vba2VS` 重新导出，或在 Claude Code 中直接用 Read/Edit 编辑。不要用 VSCode 直接改 .bas 文件！
+
 ## 项目结构
 
 - `_产出物/` — 交付产物（MC2-MC5代码、文档）
