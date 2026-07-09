@@ -9,7 +9,7 @@ MC3_策传_看板.py — 实时策传看板 v4 (Flask + ECharts)
   python "_产出物/MC3_策传_看板.py"
   浏览器打开 http://127.0.0.1:5000
 
-配置: MCX3_策传_看板_配置.py
+配置: MC3_策传_看板_配置.py
 """
 
 import datetime
@@ -21,7 +21,7 @@ from collections import defaultdict
 
 from flask import Flask, jsonify, render_template_string
 
-from MCX3_策传_看板_配置 import (
+from MC3_策传_看板_配置 import (
     EXCEL_PATH, HTML_REFRESH_SECONDS, VBA_REFRESH_SECONDS, VBA_宏名称,
     COL_CODE, COL_NAME, COL_CANGZHU, COL_HANGLANG, COL_AMOUNT, COL_SHARES, COL_COST, COL_PROFIT,
     COL_SIYU_ZHOU, COL_SIYU_RI, COL_RI_CENGDUAN, COL_RI_JIJING,
@@ -53,7 +53,8 @@ def connect_excel():
     target_lower = EXCEL_PATH.lower()
     for wb in excel.Workbooks:
         try:
-            if os.path.abspath(wb.FullName).lower() == target_lower:
+            fn = str(wb.FullName)
+            if fn.lower() == target_lower:
                 return excel, wb
         except Exception:
             continue
@@ -289,12 +290,30 @@ def generate_trading_strategy(cc, market_price):
 def refresh_data():
     """采集全部数据，写入全局缓存"""
     global _cache
+    excel = None
+    wb = None
+    for retry in range(3):
+        try:
+            excel, wb = connect_excel()
+            break
+        except Exception as e:
+            print(f"  ⚠️ Excel连接失败(第{retry+1}次): {e}")
+            if retry < 2:
+                time.sleep(3)
+            else:
+                print("  ❌ Excel连接失败，跳过本轮刷新")
+                return
+    if excel is None or wb is None:
+        return
+
     try:
-        excel, wb = connect_excel()
         ws = wb.Sheets("Z")
 
         # 读取策传
         positions, indices = read_echuan_data(ws)
+        if not positions:
+            print("  ⚠️ 未读取到持仓数据，跳过本轮")
+            return
 
         # 收集代码
         all_codes = [p["code"] for p in positions]
@@ -421,7 +440,6 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>昭明计划 · 策传看板 v4</title>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; background:#0a0e17; color:#e0e0e0; }
@@ -529,6 +547,7 @@ body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; bac
         <div class="header-info" id="headerInfo">
             <span>加载中...</span>
         </div>
+        <div id="debugInfo" style="font-size:10px;color:#546e7a;margin-top:4px">初始化中...</div>
     </div>
 
     <div class="portfolio-row">
@@ -565,6 +584,7 @@ body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; bac
     <div class="footer">昭明计划 · 策传系统 v4 | 数据: Excel + AKShare | 图表: ECharts</div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <script>
 const SIYU_COLORS = {"多长":"#00c853","多被":"#ffc107","空看":"#5c2d82","空长":"#d32f2f"};
 const AMT_WAN_THRESHOLD = 5;
@@ -620,11 +640,15 @@ let pieChart = null;
 let intradayCharts = {};
 
 function initCharts() {
-    pieChart = echarts.init(document.getElementById('pieChart'), 'dark', {renderer:'canvas'});
+    try {
+        if (typeof echarts !== 'undefined') {
+            pieChart = echarts.init(document.getElementById('pieChart'), 'dark', {renderer:'canvas'});
+        }
+    } catch(e) { console.log('ECharts init error:', e); }
 }
 
 function updatePie(positions) {
-    if (!pieChart) initCharts();
+    if (!pieChart) return;
     const bySy = {};
     positions.forEach(p => {
         const cc = parseCC(p.策传);
@@ -659,7 +683,6 @@ function updatePie(positions) {
         }],
         backgroundColor: 'transparent',
     });
-    document.getElementById('pieLegend').innerHTML = '';
 }
 
 function updateIntraday(containerId, intradayData, mp) {
@@ -962,9 +985,26 @@ let fetchCount = 0;
 function refresh() {
     fetch('/api/data').then(r=>r.json()).then(data=>{
         fetchCount++;
+        // 调试信息
+        let dbg = document.getElementById('debugInfo');
+        if(dbg) dbg.textContent = '#'+fetchCount+' pos='+(data.positions||[]).length+' loading='+(data.loading?'Y':'N');
         console.log('['+new Date().toLocaleTimeString()+'] #'+fetchCount+' 更新');
-        updateDashboard(data);
-    }).catch(e=>console.error('fetch error:', e));
+        if (data.loading) {
+            setTimeout(refresh, 5000);
+            return;
+        }
+        try {
+            updateDashboard(data);
+            if(dbg) dbg.textContent += ' render=OK';
+        } catch(e) {
+            if(dbg) dbg.textContent += ' ERROR: '+e.message;
+            console.error('render error:', e);
+        }
+    }).catch(e=>{
+        let dbg = document.getElementById('debugInfo');
+        if(dbg) dbg.textContent = 'fetch ERROR: '+e.message;
+        console.error('fetch error:', e);
+    });
 }
 
 // 初始加载

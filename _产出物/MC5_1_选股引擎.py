@@ -216,93 +216,89 @@ def 日诱甄别(row: pd.Series) -> tuple:
 
 def 计算评分(row: pd.Series, 模式: 操作模式) -> tuple:
     """
-    综合评分（满分100）
+    综合评分（满分100）— 证据驱动版
+
+    基于89文件48323周回测数据，仅纳入已验证的周级别预测指标。
 
     维度：
-    - 周仓出章（原仓月，出章模式）：25分
-    - 大局（市场状态WXCD）：20分
-    - 护型（趋势方向）：20分
-    - 动量（短期延续/反转）：10分
-    - 周仓出节（原仓周，出节模式）：10分
-    - 漏提示（模式识别）：10分
-    - 日历效应：5分
+    - 四域完整度 (30分) — 多长/多被/银的收益区分
+    - ZA区间 (25分) — ZA 3~5/7~10 最佳，5~7 最差
+    - 周柱排 (20分) — 升排>人排>跌排
+    - 盈提示 (15分) — 无盈=高分，有盈=减分（反向信号）
+    - 波型 (10分) — 龙猪/头正加分，震正0分
     """
     score = 0
     明细 = {}
 
-    # 1. 周仓出章（WXCD大局）— 25分
+    # 1. 四域完整度 (30分)
     wxcd = str(row.get("WXCD", ""))
-    if "金" in wxcd:
-        score += 25
-        明细["周仓出章"] = 25
-    elif "银" in wxcd:
-        score += 15
-        明细["周仓出章"] = 15
-    else:
-        明细["周仓出章"] = 0
+    wxab = str(row.get("护型WXAB", row.get("WXAB", "")))
+    j = '金' in wxcd
+    y = '银' in wxcd
+    s = '升' in wxcd
+    ab_good = wxab in ('甲','乙','己')
 
-    # 2. 大局（WXZC/ZC周）— 20分
-    zc周 = row.get("ZC周", 0)
-    if pd.notna(zc周) and zc周 > 0:
-        score += 20
-        明细["大局"] = 20
+    if j and s and ab_good:        # 多长
+        score += 30; 明细["四域"] = 30
+    elif y and s and ab_good:       # 银升+甲乙己
+        score += 25; 明细["四域"] = 25
+    elif j and s and not ab_good:   # 多被(金升+丙丁戊)
+        score += 15; 明细["四域"] = 15
+    elif y and s and not ab_good:   # 银升+丙丁戊
+        score += 5; 明细["四域"] = 5
     else:
-        明细["大局"] = 0
+        明细["四域"] = 0
 
-    # 3. 护型（DXAB/ZA日）— 20分
-    za日 = row.get("ZA日", 0)
-    if pd.notna(za日) and za日 >= 3:
-        score += 20
-        明细["护型"] = 20
-    elif pd.notna(za日) and za日 > 0:
-        score += 10
-        明细["护型"] = 10
+    # 2. ZA区间 (25分) — 周线ZA
+    za_zhou = row.get("ZA周", 0)
+    if pd.notna(za_zhou) and za_zhou > 0:
+        if 3 <= za_zhou < 5:
+            score += 25; 明细["ZA"] = 25  # 53%/0.62%
+        elif 7 <= za_zhou < 10:
+            score += 25; 明细["ZA"] = 25  # 55%/0.79%
+        elif 1 <= za_zhou < 3:
+            score += 20; 明细["ZA"] = 20  # 51%/0.55%
+        elif za_zhou >= 10:
+            score += 10; 明细["ZA"] = 10  # 51%/0.51%
+        elif 5 <= za_zhou < 7:
+            score += 10; 明细["ZA"] = 10  # 49%/0.33%
     else:
-        明细["护型"] = 0
+        明细["ZA"] = 0
 
-    # 4. 动量（柱排升开头）— 10分
-    if 模式 == 操作模式.下日冲高:
-        if row.get("柱排日_升开头", False):
-            score += 10
-            明细["动量"] = 10
-        else:
-            明细["动量"] = 0
-    elif 模式 == 操作模式.下周冲高:
-        if row.get("柱排周_升开头", False):
-            score += 10
-            明细["动量"] = 10
-        else:
-            明细["动量"] = 0
-    else:
-        明细["动量"] = 5  # 基仓模式给一半
+    # 3. 周柱排 (20分)
+    col_zhou = str(row.get("柱排周", ""))
+    col_is_up = col_zhou.startswith('升')
+    col_is_man = '人' in col_zhou and not col_zhou.startswith('升') and not col_zhou.startswith('跌')
+    col_is_down = col_zhou.startswith('跌')
 
-    # 5. 周仓出节（ZB周）— 10分
-    zb周 = row.get("ZB周", 0)
-    if pd.notna(zb周) and zb周 > 0:
-        score += 10
-        明细["周仓出节"] = 10
+    if col_is_up:
+        score += 20; 明细["柱排"] = 20  # 52%/0.58%
+    elif col_is_man:
+        score += 10; 明细["柱排"] = 10  # 52%/0.29%
+    elif col_is_down:
+        score += 5; 明细["柱排"] = 5   # 57%/0.31%样本少
     else:
-        明细["周仓出节"] = 0
+        明细["柱排"] = 0
 
-    # 6. 漏提示（HA偏）— 10分
-    ha偏 = row.get("HA偏", 0)
-    if pd.notna(ha偏) and 0 < ha偏 < 6:
-        score += 10
-        明细["漏提示"] = 10
-    elif pd.notna(ha偏) and ha偏 >= 6:
-        score += 3  # 太高反而不好
-        明细["漏提示"] = 3
+    # 4. 盈提示 (15分) — 反向信号：有盈减分
+    ying = str(row.get("盈提示周", row.get("盈提示", "")))
+    if ying in ('', '/', 'None', None, '无'):
+        score += 15; 明细["盈提示"] = 15  # 无盈: 54%/0.43%
     else:
-        明细["漏提示"] = 0
+        score += 5; 明细["盈提示"] = 5    # 有盈: 49%/0.85%高风险
 
-    # 7. 日历效应 — 5分
-    # 简化：周一到周四给下日冲高加分，周五给下周冲高加分
-    if 模式 == 操作模式.下日冲高:
-        明细["日历效应"] = 5
-        score += 5
+    # 5. 波型 (10分)
+    wave = str(row.get("波型周", ""))
+    if '龙猪' in wave or '龙管' in wave:
+        score += 10; 明细["波型"] = 10  # 51%/0.89%
+    elif '头正' in wave:
+        score += 8; 明细["波型"] = 8    # 54%/0.57%
+    elif '震正' in wave:
+        明细["波型"] = 0                 # 47%/0.02%
+    elif '头负' in wave or '震负' in wave:
+        score += 3; 明细["波型"] = 3    # 55%/0.26%
     else:
-        明细["日历效应"] = 2
-        score += 2
+        score += 5; 明细["波型"] = 5    # 中性
 
     return score, 明细
 
