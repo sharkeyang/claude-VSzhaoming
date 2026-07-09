@@ -1,0 +1,14 @@
+{
+  // 项目级 VSCode 设置 — 防止 .bas 文件被 VSCode 误处理
+  "files.encoding": "utf-8",
+  "files.autoGuessEncoding": false,
+  "editor.formatOnSave": false,
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+  "files.associations": {
+    "*.bas": "plaintext"
+  },
+  "[plaintext]": {
+    "editor.formatOnSave": false
+  }
+}
