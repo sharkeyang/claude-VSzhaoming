@@ -98,7 +98,31 @@ Auto-discovered from `<excel_name>_passwords.txt` or `vba_passwords.txt` next to
 - `_分析脚本/` — 文档格式化工具
 - `_规则文档/` — 三文件+益盟公式
 
-### 常用命令
+## Harness 工程规则
+
+### 何时启动 Harness
+当涉及以下任一场景时，必须优先使用 Harness 工程体系：
+- 修改多个文件 / 新增功能 / 重构
+- 需要联网查资料、查最新文档
+- 需要多 Agent 并行工作
+- 任何代码变更（包括 Bug 修复）
+
+### 5 条核心方法
+1. **先方案后编码**：输出完整方案 → 人工确认 → 才能写代码
+2. **MCP + Skills 配工具**：如有需要，先检查 MCP 和 Skill 是否可用
+3. **自动测试验证**：写完后运行验证脚本，确认通过
+4. **文档+Git 存档**：每功能一提交，更新进度文档
+5. **规则文件先行**：遵循 CLAUDE.md 中的项目规范
+
+### 规则卡片
+- **启动新项目**：创建 CLAUDE.md → 配置 settings.json → 创建验证脚本 → Git 初始化
+- **开始新功能**：先方案后编码 → 可并行则用多 Agent → 跑通测试 → 提交
+- **需要 MCP**：判断是否必须 → 选对应 MCP（Playwright/Context7/Sequential Thinking等）
+- **代码审查**：使用 /code-review → 高风险用 Playwright 验证 → 不通过不提交
+- **项目维护**：定期跑验证 → 清理 temp → 规范提交 → 同步文档
+
+### 实施指南路径
+完整实施指南：`D:\@VSwork\VSteach\_SHARK\Harness工程体系实施指南.md`
 ```powershell
 vba2VS.ps1        # 导出VBA -> .bas
 vba2EXCEL.ps1     # 导入 .bas -> VBA
