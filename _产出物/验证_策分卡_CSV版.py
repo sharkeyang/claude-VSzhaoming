@@ -117,4 +117,3 @@ for b in bands:
     print(f'{b:>8} {n:>6} {hr_ok:>6.0f}% {hr_avg:>6.2f}% {hr3:>6.0f}% {hr5:>6.0f}% {pr_ok:>6.0f}% {pr_avg:>6.2f}% {nw_up:>6.0f}% {nw_hr:>7.0f}%')
 
 print(f'{"基准":>8} {base_n:>6} {base_hr_ok:>6.0f}% {base_hr:>6.2f}% {base_hr3:>6.0f}% {base_nw_up:>6.0f}% {base_nw_hr:>7.0f}%')
-" 2>&1
