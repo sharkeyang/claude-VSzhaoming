@@ -10,5 +10,9 @@
   },
   "[plaintext]": {
     "editor.formatOnSave": false
+  },
+  "[markdown]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": null
   }
 }

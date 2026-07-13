@@ -12,5 +12,10 @@ indent_style = none
 trim_trailing_whitespace = false
 insert_final_newline = false
 
+[*.md]
+trim_trailing_whitespace = false
+insert_final_newline = false
+end_of_line = crlf
+
 [*.ps1]
 charset = utf-8-bom
