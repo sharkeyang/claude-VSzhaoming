@@ -1,7 +1,7 @@
-"""周冲条件系统性搜索 v2 — 按类别拆分 + 概率即分数
+"""周冲条件系统性搜索 — 按新6分类市板拆分 + 概率即分数
 
-扫描7673只×4227230周，每个条件组合按类别(沪深300上证50/中证500/中证1000/中证2000/非板块/基金ETF/指数)拆分。
-输出概率表可直接用于VBA查表赋值。
+扫描7673只×4227230周，每个条件组合按6类(指数/基金ETF/沪深300/中证500/中证小盘/中证非)拆分。
+使用MP1_花册分类映射.json中的新分类系统。
 """
 import os, csv, sys, json, glob
 from collections import defaultdict, OrderedDict
@@ -13,21 +13,19 @@ CAT_FILE = glob.glob(os.path.join('_产出物', '*MP1*.json'))
 if CAT_FILE:
     CAT_FILE = CAT_FILE[0]
 else:
-    # Try direct listing
-    import os as _os
-    for _f in _os.listdir('_产出物'):
+    for _f in os.listdir('_产出物'):
         if _f.endswith('.json') and 'MP1' in _f:
-            CAT_FILE = _os.path.join('_产出物', _f)
-            break
+            CAT_FILE = os.path.join('_产出物', _f); break
 
-# ============================================================
-# 加载分类映射
-# ============================================================
-cat_map = {}
-ALL_CATS = ['非板块', '指数', '中证2000', '中证1000', '基金ETF', '中证500', '沪深300上证50', '未分类']
-
-if CAT_FILE:
-    with open(CAT_FILE, 'r', encoding='utf-8') as f:
+# 新6分类映射
+CAT_RENAME = {
+    '指数': '指数', '基金ETF': '基金ETF',
+    '沪深300上证50': '沪深300', '中证500': '中证500',
+    '中证1000': '中证小盘', '中证2000': '中证小盘',
+    '非板块': '中证非',
+}
+NEW_CATS = ['指数', '基金ETF', '沪深300', '中证500', '中证小盘', '中证非']
+DISPLAY = ['全量'] + NEW_CATS
         cat_map = json.load(f)
     # 实际存在的分类
     raw_json = json.dumps(cat_map, ensure_ascii=False)

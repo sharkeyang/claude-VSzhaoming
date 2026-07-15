@@ -165,7 +165,6 @@ Function IQQQ跨码展擎_按列QT区域( _
         .Cells(1, 位qt停牌) = "停牌"
         .Cells(1, 位qt今时) = "今时"
         .Cells(1, 位qt今期) = "今日"
-        .Cells(1, 位qt成分) = "成分"
         .Cells(1, 位qt市板) = "市板"
         .Cells(1, 位qt行业) = "行浪"
         .Cells(1, 位qt行益) = "行益"
@@ -227,8 +226,6 @@ Function IQQQ跨码展擎_按列QT区域( _
         .Columns(位qt概念).ColumnWidth = 8
         .Columns(位qt今时).ColumnWidth = 6
         .Columns(位qt今期).ColumnWidth = 9
-        .Columns(位qt成分).ColumnWidth = 2.3
-        .Columns(位qt成分).HorizontalAlignment = xlRight
         .Columns(位qt市板).ColumnWidth = 2
         .Columns(位qt今池).ColumnWidth = 2
         .Columns(位qt仓主).ColumnWidth = 2
@@ -248,7 +245,6 @@ Function IQQQ跨码展擎_按列QT区域( _
         .Columns(位qt量比).Hidden = False
         .Columns(位qt换手).Hidden = False
         '.Columns(位qt行业).Hidden = False
-        .Columns(位qt成分).Hidden = False
         .Columns(位qt仓周).Hidden = False
         If WS.Name = 常池名金 Then
             .Columns(位qt今收).Hidden = False
