@@ -468,8 +468,12 @@ Public Const 位谕of策周浮仓 = 位谕终of族月均 + 6
 Public Const 位谕of策日浮仓 = 位谕终of族月均 + 7
 Public Const 位谕of策传 = 位谕终of族月均 + 8      '策传综合信息，供Python读取
 Public Const 位谕of策分周浮仓 = 位谕终of族月均 + 9      '策分: 周浮仓评分(0~100)
-Public Const 位谕of策分周概率 = 位谕终of族月均 + 10     '策分: 周冲概率(P>=3%)
-Public Const 位谕列终全部 = 位谕of策分周浮仓
+Public Const 位谕of周冲策略 = 位谕终of族月均 + 10     '周冲策略: 匹配的策略名（如"金+多长+升排+非孕"）
+Public Const 位谕of周冲策分 = 位谕终of族月均 + 11     '周冲策分: 冲高概率(P>=3%)
+Public Const 位谕列终全部 = 位谕of周冲策分
+'========================================================================================
+'花天表AI提示列（在OS车道之后 = 花宽全道 + 花宽单道 + 1）
+Public Const 位列花天AI提示 = 245
 '========================================================================================
 
 
@@ -3448,22 +3452,45 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
     谕组(X, 位谕of策分周浮仓) = 策分
 
     '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    '策分: 概率即分数 (P>=3%查表)
-    '基于全量7673只×4227230周回测数据，所有策略均基于同一全量样本。
-    '样本量 = 全量数据中命中该条件的周数（如最优仅76209周=1.8%，因条件最严）。
-    '分类: 指数/基金ETF/沪深300/中证500/中证小盘/中证非
-    '分类对照详见 研究周冲策略.md §2.10
-    '概率表说明:
-    '  所有概率 = 下周真高幅≥3%的成功率
-    '  金+多长+升排+非孕+盈高 和 最优(全部) 为100% — 真均幅24~26%，全部样本HR≥3%
-    '最优(全部)定义:
-    '  wxcd='金', wxab_set={'甲','乙','己'}, zhupai='升',
-    '  no_weifanyun=True, yingtishi_high=True, boxing_set={'龙猪','龙管'}
-    '  即：金+甲乙己+升排+非孕+盈高+龙猪/管，不含ZA区间限制。
+    '策分: 概率即分数 — 匹配策略 + 查概率表
     '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-'    Dim 周花册分类 As String: 周花册分类 = 取花册分类(CIDL)
-'    Dim 周策分概率 As Double: 周策分概率 = 取周冲概率(周局, 周护, 周ZA, 周柱排, 周盈提, 周波型, 周花册分类, CIDL)
-'    谕组(X, 位谕of策分周概率) = 周策分概率
+    Dim 周策略 As String: 周策略 = ""
+    Dim 周市板 As String: 周市板 = 谕组(X, 位qt市板)
+
+    '按条件严格度降序匹配（最严格优先）
+    If InStr(周局, "金") > 0 And InStr(周护, "甲") + InStr(周护, "乙") + InStr(周护, "己") > 0 Then
+        If Left$(周柱排, 1) = "升" And InStr(周柱排, "尾反孕") = 0 Then
+            If InStr(周盈提, "高") > 0 Then
+                If InStr(周波型, "龙猪") > 0 Or InStr(周波型, "龙管") > 0 Then
+                    周策略 = "金最优(全部)"
+                Else
+                    周策略 = "金+多长+升排+非孕+盈高"
+                End If
+            Else
+                周策略 = "金+多长+升排+非孕"
+            End If
+        ElseIf Left$(周柱排, 1) = "升" Then
+            周策略 = "金+多长+升排"
+        Else
+            周策略 = "金+多长"
+        End If
+    ElseIf InStr(周局, "银") > 0 Then
+        If InStr(周盈提, "高") > 0 Or InStr(周盈提, "宽") > 0 Then
+            周策略 = "银+盈提示有"
+        ElseIf Left$(周柱排, 1) = "升" Then
+            周策略 = "银+柱排=升"
+        ElseIf InStr(周波型, "龙猪") > 0 Then
+            周策略 = "银+龙猪"
+        ElseIf 周ZA > 5 And 周ZA <= 10 Then
+            周策略 = "银+ZA5~10"
+        End If
+    End If
+
+    '查概率表并写入
+    If 周策略 <> "" And 周市板 <> "" Then
+        谕组(X, 位谕of周冲策略) = 周策略
+        谕组(X, 位谕of周冲策分) = 查概率表(周策略, 周市板)
+    End If
     '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 '########################################################################################
 '########################################################################################
@@ -6570,6 +6597,8 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of策日浮仓) = "策日浮仓"
         .Cells(1, 位谕of策传) = "策传"
         .Cells(1, 位谕of策分周浮仓) = "策分周浮仓"
+        .Cells(1, 位谕of周冲策略) = "周冲策略"
+        .Cells(1, 位谕of周冲策分) = "周冲策分"
         '四域列
         .Cells(1, 位谕of周层四域) = "四域周"
         .Cells(1, 位谕of日层四域) = "四域日"
@@ -6597,6 +6626,10 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of策日浮仓).ColumnWidth = 4
         .Columns(位谕of策分周浮仓).ColumnWidth = 4
         .Columns(位谕of策分周浮仓).HorizontalAlignment = xlRight
+        .Columns(位谕of周冲策略).ColumnWidth = 20
+        .Columns(位谕of周冲策分).ColumnWidth = 4
+        .Columns(位谕of周冲策分).HorizontalAlignment = xlRight
+        .Columns(位谕of周冲策分).NumberFormatLocal = "0"
         .Columns(位谕of周层四域).ColumnWidth = 4
         .Columns(位谕of日层四域).ColumnWidth = 4
         .Columns(位谕of日层段).ColumnWidth = 4
@@ -6672,4 +6705,171 @@ Function IQQQ跨码展擎_按列神谕区域( _
     IQQQ跨码展擎_按列神谕区域 = 基列 + 位谕列终全部
 '========================================================================================
 End Function
+
+'========================================================================================
+'查概率表 — 从 TXT 文件读取 P(≥3%) 值，首次调用加载到 Dictionary 缓存
+'文件路径: D:\zdata\照明概率.txt
+'格式: 策略\tQd\tQe\tQif\tQic\tQimit\tQin
+'========================================================================================
+Public Function 查概率表(ByVal 策略名 As String, ByVal 市板 As String) As Double
+    Static 概率典 As Dictionary
+    Static 已加载 As Boolean
+    Dim 文件号 As Integer, 行内容 As String
+    Dim 字段 As Variant, 头字段 As Variant, j As Integer
+    Dim 键 As String
+
+    If Not 已加载 Then
+        Set 概率典 = New Dictionary
+        文件号 = FreeFile
+        Open "D:\zdata\照明概率.txt" For Input As #文件号
+            Line Input #文件号, 行内容
+            头字段 = Split(行内容, vbTab)
+            Do While Not EOF(文件号)
+                Line Input #文件号, 行内容
+                字段 = Split(行内容, vbTab)
+                If UBound(字段) >= UBound(头字段) Then
+                    For j = 1 To UBound(头字段)
+                        概率典(字段(0) & "|" & 头字段(j)) = CDbl(字段(j))
+                    Next
+                End If
+            Loop
+        Close #文件号
+        已加载 = True
+    End If
+
+    键 = 策略名 & "|" & 市板
+    If 概率典.Exists(键) Then 查概率表 = 概率典(键) Else 查概率表 = 0
+End Function
+
+'========================================================================================
+'测试：查概率表是否正常加载
+'========================================================================================
+Public Sub 测试_查概率表()
+    Dim 测试项 As Variant
+    测试项 = Array( _
+        Array("全量基准", "Qd", 28.6), _
+        Array("金+多长", "Qif", 65.0), _
+        Array("金+多长+升排+非孕", "Qimit", 91.4), _
+        Array("银+盈提示有", "Qin", 86.4), _
+        Array("金最优(全部)", "Qe", 100.0))
+
+    Dim i As Integer, 策略 As String, 市板 As String, 期望 As Double, 实际 As Double
+    Dim 全部正确 As Boolean: 全部正确 = True
+
+    Debug.Print "===== 查概率表 测试 ====="
+    For i = LBound(测试项) To UBound(测试项)
+        策略 = 测试项(i)(0)
+        市板 = 测试项(i)(1)
+        期望 = 测试项(i)(2)
+        实际 = 查概率表(策略, 市板)
+        If 实际 = 期望 Then
+            Debug.Print "✅ " & 策略 & " | " & 市板 & " = " & 实际
+        Else
+            Debug.Print "❌ " & 策略 & " | " & 市板 & " = " & 实际 & " (期望 " & 期望 & ")"
+            全部正确 = False
+        End If
+    Next
+
+    If 全部正确 Then
+        MsgBox "查概率表 测试通过 ✅" & vbCrLf & "所有 " & UBound(测试项) - LBound(测试项) + 1 & " 项正确", vbInformation
+    Else
+        MsgBox "查概率表 测试失败 ❌" & vbCrLf & "请检查 D:\zdata\照明概率.txt 是否存在且格式正确", vbExclamation
+    End If
+End Sub
+
+'========================================================================================
+'测试：模拟一只股票的策略匹配
+'========================================================================================
+Public Sub 测试_匹配策略(Optional WXCD As String = "金", _
+                           Optional WXAB As String = "甲", _
+                           Optional ZA As Double = 7, _
+                           Optional 柱排 As String = "升.尾连QQ.Q3", _
+                           Optional 盈提 As String = "高", _
+                           Optional 波型 As String = "Aa龙猪.初")
+    ' 模拟神谕中的变量
+    Dim 周局 As String: 周局 = WXCD
+    Dim 周护 As String: 周护 = WXAB
+    Dim 周ZA As Double: 周ZA = ZA
+    Dim 周柱排 As String: 周柱排 = 柱排
+    Dim 周盈提 As String: 周盈提 = 盈提
+    Dim 周波型 As String: 周波型 = 波型
+    Dim 周策略 As String: 周策略 = ""
+
+    ' 复制神谕中的匹配逻辑
+    If InStr(周局, "金") > 0 And InStr(周护, "甲") + InStr(周护, "乙") + InStr(周护, "己") > 0 Then
+        If Left$(周柱排, 1) = "升" And InStr(周柱排, "尾反孕") = 0 Then
+            If InStr(周盈提, "高") > 0 Then
+                If InStr(周波型, "龙猪") > 0 Or InStr(周波型, "龙管") > 0 Then
+                    周策略 = "金最优(全部)"
+                Else
+                    周策略 = "金+多长+升排+非孕+盈高"
+                End If
+            Else
+                周策略 = "金+多长+升排+非孕"
+            End If
+        ElseIf Left$(周柱排, 1) = "升" Then
+            周策略 = "金+多长+升排"
+        Else
+            周策略 = "金+多长"
+        End If
+    ElseIf InStr(周局, "银") > 0 Then
+        If InStr(周盈提, "高") > 0 Or InStr(周盈提, "宽") > 0 Then
+            周策略 = "银+盈提示有"
+        ElseIf Left$(周柱排, 1) = "升" Then
+            周策略 = "银+柱排=升"
+        ElseIf InStr(周波型, "龙猪") > 0 Then
+            周策略 = "银+龙猪"
+        ElseIf 周ZA > 5 And 周ZA <= 10 Then
+            周策略 = "银+ZA5~10"
+        End If
+    End If
+
+    ' 输出结果
+    Debug.Print "===== 匹配策略 测试 ====="
+    Debug.Print "输入: WXCD=" & 周局 & " WXAB=" & 周护 & " ZA=" & 周ZA
+    Debug.Print "     柱排=" & 周柱排 & " 盈提=" & 周盈提 & " 波型=" & 周波型
+    If 周策略 <> "" Then
+        Debug.Print "匹配: " & 周策略
+        Debug.Print "概率(Qd): " & 查概率表(周策略, "Qd")
+    Else
+        Debug.Print "匹配: 无"
+    End If
+End Sub
+
+'========================================================================================
+'测试：查概率表调试版 — 逐行显示加载过程
+'========================================================================================
+Public Sub 测试_查概率表调试()
+    Dim 文件号 As Integer, 行内容 As String, 行数 As Integer
+    Dim 字段 As Variant, 头字段 As Variant
+
+    文件号 = FreeFile
+    On Error GoTo 文件错误
+    Open "D:\zdata\照明概率.txt" For Input As #文件号
+    Debug.Print "✅ 文件打开成功"
+
+    Line Input #文件号, 行内容
+    头字段 = Split(行内容, vbTab)
+    Debug.Print "✅ 表头(" & UBound(头字段) + 1 & "列): " & 行内容
+
+    行数 = 0
+    Do While Not EOF(文件号)
+        Line Input #文件号, 行内容
+        行数 = 行数 + 1
+        字段 = Split(行内容, vbTab)
+        If 行数 <= 3 Then Debug.Print "  行" & 行数 & ": " & 字段(0) & "|" & 字段(1)
+    Loop
+    Close #文件号
+    Debug.Print "✅ 共 " & 行数 & " 行数据"
+
+    Dim 概率 As Double
+    概率 = 查概率表("全量基准", "Qd")
+    Debug.Print "✅ 查概率表(""全量基准"",""Qd"") = " & 概率
+    Exit Sub
+
+文件错误:
+    Debug.Print "❌ " & Err.Description
+    Debug.Print "   路径: D:\zdata\照明概率.txt"
+End Sub
+'========================================================================================
 

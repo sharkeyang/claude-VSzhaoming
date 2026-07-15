@@ -137,9 +137,8 @@ Function STBASE藏库引擎_更新主程( _
     '====================================================================================
     Dim ARRDATA As Variant
     If STBASE外簿工具_藏库获取组库(ARRDATA, 指定期类) = 0 Then
-        MSG = "藏库获取组库失败：" & 指定期类
-        STBASE藏库引擎_更新主程 = MSG
-        Exit Function
+        MSG = "【藏库空】从CSV重新构建"
+        'ARRDATA保持空Variant，更新数程内部会ReDim创建
     End If
     '------------------------------------------------------------------------------------
     If 是否更新源AK = True Then
@@ -149,20 +148,25 @@ Function STBASE藏库引擎_更新主程( _
     If 是否更新源TR = True And 指定期类 = 常期类为日 Then
         MSG = MSG & STBASE藏库引擎_更新数程(ARRDATA, 典码称, 常据源TR, 指定期类)
     End If
+    '诊断：更新后ARRDATA维度
+    On Error Resume Next
+    Debug.Print "【诊断】更新后ARRDATA: " & UBound(ARRDATA, 1) & "行 × " & UBound(ARRDATA, 2) & "列"
+    If UBound(ARRDATA, 2) <= 2 Then Debug.Print "【诊断】无数据列，更新数程可能未填充"
+    On Error GoTo 0
 '========================================================================================
-'输出
+'输出（先定位已打开工簿→避免双链接冲突。@@@2026-07-15 fix）
 '========================================================================================
-    '------------------------------------------------------------------------------------
-    '输出
-    '------------------------------------------------------------------------------------
-    If STBASE外簿工具_藏库链接(WS藏库, 指定期类) = False Then
+    Dim 定位簿令 As Workbook
+    If STBASE外簿引擎_定位(定位簿令, 常外簿藏库) Then
+        Set WS藏库 = 定位簿令.Sheets(指定期类)
+    ElseIf STBASE外簿工具_藏库链接(WS藏库, 指定期类) = False Then
         MSG = "藏库链接失败：" & 指定期类
         STBASE藏库引擎_更新主程 = MSG
         Exit Function
     End If
     WS藏库.Cells.Clear
     Call UTL数据转换_集ARR2WS(ARRDATA, WS藏库, 1, 1)
-    Erase ARRDATA
+    'Erase ARRDATA  '@@@ 2026-07-15 去掉Erase，函数结束自动释放，避免数组状态异常
     '------------------------------------------------------------------------------------
     '格式化
     '------------------------------------------------------------------------------------
@@ -208,36 +212,35 @@ Function STBASE藏库引擎_更新数程( _
         , Optional ByVal 是否更新全量 As Boolean = True _
         ) As String
 '========================================================================================
-    If 典码称 Is Nothing Then Exit Function
-    If 典码称.Count = 0 Then Exit Function
+    If 典码称 Is Nothing Then Debug.Print "[更新数程退出] 典码称 Is Nothing": Exit Function
+    If 典码称.Count = 0 Then Debug.Print "[更新数程退出] 典码称.Count=0（花册可能为空）": Exit Function
 '========================================================================================
-'设置可更新交日更新：删除大于此日期
+'设置可更新交日更新：从花册结期表构建交易日轴（替代原sh000001.csv）
 '========================================================================================
     Dim CIDL As String
-    CIDL = "sh000001"
-    '------------------------------------------------------------------------------------
-    '利用上证的交易日作为基准
-    '------------------------------------------------------------------------------------
-    Dim ARRSTOCK As Variant
-    Dim 计行导入 As Integer
-    If 指定据源 = 常据源AK Then
-        计行导入 = STBASE取据引擎取据由外库(ARRSTOCK, CIDL, 指定期类, 指定结期下限:=指定结期下限)
-    ElseIf 指定据源 = 常据源TR Then
-        计行导入 = STBASE取据引擎取据由腾实(ARRSTOCK, CIDL)
+    Dim WS交期 As Worksheet
+    If STBASE外簿工具_花册链接(WS交期, 常花结期) = False Then
+        Debug.Print "[更新数程退出] 花册结期表链接失败"
+        Exit Function
     End If
-    If 计行导入 < 1 Then Exit Function                 '如果行情计数小于1，只有断网情况
-    '------------------------------------------------------------------------------------
-    '更库：纵向 日期
-    '------------------------------------------------------------------------------------
     Dim 典期序本源 As New Dictionary
     Dim 当期 As Date
-    Dim 值索横期  As String
+    Dim 值索横期 As String
     Dim i As Integer
-    For i = LBound(ARRSTOCK, 1) To UBound(ARRSTOCK, 1)
-        当期 = ARRSTOCK(i, 位列TS结期)
-        值索横期 = 时程工具衍生期索(当期, 指定期类)
-        典期序本源.Add Item:=当期, Key:=值索横期
-    Next
+    With WS交期
+        For i = 2 To .Cells(65536, 1).End(xlUp).Row
+            If VBA.IsDate(.Cells(i, 1)) = True Then
+                当期 = .Cells(i, 1)
+                值索横期 = 时程工具衍生期索(当期, 指定期类)
+                典期序本源.Add Item:=当期, Key:=值索横期
+            End If
+        Next
+    End With
+    Set WS交期 = Nothing
+    If 典期序本源.Count = 0 Then
+        Debug.Print "[更新数程退出] 结期表无有效日期"
+        Exit Function
+    End If
     Dim 更期最始本源 As Date
     更期最始本源 = 典期序本源.Items(0)
     Dim 更期最终本源 As Date
@@ -431,6 +434,7 @@ Function STBASE藏库引擎_更新数程( _
     '-----------------------------------
     Dim 是否应更新本码 As Boolean
     Dim 计码未更新到位 As Long
+    Dim 计行导入 As Integer      '计行导入：用于AK/TR数据循环
 '========================================================================================
 '运行：多轮遍历更新数据
 '========================================================================================
