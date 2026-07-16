@@ -3479,6 +3479,8 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
     ElseIf InStr(周局, "银") > 0 Then
         If InStr(周盈提, "高") > 0 Or InStr(周盈提, "宽") > 0 Then
             周策略 = "银+盈提示有"
+        ElseIf InStr(周护, "己") > 0 Then
+            周策略 = "银+WXAB=己"
         ElseIf Left$(周柱排, 1) = "升" Then
             周策略 = "银+柱排=升"
         ElseIf InStr(周波型, "龙猪") > 0 Then
@@ -6819,6 +6821,8 @@ Public Sub 测试_匹配策略(Optional WXCD As String = "金", _
     ElseIf InStr(周局, "银") > 0 Then
         If InStr(周盈提, "高") > 0 Or InStr(周盈提, "宽") > 0 Then
             周策略 = "银+盈提示有"
+        ElseIf InStr(周护, "己") > 0 Then
+            周策略 = "银+WXAB=己"
         ElseIf Left$(周柱排, 1) = "升" Then
             周策略 = "银+柱排=升"
         ElseIf InStr(周波型, "龙猪") > 0 Then
