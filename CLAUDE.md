@@ -8,6 +8,10 @@ A quantitative trading/investment research system built in Excel VBA (57 standar
 
 ## VBA workflow
 
+### 🔴 铁律：Claude 绝对禁止导入 .bas 到 xlsm
+
+**这是死命令，没有任何例外。** Claude 只能写 `.bas` 文件到 `昭明计划VS优化_vba/` 目录。用户自己通过 `vba2EXCEL` 手动导入。永远不要运行任何导入脚本或链接触发导入。
+
 ### Quick: use skills
 
 In Claude Code chat, use `/vba2VS` and `/vba2EXCEL`. These skills handle Excel lifecycle (save/quit via COM), temp dir cleanup, and file sync automatically.

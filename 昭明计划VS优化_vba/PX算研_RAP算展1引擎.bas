@@ -1673,9 +1673,11 @@ Public Sub XL算展取谕组(被研代码 As String)
     If 计数 < 1 Or IsEmpty(谕组) Then Exit Sub
 
     Dim 路径 As String
-    路径 = ThisWorkbook.Path & "\____temp\谕组_" & 被研代码 & ".csv"
+    路径 = ThisWorkbook.Path & "\____temp\谕组\"
+    If Dir(路径, vbDirectory) = "" Then MkDir 路径
+    路径 = ThisWorkbook.Path & "\____temp\谕组\谕组_" & 被研代码 & ".csv"
     Open 路径 For Output As #1
-    Print #1, "主期,周涨,PR,HR,WXAB,波型,柱排周,盈提示,WXCD,ZA周,ZC周,周龄,周键"
+    Print #1, "主期,周涨,PR,HR,WXAB,波型,柱排周,盈提示,WXCD,ZA周,ZB周,ZC周,周龄,周键"
 
     Dim 基位日类 As Integer: 基位日类 = 0
     Dim 基位周类 As Integer: 基位周类 = 花宽单道
@@ -1693,12 +1695,35 @@ Public Sub XL算展取谕组(被研代码 As String)
                 谕组(X, 位谕of周层盈提示) & "," & _
                 Replace(谕组(X, 位谕of周层大局), ",", ";") & "," & _
                 谕组(X, 位谕of周类BTZA) & "," & _
+                谕组(X, 位谕of周类BTZB) & "," & _
                 谕组(X, 位谕of周类BTZC) & "," & _
                 ARRLLL(X, 基位周类 + 位os基累龄) & "," & _
                 "True"
         End If
     Next X
     Close #1
+End Sub
+
+'========================================================================================
+'批量生成谕组CSV（含ZB周）— 遍历花册，逐只跑算展导出CSV
+'用法：在Excel中运行 Call XL算展取谕组批量
+'========================================================================================
+Public Sub XL算展取谕组批量()
+    Dim WS花天 As Worksheet
+    If STBASE外簿工具_花册链接(WS花天, 常花中股) = False Then
+        MsgBox "花册链接失败", vbExclamation: Exit Sub
+    End If
+    Dim 末行 As Long, i As Long, CIDL As String, TT As Single
+    TT = Timer: 末行 = WS花天.Cells(65536, 1).End(xlUp).Row
+    For i = 2 To 末行
+        CIDL = WS花天.Cells(i, 1).Value
+        If UBCID是代码(CIDL) Then Call XL算展取谕组(CIDL)
+        If i Mod 500 = 0 Then
+            Debug.Print "已处理 " & i & "/" & 末行 & " 耗时:" & CInt(Timer - TT) & "秒"
+            DoEvents
+        End If
+    Next
+    MsgBox "完成！共处理 " & (末行 - 1) & " 只，耗时 " & CInt(Timer - TT) & " 秒", vbInformation
 End Sub
 '########################################################################################
 '########################################################################################
