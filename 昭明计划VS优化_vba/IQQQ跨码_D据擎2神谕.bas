@@ -3456,6 +3456,8 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
     '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     Dim 周策略 As String: 周策略 = ""
     Dim 周市板 As String: 周市板 = 谕组(X, 位qt市板)
+    ' 市板为空时，从花册单行查询
+    If 周市板 = "" Then 周市板 = 获取单码市板(CIDL)
 
     '按条件严格度降序匹配（最严格优先）
     If InStr(周局, "金") > 0 And InStr(周护, "甲") + InStr(周护, "乙") + InStr(周护, "己") > 0 Then
@@ -6871,5 +6873,19 @@ Public Sub 测试_查概率表调试()
     Debug.Print "❌ " & Err.Description
     Debug.Print "   路径: D:\zdata\照明概率.txt"
 End Sub
+
+'========================================================================================
+'获取单码市板 — 从花册单行查询，不加载整个数组
+'========================================================================================
+Public Function 获取单码市板(ByVal CIDL As String) As String
+    Dim WS花天 As Worksheet
+    Dim RG As Range
+    If STBASE外簿工具_花册链接(WS花天, 常花中股) = False Then Exit Function
+    Set RG = WS花天.Columns(位列花天CIDL).Find(CIDL)
+    If Not RG Is Nothing Then
+        获取单码市板 = WS花天.Cells(RG.Row, 位列花天市板).Value
+    End If
+    Set RG = Nothing
+End Function
 '========================================================================================
 
