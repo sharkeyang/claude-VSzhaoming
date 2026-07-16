@@ -6740,6 +6740,8 @@ Public Function 查概率表(ByVal 策略名 As String, ByVal 市板 As String) 
     End If
 
     键 = 策略名 & "|" & 市板
+    '兼容市板重构：Qim(中证1000)/Qit(中证2000)在概率表中合并为Qimit，两者差异<1%
+    If 市板 = "Qim" Or 市板 = "Qit" Then 键 = 策略名 & "|Qimit"
     If 概率典.Exists(键) Then 查概率表 = 概率典(键) Else 查概率表 = 0
 End Function
 
