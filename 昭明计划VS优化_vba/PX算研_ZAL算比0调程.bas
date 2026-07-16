@@ -175,7 +175,7 @@ Function XL算比模板前调基程( _
     ThisWorkbook.Save
     '------------------------------------------------------------------------------------
     MSG = "算法对比引擎批处理" _
-         & vbCrLf & "运行用时：" & CInt(Timer - TT) _
+         & vbCrLf & "运行用时：" & CLng(Timer - TT) _
          & vbCrLf & "运行次数：" & 运行次数 _
          & vbCrLf & "运行列表：" _
          & vbCrLf & MSG

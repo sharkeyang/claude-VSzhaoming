@@ -913,7 +913,7 @@ Function 市调预程引擎初始(天组 As Variant, 天典 As Dictionary) As St
 '    Set WS花册 = Nothing
 '    MSG = MSG & "【更新花册名称】耗时：" & Round(Timer - TTT, 2) & vbCrLf
 '========================================================================================
-    MSG = MSG & "【A股行情数据爬取】耗时：" & CInt(Timer - TT) & vbCrLf
+    MSG = MSG & "【A股行情数据爬取】耗时：" & CLng(Timer - TT) & vbCrLf
     市调预程引擎初始 = MSG
 End Function
 

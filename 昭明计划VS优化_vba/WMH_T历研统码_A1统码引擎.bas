@@ -92,7 +92,7 @@ Function 历研统码基程_展日码总( _
     Call STCALL花册工具_提取典码花天按市池(典码称, 包含市指:=False, 包含市基:=False, 包含市票:=True, 测试限数:=-1)
     Dim MSG票计 As String
     MSG票计 = 历研统码引擎1主程("历码票", 典码称, 指定期类, 指定结期下限:=指定结期下限, 是否神谕指标:=False, 显否宽基:=False, 显否排名:=False, 显否马赛克:=False, 显否神谕主页:=False, 表名统码:=表名统码, 是否建表:=True, wb:=wb)
-    MSG = MSG & ">>历码票耗时：" & CInt(Timer - TT票) & vbCrLf
+    MSG = MSG & ">>历码票耗时：" & CLng(Timer - TT票) & vbCrLf
     典码称.RemoveAll
     '------------------------------------------------------------------------------------
     '---- 行业 ----
@@ -101,10 +101,10 @@ Function 历研统码基程_展日码总( _
     Call 后台族非票精分调程_WA_设置典核心行业(典码称)
     Dim MSG核计 As String
     MSG核计 = 历研统码引擎1主程("历码核", 典码称, 指定期类, 指定结期下限:=指定结期下限, 是否神谕指标:=True, 显否宽基:=True, 显否排名:=True, 显否马赛克:=True, 显否神谕主页:=True, 表名统码:=表名统码, 是否建表:=False, wb:=wb)
-    MSG = MSG & ">>历码核耗时：" & CInt(Timer - TT行业) & vbCrLf
+    MSG = MSG & ">>历码核耗时：" & CLng(Timer - TT行业) & vbCrLf
     典码称.RemoveAll
     '------------------------------------------------------------------------------------
-    MSG = MSG & ">>历码全部耗时：" & CInt(Timer - TT历码) & vbCrLf
+    MSG = MSG & ">>历码全部耗时：" & CLng(Timer - TT历码) & vbCrLf
     Debug.Print MSG票计 & vbCrLf & MSG核计
     历研统码基程_展日码总 = MSG
 End Function
@@ -124,10 +124,10 @@ Sub 历研统码调程__展日码核L版()
     Dim 表名统码 As String
     表名统码 = "历码核"
     MSG核计 = 历研统码引擎1主程("历码核", 典码称, 指定期类, 指定结期下限:=指定结期下限, 是否更新源TR:=False, 是否神谕指标:=True, 显否宽基:=True, 显否排名:=True, 显否马赛克:=True, 显否神谕主页:=True, 表名统码:=表名统码, 是否建表:=True, wb:=ThisWorkbook)
-    MSG = MSG & ">>历码核耗时：" & CInt(Timer - TT行业) & vbCrLf
+    MSG = MSG & ">>历码核耗时：" & CLng(Timer - TT行业) & vbCrLf
     典码称.RemoveAll
     '------------------------------------------------------------------------------------
-    MSG = MSG & ">>历码全部耗时：" & CInt(Timer - TT历码) & vbCrLf
+    MSG = MSG & ">>历码全部耗时：" & CLng(Timer - TT历码) & vbCrLf
     Debug.Print MSG & vbCrLf & MSG核计
 End Sub
 Sub 历研统码调程__展日码总R版()
@@ -139,7 +139,7 @@ Sub 历研统码调程__展日码总R版()
     Debug.Print 历研统码基程_展日码总(常期类为日, 表名统码)
     ThisWorkbook.Sheets(表名统码).Activate
     UTL宏工具_END
-    Debug.Print "历码耗时：" & CInt(Timer - TT)
+    Debug.Print "历码耗时：" & CLng(Timer - TT)
 End Sub
 Sub 历研统码调程__展日码总RL版()
     Dim TT As Single
@@ -149,7 +149,7 @@ Sub 历研统码调程__展日码总RL版()
     表名统码 = "轮总L"
     Debug.Print 历研统码基程_展日码总(常期类为日, 表名统码, 指定结期下限:=常结期下限历长)
     UTL宏工具_END
-    Debug.Print "历码耗时：" & CInt(Timer - TT)
+    Debug.Print "历码耗时：" & CLng(Timer - TT)
 End Sub
 '########################################################################################
 '########################################################################################

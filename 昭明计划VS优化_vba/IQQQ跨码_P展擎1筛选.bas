@@ -3916,7 +3916,7 @@ Function IQQQ展擎筛程_统计本页基程(WSTO As Worksheet, WSAS As Workshee
 '    MSG = MSG & "工表名：" & 当前表名
 '
 '    TTT = Timer
-'    计时过程 = CInt(Timer - TTT)
+'    计时过程 = CLng(Timer - TTT)
 '
 '    MSG = MSG & vbCrLf
 '    MSG = MSG & "QQQ筛选用时：" & 计时过程
