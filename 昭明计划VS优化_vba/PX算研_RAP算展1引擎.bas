@@ -173,7 +173,7 @@ Function XL算展前调模板( _
     ThisWorkbook.Save
     '------------------------------------------------------------------------------------
     MSG = "算法展示引擎批处理" _
-         & vbCrLf & "运行用时：" & CInt(Timer - TT) _
+         & vbCrLf & "运行用时：" & CLng(Timer - TT) _
          & vbCrLf & "运行次数：" & 运行次数 _
          & vbCrLf & "运行列表：" _
          & vbCrLf & MSG
@@ -1672,10 +1672,11 @@ Public Sub XL算展取谕组(被研代码 As String)
     计数 = XL算展数程跨期(ARRLLL, 被研代码, , , 谕组, "T@乾坤", "W")
     If 计数 < 1 Or IsEmpty(谕组) Then Exit Sub
 
-    Dim 路径 As String
+    Dim 路径 As String, fso As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
     路径 = ThisWorkbook.Path & "\____temp\谕组\"
-    If Dir(路径, vbDirectory) = "" Then MkDir 路径
-    路径 = ThisWorkbook.Path & "\____temp\谕组\谕组_" & 被研代码 & ".csv"
+    If Not fso.FolderExists(路径) Then fso.CreateFolder 路径
+    路径 = 路径 & "谕组_" & 被研代码 & ".csv"
     Open 路径 For Output As #1
     Print #1, "主期,周涨,PR,HR,WXAB,波型,柱排周,盈提示,WXCD,ZA周,ZB周,ZC周,周龄,周键"
 
@@ -1719,11 +1720,11 @@ Public Sub XL算展取谕组批量()
         CIDL = WS花天.Cells(i, 1).Value
         If UBCID是代码(CIDL) Then Call XL算展取谕组(CIDL)
         If i Mod 500 = 0 Then
-            Debug.Print "已处理 " & i & "/" & 末行 & " 耗时:" & CInt(Timer - TT) & "秒"
+            Debug.Print "已处理 " & i & "/" & 末行 & " 耗时:" & CLng(Timer - TT) & "秒"
             DoEvents
         End If
     Next
-    MsgBox "完成！共处理 " & (末行 - 1) & " 只，耗时 " & CInt(Timer - TT) & " 秒", vbInformation
+    MsgBox "完成！共处理 " & (末行 - 1) & " 只，耗时 " & CLng(Timer - TT) & " 秒", vbInformation
 End Sub
 '########################################################################################
 '########################################################################################

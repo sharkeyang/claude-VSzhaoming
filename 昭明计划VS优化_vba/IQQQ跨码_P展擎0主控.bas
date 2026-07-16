@@ -319,7 +319,7 @@ Function IQQQ展擎主前调正程( _
         计数全息 = IQQQ跨码据擎_数程生成全息(谕组, 指定花册, 研究日期:=研究日期, 实结类型:=实结类型)
     End If
     MSG = MSG & "【QQQ全息】" & 计数全息 & vbCrLf
-    MSG = MSG & ">>QQQ全息耗时：" & CInt(Timer - TT) & vbCrLf
+    MSG = MSG & ">>QQQ全息耗时：" & CLng(Timer - TT) & vbCrLf
     '------------------------------------------------------------------------------------
     If 计数全息 = 0 Then Exit Function
 '========================================================================================
@@ -353,7 +353,7 @@ Function IQQQ展擎主前调正程( _
             TTT = Timer
             MSG = MSG & "【QQQ输出频谱】" & vbCrLf
             Call IQQQ展擎频谱输出分程(wb, 谕组, 参of筛频谱日类:=参of筛频谱日类, 实结类型:=实结类型)
-            MSG = MSG & ">>QQQ输出频谱耗时：" & CInt(Timer - TTT) & vbCrLf
+            MSG = MSG & ">>QQQ输出频谱耗时：" & CLng(Timer - TTT) & vbCrLf
     End If
     '====================================================================================
     '输出：市类
@@ -363,7 +363,7 @@ Function IQQQ展擎主前调正程( _
             TTT = Timer
             MSG = MSG & "【QQQ筛选市类】" & vbCrLf
             MSG = MSG & IQQQ展擎筛程至A2册按市类(wb, 谕组, 出章模式:=出章模式, 出节模式:=出节模式)
-            MSG = MSG & ">>QQQ输出市类耗时：" & CInt(Timer - TTT) & vbCrLf
+            MSG = MSG & ">>QQQ输出市类耗时：" & CLng(Timer - TTT) & vbCrLf
     End If
     '====================================================================================
     '输出：决策
@@ -375,7 +375,7 @@ Function IQQQ展擎主前调正程( _
             '                MSG = MSG & IQQQ展擎筛程至A2册按市类(WB, 谕组, 出节模式:=出节模式)
             '            End If
             MSG = MSG & IQQQ展擎筛程至A1册按全数据(wb, 谕组, 参of筛决策剔池:=参of筛决策剔池, 参of筛决策详表:=参of筛决策详表, 出章模式:=出章模式, 出节模式:=出节模式)
-            MSG = MSG & ">>QQQ输出决策耗时：" & CInt(Timer - TTT) & vbCrLf
+            MSG = MSG & ">>QQQ输出决策耗时：" & CLng(Timer - TTT) & vbCrLf
     End If
     '====================================================================================
     '输出：股性
@@ -384,7 +384,7 @@ Function IQQQ展擎主前调正程( _
             TTT = Timer
             MSG = MSG & "【QQQ筛选股性】" & vbCrLf
             MSG = MSG & IQQQ展擎筛程至A9册按股性(wb, 谕组, 出章模式:=出章模式, 出节模式:=出节模式)
-            MSG = MSG & ">>QQQ输出股性耗时：" & CInt(Timer - TTT) & vbCrLf
+            MSG = MSG & ">>QQQ输出股性耗时：" & CLng(Timer - TTT) & vbCrLf
     End If
     '====================================================================================
     Erase 谕组
@@ -425,7 +425,7 @@ End If
 '========================================================================================
     UTL宏工具_END
     '------------------------------------------------------------------------------------
-    MSG = MSG & ">>QQQ全部耗时：" & CInt(Timer - TT) & vbCrLf
+    MSG = MSG & ">>QQQ全部耗时：" & CLng(Timer - TT) & vbCrLf
     IQQQ展擎主前调正程 = MSG
     If 是否弹窗 = True Then
         MsgBox MSG, Title:="QQQ引擎"

@@ -735,7 +735,7 @@ End Sub
 '            'Debug.Print checkDate & " 不是交易日"
 '        End If
 '    Next
-'    Debug.Print "FIND运行时间：", CInt(Timer - TT)
+'    Debug.Print "FIND运行时间：", CLng(Timer - TT)
 '
 '
 '
@@ -749,7 +749,7 @@ End Sub
 ''            Debug.Print checkDate & " 不是交易日"
 '        End If
 '    Next
-'    Debug.Print "数组运行时间：", CInt(Timer - TT)
+'    Debug.Print "数组运行时间：", CLng(Timer - TT)
 '
 '
 '    TT = Timer
@@ -762,7 +762,7 @@ End Sub
 ''            Debug.Print checkDate & " 不是交易日"
 '        End If
 '    Next
-'    Debug.Print "字典运行时间：", CInt(Timer - TT)
+'    Debug.Print "字典运行时间：", CLng(Timer - TT)
 '
 '
 '    TT = Timer
@@ -775,7 +775,7 @@ End Sub
 '            'Debug.Print checkDate & " 不是交易日"
 '        End If
 '    Next
-'    Debug.Print "原有运行时间：", CInt(Timer - TT)
+'    Debug.Print "原有运行时间：", CLng(Timer - TT)
 '    '------------------------------------------------------------------------------------
 '    '结论：经过验证，通过【将假日装入数组】或【将交易日装入字典】，效率都高于【使用FIND函数】或【原有推理】，为了综合使用【周类与月类交易日】，所以使用【直接将日类交易日罗列】。
 '    '以下为运行效率：
