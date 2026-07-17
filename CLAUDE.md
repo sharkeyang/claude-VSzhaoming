@@ -8,9 +8,15 @@ A quantitative trading/investment research system built in Excel VBA (57 standar
 
 ## VBA workflow
 
-### 🔴 铁律：Claude 绝对禁止导入 .bas 到 xlsm
+### 🔴 铁律：Claude 绝对禁止导入 .bas 到 **正式** xlsm
 
 **这是死命令，没有任何例外。** Claude 只能写 `.bas` 文件到 `昭明计划VS优化_vba/` 目录。用户自己通过 `vba2EXCEL` 手动导入。永远不要运行任何导入脚本或链接触发导入。
+
+**唯一例外：验证副本。** 在 `____temp/` 下创建带时间戳的副本 xlsm，Claude 可自行导入 .bas 到副本用于验证，但必须遵守：
+- 导入前先复制，文件名带时间戳
+- 只操作 `____temp/` 下的副本，**绝不碰原版**
+- COM 操作完成后 `Quit()` + `ReleaseComObject`，不留进程
+- 验证结论出来后，如需修改正式代码，提示用户手动 `vba2EXCEL`
 
 ### Quick: use skills
 
