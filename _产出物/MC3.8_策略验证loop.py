@@ -37,8 +37,8 @@ def match_strategy(row):
         za = 0
     hr = float(row.get('HR', '0') or '0')
 
-    # 金系
-    if '金' in wxcd and ('甲' in wxab or '乙' in wxab or '己' in wxab):
+    # 金系（宽匹配：不限WXAB，已验证限制甲乙己不影响概率，但为获取最大覆盖使用宽匹配）
+    if '金' in wxcd:
         if zhupai.startswith('升') and '尾反孕' not in zhupai:
             if '高' in yingtishi:
                 if '龙猪' in boxing or '龙管' in boxing:
