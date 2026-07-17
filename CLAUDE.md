@@ -15,6 +15,7 @@ A quantitative trading/investment research system built in Excel VBA (57 standar
 **唯一例外：验证副本。** 在 `____temp/` 下创建带时间戳的副本 xlsm，Claude 可自行导入 .bas 到副本用于验证，但必须遵守：
 - 导入前先复制，文件名带时间戳
 - 只操作 `____temp/` 下的副本，**绝不碰原版**
+- **必须用 `win32com.client.DispatchEx` 创建独立Excel进程**，禁用 `GetActiveObject` 或 `Dispatch`
 - COM 操作完成后 `Quit()` + `ReleaseComObject`，不留进程
 - 验证结论出来后，如需修改正式代码，提示用户手动 `vba2EXCEL`
 
