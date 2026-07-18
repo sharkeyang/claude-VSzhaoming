@@ -19,6 +19,17 @@ A quantitative trading/investment research system built in Excel VBA (57 standar
 - COM 操作完成后 `Quit()` + `ReleaseComObject`，不留进程
 - 验证结论出来后，如需修改正式代码，提示用户手动 `vba2EXCEL`
 
+## 模块命名规范
+
+### 🔴 规则：PX算研_ZPY接口.bas = Python接口专属模块
+
+`PX算研_ZPY接口.bas` 是所有Python调用、COM提取、测试验证的VBA入口的**唯一存放位置**。规则：
+- 任何需要从Python调用的VBA宏（Public Sub）都放入此模块
+- 任何测试验证用的独立宏（测试_*）都放入此模块
+- 任何一次性数据提取宏（XL扫盘/XL展探/等）都放入此模块
+- 现有业务模块（神谕/筛选/算展等）中的测试宏应逐步迁移至此模块
+- 原因：隔离测试代码与业务逻辑，避免误触，便于Python统一调用
+
 ### Quick: use skills
 
 In Claude Code chat, use `/vba2VS` and `/vba2EXCEL`. These skills handle Excel lifecycle (save/quit via COM), temp dir cleanup, and file sync automatically.
