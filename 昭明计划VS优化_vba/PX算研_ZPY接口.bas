@@ -1,3 +1,4 @@
+Attribute VB_Name = "PX算研_ZPY接口"
 '========================================================================================
 ' PX算研_ZPY接口 — Python接口模块
 '========================================================================================
@@ -14,8 +15,8 @@
 '   ZPY_概率表_验证加载()           — 验证照明概率.txt加载正确性
 '   ZPY_策略匹配_模拟(...)         — 模拟一只股票的周冲策略匹配
 '   ZPY_概率表_调试加载()        — 逐行显示概率表加载过程
+'   ZPY_批量算展()               — 批量生成算展Excel用于验证（读取stocks.txt）
 '========================================================================================
-Attribute VB_Name = "PX算研_ZPY接口"
 Option Explicit
 
 '======================================================================================== (2026-07-17)
@@ -130,10 +131,10 @@ Public Sub ZPY_概率表_验证加载()
     Dim 测试项 As Variant
     测试项 = Array( _
         Array("全量基准", "Qd", 28.6), _
-        Array("金+多长", "Qif", 65.0), _
+        Array("金+多长", "Qif", 65#), _
         Array("金+多长+升排+非孕", "Qimit", 91.4), _
         Array("银+盈提示有", "Qin", 86.4), _
-        Array("金最优(全部)", "Qe", 100.0))
+        Array("金最优(全部)", "Qe", 100#))
 
     Dim i As Integer, 策略 As String, 市板 As String, 期望 As Double, 实际 As Double
     Dim 全部正确 As Boolean: 全部正确 = True
@@ -142,16 +143,16 @@ Public Sub ZPY_概率表_验证加载()
         策略 = 测试项(i)(0): 市板 = 测试项(i)(1): 期望 = 测试项(i)(2)
         实际 = 查概率表(策略, 市板)
         If 实际 = 期望 Then
-            Debug.Print "✅ " & 策略 & " | " & 市板 & " = " & 实际
+            Debug.Print "? " & 策略 & " | " & 市板 & " = " & 实际
         Else
-            Debug.Print "❌ " & 策略 & " | " & 市板 & " = " & 实际 & " (期望 " & 期望 & ")"
+            Debug.Print "? " & 策略 & " | " & 市板 & " = " & 实际 & " (期望 " & 期望 & ")"
             全部正确 = False
         End If
     Next
     If 全部正确 Then
-        MsgBox "查概率表 测试通过 ✅", vbInformation
+        MsgBox "查概率表 测试通过 ?", vbInformation
     Else
-        MsgBox "查概率表 测试失败 ❌", vbExclamation
+        MsgBox "查概率表 测试失败 ?", vbExclamation
     End If
 End Sub
 
@@ -191,19 +192,28 @@ Public Sub ZPY_策略匹配_模拟(Optional WXCD As String = "金", _
             If InStr(周盈提, "高") > 0 Then
                 If InStr(周波型, "龙猪") > 0 Or InStr(周波型, "龙管") > 0 Then
                     周策略 = "金最优(全部)"
-                Else: 周策略 = "金+多长+升排+非孕+盈高"
+                Else
+                    周策略 = "金+多长+升排+非孕+盈高"
                 End If
-            Else: 周策略 = "金+多长+升排+非孕"
+            Else
+                周策略 = "金+多长+升排+非孕"
             End If
-        ElseIf Left$(周柱排, 1) = "升" Then: 周策略 = "金+多长+升排"
-        Else: 周策略 = "金+多长"
+        ElseIf Left$(周柱排, 1) = "升" Then
+            周策略 = "金+多长+升排"
+        Else
+            周策略 = "金+多长"
         End If
     ElseIf InStr(周局, "银") > 0 Then
-        If InStr(周盈提, "高") > 0 Or InStr(周盈提, "宽") > 0 Then: 周策略 = "银+盈提示有"
-        ElseIf InStr(周护, "己") > 0 Then: 周策略 = "银+WXAB=己"
-        ElseIf Left$(周柱排, 1) = "升" Then: 周策略 = "银+柱排=升"
-        ElseIf InStr(周波型, "龙猪") > 0 Then: 周策略 = "银+龙猪"
-        ElseIf 周ZA > 5 And 周ZA <= 10 Then: 周策略 = "银+ZA5~10"
+        If InStr(周盈提, "高") > 0 Or InStr(周盈提, "宽") > 0 Then
+            周策略 = "银+盈提示有"
+        ElseIf InStr(周护, "己") > 0 Then
+            周策略 = "银+WXAB=己"
+        ElseIf Left$(周柱排, 1) = "升" Then
+            周策略 = "银+柱排=升"
+        ElseIf InStr(周波型, "龙猪") > 0 Then
+            周策略 = "银+龙猪"
+        ElseIf 周ZA > 5 And 周ZA <= 10 Then
+            周策略 = "银+ZA5~10"
         End If
     End If
 
@@ -237,20 +247,87 @@ Public Sub ZPY_概率表_调试加载()
     文件号 = FreeFile
     On Error GoTo 文件错误
     Open "D:\zdata\照明概率.txt" For Input As #文件号
-    Debug.Print "✅ 文件打开成功"
+    Debug.Print "? 文件打开成功"
     Line Input #文件号, 行内容: 头字段 = Split(行内容, vbTab)
-    Debug.Print "✅ 表头(" & UBound(头字段) + 1 & "列): " & 行内容
+    Debug.Print "? 表头(" & UBound(头字段) + 1 & "列): " & 行内容
     行数 = 0
     Do While Not EOF(文件号)
         Line Input #文件号, 行内容: 行数 = 行数 + 1
         字段 = Split(行内容, vbTab)
         If 行数 <= 3 Then Debug.Print "  行" & 行数 & ": " & 字段(0) & "|" & 字段(1)
     Loop
-    Close #文件号: Debug.Print "✅ 共 " & 行数 & " 行数据"
-    Debug.Print "✅ 查概率表(""全量基准"",""Qd"") = " & 查概率表("全量基准", "Qd")
+    Close #文件号: Debug.Print "? 共 " & 行数 & " 行数据"
+    Debug.Print "? 查概率表(""全量基准"",""Qd"") = " & 查概率表("全量基准", "Qd")
     Exit Sub
 文件错误:
-    Debug.Print "❌ " & Err.Description & " 路径: D:\zdata\照明概率.txt"
+    Debug.Print "? " & Err.Description & " 路径: D:\zdata\照明概率.txt"
+End Sub
+
+'======================================================================================== (2026-07-18)
+' ZPY_批量算展 — 批量生成算展Excel用于验证
+'========================================================================================
+' 读取 D:\@VSwork\VS昭明计划VBA优化\昭明算展\算展0718\stocks.txt
+' 对每只股票调用XL算展生成_单股生成算展xlsx，输出到 算展0718\
+' 调用：Alt+F8 → ZPY_批量算展 → 运行
+' 进度：VBA立即窗口(Ctrl+G)查看
+'========================================================================================
+Public Sub ZPY_批量算展()
+    Dim 路径 As String, 行内容 As String, 文件号 As Integer
+    Dim 字段 As Variant, 代码 As String, 名称 As String, 市板 As String
+    Dim 计数成功 As Long, 计数失败 As Long
+    Dim 输出目录 As String
+
+    输出目录 = ThisWorkbook.Path & "\昭明算展\算展0718\"
+    路径 = 输出目录 & "stocks.txt"
+
+    Dim FSO As Object
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    If Not FSO.FolderExists(输出目录) Then FSO.CreateFolder 输出目录
+    If Not FSO.FileExists(路径) Then
+        MsgBox "找不到股票列表: " & 路径, vbCritical, "错误"
+        Exit Sub
+    End If
+
+    文件号 = FreeFile
+    Open 路径 For Input As #文件号
+    Do While Not EOF(文件号)
+        Line Input #文件号, 行内容: 行内容 = Trim(行内容)
+        If Len(行内容) = 0 Then GoTo 下一行
+        If Left$(行内容, 1) = "#" Or Left$(行内容, 1) = "[" Then GoTo 下一行
+        字段 = Split(行内容, ",")
+        If UBound(字段) < 1 Then GoTo 下一行
+        代码 = Trim(字段(1))
+        If UBound(字段) >= 2 Then 名称 = Trim(字段(2))
+        Debug.Print "[" & Trim(字段(0)) & "] " & 代码 & " " & 名称
+
+        On Error Resume Next
+        Call XL算展生成_单股(代码)
+        If Err.Number = 0 Then
+            计数成功 = 计数成功 + 1: Debug.Print "  OK"
+        Else
+            Err.Clear
+            Dim 源路径 As String
+            源路径 = ThisWorkbook.Path & "\昭明算展\算展." & 代码 & ".xlsx"
+            If FSO.FileExists(源路径) Then
+                计数成功 = 计数成功 + 1
+            Else
+                计数失败 = 计数失败 + 1: Debug.Print "  SKIP (无数据)"
+                GoTo 下一行
+            End If
+        End If
+        On Error GoTo 0
+
+        源路径 = ThisWorkbook.Path & "\昭明算展\算展." & 代码 & ".xlsx"
+        Dim 目标路径 As String
+        目标路径 = 输出目录 & "算展." & 代码 & ".xlsx"
+        If FSO.FileExists(源路径) Then
+            If FSO.FileExists(目标路径) Then FSO.DeleteFile 目标路径
+            FSO.MoveFile 源路径, 目标路径
+        End If
+下一行:
+    Loop
+    Close #文件号
+    MsgBox "批量算展完成!" & vbCrLf & "成功: " & 计数成功 & vbCrLf & "失败: " & 计数失败 & vbCrLf & "输出: " & 输出目录, vbInformation, "完成"
 End Sub
 
 '========================================================================================

@@ -106,10 +106,9 @@ Public Const 位谕of周层盈丘幅 = 位谕始of族周层 + 8      'WJC丘根�
 Public Const 位谕of周层盈顶幅 = 位谕始of族周层 + 9
 Public Const 位谕of周层盈提示 = 位谕始of族周层 + 10
 '衔接日类：形成周日联动
-Public Const 位谕of周层猪操作 = 位谕始of族周层 + 11      '【下周冲高专项机会】
-Public Const 位谕of周层下柱冲高提示 = 位谕始of族周层 + 12      '【下周冲高专项机会】
-Public Const 位谕of周层大局 = 位谕始of族周层 + 13
-Public Const 位谕终of族周层 = 位谕始of族周层 + 13
+Public Const 位谕of周层猪操作 = 位谕始of族周层 + 11      '月基策略的日线操作指示（长多基仓/浮仓/减仓/清仓）
+Public Const 位谕of周层大局 = 位谕始of族周层 + 12
+Public Const 位谕终of族周层 = 位谕始of族周层 + 12
 '----------------------------------------------------------------------------------------
 '----------------------------------------------------------------------------------------
 '指标群：日类乾坤体系
@@ -399,8 +398,7 @@ Public Const 位谕of月道奏启 = 位谕始of族月类 + 12
 Public Const 位谕of月道奏数交BC = 位谕始of族月类 + 13
 Public Const 位谕of月道奏数BC叉BA = 位谕始of族月类 + 14
 Public Const 位谕of月基月局 = 位谕始of族月类 + 15
-Public Const 位谕of月基退警 = 位谕始of族月类 + 16      '月基退出预警：0=正常, 1=刚转负, 2=已下破（基于WXZB）
-Public Const 位谕终of族月类 = 位谕of月基退警
+Public Const 位谕终of族月类 = 位谕of月基月局
 '----------------------------------------------------------------------------------------
 '----------------------------------------------------------------------------------------
 '指标群：族均
@@ -460,18 +458,25 @@ Public Const 位谕终of族月均 = 位谕of月类占位
 '----------------------------------------------------------------------------------------
 'AI冲高信号列（在神谕列尾新增）
 '四域体系（列尾新增）
-Public Const 位谕of周层四域 = 位谕终of族月均 + 1
-Public Const 位谕of日层四域 = 位谕终of族月均 + 2
-Public Const 位谕of日层段 = 位谕终of族月均 + 3
-Public Const 位谕of日层机警 = 位谕终of族月均 + 4
-Public Const 位谕of策传 = 位谕终of族月均 + 8      '策传综合信息，供Python读取
+Public Const 位谕始of族策 = 位谕终of族月均 + 1
+'--- 策传 ---
+Public Const 位谕of策传 = 位谕始of族策 + 0      '策传综合信息，供Python读取
+'-----------
+Public Const 位谕of周层四域 = 位谕始of族策 + 1
+Public Const 位谕of日层四域 = 位谕始of族策 + 2
+Public Const 位谕of日层段 = 位谕始of族策 + 3
+Public Const 位谕of日层机警 = 位谕始of族策 + 4
 '--- 月基调 ---
-Public Const 位谕of月基策略 = 位谕终of族月均 + 12     '月基策略: 分类(不符合/长被/WXZB<0/积极区/消极区/不确定区)
-Public Const 位谕of月基策分 = 位谕终of族月均 + 13     '月基策分: 股性分(0~100)
+Public Const 位谕of月基策略 = 位谕始of族策 + 5     '月基策略: 分类(不符合/长被/WXZB<0/积极区/消极区/不确定区)
+Public Const 位谕of月基策分 = 位谕始of族策 + 6     '月基策分: 股性分(0~100)
+Public Const 位谕of月基退警 = 位谕始of族策 + 7      '月基状态：11双好/10反险/01正潜/00双差（WXAB→WXCD双向带动）
 '--- 周冲系 ---
-Public Const 位谕of周冲策略 = 位谕终of族月均 + 10     '周冲策略: 匹配的策略名(如"金+多长+升排+非孕")
-Public Const 位谕of周冲策分 = 位谕终of族月均 + 11     '周冲策分: 冲高概率(P>=3%)
-Public Const 位谕列终全部 = 位谕of月基策分
+Public Const 位谕of周冲策略 = 位谕始of族策 + 8     '周冲策略: 匹配的策略名(如"金+多长+升排+非孕")
+Public Const 位谕of周冲策分 = 位谕始of族策 + 9     '周冲策分: 冲高概率(P>=3%)
+Public Const 位谕终of族策 = 位谕of周冲策分
+'----------------------------------------------------------------------------------------
+Public Const 位谕列终全部 = 位谕终of族策
+'----------------------------------------------------------------------------------------
 
 
 
@@ -968,17 +973,25 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             '============================================================================
             值月基月局 = 组结算(X, 基位月类 + 位os局ZABC)
             谕组(X, 位谕of月基月局) = 值月基月局
-            'WXZB退出预警：0=正常(WXZB>0), 1=刚转负(由>0转≤0), 2=已下破(WXZB≤0持续)
-            If 周类BTZB > 0 Then
-                谕组(X, 位谕of月基退警) = 0    '正常持有
-            ElseIf X > LBound(组结算, 1) Then    '非首行，检查是否刚转负
-                If 组结算(X - 1, 基位周类 + 位osBTZB) > 0 Then
-                    谕组(X, 位谕of月基退警) = 1    '刚转负，最强预警
-                Else
-                    谕组(X, 位谕of月基退警) = 2    '已下破持续
-                End If
+            '月基状态：WXAB→WXCD双向带动（全量7463只验证）
+            '   11双好 = WXAB正+WXCD好  安全持有
+            '   10反险 = WXAB负+WXCD好  反向风险81.6% ⚠️
+            '   01正潜 = WXAB正+WXCD差  正向潜力61.1%
+            '   00双差 = WXAB负+WXCD差  不参与
+            Dim 周局 As String: 周局 = 谕组(X, 位谕of周层大局)
+            Dim 周护 As String: 周护 = 谕组(X, 位谕of周层护型)
+            Dim WXCD好 As Boolean: WXCD好 = (InStr(周局, "金") + InStr(周局, "银") > 0)
+            Dim WXCD差 As Boolean: WXCD差 = (InStr(周局, "屎") + InStr(周局, "尿") + InStr(周局, "唏") + InStr(周局, "嘘") > 0)
+            Dim WXAB正 As Boolean: WXAB正 = (InStr(周护, "甲") + InStr(周护, "乙") + InStr(周护, "己") > 0)
+            Dim WXAB负 As Boolean: WXAB负 = (InStr(周护, "丙") + InStr(周护, "丁") + InStr(周护, "戊") > 0)
+            If WXAB正 And WXCD好 Then
+                谕组(X, 位谕of月基退警) = "11双好"
+            ElseIf WXAB负 And WXCD好 Then
+                谕组(X, 位谕of月基退警) = "10反险"
+            ElseIf WXAB正 And WXCD差 Then
+                谕组(X, 位谕of月基退警) = "01正潜"
             Else
-                谕组(X, 位谕of月基退警) = 2        '首行且WXZB≤0
+                谕组(X, 位谕of月基退警) = "00双差"
             End If
             '============================================================================
             '周类六局
@@ -2685,53 +2698,6 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
 '########################################################################################
 '########################################################################################
             '============================================================================
-            '设置：位谕of周层下柱冲高提示
-            '核心原则：只买阴柱
-            '时间：L（上周已经出现的信号：本周123可买）__（本周期望出现的信号：本周345可买）
-            '类型：阴（单柱下跌）低（负向偏离较大）连（连续下跌）
-            '============================================================================
-                谕组(X, 位谕of周层下柱冲高提示) = ""
-                '========================================================================
-                '按【护丘WXAB】找出适合下周冲高的情况：逐步增加确定性高的情况。
-                '有助于下周冲高的因素：
-                '   ①月局限制：/A7/A3/B1/B0
-                '   ②顶型限制：只选取/龙a/龙b
-                '   ③柱排限制（防止诱多）：/是否为贯/是否WTZA≥3（刚下破WJA后不容易马上进入主升）/是否为升排
-                '无助于下周冲高的因素：/不要偏离较大/不要小于WJA/不要刚上破WJA
-                '========================================================================
-                If InStr(谕组(X, 位谕of周层三鳄), "金") > 0 Then
-                    If InStr(谕组(X, 位谕of周层护型), "甲") > 0 _
-                    Or InStr(谕组(X, 位谕of周层护型), "乙") > 0 _
-                    Or InStr(谕组(X, 位谕of周层护型), "己") > 0 _
-                    Then
-                            If InStr(谕组(X, 位谕of周层波型), "龙") > 0 Then
-                                '----------------------------------------------------------------
-                                '顶型限制
-                                '----------------------------------------------------------------
-                                If InStr(谕组(X, 位谕of周层波型), "龙猪") > 0 Then
-                                        谕组(X, 位谕of周层下柱冲高提示) = Left$(谕组(X, 位谕of周道月势), 3) & "_" & "龙猪"
-                                Else
-                                        谕组(X, 位谕of周层下柱冲高提示) = Left$(谕组(X, 位谕of周道月势), 3) & "_" & "龙管"
-                                End If
-                                '----------------------------------------------------------------
-                                '柱排限制
-                                '注20251212。代表方向的信息包含两部分：一部分是前面WXZA信息“ABMX”，代表是否脱离WJJA，另外为是否频繁贯穿WJA“贯”；另一部分是当WTZA≥2时，看柱排是否“WJA向上”“WJA回归”。
-                                '----------------------------------------------------------------
-                                '代表WJA之上的方向，仅针对WTZA≥2时进行提示。
-                                If InStr(谕组(X, 位谕of周层护型), "冲") > 0 Then
-                                        谕组(X, 位谕of周层下柱冲高提示) = 谕组(X, 位谕of周层下柱冲高提示) & ".冲"
-                                ElseIf InStr(谕组(X, 位谕of周层护型), "警") > 0 Then
-                                        谕组(X, 位谕of周层下柱冲高提示) = 谕组(X, 位谕of周层下柱冲高提示) & ".警"
-                                End If
-                                '代表是否频繁贯穿WJA。
-                                If InStr(谕组(X, 位谕of周层护型), "暂") > 0 Then
-                                        谕组(X, 位谕of周层下柱冲高提示) = 谕组(X, 位谕of周层下柱冲高提示) & ".暂"
-                                End If
-                                '----------------------------------------------------------------
-                            End If
-                    End If
-                End If
-            '============================================================================
             '设置本周可平信号：根据竖机指示（只在周阴柱加仓）
             '字典：开头L代表上周信息；开头T代表本周信息
             '醍醐灌顶20220327：只针对上升趋势中阴柱进行适当加仓，一旦出坑就平掉，保持恒定仓位（除非出现大涨顶部，此刻也不要完全清仓）
@@ -2741,7 +2707,7 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
 '                    '【原逻辑保留】上周存在机会
 '                    '注20250522：每周期望高幅为3%。
 '                    '--------------------------------------------------------------------
-'                    If InStr(谕组(X, 位谕of周层下柱冲高提示), "冲") > 0 Then
+'                    'End If
 '                            If VBA.IsNumeric(谕组(X, 位谕of周波临涨幅)) = False Then
 '                            ElseIf 谕组(X, 位谕of周波临高幅) >= 3 Then
 '                                If 谕组(X, 位谕of周波临涨幅) >= 3 Then
@@ -2850,7 +2816,7 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             End If
             '============================================================================
             '基本分类（DJEDC之上仓位状态）
-            谕组(X, 位谕of日层段) = ""
+            谕组(X, 位谕of日层段) = "NA"
             If 日类BTZE > 0 Then
                 If 日类BTZC <= 0 Then
                     谕组(X, 位谕of日层段) = "卖浮"
@@ -2893,7 +2859,7 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             程策传_机阱 = 程策传_机阱 & " 涨幅=" & CStr(谕组(X, 位谕of周波今涨幅))
 
             '积木⑤：冲高信号
-            程策传_冲高 = "周冲=" & 谕组(X, 位谕of周层下柱冲高提示)
+            程策传_冲高 = "周冲策略=" & 谕组(X, 位谕of周冲策略) & " 策分=" & 谕组(X, 位谕of周冲策分)
             程策传_冲高 = 程策传_冲高 & " 临涨=" & CStr(谕组(X, 位谕of周波临涨幅))
             程策传_冲高 = 程策传_冲高 & " 周层局=" & 谕组(X, 位谕of周层大局)
 
@@ -3372,8 +3338,17 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
 '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 '策分: 周浮仓评分 (0~100), 基于真高幅回测数据
 '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    '策分: 概率即分数 — 匹配策略 + 查概率表
+    '注2026-07-18 全量7463只验证：WXAB等级质量排名
+'   乙(89.0%) > 甲(76.3%) > 丙(56.6%) > 己(28.1%) > 戊(2.9%)
+'   双向带动：正向(丙丁戊→甲乙己)=61.1%  反向(甲乙己→丙丁戊)=81.6%
+'策分: 概率即分数 — 匹配策略 + 查概率表
     '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    周局 = 谕组(X, 位谕of周层大局)
+    周护 = 谕组(X, 位谕of周层护型)
+    Dim 周ZA As Double: 周ZA = 谕组(X, 位谕of周类BTZA)
+    Dim 周柱排 As String: 周柱排 = 谕组(X, 位谕of周层柱排)
+    Dim 周盈提 As String: 周盈提 = 谕组(X, 位谕of周层盈提示)
+    Dim 周波型 As String: 周波型 = 谕组(X, 位谕of周层波型)
     Dim 周策略 As String: 周策略 = ""
     Dim 周市板 As String: 周市板 = 谕组(X, 位qt市板)
     ' 市板为空时，从花册单行查询
@@ -3789,7 +3764,7 @@ End Function
 '                End If
 '                '是否提示机
 '                If InStr(谕组(X, 位谕of周层柱型), "机") > 0 Then
-'                    程具周层段芽 = 程具周层段芽 & "提示机：" & "[" & 谕组(X, 位谕of周层下柱冲高提示) & "]"
+'                    程具周层段芽 = 程具周层段芽 & "提示机：" & "[" & "XXX" & "]          'TODO 原引用下柱冲高提示已删
 '                    程具周层段芽 = 程具周层段芽 & " 操作[" & 谕组(X, 位谕of周层猪操作) & "]"
 '                    程具周层段芽 = 程具周层段芽 & vbCrLf
 '                End If
@@ -5258,7 +5233,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of周层波型) = "波型（猪震）" & vbCrLf & "周"
         .Cells(1, 位谕of周层柱型) = "柱型WJA" & vbCrLf & "周"
         .Cells(1, 位谕of周层柱排) = "柱排" & vbCrLf & "周"
-        .Cells(1, 位谕of周层下柱冲高提示) = "下柱冲高提示" & vbCrLf & "下周"
         .Cells(1, 位谕of周层猪操作) = "猪操做" & vbCrLf & "下周"
         .Cells(1, 位谕of周层盈提示) = "盈提示" & vbCrLf & "周"
         .Cells(1, 位谕of周层盈顶幅) = "△顶幅" & vbCrLf & "周"
@@ -5296,7 +5270,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周层盈丘幅).Interior.TintAndShade = -0.5
         .Columns(位谕of周层盈顶幅).Interior.TintAndShade = -0.6
         .Columns(位谕of周层猪操作).Interior.TintAndShade = -0.3
-        .Columns(位谕of周层下柱冲高提示).Interior.TintAndShade = -0.2
         .Columns(位谕of周层盈提示).Interior.TintAndShade = -0.1
     End With
     '------------------------------------------------------------------------------------
@@ -5312,8 +5285,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周层护型).ColumnWidth = 10
         .Columns(位谕of周层柱型).ColumnWidth = 12
         .Columns(位谕of周层柱排).ColumnWidth = 11.5
-        .Columns(位谕of周层下柱冲高提示).ColumnWidth = 10
-        .Columns(位谕of周层猪操作).ColumnWidth = 10
+        .Columns(位谕of周层猪操作).ColumnWidth = 11
         .Columns(位谕of周层盈顶幅).ColumnWidth = 3.5
         .Columns(位谕of周层盈顶幅).HorizontalAlignment = xlRight
         .Columns(位谕of周层盈丘幅).ColumnWidth = 3.5
@@ -5328,7 +5300,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周层类合).Hidden = True
         .Columns(位谕of周层盈顶幅).Hidden = True
         .Columns(位谕of周层柱排).Hidden = True
-'        .Columns(位谕of周层波型).Hidden = True
+        .Columns(位谕of周层波型).Hidden = True
         .Columns(位谕of周层界).Hidden = True
     End With
 '========================================================================================
@@ -6510,7 +6482,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of月道奏数交BC) = "#BC交"
         .Cells(1, 位谕of月道奏数BC叉BA) = "#BA" & vbCrLf & "上BC"
         .Cells(1, 位谕of月基月局) = "月局" & vbCrLf & "月"
-        .Cells(1, 位谕of月基退警) = "退警" & vbCrLf & "月"
     End With
     '------------------------------------------------------------------------------------
     '列：边框
@@ -6565,8 +6536,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of月道尊比柱).HorizontalAlignment = xlLeft
         .Columns(位谕of月基月局).ColumnWidth = 3
         .Columns(位谕of月基月局).HorizontalAlignment = xlCenter
-        .Columns(位谕of月基退警).ColumnWidth = 3
-        .Columns(位谕of月基退警).HorizontalAlignment = xlCenter
         .Columns(位谕of月道奏数交BC).ColumnWidth = 4
         .Columns(位谕of月道奏启).ColumnWidth = 5
         .Columns(位谕of月道奏启).HorizontalAlignment = xlLeft
@@ -6600,12 +6569,12 @@ Function IQQQ跨码展擎_按列神谕区域( _
     With WS.Cells(基行, 基列)
         .Cells(1, 位谕列终全部) = "占位"
         'AI冲高信号列
-        .Cells(1, 位谕of策日浮仓) = "策日浮仓"
         .Cells(1, 位谕of策传) = "策传"
         .Cells(1, 位谕of周冲策略) = "周冲策略"
         .Cells(1, 位谕of周冲策分) = "周冲策分"
         .Cells(1, 位谕of月基策略) = "月基策略"
         .Cells(1, 位谕of月基策分) = "月基策分"
+        .Cells(1, 位谕of月基退警) = "月基带动"
         '四域列
         .Cells(1, 位谕of周层四域) = "四域周"
         .Cells(1, 位谕of日层四域) = "四域日"
@@ -6615,32 +6584,39 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '------------------------------------------------------------------------------------
     '列：配色
     '------------------------------------------------------------------------------------
-'    With WS.Cells(基行, 基列).Cells(1, 位谕始of族周波).Resize(1, 位谕终of族周波 - 位谕始of族周波 + 1).EntireColumn
-'        .Interior.Color = 常色八灰
-'        .HorizontalAlignment = xlRight
-'        .NumberFormatLocal = "0_);[蓝色](0)"
-'        .Font.Size = 9
-'    End With
+    With WS.Cells(基行, 基列).Cells(1, 位谕始of族策).Resize(1, 位谕终of族策 - 位谕始of族策 + 1).EntireColumn
+        .Interior.Color = 常色八灰
+        .HorizontalAlignment = xlRight
+        .NumberFormatLocal = "0_);[蓝色](0)"
+        .Font.Size = 9
+    End With
     With WS.Columns(基列)
-        .Columns(位谕of策日浮仓).Interior.TintAndShade = 0.1
+        .Columns(位谕of周层四域).Interior.TintAndShade = -0.1
+        .Columns(位谕of日层四域).Interior.TintAndShade = -0.2
+        .Columns(位谕of日层段).Interior.TintAndShade = -0.4
+        .Columns(位谕of日层机警).Interior.TintAndShade = -0.5
+        .Columns(位谕of策传).Interior.Color = 常色四灰
+        
+        .Columns(位谕of月基策略).Interior.Color = 常色四青
+        .Columns(位谕of月基策分).Interior.Color = 常色五青
+        .Columns(位谕of月基退警).Interior.Color = 常色五青
+        .Columns(位谕of周冲策略).Interior.Color = 常色四靛
+        .Columns(位谕of周冲策分).Interior.Color = 常色五靛
     End With
     '------------------------------------------------------------------------------------
     '列：列宽
     '------------------------------------------------------------------------------------
     With WS.Columns(基列)
-        .Columns(位谕of策日浮仓).ColumnWidth = 4
-        .Columns(位谕of周冲策略).ColumnWidth = 20
-        .Columns(位谕of周冲策分).ColumnWidth = 4
-        .Columns(位谕of周冲策分).HorizontalAlignment = xlRight
-        .Columns(位谕of周冲策分).NumberFormatLocal = "0"
-        .Columns(位谕of月基策略).ColumnWidth = 10
-        .Columns(位谕of月基策分).ColumnWidth = 4
-        .Columns(位谕of月基策分).HorizontalAlignment = xlRight
-        .Columns(位谕of月基策分).NumberFormatLocal = "0.0"
         .Columns(位谕of周层四域).ColumnWidth = 4
         .Columns(位谕of日层四域).ColumnWidth = 4
         .Columns(位谕of日层段).ColumnWidth = 4
         .Columns(位谕of日层机警).ColumnWidth = 8
+        .Columns(位谕of月基策略).ColumnWidth = 10
+        .Columns(位谕of月基策分).ColumnWidth = 4
+        .Columns(位谕of月基退警).ColumnWidth = 6
+        .Columns(位谕of月基退警).HorizontalAlignment = xlCenter
+        .Columns(位谕of周冲策略).ColumnWidth = 20
+        .Columns(位谕of周冲策分).ColumnWidth = 4
     End With
     '------------------------------------------------------------------------------------
     '列：显示

@@ -1672,10 +1672,10 @@ Public Sub XL算展取谕组(被研代码 As String)
     计数 = XL算展数程跨期(ARRLLL, 被研代码, , , 谕组, "T@乾坤", "W")
     If 计数 < 1 Or IsEmpty(谕组) Then Exit Sub
 
-    Dim 路径 As String, fso As Object
-    Set fso = CreateObject("Scripting.FileSystemObject")
+    Dim 路径 As String, FSO As Object
+    Set FSO = CreateObject("Scripting.FileSystemObject")
     路径 = ThisWorkbook.Path & "\____temp\谕组\"
-    If Not fso.FolderExists(路径) Then fso.CreateFolder 路径
+    If Not FSO.FolderExists(路径) Then FSO.CreateFolder 路径
     路径 = 路径 & "谕组_" & 被研代码 & ".csv"
     Open 路径 For Output As #1
     Print #1, "主期,周涨,PR,HR,WXAB,波型,柱排周,盈提示,WXCD,ZA周,ZB周,ZC周,周龄,周键"
@@ -1733,9 +1733,9 @@ End Sub
 '########################################################################################
 
 
-' === tmpGen: 批量生成算展(单代码), 2026-07-09 ===
-' excel.Application.Run("tmpGen", "sz159864")
-Public Sub tmpGen(ByVal 被研代码 As String)
+' === XL算展生成_单股: 批量生成算展(单代码), 2026-07-09 ===
+' excel.Application.Run("XL算展生成_单股", "sz159864")
+Public Sub XL算展生成_单股(ByVal 被研代码 As String)
     Dim ARRLLL As Variant, 谕组 As Variant
     Dim 计数 As Integer
     计数 = XL算展数程跨期(ARRLLL, 被研代码, , , 谕组, "T@乾坤", "W")

@@ -226,7 +226,7 @@ Function IQQQ跨码展擎_按列QT区域( _
         .Columns(位qt概念).ColumnWidth = 8
         .Columns(位qt今时).ColumnWidth = 6
         .Columns(位qt今期).ColumnWidth = 9
-        .Columns(位qt市板).ColumnWidth = 2
+        .Columns(位qt市板).ColumnWidth = 3
         .Columns(位qt今池).ColumnWidth = 2
         .Columns(位qt仓主).ColumnWidth = 2
         .Columns(位qt仓周).ColumnWidth = 2
@@ -244,6 +244,7 @@ Function IQQQ跨码展擎_按列QT区域( _
         .Columns(位qt今涨幅).Hidden = False
         .Columns(位qt量比).Hidden = False
         .Columns(位qt换手).Hidden = False
+        .Columns(位qt市板).Hidden = False
         '.Columns(位qt行业).Hidden = False
         .Columns(位qt仓周).Hidden = False
         If WS.Name = 常池名金 Then
@@ -685,24 +686,8 @@ End If
                         '-----------------------------------------------
                 End If
                 '========================================================================
-                '标注：按值配色
-                '========================================================================
-                        '特殊操作：买阴下周冲高
-                        With .Cells(1, 位谕of周层下柱冲高提示)
-                                If InStr(.Value, "冲") > 0 Then
-                                    .Font.Color = 常色主黑
-                                ElseIf InStr(.Value, "待") > 0 Then
-                                    .Font.Color = 常色主黑
-                                ElseIf Len(.Value) <> 0 Then
-                                    .Font.Color = 常色主黑
-                                End If
-                        End With
-                        With .Cells(1, 位谕of周层猪操作)
-                                If Left$(.Value, 1) = "冲" Then
-                                    .Font.Color = 常色六黄
-                                End If
-                        End With
-                '========================================================================
+        '标注：按值配色
+        '========================================================================
         End With
         '================================================================================
 '########################################################################################

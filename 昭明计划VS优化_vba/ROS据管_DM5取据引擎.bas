@@ -605,7 +605,7 @@ Function STBASE取据引擎查时戳由外库( _
     Dim FileNum As Integer
     FileNum = FreeFile()
     Open 指定路径 For Input As #FileNum
-    Do While Not EOF(1)
+    Do While Not EOF(FileNum)
         '--------------------------------------------------------------------------------
         Line Input #FileNum, sLINE
         If UTL数据转换_串2组4CSV(aLINE, sLINE) > 0 Then
@@ -771,7 +771,7 @@ Function STBASE取据引擎_工具取据由外库( _
     Dim FileNum As Integer
     FileNum = FreeFile()
     Open 指定路径 For Input As #FileNum
-    Do While Not EOF(1)
+    Do While Not EOF(FileNum)
         Line Input #FileNum, sLINE
         读入计数 = 读入计数 + 1
     Loop
@@ -788,7 +788,7 @@ Function STBASE取据引擎_工具取据由外库( _
     读入计数 = 0
     FileNum = FreeFile()
     Open 指定路径 For Input As #FileNum
-    Do While Not EOF(1)
+    Do While Not EOF(FileNum)
         '--------------------------------------------------------------------------------
         Line Input #FileNum, sLINE
         读入计数 = 读入计数 + 1

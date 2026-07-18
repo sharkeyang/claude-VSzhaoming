@@ -112,7 +112,7 @@ Private Sub 测试_UTL数据转换_串2组4腾历()
     Dim FileNum
     FileNum = FreeFile()
     Open 指定路径 For Input As #FileNum
-    Do While Not EOF(1)
+    Do While Not EOF(FileNum)
         Line Input #FileNum, sLINE
         读入行号 = 读入行号 + 1
         If 读入行号 = 4 Then Exit Do
