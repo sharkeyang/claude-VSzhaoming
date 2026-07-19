@@ -267,26 +267,25 @@ End Sub
 ' ZPY_批量算展 — 批量生成算展Excel用于验证
 '========================================================================================
 ' 读取 D:\@VSwork\VS昭明计划VBA优化\昭明算展\算展0718\stocks.txt
-' 对每只股票调用XL算展生成_单股生成算展xlsx，输出到 算展0718\
+' 每市板50只，已有则跳过，无则生成，确保每市板50只
 ' 调用：Alt+F8 → ZPY_批量算展 → 运行
-' 进度：VBA立即窗口(Ctrl+G)查看
+' 进度：Excel状态栏查看
 '========================================================================================
 Public Sub ZPY_批量算展()
-    Dim 路径 As String, 行内容 As String, 文件号 As Integer
-    Dim 字段 As Variant, 代码 As String, 名称 As String, 市板 As String
-    Dim 计数成功 As Long, 计数失败 As Long
     Dim 输出目录 As String
-
     输出目录 = ThisWorkbook.Path & "\昭明算展\算展0718\"
-    路径 = 输出目录 & "stocks.txt"
 
     Dim FSO As Object
     Set FSO = CreateObject("Scripting.FileSystemObject")
     If Not FSO.FolderExists(输出目录) Then FSO.CreateFolder 输出目录
-    If Not FSO.FileExists(路径) Then
-        MsgBox "找不到股票列表: " & 路径, vbCritical, "错误"
-        Exit Sub
-    End If
+
+    ' 读取stocks.txt到字典
+    Dim 路径 As String: 路径 = 输出目录 & "stocks.txt"
+    If Not FSO.FileExists(路径) Then MsgBox "找不到: " & 路径, vbCritical: Exit Sub
+
+    Dim 全部股票 As Object: Set 全部股票 = CreateObject("Scripting.Dictionary")
+    Dim 文件号 As Integer, 行内容 As String, 字段 As Variant
+    Dim 代码 As String, 名称 As String, 市板 As String
 
     文件号 = FreeFile
     Open 路径 For Input As #文件号
@@ -298,36 +297,93 @@ Public Sub ZPY_批量算展()
         If UBound(字段) < 1 Then GoTo 下一行
         代码 = Trim(字段(1))
         If UBound(字段) >= 2 Then 名称 = Trim(字段(2))
-        Debug.Print "[" & Trim(字段(0)) & "] " & 代码 & " " & 名称
-
-        On Error Resume Next
-        Call XL算展生成_单股(代码)
-        If Err.Number = 0 Then
-            计数成功 = 计数成功 + 1: Debug.Print "  OK"
-        Else
-            Err.Clear
-            Dim 源路径 As String
-            源路径 = ThisWorkbook.Path & "\昭明算展\算展." & 代码 & ".xlsx"
-            If FSO.FileExists(源路径) Then
-                计数成功 = 计数成功 + 1
-            Else
-                计数失败 = 计数失败 + 1: Debug.Print "  SKIP (无数据)"
-                GoTo 下一行
-            End If
-        End If
-        On Error GoTo 0
-
-        源路径 = ThisWorkbook.Path & "\昭明算展\算展." & 代码 & ".xlsx"
-        Dim 目标路径 As String
-        目标路径 = 输出目录 & "算展." & 代码 & ".xlsx"
-        If FSO.FileExists(源路径) Then
-            If FSO.FileExists(目标路径) Then FSO.DeleteFile 目标路径
-            FSO.MoveFile 源路径, 目标路径
-        End If
+        市板 = Trim(字段(0))
+        全部股票(代码) = 市板 & "|" & 名称
 下一行:
     Loop
     Close #文件号
-    MsgBox "批量算展完成!" & vbCrLf & "成功: " & 计数成功 & vbCrLf & "失败: " & 计数失败 & vbCrLf & "输出: " & 输出目录, vbInformation, "完成"
+
+    ' 统计各市板已有的xlsx
+    Dim 市板集 As Object: Set 市板集 = CreateObject("Scripting.Dictionary")
+    Dim 各市板已有 As Object: Set 各市板已有 = CreateObject("Scripting.Dictionary")
+    Dim 各市板待生成 As Object: Set 各市板待生成 = CreateObject("Scripting.Dictionary")
+    Dim 各市板列表 As Object: Set 各市板列表 = CreateObject("Scripting.Dictionary")
+
+    ' 遍历全部股票，按市板分组
+    Dim key As Variant
+    For Each key In 全部股票.Keys
+        市板 = Split(全部股票(key), "|")(0)
+        If Not 各市板列表.exists(市板) Then Set 各市板列表(市板) = CreateObject("Scripting.Dictionary")
+        各市板列表(市板)(key) = 全部股票(key)
+    Next
+
+    ' 统计各市板已有文件
+    Dim 已有文件 As Object: Set 已有文件 = CreateObject("Scripting.Dictionary")
+    Dim f As Object
+    For Each f In FSO.GetFolder(输出目录).Files
+        If LCase(FSO.GetExtensionName(f.Name)) = "xlsx" Then
+            Dim 文件码 As String: 文件码 = Replace(f.Name, "算展.", "")
+            文件码 = Replace(文件码, ".xlsx", "")
+            已有文件(文件码) = True
+        End If
+    Next
+
+    ' 输出各市板状态
+    Dim 总生成 As Long: 总生成 = 0
+    Dim 总跳过 As Long: 总跳过 = 0
+    Dim 总失败 As Long: 总失败 = 0
+
+    For Each 市板 In 各市板列表.Keys
+        Dim 已有数 As Long: 已有数 = 0
+        Dim 待生 As Object: Set 待生 = CreateObject("Scripting.Dictionary")
+        For Each key In 各市板列表(市板).Keys
+            If 已有文件.exists(key) Then
+                已有数 = 已有数 + 1
+            Else
+                待生(key) = 全部股票(key)
+            End If
+        Next
+
+        ' 需要生成的数量 = 50 - 已有数
+        Dim 需生成 As Long: 需生成 = 50 - 已有数
+        If 需生成 < 0 Then 需生成 = 0
+
+        ' 输出该市板状态
+        Application.StatusBar = "市板 " & 市板 & " : 已有" & 已有数 & "只, 需生成" & 需生成 & "只"
+
+        ' 生成缺失的
+        Dim 计数 As Long: 计数 = 0
+        For Each key In 待生.Keys
+            If 计数 >= 需生成 Then Exit For
+            代码 = key
+            名称 = Split(待生(key), "|")(1)
+            Application.StatusBar = "正在生成 [" & 市板 & "] " & 代码 & " " & 名称 & " (" & (计数 + 1) & "/" & 需生成 & ")"
+
+            On Error Resume Next
+            Call XL算展生成_单股(代码)
+            If Err.Number = 0 Then
+                ' 生成成功，移动文件到输出目录
+                Dim 源路径 As String: 源路径 = ThisWorkbook.Path & "\昭明算展\算展." & 代码 & ".xlsx"
+                Dim 目标路径 As String: 目标路径 = 输出目录 & "算展." & 代码 & ".xlsx"
+                If FSO.FileExists(源路径) Then
+                    If FSO.FileExists(目标路径) Then FSO.DeleteFile 目标路径
+                    On Error Resume Next: FSO.MoveFile 源路径, 目标路径: On Error GoTo 0
+                End If
+                总生成 = 总生成 + 1: 计数 = 计数 + 1
+            Else
+                Err.Clear
+                总失败 = 总失败 + 1
+            End If
+            On Error GoTo 0
+        Next
+        总跳过 = 总跳过 + (已有数 + 待生.Count - 需生成)
+    Next
+
+    Application.StatusBar = False
+    MsgBox "批量算展完成!" & vbCrLf & _
+           "生成: " & 总生成 & "只" & vbCrLf & _
+           "跳过(已有): " & 总跳过 & "只" & vbCrLf & _
+           "失败: " & 总失败 & "只", vbInformation, "完成"
 End Sub
 
 '========================================================================================
