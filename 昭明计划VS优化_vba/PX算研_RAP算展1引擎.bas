@@ -156,6 +156,7 @@ Function XL算展前调模板( _
                 , 被研算法:=被研算法 _
                 , 是否外簿:=是否外簿 _
                 , 基色底:=基色底 _
+                , 是否关闭:= (运行次数 > 5) _
                 )
         '--------------------------------------------------------------------------------
         MSG = MSG & "【" & k & "】" & 被研代码 & " " & 被研代称 & vbCrLf
@@ -208,6 +209,7 @@ Function XL算展引擎正程( _
         , Optional 被研算法 As String = "" _
         , Optional 是否外簿 As Boolean = True _
         , Optional 基色底 As Long = 常色研究 _
+        , Optional 是否关闭 As Boolean = False _
         ) As Integer
 '========================================================================================
 '工区
@@ -236,6 +238,7 @@ Function XL算展引擎正程( _
     If wb.Name <> ThisWorkbook.Name Then
         MSG = MSG & vbCrLf & PBASE格程工具_表操保存外簿(wb, 工簿简称)
         wb.Save
+        If 是否关闭 Then wb.Close False
     End If
     Set wb = Nothing
 '========================================================================================
