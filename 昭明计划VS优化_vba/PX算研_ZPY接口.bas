@@ -380,10 +380,8 @@ Public Sub ZPY_批量算展()
     Next
 
     Application.StatusBar = False
-    MsgBox "批量算展完成!" & vbCrLf & _
-           "生成: " & 总生成 & "只" & vbCrLf & _
-           "跳过(已有): " & 总跳过 & "只" & vbCrLf & _
-           "失败: " & 总失败 & "只", vbInformation, "完成"
+    Application.StatusBar = "批量算展完成! 生成:" & 总生成 & " 跳过:" & 总跳过 & " 失败:" & 总失败
+    Debug.Print "批量算展完成! 生成:" & 总生成 & " 跳过:" & 总跳过 & " 失败:" & 总失败
 End Sub
 
 '========================================================================================
