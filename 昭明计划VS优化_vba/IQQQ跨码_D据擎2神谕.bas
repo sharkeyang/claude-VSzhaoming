@@ -484,24 +484,25 @@ Public Const 位谕列终全部 = 位谕终of族策
 '----------------------------------------------------------------------------------------
 
 'V1 月基命分查表（股性分）
-'设计思路：股性分衡量一只股票的历史"基因"——当你依据长期均线操作时，
-'  是否容易赚钱？好股突破有效、回踩不破线，恶庄突破贯穿/暴力回踩/长阴破多线。
-'  命分低的股票天然不参与月基策略，避免在恶庄上浪费仓位。
-'数据源：_产出物\月基策分结果.csv（离线全量回测生成）
-'评分公式：年化×胜率×盈亏比×均单次/(1+震仓)
+'设计思路：命分衡量"多长介入→持有→WXZC<0退出"平均每次能赚多少。
+'  几何均值自然惩罚波动，过滤假信号。命分低的股票天然不参与月基策略。
+'数据源：_产出物\月基命分结果.csv（全量7463只回测生成）
+'评分公式：几何均值 = (∏(1+每次收益))^(1/交易次数) - 1
+'评级：仁慈>=20分 / 正常10~20分 / 震荡0~10分 / 凶残<0分
 Private 命分表 As Object 'Dictionary (代码→月基命分)
 Private 命分表已加载 As Boolean
 
 '----------------------------------------------------------------------------------------
 '加载月基命分CSV，按代码查表赋值
-'CSV路径：_产出物\月基策分结果.csv，与xlsm同目录
+'CSV路径：_产出物\月基命分结果.csv，与xlsm同目录
+'CSV列：代码,命分_几何均值,算术均值,最大收益,最大亏损,胜率,交易次数
 '----------------------------------------------------------------------------------------
 Private Sub 加载月基命分表()
     If 命分表已加载 Then Exit Sub
     Set 命分表 = CreateObject("Scripting.Dictionary")
 
     Dim CSV路径 As String
-    CSV路径 = ThisWorkbook.Path & "\_产出物\月基策分结果.csv"
+    CSV路径 = ThisWorkbook.Path & "\_产出物\月基命分结果.csv"
 
     Dim FSO As Object: Set FSO = CreateObject("Scripting.FileSystemObject")
     If Not FSO.FileExists(CSV路径) Then
@@ -519,7 +520,7 @@ Private Sub 加载月基命分表()
         If 行号 = 1 Then GoTo 下一行 '跳过表头
         字段 = Split(行, ",")
         If UBound(字段) >= 1 Then
-            '字段0=代码, 字段1=月基策分(股性分)
+            '字段0=代码, 字段1=命分_几何均值
             命分表.Add Trim$(字段(0)), CDbl(Trim$(字段(1)))
         End If
 下一行:
@@ -3554,10 +3555,10 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
         月基分类 = "NA(空看)"  '兜底
     End Select
 
-    'V1 月基命分（股性分）— 从CSV查表
-    'CSV路径：_产出物\月基策分结果.csv，按代码(CIDL)匹配
-    '评分公式：年化×胜率×盈亏比×均单次/(1+震仓)
-    '评级：🏆仁慈≥0.8  ✅正常≥0.3  ⚠️震荡≥0  ❌凶残<0
+    'V1 月基命分（几何均值）— 从CSV查表
+    'CSV路径：_产出物\月基命分结果.csv，按代码(CIDL)匹配
+    '评分公式：几何均值 = (∏(1+每次收益))^(1/交易次数) - 1
+    '评级：仁慈>=20分 / 正常10~20分 / 震荡0~10分 / 凶残<0分
     '逻辑：命分低=恶庄→天然不参与，命分高=好股→优先考虑月基持有
     加载月基命分表
     If 命分表.Exists(CIDL) Then
@@ -4920,6 +4921,15 @@ Function STBASE结算引擎_单点衍生核程(ByRef ARROS As Variant) As Intege
                 值层护型 = 值层护型 & ARROS(位osBTZA暂下破)
             '----------------------------------------------------------------------------
             ARROS(位os层护型) = 值层护型
+            '----------------------------------------------------------------------------
+            '写入层护段（上/中/下/忐/忠/忑）和层护级（a/b/c/r/y/z）
+            '值层护型格式: [级][WXAB等级][方向][段][BTAB].[WJA信息]
+            '               位1     位2     位3   位4    位5+
+            '----------------------------------------------------------------------------
+            ARROS(位os层护段AB) = Mid$(值层护型, 4, 1)  '段：位4
+            ARROS(位os层护级AB) = Left$(值层护型, 1)   '级：位1
+            ARROS(位os层护段CD) = Mid$(值层护型, 4, 1)  '段CD（同AB，日周共用）
+            ARROS(位os层护级CD) = Left$(值层护型, 1)   '级CD（同AB，日周共用）
             '============================================================================
             '============================================================================
             '层地型
@@ -5249,6 +5259,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周波均叠幅五).ColumnWidth = 4
         .Columns(位谕of周波涨幅迷).ColumnWidth = 5
         .Columns(位谕of周波类).ColumnWidth = 5
+        .Columns(位谕of周波高幅十冲).ColumnWidth = 1.5
     End With
     '------------------------------------------------------------------------------------
     '列：显示
@@ -5430,6 +5441,8 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周管并符范).Hidden = True
         .Columns(位谕of周管中符范).Hidden = True
         .Columns(位谕of周管BT鼎).Hidden = True
+        .Columns(位谕of周管宽符串).Hidden = True
+        .Columns(位谕of周管撤哼JA).Hidden = True
     End With
 '========================================================================================
 '格式化：周粒系
@@ -5493,11 +5506,11 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周层类IS粒).ColumnWidth = 4.5
         .Columns(位谕of周层类合).ColumnWidth = 4.5
         .Columns(位谕of周层界).ColumnWidth = 7.5
-        .Columns(位谕of周层大局).ColumnWidth = 21
-        .Columns(位谕of周层三鳄).ColumnWidth = 11.5
+        .Columns(位谕of周层大局).ColumnWidth = 15
+        .Columns(位谕of周层三鳄).ColumnWidth = 10
         .Columns(位谕of周层波型).ColumnWidth = 15
-        .Columns(位谕of周层护型).ColumnWidth = 10
-        .Columns(位谕of周层柱型).ColumnWidth = 12
+        .Columns(位谕of周层护型).ColumnWidth = 5
+        .Columns(位谕of周层柱型).ColumnWidth = 5
         .Columns(位谕of周层柱排).ColumnWidth = 11.5
         .Columns(位谕of周层猪操作).ColumnWidth = 11
         .Columns(位谕of周层盈顶幅).ColumnWidth = 3.5
@@ -5898,13 +5911,13 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层柱排).Interior.TintAndShade = -0.5
     End With
     With WS.Columns(基列)
-        .Columns(位谕of日层联动).ColumnWidth = 12
-        .Columns(位谕of日层护型).ColumnWidth = 12
+        .Columns(位谕of日层联动).ColumnWidth = 10
+        .Columns(位谕of日层护型).ColumnWidth = 10
         .Columns(位谕of日层波型).ColumnWidth = 16
-        .Columns(位谕of日层柱型).ColumnWidth = 12
+        .Columns(位谕of日层柱型).ColumnWidth = 6
         .Columns(位谕of日层界).ColumnWidth = 6
         .Columns(位谕of日层柱排).ColumnWidth = 12
-        .Columns(位谕of日层漏提示).ColumnWidth = 20
+        .Columns(位谕of日层漏提示).ColumnWidth = 15
         .Columns(位谕of日层盈提示).HorizontalAlignment = xlRight
         .Columns(位谕of日层盈提示).ColumnWidth = 8
     End With
@@ -6773,6 +6786,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of月管中符串).Hidden = True
         .Columns(位谕of月管并符串).Hidden = True
         .Columns(位谕of月道横类).Hidden = True
+        .Columns(位谕of月道竖态).Hidden = True
     End With
 '========================================================================================
 '格式化：策略
