@@ -285,7 +285,7 @@ Public Sub ZPY_批量算展()
 
     Dim 全部股票 As Object: Set 全部股票 = CreateObject("Scripting.Dictionary")
     Dim 文件号 As Integer, 行内容 As String, 字段 As Variant
-    Dim 代码 As String, 名称 As String, 市板 As String
+    Dim 代码 As String, 名称 As String, 市板 As Variant, key As Variant
 
     文件号 = FreeFile
     Open 路径 For Input As #文件号
