@@ -302,6 +302,7 @@ Public Sub ZPY_批量算展()
 下一行:
     Loop
     Close #文件号
+    Debug.Print "读取股票: " & 全部股票.Count & "只"
 
     ' 统计各市板已有的xlsx
     Dim 市板集 As Object: Set 市板集 = CreateObject("Scripting.Dictionary")
@@ -310,7 +311,6 @@ Public Sub ZPY_批量算展()
     Dim 各市板列表 As Object: Set 各市板列表 = CreateObject("Scripting.Dictionary")
 
     ' 遍历全部股票，按市板分组
-    Dim key As Variant
     For Each key In 全部股票.Keys
         市板 = Split(全部股票(key), "|")(0)
         If Not 各市板列表.exists(市板) Then Set 各市板列表(市板) = CreateObject("Scripting.Dictionary")
