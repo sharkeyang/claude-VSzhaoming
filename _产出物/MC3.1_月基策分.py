@@ -1,4 +1,6 @@
-"""月基策分：多长进 → WXZC<0出，逐ETF模拟交易"""
+"""月基命分（V1 股性分）：多长进 → WXZC<0出，逐ETF模拟交易
+   输出CSV供VBA神谕模块查表赋值（月基命分列）
+   设计思路：衡量该股沿长期均线操作是否容易赚钱，恶庄天然过滤"""
 import os, csv, sys
 from collections import defaultdict
 from statistics import mean
@@ -122,7 +124,7 @@ for code, weeks in by_code.items():
     results.append((code, 股性, 年化, 胜率, 盈亏比, 均单次, 震仓, len(trades), 均HR涨比, 评级))
 
 results.sort(key=lambda r: -r[1])
-print(f'\n{"代码":>10} {"月基策分":>8} {"年化":>7} {"胜率":>6} {"盈亏比":>6} {"均单次":>7} {"震仓":>6} {"次数":>5} {"HR/涨":>7} {"评级":>6}')
+print(f'\n{"代码":>10} {"月基命分":>8} {"年化":>7} {"胜率":>6} {"盈亏比":>6} {"均单次":>7} {"震仓":>6} {"次数":>5} {"HR/涨":>7} {"评级":>6}')
 print('-' * 75)
 for r in results[:30]:
     print(f'{r[0]:>10} {r[1]:>8.4f} {r[2]:>7.4f} {r[3]:>6.2f} {r[4]:>6.2f} {r[5]:>7.4f} {r[6]:>6.4f} {r[7]:>5} {r[8]:>7.2f} {r[9]:>6}')
@@ -138,7 +140,7 @@ print(f'\n🏆仁慈: {top}只  ✅正常: {good}只  ⚠️震荡: {mid}只  �
 csv_out = os.path.join(TEMP, '..', '_产出物', '月基策分结果.csv')
 with open(csv_out, 'w', encoding='utf-8', newline='') as f:
     w = csv.writer(f)
-    w.writerow(['代码','月基策分','年化','胜率','盈亏比','均单次','震仓','次数','HR涨比','评级'])
+    w.writerow(['代码','月基命分','年化','胜率','盈亏比','均单次','震仓','次数','HR涨比','评级'])
     for r in results:
         w.writerow(r)
 print(f'\n已保存: {csv_out}')

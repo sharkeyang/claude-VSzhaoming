@@ -466,17 +466,67 @@ Public Const 位谕of周层四域 = 位谕始of族策 + 1
 Public Const 位谕of日层四域 = 位谕始of族策 + 2
 Public Const 位谕of日层段 = 位谕始of族策 + 3
 Public Const 位谕of日层机警 = 位谕始of族策 + 4
-'--- 月基调 ---
-Public Const 位谕of月基策略 = 位谕始of族策 + 5     '月基策略: 分类(不符合/长被/WXZB<0/积极区/消极区/不确定区)
-Public Const 位谕of月基策分 = 位谕始of族策 + 6     '月基策分: 股性分(0~100)
-Public Const 位谕of月基退警 = 位谕始of族策 + 7      '月基状态：11双好/10反险/01正潜/00双差（WXAB→WXCD双向带动）
+'--- 月基三变量 ---
+'月基策略：月基持仓的底层分类，按周层四域映射为7类
+'  V1 月基命分 = 股性分（历史基因），衡量该股历史上沿长期均线操作是否容易赚钱
+'  V2 月基策分 = 存续分（走势维持），仅对多长三分类评分，预示后续1~5周是否维持月基状态
+'  V3 月基带向 = 双向带动+，WXAB→WXCD带动 + WJB下破带动 + 柱排启示（待扩展）
+Public Const 位谕of月基策略 = 位谕始of族策 + 5     '月基策略: 多长(积极)/多长(消极)/多长(不定)/多被(金)/多被(银)/NA(空看)/NA(空长)
+Public Const 位谕of月基命分 = 位谕始of族策 + 6     'V1 月基命分: 股性分(0~100)，从CSV查表，恶庄天然过滤
+Public Const 位谕of月基策分 = 位谕始of族策 + 7     'V2 月基策分(5周): 当前周波型×柱排状态, 5周后是否仍在多长(续持率取整), 仅对多长评分
+Public Const 位谕of月基带向 = 位谕始of族策 + 8     'V3 月基双向带动: 11双好/10反险/01正潜/00双差，WXAB→WXCD联动
 '--- 周冲系 ---
-Public Const 位谕of周冲策略 = 位谕始of族策 + 8     '周冲策略: 匹配的策略名(如"金+多长+升排+非孕")
-Public Const 位谕of周冲策分 = 位谕始of族策 + 9     '周冲策分: 冲高概率(P>=3%)
+Public Const 位谕of周冲策略 = 位谕始of族策 + 9     '周冲策略: 匹配的策略名(如"金+多长+升排+非孕")
+Public Const 位谕of周冲策分 = 位谕始of族策 + 10    '周冲策分: 冲高概率(P>=3%)
 Public Const 位谕终of族策 = 位谕of周冲策分
 '----------------------------------------------------------------------------------------
 Public Const 位谕列终全部 = 位谕终of族策
 '----------------------------------------------------------------------------------------
+
+'V1 月基命分查表（股性分）
+'设计思路：股性分衡量一只股票的历史"基因"——当你依据长期均线操作时，
+'  是否容易赚钱？好股突破有效、回踩不破线，恶庄突破贯穿/暴力回踩/长阴破多线。
+'  命分低的股票天然不参与月基策略，避免在恶庄上浪费仓位。
+'数据源：_产出物\月基策分结果.csv（离线全量回测生成）
+'评分公式：年化×胜率×盈亏比×均单次/(1+震仓)
+Private 命分表 As Object 'Dictionary (代码→月基命分)
+Private 命分表已加载 As Boolean
+
+'----------------------------------------------------------------------------------------
+'加载月基命分CSV，按代码查表赋值
+'CSV路径：_产出物\月基策分结果.csv，与xlsm同目录
+'----------------------------------------------------------------------------------------
+Private Sub 加载月基命分表()
+    If 命分表已加载 Then Exit Sub
+    Set 命分表 = CreateObject("Scripting.Dictionary")
+
+    Dim CSV路径 As String
+    CSV路径 = ThisWorkbook.Path & "\_产出物\月基策分结果.csv"
+
+    Dim FSO As Object: Set FSO = CreateObject("Scripting.FileSystemObject")
+    If Not FSO.FileExists(CSV路径) Then
+        命分表已加载 = True
+        Exit Sub
+    End If
+
+    Dim TS As Object: Set TS = FSO.OpenTextFile(CSV路径, 1) '1=ForReading
+    Dim 行 As String, 字段 As Variant
+    Dim 行号 As Long: 行号 = 0
+
+    Do While Not TS.AtEndOfStream
+        行 = TS.ReadLine
+        行号 = 行号 + 1
+        If 行号 = 1 Then GoTo 下一行 '跳过表头
+        字段 = Split(行, ",")
+        If UBound(字段) >= 1 Then
+            '字段0=代码, 字段1=月基策分(股性分)
+            命分表.Add Trim$(字段(0)), CDbl(Trim$(字段(1)))
+        End If
+下一行:
+    Loop
+    TS.Close
+    命分表已加载 = True
+End Sub
 
 
 
@@ -973,10 +1023,14 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             '============================================================================
             值月基月局 = 组结算(X, 基位月类 + 位os局ZABC)
             谕组(X, 位谕of月基月局) = 值月基月局
-            '月基状态：WXAB→WXCD双向带动（全量7463只验证）
-            '   11双好 = WXAB正+WXCD好  安全持有
-            '   10反险 = WXAB负+WXCD好  反向风险81.6% ⚠️
-            '   01正潜 = WXAB正+WXCD差  正向潜力61.1%
+            'V3 月基带向（双向带动+）— WXAB→WXCD联动信号
+            '设计思路：WXAB（护型）和WXCD（大局）是两条独立维度的核心指标，
+            '  但它们的组合能揭示"带动效应"：
+            '    WXAB正→WXCD好 = 11双好（安全持有）
+            '    WXAB负→WXCD好 = 10反险（反向风险81.6%，AB护已破但大局尚好）
+            '    WXAB正→WXCD差 = 01正潜（正向潜力61.1%，AB护完好但趋势差）
+            '    WXAB负→WXCD差 = 00双差（两者都差，观望不参与）
+            '待扩展：WJB下破对WXCDXCD的带动、柱排启示
             '   00双差 = WXAB负+WXCD差  不参与
             Dim 周局 As String: 周局 = 谕组(X, 位谕of周层大局)
             Dim 周护 As String: 周护 = 谕组(X, 位谕of周层护型)
@@ -985,13 +1039,13 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             Dim WXAB正 As Boolean: WXAB正 = (InStr(周护, "甲") + InStr(周护, "乙") + InStr(周护, "己") > 0)
             Dim WXAB负 As Boolean: WXAB负 = (InStr(周护, "丙") + InStr(周护, "丁") + InStr(周护, "戊") > 0)
             If WXAB正 And WXCD好 Then
-                谕组(X, 位谕of月基退警) = "11双好"
+                谕组(X, 位谕of月基带向) = "11双好"
             ElseIf WXAB负 And WXCD好 Then
-                谕组(X, 位谕of月基退警) = "10反险"
+                谕组(X, 位谕of月基带向) = "10反险"
             ElseIf WXAB正 And WXCD差 Then
-                谕组(X, 位谕of月基退警) = "01正潜"
+                谕组(X, 位谕of月基带向) = "01正潜"
             Else
-                谕组(X, 位谕of月基退警) = "00双差"
+                谕组(X, 位谕of月基带向) = "00双差"
             End If
             '============================================================================
             '周类六局
@@ -3392,84 +3446,244 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
     End If
 
     '============================================================================
-    '月基策略分类 + 月基策分（股性分）
+    '月基三变量：策略分类 + 命分(V1) + 策分(V2) + 带向(V3)
     '============================================================================
-    '分类逻辑（基于WXZB>0时的四分类体系）：
-    '  不符合 = 不满足月基条件（非金+甲乙己或WXZC≤0）
-    '  长被   = 在多长区但被其他条件排除
-    '  WXZB<0 = 退出条件触发
-    '  积极区 = 金+龙猪+升排（71.8%续持率）
-    '  消极区 = 有消极信号（跌吞/ZA下降/HR<0/ZC≤0/震正, 56.9%转负）
-    '  不确定区 = 其他WXZB>0且无明确信号（59.4%续持）
+    '【设计思路】
+    ' 月基策略的核心问题：一只股票，是否值得长期持有（月基）？
+    ' 三个变量从不同维度回答这个问题：
+    '
+    ' V1 月基命分（股性分）——历史基因
+    '   └─ 衡量该股历史上沿长期均线操作是否容易赚钱
+    '   └─ 好股票：突破有效、上升稳定、回踩不破线 → 高分
+    '   └─ 恶庄：突破反复贯穿、暴力回踩破线、长阴破多线 → 低分
+    '   └─ 自然过滤恶庄，避免在"好股率低"的股票上浪费仓位
+    '   └─ 数据来源：离线全量历史回测，CSV查表赋值
+    '
+    ' V2 月基策分（存续分）——走势维持（仅对多长三分类评分）
+    '   └─ 当前走势预示后续1~5周是否继续维持月基状态
+    '   └─ 与"周冲策略"的区别：
+    '        周冲策略 = 子集，只关心下周是否冲高（P≥3%）
+    '        月基策分 = 是否维持整体月基仓位（更宽，含横盘/缓涨等）
+    '   └─ 高分信号：龙猪延续、升柱排延续、ZA稳定上升
+    '   └─ 低分信号：触顶、跌吞、ZA下降、HR<0、ZC≤0、震正
+    '
+    ' V3 月基带向（双向带动+）——其他信号辅助
+    '   └─ 核心：WXAB→WXCD双向带动
+    '        11双好 = WXAB正+WXCD好  安全持有
+    '        10反险 = WXAB负+WXCD好  反向风险81.6%
+    '        01正潜 = WXAB正+WXCD差  正向潜力61.1%
+    '        00双差 = WXAB负+WXCD差  观望不参与
+    '   └─ 待扩展：WJB下破对WXCDXCD的带动、柱排启示
+    '
+    ' 三变量联合决策：
+    '   命分高 + 策分高 + 带向双好 → 坚定持有（长多基仓）
+    '   命分高 + 策分低 + 带向正潜 → 关注但准备减仓
+    '   命分低 + 任何情况 → 天然不参与（恶庄过滤）
+    '============================================================================
+    '四域体系（月基策略分类的底层框架）：
+    '  多长 = ZC>0+CD>0+ZB>0  → 内部三分类：积极/消极/不定
+    '  多被 = ZC>0但CD≤0或ZB≤0 → 子分类：多被(金)=ZB≤0, 多被(银)=CD≤0
+    '  NA(空看) = ZC≤0但CD/ZB有正
+    '  NA(空长) = 三空全
     '============================================================================
     Dim 月基分类 As String: 月基分类 = ""
-    Dim 月基股性 As Double: 月基股性 = 0
+    Dim 月基命分 As Double: 月基命分 = 0
+    Dim 月基策分 As Double: 月基策分 = 0
 
-    '先判断是否满足月基基础条件（金+甲乙己+WXZC>0）
-    '注意：周类BTZC是WXZC的数值
-    If InStr(周局, "金") > 0 Then  'WXCD=金
-        If 周类BTZC > 0 Then  'WXZC>0
-            'WXZB≤0 → 退出区
-            If 周类BTZB <= 0 Then
-                月基分类 = "WXZB<0"
-            '积极条件：金+龙猪+升排
-            ElseIf InStr(周波型, "龙猪") > 0 And Left$(周柱排, 1) = "升" Then
-                月基分类 = "积极区"
-            Else
-                '检查消极信号（从强到弱）
-                Dim 消极标志 As Boolean: 消极标志 = False
-                '① 跌吞：本周阴且幅度大于前周阳
-                Dim 本周涨 As Double: 本周涨 = 组结算(X, 基位周类 + 位os结幅PR0)
-                If 本周涨 < 0 And X > LBound(组结算, 1) Then
-                    Dim 前周涨 As Double: 前周涨 = 组结算(X - 1, 基位周类 + 位os结幅PR0)
-                    If 前周涨 > 0 And Abs(本周涨) > 前周涨 Then
-                        消极标志 = True
-                    End If
-                End If
-                '② ZA下降：本周ZA<前周ZA
-                If Not 消极标志 And X > LBound(组结算, 1) Then
-                    Dim 前周ZA As Double: 前周ZA = 组结算(X - 1, 基位周类 + 位osBTZA)
-                    If 周类BTZA < 前周ZA Then
-                        消极标志 = True
-                    End If
-                End If
-                '③ 本周HR<0（周线下跌）
-                If Not 消极标志 And 本周涨 < 0 Then
-                    消极标志 = True
-                End If
-                '④ ZC≤0（C线失守）
-                If Not 消极标志 And 周类BTZC <= 0 Then
-                    消极标志 = True
-                End If
-                '⑤ 震正波型
-                If Not 消极标志 And InStr(周波型, "震正") > 0 Then
-                    消极标志 = True
-                End If
+    '取四域值
+    Dim 四域 As String: 四域 = 谕组(X, 位谕of周层四域)
 
-                If 消极标志 Then
-                    月基分类 = "消极区"
-                Else
-                    月基分类 = "不确定区"
+    Select Case 四域
+    Case "多长"
+        '多长内部三分类：积极/消极/不定
+        If InStr(周波型, "龙猪") > 0 And Left$(周柱排, 1) = "升" Then
+            月基分类 = "多长(积极)"
+        Else
+            '检查消极信号（从强到弱）
+            Dim 消极标志 As Boolean: 消极标志 = False
+            '① 跌吞：本周阴且幅度大于前周阳
+            Dim 本周涨 As Double: 本周涨 = 组结算(X, 基位周类 + 位os结幅PR0)
+            If 本周涨 < 0 And X > LBound(组结算, 1) Then
+                Dim 前周涨 As Double: 前周涨 = 组结算(X - 1, 基位周类 + 位os结幅PR0)
+                If 前周涨 > 0 And Abs(本周涨) > 前周涨 Then
+                    消极标志 = True
                 End If
             End If
-        Else
-            月基分类 = "不符合"
+            '② ZA下降：本周ZA<前周ZA
+            If Not 消极标志 And X > LBound(组结算, 1) Then
+                Dim 前周ZA As Double: 前周ZA = 组结算(X - 1, 基位周类 + 位osBTZA)
+                If 周类BTZA < 前周ZA Then
+                    消极标志 = True
+                End If
+            End If
+            '③ 本周HR<0（周线下跌）
+            If Not 消极标志 And 本周涨 < 0 Then
+                消极标志 = True
+            End If
+            '④ ZC≤0（C线失守）
+            If Not 消极标志 And 周类BTZC <= 0 Then
+                消极标志 = True
+            End If
+            '⑤ 震正波型
+            If Not 消极标志 And InStr(周波型, "震正") > 0 Then
+                消极标志 = True
+            End If
+
+            If 消极标志 Then
+                月基分类 = "多长(消极)"
+            Else
+                月基分类 = "多长(不定)"
+            End If
         End If
+
+    Case "多被"
+        '多被子分类：金系ZB≤0 vs 银系/其他CD≤0
+        If InStr(周局, "金") > 0 Then
+            月基分类 = "多被(金)"
+        Else
+            月基分类 = "多被(银)"
+        End If
+
+    Case "空看"
+        月基分类 = "NA(空看)"
+
+    Case "空长"
+        月基分类 = "NA(空长)"
+
+    Case Else
+        月基分类 = "NA(空看)"  '兜底
+    End Select
+
+    'V1 月基命分（股性分）— 从CSV查表
+    'CSV路径：_产出物\月基策分结果.csv，按代码(CIDL)匹配
+    '评分公式：年化×胜率×盈亏比×均单次/(1+震仓)
+    '评级：🏆仁慈≥0.8  ✅正常≥0.3  ⚠️震荡≥0  ❌凶残<0
+    '逻辑：命分低=恶庄→天然不参与，命分高=好股→优先考虑月基持有
+    加载月基命分表
+    If 命分表.Exists(CIDL) Then
+        月基命分 = 命分表(CIDL)
     Else
-        '非金系 → 检查是否在长期被套区（WXZC>0但WXCD≠金）
-        If 周类BTZC > 0 Then
-            月基分类 = "长被"
-        Else
-            月基分类 = "不符合"
-        End If
+        月基命分 = 0
     End If
 
-    '月基策分（股性分）— 暂未从CSV加载，默认为0
-    '待后续从月基策分结果.csv加载，查表赋值
-    月基股性 = 0
+    'V2 月基策分（存续分）— 仅对多长评分，查表赋值
+    '设计原理：基于波型×柱排二维表，查续持率作为基础分
+    '  50分为敏感阈值：≥50倾向于持有，<50倾向于退出
+    '查表数据来源：全量7463只验证（2026-07-19）
+    '============================================================================
+    If 四域 = "多长" Then
+        '解析波型
+        Dim V2波型 As String: V2波型 = "其他"
+        If InStr(周波型, "龙猪") > 0 Then
+            V2波型 = "龙猪"
+        ElseIf InStr(周波型, "龙管") > 0 Then
+            V2波型 = "龙管"
+        ElseIf InStr(周波型, "头正") > 0 Then
+            V2波型 = "头正"
+        ElseIf InStr(周波型, "震正") > 0 Then
+            V2波型 = "震正"
+        ElseIf InStr(周波型, "震负") > 0 Then
+            V2波型 = "震负"
+        End If
+
+        '解析柱排
+        Dim V2柱排 As String: V2柱排 = "其他"
+        Dim 柱排首字 As String: 柱排首字 = Left$(周柱排, 1)
+        If 柱排首字 = "升" Then
+            V2柱排 = "升排"
+        ElseIf 柱排首字 = "人" Then
+            V2柱排 = "人排"
+        ElseIf 柱排首字 = "跌" Then
+            V2柱排 = "跌排"
+        End If
+
+        '查基础分表：波型×柱排 → 续持率（取整）
+        Select Case V2波型
+        Case "龙猪"
+            Select Case V2柱排
+            Case "升排": 月基策分 = 75
+            Case "人排": 月基策分 = 61
+            Case "跌排": 月基策分 = 58
+            Case Else:   月基策分 = 65
+            End Select
+        Case "龙管"
+            Select Case V2柱排
+            Case "升排": 月基策分 = 70
+            Case "人排": 月基策分 = 58
+            Case "跌排": 月基策分 = 56
+            Case Else:   月基策分 = 61
+            End Select
+        Case "头正"
+            Select Case V2柱排
+            Case "升排": 月基策分 = 63
+            Case "人排": 月基策分 = 58
+            Case "跌排": 月基策分 = 51
+            Case Else:   月基策分 = 57
+            End Select
+        Case "震正"
+            Select Case V2柱排
+            Case "升排": 月基策分 = 65
+            Case "人排": 月基策分 = 56
+            Case "跌排": 月基策分 = 51
+            Case Else:   月基策分 = 57
+            End Select
+        Case "震负"
+            Select Case V2柱排
+            Case "升排": 月基策分 = 62
+            Case "人排": 月基策分 = 58
+            Case "跌排": 月基策分 = 50
+            Case Else:   月基策分 = 57
+            End Select
+        Case Else
+            Select Case V2柱排
+            Case "升排": 月基策分 = 65
+            Case "人排": 月基策分 = 57
+            Case "跌排": 月基策分 = 52
+            Case Else:   月基策分 = 58
+            End Select
+        End Select
+
+        'WXAB调节：甲+3, 乙-3, 己-5
+        If InStr(周护, "甲") > 0 Then
+            月基策分 = 月基策分 + 3
+        ElseIf InStr(周护, "己") > 0 Then
+            月基策分 = 月基策分 - 5
+        ElseIf InStr(周护, "乙") > 0 Then
+            月基策分 = 月基策分 - 3
+        End If
+
+        '盈提示调节：盈高+4, 盈高+宽+8（盈宽单独不加分）
+        '  盈高(HR0>15): 本周最高价/前周收盘价>15%, 资金拉抬趋势延续 +4
+        '  盈高+宽: 放量突破主升浪, 趋势最强 +8
+        '  盈宽: 仅累计涨幅大但本周无冲高, 无效不加分
+        If InStr(周盈提, "高") > 0 And InStr(周盈提, "宽") > 0 Then
+            月基策分 = 月基策分 + 8
+        ElseIf InStr(周盈提, "高") > 0 Then
+            月基策分 = 月基策分 + 4
+        End If
+
+        '分类调节：按市板
+        '  常市板基"Qe"=ETF/基金 +7
+        '  常市板指"Qd"=指数 +7（与Qe同类产品）
+        '  常市板票Qit"Qit"=中证2000(小盘) -3
+        '  常市板票Qin"Qin"=非成分(小盘) -3
+        If 周市板 = "Qe" Or 周市板 = "Qd" Then
+            月基策分 = 月基策分 + 7
+        ElseIf 周市板 = "Qit" Or 周市板 = "Qin" Then
+            月基策分 = 月基策分 - 3
+        End If
+
+        '限幅
+        If 月基策分 < 0 Then 月基策分 = 0
+        If 月基策分 > 100 Then 月基策分 = 100
+    Else
+        '非多长区域不评分
+        月基策分 = 0
+    End If
 
     谕组(X, 位谕of月基策略) = 月基分类
-    谕组(X, 位谕of月基策分) = 月基股性
+    谕组(X, 位谕of月基命分) = 月基命分
+    谕组(X, 位谕of月基策分) = 月基策分
 
     '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 '########################################################################################
@@ -6573,8 +6787,9 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of周冲策略) = "周冲策略"
         .Cells(1, 位谕of周冲策分) = "周冲策分"
         .Cells(1, 位谕of月基策略) = "月基策略"
-        .Cells(1, 位谕of月基策分) = "月基策分"
-        .Cells(1, 位谕of月基退警) = "月基带动"
+        .Cells(1, 位谕of月基命分) = "月基命分"
+        .Cells(1, 位谕of月基策分) = "月基策分" & vbCrLf & "(5周维持)"
+        .Cells(1, 位谕of月基带向) = "月基带向"
         '四域列
         .Cells(1, 位谕of周层四域) = "四域周"
         .Cells(1, 位谕of日层四域) = "四域日"
@@ -6598,8 +6813,9 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of策传).Interior.Color = 常色四灰
         
         .Columns(位谕of月基策略).Interior.Color = 常色四青
+        .Columns(位谕of月基命分).Interior.Color = 常色五青
         .Columns(位谕of月基策分).Interior.Color = 常色五青
-        .Columns(位谕of月基退警).Interior.Color = 常色五青
+        .Columns(位谕of月基带向).Interior.Color = 常色五青
         .Columns(位谕of周冲策略).Interior.Color = 常色四靛
         .Columns(位谕of周冲策分).Interior.Color = 常色五靛
     End With
@@ -6612,9 +6828,10 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层段).ColumnWidth = 4
         .Columns(位谕of日层机警).ColumnWidth = 8
         .Columns(位谕of月基策略).ColumnWidth = 10
+        .Columns(位谕of月基命分).ColumnWidth = 4
         .Columns(位谕of月基策分).ColumnWidth = 4
-        .Columns(位谕of月基退警).ColumnWidth = 6
-        .Columns(位谕of月基退警).HorizontalAlignment = xlCenter
+        .Columns(位谕of月基带向).ColumnWidth = 6
+        .Columns(位谕of月基带向).HorizontalAlignment = xlCenter
         .Columns(位谕of周冲策略).ColumnWidth = 20
         .Columns(位谕of周冲策分).ColumnWidth = 4
     End With
