@@ -859,8 +859,8 @@ Function STBASE结算引擎_历统时正程( _
         CIDL = 组花册(X, 位列花天CIDL)
         代称 = 组花册(X, 位列花天代称)
         If UBCID是中股(CIDL) = True Then
-            典码称.Add Key:=CIDL, Item:=代称
-            典码行.Add Key:=CIDL, Item:=X
+            典码称.Add key:=CIDL, Item:=代称
+            典码行.Add key:=CIDL, Item:=X
         End If
         'If 典码称.Count > 50 Then Exit For
     Next

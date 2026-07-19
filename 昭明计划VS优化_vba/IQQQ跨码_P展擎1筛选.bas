@@ -218,13 +218,13 @@ Else
     '单独列示：池
     '====================================================================================
             If 谕组(X, 位谕of仓持数) > 0 Then
-                    典集筛已在池持.Add Item:=X, Key:=CIDL
+                    典集筛已在池持.Add Item:=X, key:=CIDL
             'ElseIf (谕组(X, 位qt在池) = 常池名金 Or 谕组(X, 位qt在池) = 常池名银 Or 谕组(X, 位qt在池) = 常池名铜) Then
             '        典集筛已在池白.Add Item:=X, Key:=CIDL
             '        计码池内 = 计码池内 + 1
             End If
             If 谕组(X, 位qt今池) <> "" Then
-                    典集筛已在池今.Add Item:=X, Key:=CIDL
+                    典集筛已在池今.Add Item:=X, key:=CIDL
             End If
     '====================================================================================
     '统计全市场
@@ -237,14 +237,14 @@ Else
             ElseIf 谕组(X, 位qt市板) = 常市板基 Then
                     计码市基 = 计码市基 + 1
                     If 谕组(X, 位谕of日段佰均幅高) >= 0.4 Then      '过滤债类产品
-                        典集市板Qe.Add Item:=X, Key:=CIDL
+                        典集市板Qe.Add Item:=X, key:=CIDL
                     Else
-                        典集市板Qe2.Add Item:=X, Key:=CIDL
+                        典集市板Qe2.Add Item:=X, key:=CIDL
                     End If
             ElseIf 谕组(X, 位qt市板) = 常市板票Qst Then
                         '剔除：ST/退市
                         计码股ST = 计码股ST + 1
-                        典集市板Qst.Add Item:=X, Key:=CIDL
+                        典集市板Qst.Add Item:=X, key:=CIDL
             Else
                     '-----------------------------------------------
                     计码股总 = 计码股总 + 1
@@ -271,10 +271,10 @@ Else
                     '统计前置剔除
                     If CIDL Like 常通配全码上科股 Then
                         计码股Q8 = 计码股Q8 + 1
-                        典集市板Q8.Add Item:=X, Key:=CIDL
+                        典集市板Q8.Add Item:=X, key:=CIDL
                     ElseIf CIDL Like 常通配全码北交股 Then
                         计码股Qb = 计码股Qb + 1
-                        典集市板Qb.Add Item:=X, Key:=CIDL
+                        典集市板Qb.Add Item:=X, key:=CIDL
                     End If
                     '-----------------------------------------------
                     '统计：周层三鳄第二位分布（等价于仓周类第1位）
@@ -310,40 +310,40 @@ Else
                 '复盘周类：涨幅异常
                 '------------------------------------------------------------------------
                 If 谕组(X, 位谕of周波临高幅) >= 20 Then
-                        典统周复_幅高20.Add Item:=X, Key:=CIDL
+                        典统周复_幅高20.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位谕of周波临高幅) >= 10 Then
-                        典统周复_幅高10.Add Item:=X, Key:=CIDL
+                        典统周复_幅高10.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位谕of周波临涨幅) <= -20 Then
-                        典统周复_幅涨负20.Add Item:=X, Key:=CIDL
+                        典统周复_幅涨负20.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位谕of周波临涨幅) <= -10 Then
-                        典统周复_幅涨负10.Add Item:=X, Key:=CIDL
+                        典统周复_幅涨负10.Add Item:=X, key:=CIDL
                 End If
                 '------------------------------------------------------------------------
                 '复盘日类：涨幅异常
                 '------------------------------------------------------------------------
                 If 谕组(X, 位谕of日波龄BTPR9) >= 1 Then
                             If 谕组(X, 位谕of日波龄BTHR9) >= 3 Then
-                                典筛复日_停今甲.Add Item:=X, Key:=CIDL
+                                典筛复日_停今甲.Add Item:=X, key:=CIDL
                             ElseIf 谕组(X, 位谕of日波龄BTHR9) >= 2 Then
-                                典筛复日_停今乙.Add Item:=X, Key:=CIDL
+                                典筛复日_停今乙.Add Item:=X, key:=CIDL
                             ElseIf 谕组(X, 位谕of日波龄BTPR9) >= 1 Then
-                                典筛复日_停今丙.Add Item:=X, Key:=CIDL
+                                典筛复日_停今丙.Add Item:=X, key:=CIDL
                             Else
-                                典筛复日_停今丁.Add Item:=X, Key:=CIDL
+                                典筛复日_停今丁.Add Item:=X, key:=CIDL
                             End If
                 Else
                             '------------------------------------------------------------
                             '非剔：剧烈波动
                             '------------------------------------------------------------
                             If 谕组(X, 位谕of日段十停数高) >= 3 Then
-                                典筛复日_停十数3.Add Item:=X, Key:=CIDL
+                                典筛复日_停十数3.Add Item:=X, key:=CIDL
                             '------------------------------------------------------------
                             '非剔：用于单列本日较大波动。主要用于观察走势，总结能够预测大涨的规律，用于后续选股。
                             '------------------------------------------------------------
                             ElseIf 谕组(X, 位谕of日波BSPR) >= 4 Then
-                                典筛复日_幅涨4.Add Item:=X, Key:=CIDL
+                                典筛复日_幅涨4.Add Item:=X, key:=CIDL
                             ElseIf 谕组(X, 位谕of日波BSHR) >= 4 Then
-                                典筛复日_幅高4.Add Item:=X, Key:=CIDL
+                                典筛复日_幅高4.Add Item:=X, key:=CIDL
                             End If
                             '------------------------------------------------------------
                 End If
@@ -369,14 +369,14 @@ Else
                     Or InStr(谕组(X, 位谕of日层联动), "尿") > 0 _
                     Or InStr(谕组(X, 位谕of日层联动), "嘘") > 0 Then
                         If 谕组(X, 位谕of日类BTAB) > 0 Then
-                            典统周复_周屎尿嘘甲.Add Item:=X, Key:=CIDL
+                            典统周复_周屎尿嘘甲.Add Item:=X, key:=CIDL
                         ElseIf 谕组(X, 位谕of日类BTZB) > 0 Then
-                            典统周复_周屎尿嘘乙.Add Item:=X, Key:=CIDL
+                            典统周复_周屎尿嘘乙.Add Item:=X, key:=CIDL
                         End If
                 ElseIf InStr(谕组(X, 位谕of日层联动), "唏") > 0 Then
-                            典统周复_周唏.Add Item:=X, Key:=CIDL
+                            典统周复_周唏.Add Item:=X, key:=CIDL
                 ElseIf InStr(谕组(X, 位谕of日层联动), "银") > 0 Then
-                            典统周复_周银.Add Item:=X, Key:=CIDL
+                            典统周复_周银.Add Item:=X, key:=CIDL
                 '------------------------------------------------------------------------
                 '以下均为：金。
                 '------------------------------------------------------------------------
@@ -385,34 +385,34 @@ Else
                     '根据"日层段"分类，分别筛选（警：丁戊 DXAB负交）（被：丙 下破DJB）
                     '--------------------------------------------------------------------
                     If InStr(谕组(X, 位谕of日层联动), "警") > 0 Then            '日层段：丁戊
-                            典统周复_周金活日警被.Add Item:=X, Key:=CIDL
+                            典统周复_周金活日警被.Add Item:=X, key:=CIDL
                     ElseIf InStr(谕组(X, 位谕of日层联动), "被") > 0 Then        '日层段：丙
-                            典统周复_周金萎日警被.Add Item:=X, Key:=CIDL
+                            典统周复_周金萎日警被.Add Item:=X, key:=CIDL
                     '--------------------------------------------------------------------
                     '分类：仨曾出现涨停
                     '--------------------------------------------------------------------
                     ElseIf 谕组(X, 位谕of日段仨停数高) >= 1 Or InStr(谕组(X, 位谕of日段股性), "3") > 0 Then
                                 If InStr(谕组(X, 位谕of日层联动), "被") > 0 Or InStr(谕组(X, 位谕of日层联动), "警") > 0 Then            '日层段：丙丁戊
-                                    典统周复_周金活日警被.Add Item:=X, Key:=CIDL
+                                    典统周复_周金活日警被.Add Item:=X, key:=CIDL
                                 ElseIf InStr(谕组(X, 位谕of周层波型), "龙猪") > 0 Then
-                                    典统周复_周金活龙猪.Add Item:=X, Key:=CIDL
+                                    典统周复_周金活龙猪.Add Item:=X, key:=CIDL
                                 ElseIf InStr(谕组(X, 位谕of周层波型), "龙") > 0 Then
-                                    典统周复_周金活龙管.Add Item:=X, Key:=CIDL
+                                    典统周复_周金活龙管.Add Item:=X, key:=CIDL
                                 Else
-                                    典统周复_周金活头震.Add Item:=X, Key:=CIDL
+                                    典统周复_周金活头震.Add Item:=X, key:=CIDL
                                 End If
                     '--------------------------------------------------------------------
                     '分类：其他
                     '--------------------------------------------------------------------
                     Else
                                 If InStr(谕组(X, 位谕of日层联动), "被") > 0 Or InStr(谕组(X, 位谕of日层联动), "警") > 0 Then            '日层段：丙丁戊
-                                    典统周复_周金萎日警被.Add Item:=X, Key:=CIDL
+                                    典统周复_周金萎日警被.Add Item:=X, key:=CIDL
                                 ElseIf InStr(谕组(X, 位谕of周层波型), "龙猪") > 0 Then
-                                    典统周复_周金萎龙猪.Add Item:=X, Key:=CIDL
+                                    典统周复_周金萎龙猪.Add Item:=X, key:=CIDL
                                 ElseIf InStr(谕组(X, 位谕of周层波型), "龙管") > 0 Then
-                                    典统周复_周金萎龙管.Add Item:=X, Key:=CIDL
+                                    典统周复_周金萎龙管.Add Item:=X, key:=CIDL
                                 Else
-                                    典统周复_周金萎头震.Add Item:=X, Key:=CIDL
+                                    典统周复_周金萎头震.Add Item:=X, key:=CIDL
                                 End If
                     End If
                     '--------------------------------------------------------------------
@@ -421,56 +421,60 @@ Else
             '============================================================================
             Dim 周冲策名 As String: 周冲策名 = 谕组(X, 位谕of周冲策略)
             If 周冲策名 = "金最优(全部)" Then
-                典周策_A金系P.Add Item:=X, Key:=CIDL
+                典周策_A金系P.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "金+多长+升排+非孕+盈高" Then
-                典周策_A金系1.Add Item:=X, Key:=CIDL
+                典周策_A金系1.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "金+多长+升排+非孕" Then
-                典周策_A金系2.Add Item:=X, Key:=CIDL
+                典周策_A金系2.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "金+多长+升排" Then
-                典周策_A金系3.Add Item:=X, Key:=CIDL
+                典周策_A金系3.Add Item:=X, key:=CIDL
             ElseIf Left$(周冲策名, 3) = "金+" Then
-                典周策_A金系4.Add Item:=X, Key:=CIDL
+                典周策_A金系4.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "银+盈提示有" Then
-                典周策_B银盈.Add Item:=X, Key:=CIDL
+                典周策_B银盈.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "银+龙猪" Or 周冲策名 = "银+龙猪/管+WXAB=甲" Then
-                典周策_C银龙.Add Item:=X, Key:=CIDL
+                典周策_C银龙.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "银+柱排=升" Then
-                典周策_D银升排.Add Item:=X, Key:=CIDL
+                典周策_D银升排.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "银+ZA5~10" Then
-                典周策_E银ZA.Add Item:=X, Key:=CIDL
+                典周策_E银ZA.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "银+WXAB=己" Then
-                典周策_E银己.Add Item:=X, Key:=CIDL
+                典周策_E银己.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 <> "" Then
-                典周策_E其他.Add Item:=X, Key:=CIDL
+                典周策_E其他.Add Item:=X, key:=CIDL
             End If
             '【月基带向】WXAB→WXCD双向状态: 11双好/10反险/01正潜/00双差
-            Dim 月基状码 As String: 月基状码 = Left$(谕组(X, 位谕of月基带向), 2)
-            If 月基状码 = "11" Then
-                典月基_双好.Add Item:=X, Key:=CIDL
-            ElseIf 月基状码 = "10" Then
-                典月基_反险.Add Item:=X, Key:=CIDL
-            ElseIf 月基状码 = "01" Then
-                典月基_正潜.Add Item:=X, Key:=CIDL
-            Else
-                典月基_双差.Add Item:=X, Key:=CIDL
+            '仅对非多长区域过滤（多长区域100%都是11双好，无区分度）
+            Dim 月基策名 As String: 月基策名 = 谕组(X, 位谕of月基策略)
+            If Left$(月基策名, 2) <> "多长" Then
+                Dim 月基状码 As String: 月基状码 = Left$(谕组(X, 位谕of月基带向), 2)
+                If 月基状码 = "11" Then
+                    典月基_双好.Add Item:=X, key:=CIDL
+                ElseIf 月基状码 = "10" Then
+                    典月基_反险.Add Item:=X, key:=CIDL
+                ElseIf 月基状码 = "01" Then
+                    典月基_正潜.Add Item:=X, key:=CIDL
+                Else
+                    典月基_双差.Add Item:=X, key:=CIDL
+                End If
             End If
             '【月基策略分类】读取神谕写入的月基策略列（7类，按周层四域映射）
             '============================================================================
-            Dim 月基策名 As String: 月基策名 = 谕组(X, 位谕of月基策略)
+            月基策名 = 谕组(X, 位谕of月基策略)
             If 月基策名 = "多长(积极)" Then
-                典月策_多长积极.Add Item:=X, Key:=CIDL
+                典月策_多长积极.Add Item:=X, key:=CIDL
             ElseIf 月基策名 = "多长(消极)" Then
-                典月策_多长消极.Add Item:=X, Key:=CIDL
+                典月策_多长消极.Add Item:=X, key:=CIDL
             ElseIf 月基策名 = "多长(不定)" Then
-                典月策_多长不定.Add Item:=X, Key:=CIDL
+                典月策_多长不定.Add Item:=X, key:=CIDL
             ElseIf 月基策名 = "多被(金)" Then
-                典月策_多被金.Add Item:=X, Key:=CIDL
+                典月策_多被金.Add Item:=X, key:=CIDL
             ElseIf 月基策名 = "多被(银)" Then
-                典月策_多被银.Add Item:=X, Key:=CIDL
+                典月策_多被银.Add Item:=X, key:=CIDL
             ElseIf 月基策名 = "NA(空看)" Then
-                典月策_NA空看.Add Item:=X, Key:=CIDL
+                典月策_NA空看.Add Item:=X, key:=CIDL
             ElseIf 月基策名 = "NA(空长)" Then
-                典月策_NA空长.Add Item:=X, Key:=CIDL
+                典月策_NA空长.Add Item:=X, key:=CIDL
             End If
             '============================================================================
             '复盘：用于筛选"下周冲高"机会。
@@ -513,31 +517,31 @@ Else
                     '--------------------------------------------------------------------
                     If Mid$(谕组(X, 位谕of仓周类), 1, 1) = "尿" Then
                             If 谕组(X, 位谕of周类BTZB) > 0 Or 谕组(X, 位谕of周类BTAB) > 0 Then
-                                    典筛日外仓月尿例外.Add Item:=X, Key:=CIDL
+                                    典筛日外仓月尿例外.Add Item:=X, key:=CIDL
                             End If
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "屎" Then
                             If 谕组(X, 位谕of周类BTZB) > 0 Or 谕组(X, 位谕of周类BTAB) > 0 Then
-                                    典筛日外仓月屎例外.Add Item:=X, Key:=CIDL
+                                    典筛日外仓月屎例外.Add Item:=X, key:=CIDL
                             End If
                     '--------------------------------------------------------------------
                     '过滤：嘘。
                     '--------------------------------------------------------------------
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "嘘" Then
                                 If InStr(谕组(X, 位谕of周道月势), "X7") > 0 Then
-                                    典筛日外仓月嘘X7.Add Item:=X, Key:=CIDL
+                                    典筛日外仓月嘘X7.Add Item:=X, key:=CIDL
                                 Else
-                                    典筛日外仓月嘘余.Add Item:=X, Key:=CIDL
+                                    典筛日外仓月嘘余.Add Item:=X, key:=CIDL
                                 End If
                     '--------------------------------------------------------------------
                     '过滤：唏。/C0/C4/C6。属于震荡区，更有可能向下。
                     '--------------------------------------------------------------------
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "唏" Then
-                                    典筛日外仓月唏.Add Item:=X, Key:=CIDL
+                                    典筛日外仓月唏.Add Item:=X, key:=CIDL
                     '--------------------------------------------------------------------
                     '过滤：银。/A0/C4/C6。属于震荡区，有可能形成主升。
                     '--------------------------------------------------------------------
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "银" Then
-                                    典筛日外仓月银.Add Item:=X, Key:=CIDL
+                                    典筛日外仓月银.Add Item:=X, key:=CIDL
                 '------------------------------------------------------------------------
                 '过滤：按月阶
                 '------------------------------------------------------------------------
@@ -547,23 +551,23 @@ Else
                     '--------------------------------------------------------------------
                     ElseIf InStr(谕组(X, 位谕of周道月势), "A3") > 0 Then
                                     '应属于主升，但存续时间非常短。故统一提取出来，作为潜在主升。
-                                    典筛日外仓月A3.Add Item:=X, Key:=CIDL
+                                    典筛日外仓月A3.Add Item:=X, key:=CIDL
                     ElseIf InStr(谕组(X, 位谕of周道月势), "A1") > 0 Then
-                                    典筛日外仓月A1.Add Item:=X, Key:=CIDL
+                                    典筛日外仓月A1.Add Item:=X, key:=CIDL
                     '--------------------------------------------------------------------
                     '单列：非A7、非C7
                     '--------------------------------------------------------------------
                     ElseIf InStr(谕组(X, 位谕of周道月势), "A7") = 0 And InStr(谕组(X, 位谕of周道月势), "C7") = 0 Then
-                                    典筛日外仓月余.Add Item:=X, Key:=CIDL
+                                    典筛日外仓月余.Add Item:=X, key:=CIDL
                     '--------------------------------------------------------------------
                     '单列：C7潜在顶部震荡。
                     '注20260320：此处将所有C7集中，因为WXBC劫仅有极少会成为"主升"，所以在此处集中。从而，即使是<低波><败多>，也不包含WXBC情况。
                     '--------------------------------------------------------------------
                     ElseIf InStr(谕组(X, 位谕of周道月势), "C7") > 0 Then
-                                    典筛日外仓月C7初储.Add Item:=X, Key:=CIDL
+                                    典筛日外仓月C7初储.Add Item:=X, key:=CIDL
                                     '注20260303：因存续时间较短，且已经区分地型，不再对（储初）区分是否为龙。
                     ElseIf InStr(谕组(X, 位谕of周层界), "破") > 0 Then
-                                    典筛日外仓月A7破.Add Item:=X, Key:=CIDL
+                                    典筛日外仓月A7破.Add Item:=X, key:=CIDL
                 '------------------------------------------------------------------------
                 '注：以下都是（仓月为A7）
                 '------------------------------------------------------------------------
@@ -575,17 +579,17 @@ Else
                     '孙类：日均高幅太小。没有操作空间，不适合日类操作。
                     '--------------------------------------------------------------------
                     ElseIf 谕组(X, 位谕of周波均高幅十) <= 3 Then
-                                    典筛日外A7低波.Add Item:=X, Key:=CIDL
+                                    典筛日外A7低波.Add Item:=X, key:=CIDL
                     ElseIf 谕组(X, 位谕of日段十均幅高) <= 1.2 Then
                                     '过滤日波动过小，没有操作意义。
-                                    典筛日外A7低波_日高lt1.Add Item:=X, Key:=CIDL
+                                    典筛日外A7低波_日高lt1.Add Item:=X, key:=CIDL
                     '--------------------------------------------------------------------
                     '剔除：败多（用于过滤周波动较小的情况，除非有较明确走势，否则不应参与）
                     '剔除（单列只用于个别选择进入长期池，只在周末进行筛选不用于每日筛选）
                     '历史高幅：涉及股性，可能多次出现不冲高情况。
                     '--------------------------------------------------------------------
                     ElseIf 谕组(X, 位谕of周波类) = "2败多" Then
-                                    典筛日外A7败多.Add Item:=X, Key:=CIDL
+                                    典筛日外A7败多.Add Item:=X, key:=CIDL
                 '------------------------------------------------------------------------
                 '注：以下都是（仓月为A7）（周波动率大于3%）
                 '------------------------------------------------------------------------
@@ -596,19 +600,19 @@ Else
                     '剔除：偏离较大
                     '--------------------------------------------------------------------
                     ElseIf 谕组(X, 位谕of周类BTZC) > 0 And 谕组(X, 位谕of周层盈丘幅) > 80 Then              '操作：检查是否继续上冲
-                                典筛日外A7常_剔周丘幅80.Add Item:=X, Key:=CIDL
+                                典筛日外A7常_剔周丘幅80.Add Item:=X, key:=CIDL
                     '--------------------------------------------------------------------
                     '单列：过渡期，为经历WJB劫后始终未触顶
                     '注20260303：因存续时间较短，且已经区分地型，不再对（再）区分是否为龙。
                     '--------------------------------------------------------------------
                     ElseIf InStr(谕组(X, 位谕of周层波型), "再B") > 0 Then
-                                典筛日外A7常_渡区再B.Add Item:=X, Key:=CIDL
+                                典筛日外A7常_渡区再B.Add Item:=X, key:=CIDL
                     ElseIf InStr(谕组(X, 位谕of周层波型), "再C") > 0 Then
-                                典筛日外A7常_渡区再C.Add Item:=X, Key:=CIDL
+                                典筛日外A7常_渡区再C.Add Item:=X, key:=CIDL
                     ElseIf InStr(谕组(X, 位谕of周层波型), "再") > 0 Then
-                                典筛日外A7常_渡区再D.Add Item:=X, Key:=CIDL
+                                典筛日外A7常_渡区再D.Add Item:=X, key:=CIDL
                     ElseIf InStr(谕组(X, 位谕of周层波型), "震负") > 0 Or InStr(谕组(X, 位谕of周层波型), "头") > 0 Then
-                                典筛日外A7常_汇头WJB劫.Add Item:=X, Key:=CIDL   '包含：震负芽（/W3h/W3u）头负芽（/W2I/W2i）头正芽。包含虽经过WJB劫，但较长时间未触顶的情况。
+                                典筛日外A7常_汇头WJB劫.Add Item:=X, key:=CIDL   '包含：震负芽（/W3h/W3u）头负芽（/W2I/W2i）头正芽。包含虽经过WJB劫，但较长时间未触顶的情况。
                 '------------------------------------------------------------------------
                 '注：以下都是（仓月为A7）（周波动率大于3%）(主)
                 '------------------------------------------------------------------------
@@ -616,17 +620,17 @@ Else
                     '单列："头"肯定是前面经历了WJB劫。"震"肯定是前面经历了WXZA劫，或WXZB劫（W3h/W3u）。
                     '--------------------------------------------------------------------
                     ElseIf InStr(谕组(X, 位谕of周层波型), "震正芽") > 0 Or InStr(谕组(X, 位谕of周层波型), "震正根") > 0 Then
-                                典筛日外A7常_汇震WJA劫.Add Item:=X, Key:=CIDL   '包含：震正芽、震正根
+                                典筛日外A7常_汇震WJA劫.Add Item:=X, key:=CIDL   '包含：震正芽、震正根
                     '--------------------------------------------------------------------
                     '单列：离顶。代表很可能属于【震荡】。
                     '--------------------------------------------------------------------
                     ElseIf InStr(谕组(X, 位谕of周层波型), "震") > 0 Then
-                                典筛日外A7常_汇震正〇.Add Item:=X, Key:=CIDL
+                                典筛日外A7常_汇震正〇.Add Item:=X, key:=CIDL
                                 '注20250520：：可能属于地型杂，或"帐篷"。仍可能属于阶梯上升过程，仅优于WXZA劫。
                     ElseIf InStr(谕组(X, 位谕of周层波型), "龙管根") > 0 Then
-                                典筛日外A7常_主区龙管根.Add Item:=X, Key:=CIDL
+                                典筛日外A7常_主区龙管根.Add Item:=X, key:=CIDL
                     ElseIf InStr(谕组(X, 位谕of周层波型), "龙管") > 0 Then
-                                典筛日外A7常_主区龙管余.Add Item:=X, Key:=CIDL
+                                典筛日外A7常_主区龙管余.Add Item:=X, key:=CIDL
                     '--------------------------------------------------------------------
                     '单列：/存在WXZA劫（存在上冲动力）/合顶初（属于机会较多情况）。WXZA劫是很可能处于经过高点后的震荡，所以一定要把"蛀"放在"首"之前进行过滤。
                     '注20260520：不再对"首"进行过滤，将其放回各自地型考虑。实质上是，减少顶的重要性，增加地型的重要性。
@@ -637,16 +641,16 @@ Else
                     '单列：地型（前四柱是否存在异常柱/跌连/跌吞）
                     '--------------------------------------------------------------------
                     ElseIf InStr(谕组(X, 位谕of周层波型), "_4") > 0 Then
-                                典筛日外A7常_主区龙猪地型4.Add Item:=X, Key:=CIDL
+                                典筛日外A7常_主区龙猪地型4.Add Item:=X, key:=CIDL
                     Else
                         If InStr(谕组(X, 位谕of周层波型), "_0") > 0 Then
-                                典筛日外A7常_主区龙猪地型0.Add Item:=X, Key:=CIDL
+                                典筛日外A7常_主区龙猪地型0.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层波型), "_1") > 0 Then
-                                典筛日外A7常_主区龙猪地型1.Add Item:=X, Key:=CIDL
+                                典筛日外A7常_主区龙猪地型1.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层波型), "_2") > 0 Then
-                                典筛日外A7常_主区龙猪地型2.Add Item:=X, Key:=CIDL
+                                典筛日外A7常_主区龙猪地型2.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层波型), "_3") > 0 Then
-                                典筛日外A7常_主区龙猪地型3.Add Item:=X, Key:=CIDL
+                                典筛日外A7常_主区龙猪地型3.Add Item:=X, key:=CIDL
                         End If
                     End If
                 '------------------------------------------------------------------------
@@ -684,17 +688,17 @@ Else
             '【活】
             '----------------------------------------------------------------------------
                     ElseIf 谕组(X, 位qt市板) = 常市板票Qin Then
-                            典集筛股性非.Add Item:=X, Key:=CIDL
+                            典集筛股性非.Add Item:=X, key:=CIDL
                     ElseIf 谕组(X, 位qt市板) = 常市板票Qit Then
-                            典集筛股性微.Add Item:=X, Key:=CIDL
+                            典集筛股性微.Add Item:=X, key:=CIDL
                     ElseIf 谕组(X, 位qt市板) = 常市板票Qif Or 谕组(X, 位qt市板) = 常市板票Qic Or 谕组(X, 位qt市板) = 常市板票Qim Or 谕组(X, 位qt市板) = 常市板票Qit Then
-                            典集筛股性活.Add Item:=X, Key:=CIDL
+                            典集筛股性活.Add Item:=X, key:=CIDL
                     Else
                         If 谕组(X, 位谕of日段股性) = "12变活" Or 谕组(X, 位谕of日段股性) = "13变活" _
                         Or 谕组(X, 位谕of日段股性) = "0萎" Or 谕组(X, 位谕of日段股性) = "11蔫" Then
-                            典集筛股性萎.Add Item:=X, Key:=CIDL
+                            典集筛股性萎.Add Item:=X, key:=CIDL
                         Else
-                            典集筛股性活.Add Item:=X, Key:=CIDL
+                            典集筛股性活.Add Item:=X, key:=CIDL
                         End If
                     End If
     '====================================================================================
@@ -1049,11 +1053,13 @@ Next
         '   2=已下破(WXZB≤0持续) → 下周P(≥3%)=38.5%，观望等待重新站稳B线
         ' 详见：_主文档\昭明计划大局观体系.md §1.2_②
         ' 11双好=安全持有 10反险=反向风险81.6% 01正潜=正向潜力61.1% 00双差=不参与
+        ' 注：多长区域内100%为11双好，已排除，以下仅输出非多长区域
         '====================================================================================
+        Call IQQQ展擎出程至页(wb, 表名, 是否建表:=False, 章色:=常色四红, 章签:="【月基退出预警】基于WXZB信号")
         MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色八绿, 典码输出:=典月基_双好, 节签:="【月基】11双好(安全)")
-        MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典月基_反险, 节签:="⚠️【月基】10反险(反向81.6%)")
         MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色八橙, 典码输出:=典月基_正潜, 节签:="【月基】01正潜(正向61.1%)")
-        MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色二灰, 典码输出:=典月基_双差, 节签:="【月基】00双差(观望)")
+'        MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典月基_反险, 节签:="??【月基】10反险(反向81.6%)")
+'        MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色二灰, 典码输出:=典月基_双差, 节签:="【月基】00双差(观望)")
 '====================================================================================
         '【月基策略分类】7类输出（按周层四域映射）
         ' 基于四域体系（详见周层四域定义）：
@@ -1065,13 +1071,14 @@ Next
         '   NA(空看)   = ZC≤0但CD/ZB有正
         '   NA(空长)   = 三空全
         '====================================================================================
+        Call IQQQ展擎出程至页(wb, 表名, 是否建表:=False, 章色:=常色四红, 章签:="【月基策略分类】7类输出（按周层四域映射）")
         MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色一蓝, 典码输出:=典月策_多长积极, 节签:="?【月基策略】多长(积极)持有")
         MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色二灰, 典码输出:=典月策_多长不定, 节签:="【月基策略】多长(不定)关注")
         MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典月策_多长消极, 节签:="?【月基策略】多长(消极)准备减仓")
-        MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典月策_多被金, 节签:="?【月基策略】多被(金)ZB≤0")
-        MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典月策_多被银, 节签:="【月基策略】多被(银)CD≤0")
-        MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典月策_NA空看, 节签:="【月基策略】NA(空看)")
-        MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典月策_NA空长, 节签:="【月基策略】NA(空长)")
+'        MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典月策_多被金, 节签:="?【月基策略】多被(金)ZB≤0")
+'        MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典月策_多被银, 节签:="【月基策略】多被(银)CD≤0")
+'        MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典月策_NA空看, 节签:="【月基策略】NA(空看)")
+'        MSG = MSG & IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典月策_NA空长, 节签:="【月基策略】NA(空长)")
 '========================================================================================
 '类别：在池
 '========================================================================================
@@ -1258,33 +1265,33 @@ Function IQQQ展擎筛程至C1章按仓类( _
         If 出章模式 = "周仓" Then
             If UBCID是代码(CIDL) = False Then
             ElseIf 谕组(X, 位qt停牌) = "S" Then
-                        典仓停牌.Add Item:=X, Key:=CIDL
+                        典仓停牌.Add Item:=X, key:=CIDL
             Else
                 '========================================================================
                 '两级过滤：（1）仓周类（2）周劫类型
                 '========================================================================
                     If Mid$(谕组(X, 位谕of仓周类), 1, 1) = "金" Then
                             If Mid$(谕组(X, 位谕of仓周类), 2, 1) = "c" Or Mid$(谕组(X, 位谕of仓周类), 2, 1) = "y" Or Mid$(谕组(X, 位谕of仓周类), 2, 1) = "z" Then
-                                典仓周金_cyz.Add Item:=X, Key:=CIDL
+                                典仓周金_cyz.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of周层波型), "再") > 0 Or InStr(谕组(X, 位谕of周层波型), "震负") > 0 Or InStr(谕组(X, 位谕of周层波型), "头") > 0 Then
                                 '包含WJB劫
-                                典仓周金_入口再.Add Item:=X, Key:=CIDL
+                                典仓周金_入口再.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of周层波型), "初") > 0 Or InStr(谕组(X, 位谕of周层波型), "储") > 0 Then
                                 '包含WXBC劫
-                                典仓周金_入口初.Add Item:=X, Key:=CIDL
+                                典仓周金_入口初.Add Item:=X, key:=CIDL
                             Else
-                                典仓周金_常.Add Item:=X, Key:=CIDL
+                                典仓周金_常.Add Item:=X, key:=CIDL
                             End If
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "银" Then
-                                典仓周银.Add Item:=X, Key:=CIDL
+                                典仓周银.Add Item:=X, key:=CIDL
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "唏" Then
-                                典仓周唏.Add Item:=X, Key:=CIDL
+                                典仓周唏.Add Item:=X, key:=CIDL
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "嘘" Then
-                                典仓周嘘.Add Item:=X, Key:=CIDL
+                                典仓周嘘.Add Item:=X, key:=CIDL
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "尿" Then
-                                典仓周尿.Add Item:=X, Key:=CIDL
+                                典仓周尿.Add Item:=X, key:=CIDL
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "屎" Then
-                                典仓周屎.Add Item:=X, Key:=CIDL
+                                典仓周屎.Add Item:=X, key:=CIDL
                     End If
                 '========================================================================
             End If
@@ -1295,36 +1302,36 @@ Function IQQQ展擎筛程至C1章按仓类( _
         If 出章模式 = "日仓" Then
             If UBCID是代码(CIDL) = False Then
             ElseIf 谕组(X, 位qt停牌) = "S" Then
-                典仓停牌.Add Item:=X, Key:=CIDL
+                典仓停牌.Add Item:=X, key:=CIDL
             Else
                 '========================================================================
                 '两级过滤：（1）仓周类（2）仓日类
                 '========================================================================
                     If Mid$(谕组(X, 位谕of仓周类), 1, 1) = "金" Then
                             Select Case Left$(谕组(X, 位谕of仓日类), 1)
-                            Case "忐": 典仓周金_日忐.Add Item:=X, Key:=CIDL
-                            Case "忠": 典仓周金_日忠.Add Item:=X, Key:=CIDL
-                            Case "忑": 典仓周金_日忑.Add Item:=X, Key:=CIDL
-                            Case "下": 典仓周金_日下.Add Item:=X, Key:=CIDL
-                            Case "中": 典仓周金_日中.Add Item:=X, Key:=CIDL
+                            Case "忐": 典仓周金_日忐.Add Item:=X, key:=CIDL
+                            Case "忠": 典仓周金_日忠.Add Item:=X, key:=CIDL
+                            Case "忑": 典仓周金_日忑.Add Item:=X, key:=CIDL
+                            Case "下": 典仓周金_日下.Add Item:=X, key:=CIDL
+                            Case "中": 典仓周金_日中.Add Item:=X, key:=CIDL
                             Case "上"
                                 Select Case Mid$(谕组(X, 位谕of仓日类), 2, 1)
-                                    Case "a", "b": 典仓周金_日上正交.Add Item:=X, Key:=CIDL
-                                    Case "r", "c": 典仓周金_日上过渡.Add Item:=X, Key:=CIDL
-                                    Case "y", "z": 典仓周金_日上负交.Add Item:=X, Key:=CIDL
+                                    Case "a", "b": 典仓周金_日上正交.Add Item:=X, key:=CIDL
+                                    Case "r", "c": 典仓周金_日上过渡.Add Item:=X, key:=CIDL
+                                    Case "y", "z": 典仓周金_日上负交.Add Item:=X, key:=CIDL
                                 End Select
-                            Case Else: 典仓周金_日兜底.Add Item:=X, Key:=CIDL
+                            Case Else: 典仓周金_日兜底.Add Item:=X, key:=CIDL
                             End Select
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "银" Then
-                                典仓周银.Add Item:=X, Key:=CIDL
+                                典仓周银.Add Item:=X, key:=CIDL
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "唏" Then
-                                典仓周唏.Add Item:=X, Key:=CIDL
+                                典仓周唏.Add Item:=X, key:=CIDL
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "嘘" Then
-                                典仓周嘘.Add Item:=X, Key:=CIDL
+                                典仓周嘘.Add Item:=X, key:=CIDL
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "尿" Then
-                                典仓周尿.Add Item:=X, Key:=CIDL
+                                典仓周尿.Add Item:=X, key:=CIDL
                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "屎" Then
-                                典仓周屎.Add Item:=X, Key:=CIDL
+                                典仓周屎.Add Item:=X, key:=CIDL
                     End If
                 '========================================================================
             End If
@@ -1449,23 +1456,23 @@ Function IQQQ展擎筛程至C8章按停( _
             '今涨停
             '============================================================================
             If 谕组(X, 位谕of日波龄BTHR9) >= 2 Then
-                    典跨时类停今甲.Add Item:=X, Key:=CIDL
+                    典跨时类停今甲.Add Item:=X, key:=CIDL
             ElseIf 谕组(X, 位谕of日波龄BTHR9) >= 1 Then
-                    典跨时类停今乙.Add Item:=X, Key:=CIDL
+                    典跨时类停今乙.Add Item:=X, key:=CIDL
             '============================================================================
             '叠大涨的标准形态
             '============================================================================
             ElseIf 谕组(X, 位谕of日波叠幅) >= 50 Then
                 If InStr(谕组(X, 位谕of日龟顶触), "高") > 0 Or InStr(谕组(X, 位谕of日龟顶触), "撤") > 0 Then
-                    典跨时类叠高甲.Add Item:=X, Key:=CIDL
+                    典跨时类叠高甲.Add Item:=X, key:=CIDL
                 End If
             ElseIf 谕组(X, 位谕of日波叠幅) >= 40 Then
                 If InStr(谕组(X, 位谕of日龟顶触), "高") > 0 Or InStr(谕组(X, 位谕of日龟顶触), "撤") > 0 Then
-                    典跨时类叠高乙.Add Item:=X, Key:=CIDL
+                    典跨时类叠高乙.Add Item:=X, key:=CIDL
                 End If
             ElseIf 谕组(X, 位谕of日波叠幅) >= 30 Then
                 If InStr(谕组(X, 位谕of日龟顶触), "高") > 0 Or InStr(谕组(X, 位谕of日龟顶触), "撤") > 0 Then
-                    典跨时类叠高丙.Add Item:=X, Key:=CIDL
+                    典跨时类叠高丙.Add Item:=X, key:=CIDL
                 End If
             End If
 '            '============================================================================
@@ -1586,30 +1593,30 @@ Function IQQQ展擎筛程至C8章按活( _
             '周均高幅：
             If 谕组(X, 位谕of日段十均幅高) >= 3 Then
                 If 谕组(X, 位谕of周波均高幅十) >= 14 Then
-                        典集汇活日G3周G14.Add Item:=X, Key:=CIDL
+                        典集汇活日G3周G14.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位谕of周波均高幅十) >= 10 Then
-                        典集汇活日G3周G10.Add Item:=X, Key:=CIDL
+                        典集汇活日G3周G10.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位谕of周波均高幅十) >= 8 Then
-                        典集汇活日G3周G8.Add Item:=X, Key:=CIDL
+                        典集汇活日G3周G8.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位谕of周波均高幅十) >= 6 Then
-                        典集汇活日G3周G6.Add Item:=X, Key:=CIDL
+                        典集汇活日G3周G6.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位谕of日段十均幅高) >= 7 Then
-                        典集汇活日G3周L6日G7.Add Item:=X, Key:=CIDL
+                        典集汇活日G3周L6日G7.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位谕of日段十均幅高) >= 5 Then
-                        典集汇活日G3周L6日G5.Add Item:=X, Key:=CIDL
+                        典集汇活日G3周L6日G5.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位谕of日段十均幅高) >= 3 Then
-                        典集汇活日G3周L6日G3.Add Item:=X, Key:=CIDL
+                        典集汇活日G3周L6日G3.Add Item:=X, key:=CIDL
                 End If
             ElseIf 谕组(X, 位谕of周波均高幅十) >= 6 Then
                 If 谕组(X, 位谕of日段十均幅高) < 2 Then
-                        典集汇活日L3周G6低活.Add Item:=X, Key:=CIDL
+                        典集汇活日L3周G6低活.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位谕of周波均高幅十) >= 10 Then
-                        典集汇活日L3周G10.Add Item:=X, Key:=CIDL
+                        典集汇活日L3周G10.Add Item:=X, key:=CIDL
                 Else
-                        典集汇活日L3周G6.Add Item:=X, Key:=CIDL
+                        典集汇活日L3周G6.Add Item:=X, key:=CIDL
                 End If
             Else
-                        典集汇活日L3周L6.Add Item:=X, Key:=CIDL
+                        典集汇活日L3周L6.Add Item:=X, key:=CIDL
             End If
         '================================================================================
         End If
@@ -1890,17 +1897,17 @@ Function IQQQ展擎筛程至D1节按周类( _
         If 出节模式 = "周护" Then
             If UBCID是代码(CIDL) = False Then
             ElseIf 谕组(X, 位qt停牌) = "S" Then
-                            典周废单停牌.Add Item:=X, Key:=CIDL
+                            典周废单停牌.Add Item:=X, key:=CIDL
             Else
                 '========================================================================
                 If InStr(谕组(X, 位谕of周层护型), "甲") > 0 Or InStr(谕组(X, 位谕of周层护型), "乙") > 0 Then
-                            典周护_甲乙.Add Item:=X, Key:=CIDL
+                            典周护_甲乙.Add Item:=X, key:=CIDL
                 ElseIf InStr(谕组(X, 位谕of周层护型), "丙") > 0 Then
-                            典周护_丙.Add Item:=X, Key:=CIDL
+                            典周护_丙.Add Item:=X, key:=CIDL
                 ElseIf InStr(谕组(X, 位谕of周层护型), "己") > 0 Then
-                            典周护_己.Add Item:=X, Key:=CIDL
+                            典周护_己.Add Item:=X, key:=CIDL
                 Else
-                            典周护_丁戊.Add Item:=X, Key:=CIDL
+                            典周护_丁戊.Add Item:=X, key:=CIDL
                 End If
                 '========================================================================
             End If
@@ -1913,38 +1920,38 @@ Function IQQQ展擎筛程至D1节按周类( _
         If 出节模式 = "周地" Then
             If UBCID是代码(CIDL) = False Then
             ElseIf 谕组(X, 位qt停牌) = "S" Then
-                            典周废单停牌.Add Item:=X, Key:=CIDL
+                            典周废单停牌.Add Item:=X, key:=CIDL
             Else
                 '========================================================================
                 '注20260620：坚持以WXAB为准。首先按【周护型】分类，只针对周护型为"甲乙"进行地型分类。
                 '========================================================================
                 If InStr(谕组(X, 位谕of周层护型), "甲") > 0 Or InStr(谕组(X, 位谕of周层护型), "乙") > 0 Then
                         If InStr(谕组(X, 位谕of周层大局), ".4暂") > 0 Then
-                            典周地型_甲乙含4暂.Add Item:=X, Key:=CIDL
+                            典周地型_甲乙含4暂.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层大局), ".4蛀") > 0 Then
-                            典周地型_甲乙含4蛀.Add Item:=X, Key:=CIDL
+                            典周地型_甲乙含4蛀.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层大局), ".0") > 0 Then
-                            典周地型_甲乙含0.Add Item:=X, Key:=CIDL
+                            典周地型_甲乙含0.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层大局), ".1") > 0 Then
-                            典周地型_甲乙含1.Add Item:=X, Key:=CIDL
+                            典周地型_甲乙含1.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层大局), ".2") > 0 Then
-                            典周地型_甲乙含2.Add Item:=X, Key:=CIDL
+                            典周地型_甲乙含2.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层大局), ".3") > 0 Then
-                            典周地型_甲乙含3.Add Item:=X, Key:=CIDL
+                            典周地型_甲乙含3.Add Item:=X, key:=CIDL
                         '---------------------------------------------------
                         '负向地型：只区分两类。
                         '---------------------------------------------------
                         ElseIf InStr(谕组(X, 位谕of周层大局), ".5") > 0 Then
-                            典周地型_甲乙负三内.Add Item:=X, Key:=CIDL
+                            典周地型_甲乙负三内.Add Item:=X, key:=CIDL
                         Else
-                            典周地型_甲乙负三外.Add Item:=X, Key:=CIDL
+                            典周地型_甲乙负三外.Add Item:=X, key:=CIDL
                         End If
                 ElseIf InStr(谕组(X, 位谕of周层护型), "丙") > 0 Then
-                            典周地型_丙.Add Item:=X, Key:=CIDL
+                            典周地型_丙.Add Item:=X, key:=CIDL
                 ElseIf InStr(谕组(X, 位谕of周层护型), "己") > 0 Then
-                            典周地型_己.Add Item:=X, Key:=CIDL
+                            典周地型_己.Add Item:=X, key:=CIDL
                 Else
-                            典周地型_丁戊.Add Item:=X, Key:=CIDL
+                            典周地型_丁戊.Add Item:=X, key:=CIDL
                 End If
                 '========================================================================
             End If
@@ -1957,7 +1964,7 @@ Function IQQQ展擎筛程至D1节按周类( _
         If 出节模式 = "周层" Then
         If UBCID是代码(CIDL) = False Then
         ElseIf 谕组(X, 位qt停牌) = "S" Then
-                            典周废单停牌.Add Item:=X, Key:=CIDL
+                            典周废单停牌.Add Item:=X, key:=CIDL
         '--------------------------------------------------------------------------------
         '【出全是否】不只输出DJC之上，而是按照周层范围进行筛选。如果需要仅保留DXZC>0，则利用日类进行筛选。
         '--------------------------------------------------------------------------------
@@ -1969,11 +1976,11 @@ Function IQQQ展擎筛程至D1节按周类( _
         '--------------------------------------------------------------------------------
         ElseIf 谕组(X, 位谕of周基周局) = "3w" Or 谕组(X, 位谕of周基周局) = "3v" Then
                         If InStr(谕组(X, 位谕of周层柱排), "跌.") > 0 Then
-                                典周层正破JB排跌.Add Item:=X, Key:=CIDL
+                                典周层正破JB排跌.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层柱排), "升.") > 0 Then
-                                典周层正破JB排升.Add Item:=X, Key:=CIDL
+                                典周层正破JB排升.Add Item:=X, key:=CIDL
                         Else
-                                典周层正破JB排人.Add Item:=X, Key:=CIDL
+                                典周层正破JB排人.Add Item:=X, key:=CIDL
                         End If
         '--------------------------------------------------------------------------------
         '单独列示：储
@@ -1982,18 +1989,18 @@ Function IQQQ展擎筛程至D1节按周类( _
         '--------------------------------------------------------------------------------
         ElseIf InStr(谕组(X, 位谕of周层界), "储") > 0 Then
                         If InStr(谕组(X, 位谕of周层柱型), "梯") > 0 Then
-                                典周层正储梯.Add Item:=X, Key:=CIDL
+                                典周层正储梯.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "栏") > 0 Then
-                                典周层正储栏.Add Item:=X, Key:=CIDL
+                                典周层正储栏.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "栅") > 0 Then
-                                典周层正储栅.Add Item:=X, Key:=CIDL
+                                典周层正储栅.Add Item:=X, key:=CIDL
                         '----------------------------------------------------------------
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "枝") > 0 Then
-                                典周层正储枝.Add Item:=X, Key:=CIDL
+                                典周层正储枝.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "根") > 0 Then
-                                典周层正储根.Add Item:=X, Key:=CIDL
+                                典周层正储根.Add Item:=X, key:=CIDL
                         Else
-                                典周层正储杂.Add Item:=X, Key:=CIDL
+                                典周层正储杂.Add Item:=X, key:=CIDL
                         End If
         '--------------------------------------------------------------------------------
         '正向：WJC之上
@@ -2006,34 +2013,34 @@ Function IQQQ展擎筛程至D1节按周类( _
                     If InStr(谕组(X, 位谕of周层波型), "龙") > 0 Then
                         '----------------------------------------------------------------
                         If InStr(谕组(X, 位谕of周层柱型), "根") > 0 Then
-                                典周层正再根.Add Item:=X, Key:=CIDL
+                                典周层正再根.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "杂") > 0 Then
-                                典周层正再杂.Add Item:=X, Key:=CIDL
+                                典周层正再杂.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "枝") > 0 Then
                             If InStr(谕组(X, 位谕of周层柱型), "枝贯") > 0 Then
-                                典周层正再枝贯.Add Item:=X, Key:=CIDL
+                                典周层正再枝贯.Add Item:=X, key:=CIDL
                             Else
-                                典周层正再枝启.Add Item:=X, Key:=CIDL
+                                典周层正再枝启.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "栅") > 0 Then
-                                典周层正再栅.Add Item:=X, Key:=CIDL
+                                典周层正再栅.Add Item:=X, key:=CIDL
                         '----------------------------------------------------------------
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "梯") > 0 Then
                             '注20251002：先均线后顶型。体现【顶型】是【均线】的子集。
                             If InStr(谕组(X, 位谕of周层柱型), "梯交") > 0 Then
-                                典周层正再梯交.Add Item:=X, Key:=CIDL
+                                典周层正再梯交.Add Item:=X, key:=CIDL
                             Else
-                                典周层正再梯升.Add Item:=X, Key:=CIDL
+                                典周层正再梯升.Add Item:=X, key:=CIDL
                             End If
                         Else
-                                典周层正再栏.Add Item:=X, Key:=CIDL
+                                典周层正再栏.Add Item:=X, key:=CIDL
                         End If
                         '----------------------------------------------------------------
                     ElseIf InStr(谕组(X, 位谕of周层波型), "震正") > 0 Then
-                                典周层正再_汇震WJA劫.Add Item:=X, Key:=CIDL   '包含：震正芽、震正根
+                                典周层正再_汇震WJA劫.Add Item:=X, key:=CIDL   '包含：震正芽、震正根
                     '以下为经历WJB劫后始终未触顶
                     Else
-                                典周层正再_汇头WJB劫.Add Item:=X, Key:=CIDL   '包含：震负芽（/W3h/W3u）头负芽（/W2I/W2i）头正芽
+                                典周层正再_汇头WJB劫.Add Item:=X, key:=CIDL   '包含：震负芽（/W3h/W3u）头负芽（/W2I/W2i）头正芽
                     End If
                 '------------------------------------------------------------------------
                 '单独列示：初
@@ -2042,33 +2049,33 @@ Function IQQQ展擎筛程至D1节按周类( _
                     If InStr(谕组(X, 位谕of周层波型), "龙") > 0 Then
                         '----------------------------------------------------------------
                         If InStr(谕组(X, 位谕of周层柱型), "根") > 0 Then
-                                典周层正初根.Add Item:=X, Key:=CIDL
+                                典周层正初根.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "杂") > 0 Then
-                                典周层正初杂.Add Item:=X, Key:=CIDL
+                                典周层正初杂.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "枝") > 0 Then
                             If InStr(谕组(X, 位谕of周层柱型), "枝贯") > 0 Then
-                                典周层正初枝贯.Add Item:=X, Key:=CIDL
+                                典周层正初枝贯.Add Item:=X, key:=CIDL
                             Else
-                                典周层正初枝启.Add Item:=X, Key:=CIDL
+                                典周层正初枝启.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "栅") > 0 Then
-                                典周层正初栅.Add Item:=X, Key:=CIDL
+                                典周层正初栅.Add Item:=X, key:=CIDL
                         '----------------------------------------------------------------
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "梯") > 0 Then
                             If InStr(谕组(X, 位谕of周层柱型), "梯交") > 0 Then
-                                典周层正初梯交.Add Item:=X, Key:=CIDL
+                                典周层正初梯交.Add Item:=X, key:=CIDL
                             Else
-                                典周层正初梯升.Add Item:=X, Key:=CIDL
+                                典周层正初梯升.Add Item:=X, key:=CIDL
                             End If
                         Else
-                                典周层正初栏.Add Item:=X, Key:=CIDL
+                                典周层正初栏.Add Item:=X, key:=CIDL
                         End If
                         '----------------------------------------------------------------
                     ElseIf InStr(谕组(X, 位谕of周层波型), "震正") > 0 Then
-                                典周层正初_汇震WJA劫.Add Item:=X, Key:=CIDL   '包含：震正芽、震正根
+                                典周层正初_汇震WJA劫.Add Item:=X, key:=CIDL   '包含：震正芽、震正根
                     '以下为经历WJB劫后始终未触顶
                     Else
-                                典周层正初_汇头WJB劫.Add Item:=X, Key:=CIDL   '包含：震负芽（/W3h/W3u）头负芽（/W2I/W2i）头正芽
+                                典周层正初_汇头WJB劫.Add Item:=X, key:=CIDL   '包含：震负芽（/W3h/W3u）头负芽（/W2I/W2i）头正芽
                     End If
                 '------------------------------------------------------------------------
                 '单独列示：主
@@ -2082,47 +2089,47 @@ Function IQQQ展擎筛程至D1节按周类( _
                         '----------------------------------------------------------------
                         If InStr(谕组(X, 位谕of周层柱型), "根") > 0 Then
                                 '为了突出【破WJA】不是趋势结束，应该将所有【破WJA】集中出来。包含：中C、中D、中E
-                                典周层正主根.Add Item:=X, Key:=CIDL
+                                典周层正主根.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "杂") > 0 Then
-                                典周层正主杂.Add Item:=X, Key:=CIDL
+                                典周层正主杂.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "枝") > 0 Then
                             If InStr(谕组(X, 位谕of周层柱型), "枝贯") > 0 Then
-                                典周层正主枝贯.Add Item:=X, Key:=CIDL
+                                典周层正主枝贯.Add Item:=X, key:=CIDL
                             Else
-                                典周层正主枝启.Add Item:=X, Key:=CIDL
+                                典周层正主枝启.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of周层柱型), "栅") > 0 Then
-                                典周层正主栅.Add Item:=X, Key:=CIDL
+                                典周层正主栅.Add Item:=X, key:=CIDL
                         '----------------------------------------------------------------
                         '注20251011：日类下破均线DJC或DJB，只应包含主升情况中的预警，而不应对【根杂枝】等本就靠近DJC的情况进行警示。
                         '----------------------------------------------------------------
                         ElseIf 谕组(X, 位谕of日类BTZC) < 0 Then
-                                典周层正主_破DJC.Add Item:=X, Key:=CIDL
+                                典周层正主_破DJC.Add Item:=X, key:=CIDL
                         ElseIf 谕组(X, 位谕of日类BTZB) < 0 Then
-                                典周层正主_破DJB.Add Item:=X, Key:=CIDL
+                                典周层正主_破DJB.Add Item:=X, key:=CIDL
                         Else
                             If InStr(谕组(X, 位谕of周层柱型), "梯") > 0 Then
                                 If InStr(谕组(X, 位谕of周层柱型), "梯交") > 0 Then
-                                        典周层正主梯交.Add Item:=X, Key:=CIDL
+                                        典周层正主梯交.Add Item:=X, key:=CIDL
                                 Else
                                     If InStr(谕组(X, 位谕of周层界), "a顶") > 0 Then
-                                        典周层正主梯升a顶.Add Item:=X, Key:=CIDL
+                                        典周层正主梯升a顶.Add Item:=X, key:=CIDL
                                     ElseIf InStr(谕组(X, 位谕of周层界), "b〇") > 0 Then
-                                        典周层正主梯升b〇.Add Item:=X, Key:=CIDL
+                                        典周层正主梯升b〇.Add Item:=X, key:=CIDL
                                     Else
-                                        典周层正主梯升余.Add Item:=X, Key:=CIDL
+                                        典周层正主梯升余.Add Item:=X, key:=CIDL
                                     End If
                                 End If
                             Else
-                                    典周层正主栏.Add Item:=X, Key:=CIDL
+                                    典周层正主栏.Add Item:=X, key:=CIDL
                             End If
                         End If
                         '----------------------------------------------------------------
                     ElseIf InStr(谕组(X, 位谕of周层波型), "震正") > 0 Then
-                                典周层正主_汇震WJA劫.Add Item:=X, Key:=CIDL   '包含：震正芽、震正根
+                                典周层正主_汇震WJA劫.Add Item:=X, key:=CIDL   '包含：震正芽、震正根
                     '以下为经历WJB劫后始终未触顶
                     Else
-                                典周层正主_汇头WJB劫.Add Item:=X, Key:=CIDL   '包含：震负芽（/W3h/W3u）头负芽（/W2I/W2i）头正芽
+                                典周层正主_汇头WJB劫.Add Item:=X, key:=CIDL   '包含：震负芽（/W3h/W3u）头负芽（/W2I/W2i）头正芽
                     End If
                 End If
         '--------------------------------------------------------------------------------
@@ -2133,31 +2140,31 @@ Function IQQQ展擎筛程至D1节按周类( _
                 '单独列示：/BA劫/CA劫/BZ劫
                 '------------------------------------------------------------------------
                 If InStr(谕组(X, 位谕of周层类合), 常枚层类D) > 0 Then
-                            典周层负D混.Add Item:=X, Key:=CIDL
+                            典周层负D混.Add Item:=X, key:=CIDL
                 ElseIf InStr(谕组(X, 位谕of周层类合), 常枚层类C) > 0 Then
-                            典周层负C混.Add Item:=X, Key:=CIDL
+                            典周层负C混.Add Item:=X, key:=CIDL
                 ElseIf InStr(谕组(X, 位谕of周层类合), 常枚层类B) > 0 Then
-                            典周层负B混.Add Item:=X, Key:=CIDL
+                            典周层负B混.Add Item:=X, key:=CIDL
                 '------------------------------------------------------------------------
                 '专门处理：/BC劫
                 '------------------------------------------------------------------------
                 ElseIf InStr(谕组(X, 位谕of周层类合), 常枚层类A) > 0 Then
                         '----------------------------------------------------------------
                         If 谕组(X, 位谕of周基周局) = "4v" Then
-                            典周层负A芽非头4v.Add Item:=X, Key:=CIDL
+                            典周层负A芽非头4v.Add Item:=X, key:=CIDL
                         ElseIf 谕组(X, 位谕of周基周局) = "4w" Then
-                            典周层负A芽非头4w.Add Item:=X, Key:=CIDL
+                            典周层负A芽非头4w.Add Item:=X, key:=CIDL
                         '----------------------------------------------------------------
                         ElseIf 谕组(X, 位谕of周层界) = "_初Aa触" Then            '需要区分是否存在【震荡中a触】【中间是否多处未触顶】
-                            典周层负初A触a.Add Item:=X, Key:=CIDL
+                            典周层负初A触a.Add Item:=X, key:=CIDL
                         ElseIf 谕组(X, 位谕of周层界) = "_初Ab触〇" Then
-                            典周层负初A触b〇.Add Item:=X, Key:=CIDL
+                            典周层负初A触b〇.Add Item:=X, key:=CIDL
                         ElseIf 谕组(X, 位谕of周层界) = "_初Ac震〇" Then
-                            典周层负初A震〇.Add Item:=X, Key:=CIDL
+                            典周层负初A震〇.Add Item:=X, key:=CIDL
                         ElseIf 谕组(X, 位谕of周层界) = "_初Ad震芽" Then
-                            典周层负初A震芽.Add Item:=X, Key:=CIDL
+                            典周层负初A震芽.Add Item:=X, key:=CIDL
                         Else
-                            典周层负初A震篪.Add Item:=X, Key:=CIDL
+                            典周层负初A震篪.Add Item:=X, key:=CIDL
                         End If
                 '------------------------------------------------------------------------
                 '专门处理：/AZ劫/天劫（aAA）
@@ -2165,19 +2172,19 @@ Function IQQQ展擎筛程至D1节按周类( _
                 ElseIf InStr(谕组(X, 位谕of周层类合), 常枚层类G) > 0 Then
                         '----------------------------------------------------------------
                         If 谕组(X, 位谕of周层界) = "_主Ga触" Then         '需要区分是否存在【震荡中a触】【中间是否多处未触顶】
-                            典周层负主G触a.Add Item:=X, Key:=CIDL
+                            典周层负主G触a.Add Item:=X, key:=CIDL
                         ElseIf 谕组(X, 位谕of周层界) = "_主Gb触〇" Then
-                            典周层负主G触b〇.Add Item:=X, Key:=CIDL
+                            典周层负主G触b〇.Add Item:=X, key:=CIDL
                         ElseIf 谕组(X, 位谕of周层界) = "_主Gc震〇" Then
-                            典周层负主G震〇.Add Item:=X, Key:=CIDL
+                            典周层负主G震〇.Add Item:=X, key:=CIDL
                         ElseIf 谕组(X, 位谕of周层界) = "_主Gd震芽" Then
-                            典周层负主G震芽.Add Item:=X, Key:=CIDL
+                            典周层负主G震芽.Add Item:=X, key:=CIDL
                         Else
-                            典周层负主G震篪.Add Item:=X, Key:=CIDL
+                            典周层负主G震篪.Add Item:=X, key:=CIDL
                         End If
                 '------------------------------------------------------------------------
                 Else
-                                典废单错误.Add Item:=X, Key:=CIDL
+                                典废单错误.Add Item:=X, key:=CIDL
                 End If
                 '------------------------------------------------------------------------
         End If
@@ -2404,7 +2411,7 @@ Function IQQQ展擎筛程至D3节按日综( _
         '================================================================================
         If UBCID是代码(CIDL) = False Then
         ElseIf 谕组(X, 位qt停牌) = "S" Then
-                    典停牌.Add Item:=X, Key:=CIDL
+                    典停牌.Add Item:=X, key:=CIDL
         Else
         '================================================================================
         '过滤：月局
@@ -2420,30 +2427,30 @@ Function IQQQ展擎筛程至D3节按日综( _
                 '========================================================================
                     If Mid$(谕组(X, 位谕of仓日类), 1, 1) = "上" Then
                             If Mid$(谕组(X, 位谕of仓日类), 2, 1) = "c" Or Mid$(谕组(X, 位谕of仓日类), 2, 1) = "y" Or Mid$(谕组(X, 位谕of仓日类), 2, 1) = "z" Then
-                                典仓日上_cyz.Add Item:=X, Key:=CIDL
+                                典仓日上_cyz.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层波型), "再") > 0 Or InStr(谕组(X, 位谕of日层波型), "震负") > 0 Or InStr(谕组(X, 位谕of日层波型), "头") > 0 Then
                                 '包含WJB劫
-                                典仓日上_入口再.Add Item:=X, Key:=CIDL
+                                典仓日上_入口再.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层波型), "初") > 0 Or InStr(谕组(X, 位谕of日层波型), "储") > 0 Then
                                 '包含WXBC劫
-                                典仓日上_入口初.Add Item:=X, Key:=CIDL
+                                典仓日上_入口初.Add Item:=X, key:=CIDL
                             ElseIf 谕组(X, 位谕of日层偏顶JC) <= 11 Then
-                                典仓日上_常余宽小8.Add Item:=X, Key:=CIDL
+                                典仓日上_常余宽小8.Add Item:=X, key:=CIDL
                             Else
-                                典仓日上_常余.Add Item:=X, Key:=CIDL
+                                典仓日上_常余.Add Item:=X, key:=CIDL
                             End If
                     ElseIf Mid$(谕组(X, 位谕of仓日类), 1, 1) = "忐" Then
-                                典仓日忐.Add Item:=X, Key:=CIDL
+                                典仓日忐.Add Item:=X, key:=CIDL
                     ElseIf Mid$(谕组(X, 位谕of仓日类), 1, 1) = "忠" Then
-                                典仓日忠.Add Item:=X, Key:=CIDL
+                                典仓日忠.Add Item:=X, key:=CIDL
                     ElseIf Mid$(谕组(X, 位谕of仓日类), 1, 1) = "忑" Then
-                                典仓日忑.Add Item:=X, Key:=CIDL
+                                典仓日忑.Add Item:=X, key:=CIDL
                     ElseIf Mid$(谕组(X, 位谕of仓日类), 1, 1) = "中" Then
-                                典仓日中.Add Item:=X, Key:=CIDL
+                                典仓日中.Add Item:=X, key:=CIDL
                     ElseIf Mid$(谕组(X, 位谕of仓日类), 1, 1) = "下" Then
-                                典仓日下.Add Item:=X, Key:=CIDL
+                                典仓日下.Add Item:=X, key:=CIDL
                     Else
-                                典仓日无.Add Item:=X, Key:=CIDL
+                                典仓日无.Add Item:=X, key:=CIDL
                     End If
                 '========================================================================
         End If
@@ -2622,7 +2629,7 @@ Function IQQQ展擎筛程至D3节按日层( _
         '================================================================================
         If UBCID是代码(CIDL) = False Then
         ElseIf 谕组(X, 位qt停牌) = "S" Then     '测试用
-                        典日层废单停牌.Add Item:=X, Key:=CIDL
+                        典日层废单停牌.Add Item:=X, key:=CIDL
         '--------------------------------------------------------------------------------
         '控制输出：【出全是否】是否只输出DJD之上。因为K柱围绕DJC波动，所以利用DJD来进行限制。
         '注20251220：不要用DXZD＞0来限制输出，当WXAB＞0时即使DXZD＜0，仍然属于可捡漏情况。所以将此处条件注销，是否限制DXZD＞0，需要在上级外部条件进行过滤。
@@ -2634,19 +2641,19 @@ Function IQQQ展擎筛程至D3节按日层( _
         ElseIf Left$(谕组(X, 位谕of日层界), 1) = "破" Then
                         If Right(谕组(X, 位谕of日管中符串), 1) = "A" Or Right(谕组(X, 位谕of日管中符串), 1) = "B" Or Right(谕组(X, 位谕of日管中符串), 1) = "C" Then
                             If 谕组(X, 位谕of日类BTZA) <= 0 Then    '假鼎
-                                典日正破_ABC假鼎.Add Item:=X, Key:=CIDL
+                                典日正破_ABC假鼎.Add Item:=X, key:=CIDL
                             ElseIf 谕组(X, 位谕of日类BTZA) <= 3 Then    '包含：初始突破WJA
-                                典日正破_ABC初三.Add Item:=X, Key:=CIDL
+                                典日正破_ABC初三.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱排), "升.") > 0 Then
-                                典日正破_ABC余升排.Add Item:=X, Key:=CIDL
+                                典日正破_ABC余升排.Add Item:=X, key:=CIDL
                             Else
-                                典日正破_ABC余非升.Add Item:=X, Key:=CIDL
+                                典日正破_ABC余非升.Add Item:=X, key:=CIDL
                             End If
                         Else
                             If 谕组(X, 位谕of日类BTZA) >= -1 Then '首薡
-                                典日正破_DEF初首.Add Item:=X, Key:=CIDL
+                                典日正破_DEF初首.Add Item:=X, key:=CIDL
                             Else
-                                典日正破_DEF余多.Add Item:=X, Key:=CIDL
+                                典日正破_DEF余多.Add Item:=X, key:=CIDL
                             End If
                         End If
         '--------------------------------------------------------------------------------
@@ -2656,46 +2663,46 @@ Function IQQQ展擎筛程至D3节按日层( _
         ElseIf Left$(谕组(X, 位谕of日层界), 1) = "储" Or Left$(谕组(X, 位谕of日层界), 1) = "初" Then
                         If InStr(谕组(X, 位谕of日层柱型), "梯") > 0 Then
                             If InStr(谕组(X, 位谕of日层柱型), "梯升连冲") > 0 Then
-                                典日正初储_梯升连冲.Add Item:=X, Key:=CIDL
+                                典日正初储_梯升连冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "梯升孕冲") > 0 Then
-                                典日正初储_梯升孕冲.Add Item:=X, Key:=CIDL
+                                典日正初储_梯升孕冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "梯升调待") > 0 Then
-                                典日正初储_梯升调待.Add Item:=X, Key:=CIDL
+                                典日正初储_梯升调待.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "梯交调待") > 0 Then
-                                典日正初储_梯交调待.Add Item:=X, Key:=CIDL
+                                典日正初储_梯交调待.Add Item:=X, key:=CIDL
                             Else
-                                典日正初储_梯交跌警.Add Item:=X, Key:=CIDL
+                                典日正初储_梯交跌警.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "栏") > 0 Then
                             If InStr(谕组(X, 位谕of日层柱型), "栏调吞冲") > 0 Then
-                                典日正初储_栏调吞冲.Add Item:=X, Key:=CIDL
+                                典日正初储_栏调吞冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "栏调孕待") > 0 Then
-                                典日正初储_栏调孕待.Add Item:=X, Key:=CIDL
+                                典日正初储_栏调孕待.Add Item:=X, key:=CIDL
                             Else
-                                典日正初储_栏调吞待.Add Item:=X, Key:=CIDL
+                                典日正初储_栏调吞待.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "栅") > 0 Then
                             If InStr(谕组(X, 位谕of日层柱型), "栅调吞冲") > 0 Then
-                                典日正初储_栅调吞冲.Add Item:=X, Key:=CIDL
+                                典日正初储_栅调吞冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "栅调孕待") > 0 Then
-                                典日正初储_栅调孕待.Add Item:=X, Key:=CIDL
+                                典日正初储_栅调孕待.Add Item:=X, key:=CIDL
                             Else
-                                典日正初储_栅调吞待.Add Item:=X, Key:=CIDL
+                                典日正初储_栅调吞待.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "枝") > 0 Then
                             If InStr(谕组(X, 位谕of日层柱型), "枝启升冲") > 0 Then
-                                典日正初储_枝启升冲.Add Item:=X, Key:=CIDL
+                                典日正初储_枝启升冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "枝启踩警") > 0 Then
-                                典日正初储_枝启踩警.Add Item:=X, Key:=CIDL
+                                典日正初储_枝启踩警.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "枝贯连待") > 0 Then
-                                典日正初储_枝贯连待.Add Item:=X, Key:=CIDL
+                                典日正初储_枝贯连待.Add Item:=X, key:=CIDL
                             Else
-                                典日正初储_枝贯单待.Add Item:=X, Key:=CIDL
+                                典日正初储_枝贯单待.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "根") > 0 Then
-                                典日正初储_根全.Add Item:=X, Key:=CIDL
+                                典日正初储_根全.Add Item:=X, key:=CIDL
                         Else
-                                典日正初储_杂全.Add Item:=X, Key:=CIDL
+                                典日正初储_杂全.Add Item:=X, key:=CIDL
                         End If
         '--------------------------------------------------------------------------------
         'ZC之上
@@ -2707,46 +2714,46 @@ Function IQQQ展擎筛程至D3节按日层( _
                 If InStr(谕组(X, 位谕of日层界), "再") > 0 Then
                         If InStr(谕组(X, 位谕of日层柱型), "梯") > 0 Then
                             If InStr(谕组(X, 位谕of日层柱型), "梯升连冲") > 0 Then
-                                典日正再_梯升连冲.Add Item:=X, Key:=CIDL
+                                典日正再_梯升连冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "梯升孕冲") > 0 Then
-                                典日正再_梯升孕冲.Add Item:=X, Key:=CIDL
+                                典日正再_梯升孕冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "梯升调待") > 0 Then
-                                典日正再_梯升调待.Add Item:=X, Key:=CIDL
+                                典日正再_梯升调待.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "梯交调待") > 0 Then
-                                典日正再_梯交调待.Add Item:=X, Key:=CIDL
+                                典日正再_梯交调待.Add Item:=X, key:=CIDL
                             Else
-                                典日正再_梯交跌警.Add Item:=X, Key:=CIDL
+                                典日正再_梯交跌警.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "栏") > 0 Then
                             If InStr(谕组(X, 位谕of日层柱型), "栏调吞冲") > 0 Then
-                                典日正再_栏调吞冲.Add Item:=X, Key:=CIDL
+                                典日正再_栏调吞冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "栏调孕待") > 0 Then
-                                典日正再_栏调孕待.Add Item:=X, Key:=CIDL
+                                典日正再_栏调孕待.Add Item:=X, key:=CIDL
                             Else
-                                典日正再_栏调吞待.Add Item:=X, Key:=CIDL
+                                典日正再_栏调吞待.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "栅") > 0 Then
                             If InStr(谕组(X, 位谕of日层柱型), "栅调吞冲") > 0 Then
-                                典日正再_栅调吞冲.Add Item:=X, Key:=CIDL
+                                典日正再_栅调吞冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "栅调孕待") > 0 Then
-                                典日正再_栅调孕待.Add Item:=X, Key:=CIDL
+                                典日正再_栅调孕待.Add Item:=X, key:=CIDL
                             Else
-                                典日正再_栅调吞待.Add Item:=X, Key:=CIDL
+                                典日正再_栅调吞待.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "枝") > 0 Then
                             If InStr(谕组(X, 位谕of日层柱型), "枝启升冲") > 0 Then
-                                典日正再_枝启升冲.Add Item:=X, Key:=CIDL
+                                典日正再_枝启升冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "枝启踩警") > 0 Then
-                                典日正再_枝启踩警.Add Item:=X, Key:=CIDL
+                                典日正再_枝启踩警.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "枝贯连待") > 0 Then
-                                典日正再_枝贯连待.Add Item:=X, Key:=CIDL
+                                典日正再_枝贯连待.Add Item:=X, key:=CIDL
                             Else
-                                典日正再_枝贯单待.Add Item:=X, Key:=CIDL
+                                典日正再_枝贯单待.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "根") > 0 Then
-                                典日正再_根全.Add Item:=X, Key:=CIDL
+                                典日正再_根全.Add Item:=X, key:=CIDL
                         Else
-                                典日正再_杂全.Add Item:=X, Key:=CIDL
+                                典日正再_杂全.Add Item:=X, key:=CIDL
                         End If
                 '------------------------------------------------------------------------
                 '单独列示：主
@@ -2757,46 +2764,46 @@ Function IQQQ展擎筛程至D3节按日层( _
                 Else
                         If InStr(谕组(X, 位谕of日层柱型), "梯") > 0 Then
                             If InStr(谕组(X, 位谕of日层柱型), "梯升连冲") > 0 Then
-                                典日正主_梯升连冲.Add Item:=X, Key:=CIDL
+                                典日正主_梯升连冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "梯升孕冲") > 0 Then
-                                典日正主_梯升孕冲.Add Item:=X, Key:=CIDL
+                                典日正主_梯升孕冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "梯升调待") > 0 Then
-                                典日正主_梯升调待.Add Item:=X, Key:=CIDL
+                                典日正主_梯升调待.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "梯交调待") > 0 Then
-                                典日正主_梯交调待.Add Item:=X, Key:=CIDL
+                                典日正主_梯交调待.Add Item:=X, key:=CIDL
                             Else
-                                典日正主_梯交跌警.Add Item:=X, Key:=CIDL
+                                典日正主_梯交跌警.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "栏") > 0 Then
                             If InStr(谕组(X, 位谕of日层柱型), "栏调吞冲") > 0 Then
-                                典日正主_栏调吞冲.Add Item:=X, Key:=CIDL
+                                典日正主_栏调吞冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "栏调孕待") > 0 Then
-                                典日正主_栏调孕待.Add Item:=X, Key:=CIDL
+                                典日正主_栏调孕待.Add Item:=X, key:=CIDL
                             Else
-                                典日正主_栏调吞待.Add Item:=X, Key:=CIDL
+                                典日正主_栏调吞待.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "栅") > 0 Then
                             If InStr(谕组(X, 位谕of日层柱型), "栅调吞冲") > 0 Then
-                                典日正主_栅调吞冲.Add Item:=X, Key:=CIDL
+                                典日正主_栅调吞冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "栅调孕待") > 0 Then
-                                典日正主_栅调孕待.Add Item:=X, Key:=CIDL
+                                典日正主_栅调孕待.Add Item:=X, key:=CIDL
                             Else
-                                典日正主_栅调吞待.Add Item:=X, Key:=CIDL
+                                典日正主_栅调吞待.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "枝") > 0 Then
                             If InStr(谕组(X, 位谕of日层柱型), "枝启升冲") > 0 Then
-                                典日正主_枝启升冲.Add Item:=X, Key:=CIDL
+                                典日正主_枝启升冲.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "枝启踩警") > 0 Then
-                                典日正主_枝启踩警.Add Item:=X, Key:=CIDL
+                                典日正主_枝启踩警.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层柱型), "枝贯连待") > 0 Then
-                                典日正主_枝贯连待.Add Item:=X, Key:=CIDL
+                                典日正主_枝贯连待.Add Item:=X, key:=CIDL
                             Else
-                                典日正主_枝贯单待.Add Item:=X, Key:=CIDL
+                                典日正主_枝贯单待.Add Item:=X, key:=CIDL
                             End If
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "根") > 0 Then
-                                典日正主_根全.Add Item:=X, Key:=CIDL
+                                典日正主_根全.Add Item:=X, key:=CIDL
                         Else
-                                典日正主_杂全.Add Item:=X, Key:=CIDL
+                                典日正主_杂全.Add Item:=X, key:=CIDL
                         End If
                 End If
         '--------------------------------------------------------------------------------
@@ -2811,13 +2818,13 @@ Function IQQQ展擎筛程至D3节按日层( _
                 '------------------------------------------------------------------------
                 If InStr(谕组(X, 位谕of日层类合), 常枚层类B) > 0 Or InStr(谕组(X, 位谕of日层类合), 常枚层类C) > 0 Or InStr(谕组(X, 位谕of日层类合), 常枚层类D) > 0 Then
                         If InStr(谕组(X, 位谕of日层类合), 常枚层别根) > 0 Then
-                                典日层负BCD根.Add Item:=X, Key:=CIDL
+                                典日层负BCD根.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of日层类合), 常枚层类B) > 0 Then
-                                典日层负B管芽.Add Item:=X, Key:=CIDL
+                                典日层负B管芽.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of日层类合), 常枚层类C) > 0 Then
-                                典日层负C管芽.Add Item:=X, Key:=CIDL
+                                典日层负C管芽.Add Item:=X, key:=CIDL
                         Else
-                                典日层负D管芽.Add Item:=X, Key:=CIDL
+                                典日层负D管芽.Add Item:=X, key:=CIDL
                         End If
                 '------------------------------------------------------------------------
                 '主升层：只针对【G】
@@ -2829,23 +2836,23 @@ Function IQQQ展擎筛程至D3节按日层( _
                             If 谕组(X, 位谕of日龟BT合顶哼) > 0 Then     '合顶：防止尾部触顶
                                 '注20240410：为了展示完整流程，仅对管进行特殊情况单列。
                                 If 谕组(X, 位谕of日层BSLA) <= -8 Then
-                                    典日层负G管顶合剔偏大.Add Item:=X, Key:=CIDL
+                                    典日层负G管顶合剔偏大.Add Item:=X, key:=CIDL
                                 ElseIf 谕组(X, 位谕of日层宽哈JC) <= -20 Then
-                                    典日层负G管顶合剔宽大.Add Item:=X, Key:=CIDL
+                                    典日层负G管顶合剔宽大.Add Item:=X, key:=CIDL
                                 ElseIf 谕组(X, 位谕of日波龄BTPR0) <= -3 Then
-                                    典日层负G管顶合剔连久.Add Item:=X, Key:=CIDL
+                                    典日层负G管顶合剔连久.Add Item:=X, key:=CIDL
                                 Else
-                                    典日层负G管顶合余.Add Item:=X, Key:=CIDL
+                                    典日层负G管顶合余.Add Item:=X, key:=CIDL
                                 End If
                             Else
-                                    典日层负G管顶离.Add Item:=X, Key:=CIDL
+                                    典日层负G管顶离.Add Item:=X, key:=CIDL
                             End If
                         '----------------------------------------------------------------
                         '针对坤G
                         ElseIf InStr(谕组(X, 位谕of日层类合), 常枚层别根) > 0 Then
-                                    典日层负G根.Add Item:=X, Key:=CIDL
+                                    典日层负G根.Add Item:=X, key:=CIDL
                         Else
-                                    典日层负G芽.Add Item:=X, Key:=CIDL
+                                    典日层负G芽.Add Item:=X, key:=CIDL
                         End If
                 '------------------------------------------------------------------------
                 '主升层：只针对【A】
@@ -2854,26 +2861,26 @@ Function IQQQ展擎筛程至D3节按日层( _
                 Else
                         '----------------------------------------------------------------
                         If 谕组(X, 位谕of日基日局) = "6w" Then
-                                    典日层负C根6w.Add Item:=X, Key:=CIDL
+                                    典日层负C根6w.Add Item:=X, key:=CIDL
                         ElseIf 谕组(X, 位谕of日基日局) = "6v" Then
-                                    典日层负B根6v.Add Item:=X, Key:=CIDL
+                                    典日层负B根6v.Add Item:=X, key:=CIDL
                         ElseIf 谕组(X, 位谕of日类BTBC) > 0 Then
                             If 谕组(X, 位谕of日基日局) = "4v" Then
-                                    典日层负A_BC正交4v.Add Item:=X, Key:=CIDL
+                                    典日层负A_BC正交4v.Add Item:=X, key:=CIDL
                             ElseIf 谕组(X, 位谕of日基日局) = "4w" Then
-                                    典日层负A_BC正交4w.Add Item:=X, Key:=CIDL
+                                    典日层负A_BC正交4w.Add Item:=X, key:=CIDL
                             ElseIf 谕组(X, 位谕of日基日局) = "4b" Then
-                                    典日层负A_BC正交4b.Add Item:=X, Key:=CIDL
+                                    典日层负A_BC正交4b.Add Item:=X, key:=CIDL
                             Else
-                                    典日层负A_BC正交4e.Add Item:=X, Key:=CIDL
+                                    典日层负A_BC正交4e.Add Item:=X, key:=CIDL
                             End If
                         Else
                             If InStr(谕组(X, 位谕of日层类合), 常枚层别管) > 0 Then
-                                    典日层负A_BC负交管.Add Item:=X, Key:=CIDL
+                                    典日层负A_BC负交管.Add Item:=X, key:=CIDL
                             ElseIf InStr(谕组(X, 位谕of日层类合), 常枚层别根) > 0 Then
-                                    典日层负A_BC负交根.Add Item:=X, Key:=CIDL
+                                    典日层负A_BC负交根.Add Item:=X, key:=CIDL
                             Else
-                                    典日层负A_BC负交芽.Add Item:=X, Key:=CIDL
+                                    典日层负A_BC负交芽.Add Item:=X, key:=CIDL
                             End If
                         End If
                         '----------------------------------------------------------------
@@ -3094,9 +3101,9 @@ Function IQQQ展擎筛程至D4节按日机( _
         '根据【周日联动】区分
         '================================================================================
         ElseIf 谕组(X, 位谕of周类BTZA) <= -2 Then   '弃
-                典日机周下破久.Add Item:=X, Key:=CIDL
+                典日机周下破久.Add Item:=X, key:=CIDL
         ElseIf 谕组(X, 位谕of周类BTZA) = -1 Then
-                典日机周下破首.Add Item:=X, Key:=CIDL
+                典日机周下破首.Add Item:=X, key:=CIDL
         ElseIf 谕组(X, 位谕of仓日类) <> "z" And 谕组(X, 位谕of仓日类) <> "x" Then
         '================================================================================
         '特殊形态【特负】
@@ -3125,15 +3132,15 @@ Function IQQQ展擎筛程至D4节按日机( _
                     '按特殊形态
                     '====================================================================
                     If InStr(谕组(X, 位谕of日层漏提示), "特踩") > 0 Then
-                            典日机特踩.Add Item:=X, Key:=CIDL
+                            典日机特踩.Add Item:=X, key:=CIDL
                     ElseIf InStr(谕组(X, 位谕of日层漏提示), "特升栅") > 0 Then
-                            典日机特升栅.Add Item:=X, Key:=CIDL
+                            典日机特升栅.Add Item:=X, key:=CIDL
                     '====================================================================
                     '单列：储。
                     '====================================================================
                     ElseIf InStr(谕组(X, 位谕of日层界), "储") > 0 Then
                         If Left$(谕组(X, 位谕of日层柱型), 1) = "X" Then
-                                典日机正储根.Add Item:=X, Key:=CIDL
+                                典日机正储根.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "a顶") > 0 Then
 '                            If InStr(谕组(X, 位谕of日层柱型), ".触首") > 0 Then
 '                                典日机正储触a_触首.Add Item:=X, Key:=CIDL
@@ -3146,42 +3153,42 @@ Function IQQQ展擎筛程至D4节按日机( _
 '                            Else
 '                                典日机正储触a_尾升单.Add Item:=X, Key:=CIDL
 '                            End If
-                                典日机正储触a.Add Item:=X, Key:=CIDL
+                                典日机正储触a.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "b顶") > 0 Then
-                                典日机正储触b.Add Item:=X, Key:=CIDL
+                                典日机正储触b.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of日层柱型), "〇") > 0 Then
-                                典日机正储〇.Add Item:=X, Key:=CIDL
+                                典日机正储〇.Add Item:=X, key:=CIDL
                         Else
-                                典日机正储芽.Add Item:=X, Key:=CIDL
+                                典日机正储芽.Add Item:=X, key:=CIDL
                         End If
                     '====================================================================
                     '按顶型
                     '====================================================================
                     ElseIf InStr(谕组(X, 位谕of日层漏提示), "触升" & 常枚并符升连) > 0 Then
                         If InStr(谕组(X, 位谕of日层柱型), "触首") > 0 Then
-                            典日机触升尾升连触首.Add Item:=X, Key:=CIDL
+                            典日机触升尾升连触首.Add Item:=X, key:=CIDL
                         Else
-                            典日机触升尾升连.Add Item:=X, Key:=CIDL
+                            典日机触升尾升连.Add Item:=X, key:=CIDL
                         End If
                     ElseIf InStr(谕组(X, 位谕of日层漏提示), "触升" & 常枚并符跌孕) > 0 Then
                         If InStr(谕组(X, 位谕of日层柱型), "触首") > 0 Then
-                            典日机触升尾跌孕触首.Add Item:=X, Key:=CIDL
+                            典日机触升尾跌孕触首.Add Item:=X, key:=CIDL
                         Else
-                            典日机触升尾跌孕.Add Item:=X, Key:=CIDL
+                            典日机触升尾跌孕.Add Item:=X, key:=CIDL
                         End If
                     '--------------------------------------------------------------------
                     ElseIf InStr(谕组(X, 位谕of日层漏提示), "r雀升") > 0 Then
-                            典日机r雀升.Add Item:=X, Key:=CIDL
+                            典日机r雀升.Add Item:=X, key:=CIDL
                     '--------------------------------------------------------------------
                     ElseIf InStr(谕组(X, 位谕of日层柱型), "根") > 0 Then
                         If InStr(谕组(X, 位谕of日层漏提示), "e试" & 常枚并符升连) > 0 Then
-                            典日机捡A试尾升连.Add Item:=X, Key:=CIDL
+                            典日机捡A试尾升连.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of日层漏提示), "e试" & 常枚并符升吞) > 0 Then
-                            典日机捡A试尾升吞.Add Item:=X, Key:=CIDL
+                            典日机捡A试尾升吞.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of日层漏提示), "e试" & 常枚并符升孕) > 0 Then
-                            典日机捡A试尾升孕.Add Item:=X, Key:=CIDL
+                            典日机捡A试尾升孕.Add Item:=X, key:=CIDL
                         ElseIf InStr(谕组(X, 位谕of日层漏提示), "特鼎") > 0 Then
-                            典日机捡A特鼎.Add Item:=X, Key:=CIDL
+                            典日机捡A特鼎.Add Item:=X, key:=CIDL
                         End If
                     ElseIf InStr(谕组(X, 位谕of日层稳口), "破B") > 0 Then
                             '注20241015：按照日类仓位策略，只保留底仓，不主动进入。
@@ -3327,33 +3334,33 @@ Function IQQQ展擎筛程至A2册按市类( _
             CIDL = 组花册(X, 位列花天CIDL)
             定位谕组行号 = 典集谕组(CIDL)
             '----------------------------------------------------------------------------
-            If 组花册(X, 位列花天是否上证50) <> "" Then 典集市板上证50.Add Item:=定位谕组行号, Key:=CIDL
-            If 组花册(X, 位列花天是否创业板50) <> "" Then 典集市板创业板50.Add Item:=定位谕组行号, Key:=CIDL
-            If 组花册(X, 位列花天是否MSCI中国) <> "" Then 典集市板MSCI中国.Add Item:=定位谕组行号, Key:=CIDL
+            If 组花册(X, 位列花天是否上证50) <> "" Then 典集市板上证50.Add Item:=定位谕组行号, key:=CIDL
+            If 组花册(X, 位列花天是否创业板50) <> "" Then 典集市板创业板50.Add Item:=定位谕组行号, key:=CIDL
+            If 组花册(X, 位列花天是否MSCI中国) <> "" Then 典集市板MSCI中国.Add Item:=定位谕组行号, key:=CIDL
             If CIDL Like 常通配全码上科股 Then
-                    典集市板Q8.Add Item:=X, Key:=CIDL
+                    典集市板Q8.Add Item:=X, key:=CIDL
             ElseIf CIDL Like 常通配全码北交股 Then
-                    典集市板Qb.Add Item:=X, Key:=CIDL
+                    典集市板Qb.Add Item:=X, key:=CIDL
             End If
             '----------------------------------------------------------------------------
-            If 组花册(X, 位列花天市板) = 常市板票Qif Then 典集市板Qif.Add Item:=定位谕组行号, Key:=CIDL
-            If 组花册(X, 位列花天市板) = 常市板票Qic Then 典集市板Qic.Add Item:=定位谕组行号, Key:=CIDL
-            If 组花册(X, 位列花天市板) = 常市板票Qim Then 典集市板Qim.Add Item:=定位谕组行号, Key:=CIDL
-            If 组花册(X, 位列花天市板) = 常市板票Qit Then 典集市板Qit.Add Item:=定位谕组行号, Key:=CIDL
-            If 组花册(X, 位列花天市板) = 常市板票Qst Then 典集市板Qst.Add Item:=定位谕组行号, Key:=CIDL
-            If 组花册(X, 位列花天市板) = 常市板票Qin Then 典集市板Qin.Add Item:=定位谕组行号, Key:=CIDL
+            If 组花册(X, 位列花天市板) = 常市板票Qif Then 典集市板Qif.Add Item:=定位谕组行号, key:=CIDL
+            If 组花册(X, 位列花天市板) = 常市板票Qic Then 典集市板Qic.Add Item:=定位谕组行号, key:=CIDL
+            If 组花册(X, 位列花天市板) = 常市板票Qim Then 典集市板Qim.Add Item:=定位谕组行号, key:=CIDL
+            If 组花册(X, 位列花天市板) = 常市板票Qit Then 典集市板Qit.Add Item:=定位谕组行号, key:=CIDL
+            If 组花册(X, 位列花天市板) = 常市板票Qst Then 典集市板Qst.Add Item:=定位谕组行号, key:=CIDL
+            If 组花册(X, 位列花天市板) = 常市板票Qin Then 典集市板Qin.Add Item:=定位谕组行号, key:=CIDL
             '----------------------------------------------------------------------------
             If 组花册(X, 位列花天市板) = 常市板指 Then
                     If 谕组(定位谕组行号, 位谕of日段佰均幅高) >= 0.3 Then      '过滤债类产品
-                        典集市板Qi.Add Item:=X, Key:=CIDL
+                        典集市板Qi.Add Item:=X, key:=CIDL
                     Else
-                        典集市板Qi2.Add Item:=X, Key:=CIDL
+                        典集市板Qi2.Add Item:=X, key:=CIDL
                     End If
             ElseIf 组花册(X, 位列花天市板) = 常市板基 Then
                     If 谕组(定位谕组行号, 位谕of日段佰均幅高) >= 0.4 Then      '过滤债类产品
-                        典集市板Qe.Add Item:=X, Key:=CIDL
+                        典集市板Qe.Add Item:=X, key:=CIDL
                     Else
-                        典集市板Qe2.Add Item:=X, Key:=CIDL
+                        典集市板Qe2.Add Item:=X, key:=CIDL
                     End If
             End If
             '----------------------------------------------------------------------------
@@ -3490,44 +3497,44 @@ Function IQQQ展擎筛程至A9册按股性( _
                 End If
                 '------------------------------------------------------------------------
                 If InStr(谕组(X, 位qt代称), "ST") > 0 Or InStr(谕组(X, 位qt代称), "退") > 0 Then
-                        典跨时类0ST退.Add Item:=X, Key:=CIDL
+                        典跨时类0ST退.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位qt停牌) = "S" Then
-                        典跨时类0停牌.Add Item:=X, Key:=CIDL
+                        典跨时类0停牌.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位谕of日段佰计数) < 150 Then
-                        典跨时类0新股.Add Item:=X, Key:=CIDL
+                        典跨时类0新股.Add Item:=X, key:=CIDL
                 ElseIf 谕组(X, 位谕of日段佰均幅高) < 1 Then
-                        典跨时类0萎靡.Add Item:=X, Key:=CIDL
+                        典跨时类0萎靡.Add Item:=X, key:=CIDL
                 '-------------------------------------------------
                 '过滤均高幅：佰小 应分为三类
                 ElseIf 谕组(X, 位谕of日段佰均幅高) < 值幅下限 Then
                     If 谕组(X, 位谕of日段仨均幅高) < 值幅下限 Then
-                        典跨时类11.Add Item:=X, Key:=CIDL
+                        典跨时类11.Add Item:=X, key:=CIDL
                     ElseIf 谕组(X, 位谕of日段仨均幅高) < 值幅上限 Then
-                        典跨时类12.Add Item:=X, Key:=CIDL
+                        典跨时类12.Add Item:=X, key:=CIDL
                     Else
-                        典跨时类13.Add Item:=X, Key:=CIDL
+                        典跨时类13.Add Item:=X, key:=CIDL
                     End If
                 '-------------------------------------------------
                 '过滤均高幅：佰大 应分为三类
                 ElseIf 谕组(X, 位谕of日段佰均幅高) >= 值幅上限 Then
                     If 谕组(X, 位谕of日段仨均幅高) < 值幅下限 Then
-                        典跨时类31.Add Item:=X, Key:=CIDL
+                        典跨时类31.Add Item:=X, key:=CIDL
                     ElseIf 谕组(X, 位谕of日段仨均幅高) < 值幅上限 Then
-                        典跨时类32.Add Item:=X, Key:=CIDL
+                        典跨时类32.Add Item:=X, key:=CIDL
                     Else
-                        典跨时类33.Add Item:=X, Key:=CIDL
+                        典跨时类33.Add Item:=X, key:=CIDL
                     End If
                 '-------------------------------------------------
                 '过滤均高幅：佰中
                 Else
                     If 谕组(X, 位谕of日段仨均幅高) < 值幅下限 Then
-                        典跨时类21.Add Item:=X, Key:=CIDL
+                        典跨时类21.Add Item:=X, key:=CIDL
                     ElseIf 谕组(X, 位谕of日段仨均幅高) >= 值幅上限 Then
-                        典跨时类23.Add Item:=X, Key:=CIDL
+                        典跨时类23.Add Item:=X, key:=CIDL
                     ElseIf 谕组(X, 位谕of日段佰均幅高) <= 谕组(X, 位谕of日段仨均幅高) Then
-                        典跨时类22a.Add Item:=X, Key:=CIDL
+                        典跨时类22a.Add Item:=X, key:=CIDL
                     Else
-                        典跨时类22b.Add Item:=X, Key:=CIDL
+                        典跨时类22b.Add Item:=X, key:=CIDL
                     End If
                 End If
                 '-------------------------------------------------
@@ -3651,18 +3658,18 @@ Function IQQQ展擎筛程至B1书按池( _
         CIDL = 谕组(X, 位qt代码)
         '区分所在池
         If 谕组(X, 位qt在池) = 常池名金 Then
-            典码输出池金.Add Item:=X, Key:=CIDL
+            典码输出池金.Add Item:=X, key:=CIDL
         ElseIf 谕组(X, 位qt在池) = 常池名银 Then
-            典码输出池银.Add Item:=X, Key:=CIDL
+            典码输出池银.Add Item:=X, key:=CIDL
         ElseIf 谕组(X, 位qt在池) = 常池名铜 Then
-            典码输出池铜.Add Item:=X, Key:=CIDL
+            典码输出池铜.Add Item:=X, key:=CIDL
         ElseIf 谕组(X, 位qt在池) = 常池名黑 Then
-            典码输出池黑.Add Item:=X, Key:=CIDL
+            典码输出池黑.Add Item:=X, key:=CIDL
         ElseIf 谕组(X, 位谕of仓持数) > 0 Then
             '注20230101：将池持放在金银非之后，不打乱池结构
-            典码输出池持.Add Item:=X, Key:=CIDL
+            典码输出池持.Add Item:=X, key:=CIDL
         Else
-            典码输出池外.Add Item:=X, Key:=CIDL
+            典码输出池外.Add Item:=X, key:=CIDL
         End If
     Next
 '========================================================================================
@@ -3766,7 +3773,7 @@ Function IQQQ展擎筛程_统计本页基程(WSTO As Worksheet, WSAS As Workshee
     For 行号遍历 = WSAS.Cells(65536, 1).End(xlUp).Row To 2 Step -1
         CIDL = WSAS.Cells(行号遍历, 位qt代码)
         If UBCID是代码(CIDL) And 典集本页.Exists(CIDL) = False Then
-            典集本页.Add Item:=行号遍历, Key:=CIDL
+            典集本页.Add Item:=行号遍历, key:=CIDL
         End If
     Next
     If 典集本页.Count = 0 Then Exit Function
@@ -3790,7 +3797,7 @@ Function IQQQ展擎筛程_统计本页基程(WSTO As Worksheet, WSAS As Workshee
     For X = 1 To 典集本页.Count
         当行 = 典集本页.Items(X - 1)
         CIDL = 典集本页.Keys(X - 1)
-        典码输出.Add Item:=X, Key:=CIDL
+        典码输出.Add Item:=X, key:=CIDL
         ARROW = WSAS.Cells(当行, 1).Resize(1, 维横)
         For Y = 1 To 维横
             元组被分(X, Y) = ARROW(1, Y)
@@ -3816,12 +3823,12 @@ Function IQQQ展擎筛程_统计本页基程(WSTO As Worksheet, WSAS As Workshee
         值指标 = 元组被分(X, 被研指标)
         If 典集标数.Exists(值指标) = False Then
             N = N + 1
-            典集标数.Add Item:=0, Key:=值指标
-            典集标涨数.Add Item:=0, Key:=值指标
-            典集标涨幅.Add Item:=0, Key:=值指标
-            典集标高数G3.Add Item:=0, Key:=值指标
-            典集标高数G1.Add Item:=0, Key:=值指标
-            典集标高数G0.Add Item:=0, Key:=值指标
+            典集标数.Add Item:=0, key:=值指标
+            典集标涨数.Add Item:=0, key:=值指标
+            典集标涨幅.Add Item:=0, key:=值指标
+            典集标高数G3.Add Item:=0, key:=值指标
+            典集标高数G1.Add Item:=0, key:=值指标
+            典集标高数G0.Add Item:=0, key:=值指标
         End If
     Next
     '------------------------------------------------------------------------------------

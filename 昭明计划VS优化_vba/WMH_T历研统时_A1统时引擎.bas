@@ -106,9 +106,9 @@ Sub 测试2_历调引擎_4指基()
         CIDL = 组花册(X, 位列花天CIDL)
         代称 = 组花册(X, 位列花天代称)
         If UBCID是中股指(CIDL) = True Then
-            典码花册指.Add Key:=CIDL, Item:=代称
+            典码花册指.Add key:=CIDL, Item:=代称
         ElseIf UBCID是中股基(CIDL) = True Then
-            典码花册基.Add Key:=CIDL, Item:=代称
+            典码花册基.Add key:=CIDL, Item:=代称
         End If
 '        If 典码花册指.Count > 20 Then Exit For
         If 典码花册基.Count > 20 Then Exit For
@@ -540,51 +540,51 @@ Function 历研统时引擎3统程分布(表名输出 As String, 组历统时 As
                 '注意20230730：以下赋值会覆盖原有程序，但是不需要改变。本程序属于试验性质，用于探索适当的参数，如果参数有调整，反过去修改数程就行了。
                 '------------------------------------------------------------------------
                 If 组历统时(X, 位统时列股性) = "0ST退" Then
-                        典跨时类OST退.Add Item:=代称, Key:=CIDL
+                        典跨时类OST退.Add Item:=代称, key:=CIDL
                 ElseIf 组历统时(X, 位统时列股性) = "0停" Then
-                        典跨时类O停.Add Item:=代称, Key:=CIDL
+                        典跨时类O停.Add Item:=代称, key:=CIDL
                 ElseIf 组历统时(X, 位统时列股性) = "0新" Then
-                        典跨时类O新.Add Item:=代称, Key:=CIDL
+                        典跨时类O新.Add Item:=代称, key:=CIDL
                 ElseIf 组历统时(X, 位统时列股性) = "0萎" Then
-                        典跨时类O萎.Add Item:=代称, Key:=CIDL
+                        典跨时类O萎.Add Item:=代称, key:=CIDL
                 '-------------------------------------------------
                 '过滤均高幅：佰小 应分为三类
                 ElseIf 组历统时(X, 位统时列佰均幅高) < 值幅下限 Then
                     If 组历统时(X, 位统时列仨均幅高) < 值幅下限 Then
                         组历统时(X, 位统时列股性) = "11蔫"
-                        典跨时类11蔫.Add Item:=代称, Key:=CIDL
+                        典跨时类11蔫.Add Item:=代称, key:=CIDL
                     ElseIf 组历统时(X, 位统时列仨均幅高) < 值幅上限 Then
                         组历统时(X, 位统时列股性) = "12变活"
-                        典跨时类12变活.Add Item:=代称, Key:=CIDL
+                        典跨时类12变活.Add Item:=代称, key:=CIDL
                     Else
                         组历统时(X, 位统时列股性) = "13变活"
-                        典跨时类13变活.Add Item:=代称, Key:=CIDL
+                        典跨时类13变活.Add Item:=代称, key:=CIDL
                     End If
                 '-------------------------------------------------
                 '过滤均高幅：佰中
                 ElseIf 组历统时(X, 位统时列佰均幅高) < 值幅上限 Then
                     If 组历统时(X, 位统时列仨均幅高) < 值幅下限 Then
                             组历统时(X, 位统时列股性) = "21变蔫"
-                            典跨时类21变蔫.Add Item:=代称, Key:=CIDL
+                            典跨时类21变蔫.Add Item:=代称, key:=CIDL
                     ElseIf 组历统时(X, 位统时列仨均幅高) < 值幅上限 Then
                             组历统时(X, 位统时列股性) = "22中"
-                            典跨时类22中.Add Item:=代称, Key:=CIDL
+                            典跨时类22中.Add Item:=代称, key:=CIDL
                     Else
                             组历统时(X, 位统时列股性) = "23变活"
-                            典跨时类23变活.Add Item:=代称, Key:=CIDL
+                            典跨时类23变活.Add Item:=代称, key:=CIDL
                     End If
                 '-------------------------------------------------
                 '过滤均高幅：佰大 应分为三类
                 Else
                     If 组历统时(X, 位统时列仨均幅高) < 值幅下限 Then
                         组历统时(X, 位统时列股性) = "31变蔫"
-                        典跨时类31变蔫.Add Item:=代称, Key:=CIDL
+                        典跨时类31变蔫.Add Item:=代称, key:=CIDL
                     ElseIf 组历统时(X, 位统时列仨均幅高) < 值幅上限 Then
                         组历统时(X, 位统时列股性) = "32变蔫"
-                        典跨时类32变蔫.Add Item:=代称, Key:=CIDL
+                        典跨时类32变蔫.Add Item:=代称, key:=CIDL
                     Else
                         组历统时(X, 位统时列股性) = "33活"
-                        典跨时类33活.Add Item:=代称, Key:=CIDL
+                        典跨时类33活.Add Item:=代称, key:=CIDL
                     End If
                 End If
         '                '-------------------------------------------------
@@ -701,7 +701,7 @@ Function 历研统时引擎4输程( _
     Dim Y As Integer
     Dim 定位组历统时 As Integer
     For X = LBound(组历统时, 1) To UBound(组历统时, 1)
-        典组历统时.Add Item:=X, Key:=CIDL
+        典组历统时.Add Item:=X, key:=CIDL
     Next
     '------------------------------------------------------------------------------------
     ReDim 组输出(1 To 典码称输出.Count, LBound(组历统时, 2) To UBound(组历统时, 2)) As Variant
@@ -1060,7 +1060,7 @@ Sub 历研统时调程涨停()
     Dim 代称 As String
     For X = LBound(组花册, 1) To UBound(组花册, 1)
         If UBCID是中股票(CIDL) = True Then
-            典码花册.Add Key:=CIDL, Item:=代称
+            典码花册.Add key:=CIDL, Item:=代称
         End If
 '        If 典码花册.Count > 500 Then Exit For
         Debug.Print X, CIDL
@@ -1136,19 +1136,19 @@ Function 历研统时引擎3统程涨停(表名输出 As String, 组历统时 As
                 End If
                 '------------------------------------------------------------------------
                 If 组历统时(X, 位统时列股性) Like "0*" Then
-                    If 组历统时(X, 位统时列十停数高) > 0 Then 典跨时类停高十类0.Add Item:=代称, Key:=CIDL
+                    If 组历统时(X, 位统时列十停数高) > 0 Then 典跨时类停高十类0.Add Item:=代称, key:=CIDL
                 '-------------------------------------------------
                 '过滤均高幅：佰小 应分为三类
                 ElseIf 组历统时(X, 位统时列佰均幅高) <= 值幅下限 Then
-                    If 组历统时(X, 位统时列十停数高) > 0 Then 典跨时类停高十佰小.Add Item:=代称, Key:=CIDL
+                    If 组历统时(X, 位统时列十停数高) > 0 Then 典跨时类停高十佰小.Add Item:=代称, key:=CIDL
                 '-------------------------------------------------
                 '过滤均高幅：佰大 应分为三类
                 ElseIf 组历统时(X, 位统时列佰均幅高) >= 值幅上限 Then
-                    If 组历统时(X, 位统时列十停数高) > 0 Then 典跨时类停高十佰大.Add Item:=代称, Key:=CIDL
+                    If 组历统时(X, 位统时列十停数高) > 0 Then 典跨时类停高十佰大.Add Item:=代称, key:=CIDL
                 '-------------------------------------------------
                 '过滤均高幅：佰中
                 Else
-                    If 组历统时(X, 位统时列十停数高) > 0 Then 典跨时类停高十佰中.Add Item:=代称, Key:=CIDL
+                    If 组历统时(X, 位统时列十停数高) > 0 Then 典跨时类停高十佰中.Add Item:=代称, key:=CIDL
                 End If
                 '-------------------------------------------------
         End If

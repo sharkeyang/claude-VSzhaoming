@@ -272,8 +272,8 @@ Private Function STCALL花册管理_重制花天P2正程导入益盟() As String
     For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
         CIDV = ARRYM(R, 位列YM代码)
         CIDL = UBCID规制代码(CIDV)
-        典集行业益盟.Add Key:=CIDL, Item:=ARRYM(R, 位列YM行业益盟)
-        典集概念益盟.Add Key:=CIDL, Item:=ARRYM(R, 位列YM概念益盟)
+        典集行业益盟.Add key:=CIDL, Item:=ARRYM(R, 位列YM行业益盟)
+        典集概念益盟.Add key:=CIDL, Item:=ARRYM(R, 位列YM概念益盟)
     Next R
     Erase ARRYM
     '------------------------------------------------------------------------------------
@@ -441,7 +441,7 @@ Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional 指
     For X = LBound(组花册, 1) To UBound(组花册, 1)
         '--------------------------------------------------------------------------------
         CIDL = 组花册(X, 1)
-        典集花册行号.Add Item:=X, Key:=CIDL
+        典集花册行号.Add Item:=X, key:=CIDL
         '--------------------------------------------------------------------------------
         '清空原有信息：持仓
         '--------------------------------------------------------------------------------
@@ -839,17 +839,17 @@ Function STCALL花册管理_重制花天P9子程重置信息2在池( _
                         '----------------------------------------------------------------
                         '标注是否已在池：金银非黑为互斥关系
                         If 组花册(X, 位列花天在池) = 常池名金 Then
-                            典码已在池金.Add Item:=X, Key:=CIDL
+                            典码已在池金.Add Item:=X, key:=CIDL
                         ElseIf 组花册(X, 位列花天在池) = 常池名银 Then
-                            典码已在池银.Add Item:=X, Key:=CIDL
+                            典码已在池银.Add Item:=X, key:=CIDL
                         ElseIf 组花册(X, 位列花天在池) = 常池名铜 Then
-                            典码已在池铜.Add Item:=X, Key:=CIDL
+                            典码已在池铜.Add Item:=X, key:=CIDL
                         ElseIf 组花册(X, 位列花天在池) = 常池名黑 Then
-                            典码已在池黑.Add Item:=X, Key:=CIDL
+                            典码已在池黑.Add Item:=X, key:=CIDL
                         End If
                         '----------------------------------------------------------------
                         If 组花册(X, 位列花天今池) = 常池名今 Then
-                            典码已在池今.Add Item:=X, Key:=CIDL
+                            典码已在池今.Add Item:=X, key:=CIDL
                         End If
                         '----------------------------------------------------------------
     Next
@@ -1292,7 +1292,7 @@ Private Function STCALL花册管理_重制花天P1子程导入列表指数(WS花
         '--------------------------------------------------------------------------------
         原件名称 = UCase(FSO.GetBaseName(gfile.Path))
         原件代码 = LCase(原件名称)
-        典集指码.Add Item:=原件代码, Key:=原件代码
+        典集指码.Add Item:=原件代码, key:=原件代码
         '--------------------------------------------------------------------------------
     Next
     Set FSO = Nothing
@@ -1452,7 +1452,7 @@ Function STCALL花册工具_提取典码花天按市池( _
         End If
         '--------------------------------------------------------------------------------
         If 是否提取 = True Then
-            If 典码称.Exists(CIDL) = False Then 典码称.Add Key:=CIDL, Item:=代称
+            If 典码称.Exists(CIDL) = False Then 典码称.Add key:=CIDL, Item:=代称
         End If
         '--------------------------------------------------------------------------------
         If 测试限数 > 0 And 典码称.Count > 测试限数 Then Exit For         '测试专用
@@ -1497,7 +1497,7 @@ Function STCALL花册工具_提取典码花天按采样( _
         If UBCID是中股票(CIDL) = True Or UBCID是中股基(CIDL) = True Or UBCID是中股指(CIDL) = True Then
         If 组花册(X, 采样列号) = 采样列值 Then
             采样总数 = 采样总数 + 1
-            If 典码称.Exists(CIDL) = False Then 典码称.Add Key:=CIDL, Item:=代称
+            If 典码称.Exists(CIDL) = False Then 典码称.Add key:=CIDL, Item:=代称
         End If
         End If
         '--------------------------------------------------------------------------------
@@ -1624,7 +1624,7 @@ Function STCALL花册工具_花天查询神谕字段(CIDL As String, Optional �
         '获取变量
         '--------------------------------------------------------------------------------
         Dim 采样典码 As New Dictionary
-        采样典码.Add Item:=CIDL, Key:=CIDL
+        采样典码.Add Item:=CIDL, key:=CIDL
         Dim 谕组 As Variant
         Call IQQQ跨码据擎_数程生成全息(谕组, 常花中股, 实结类型:=实结类型, 采样典码:=采样典码)
         If VBA.IsEmpty(谕组) = True Then Exit Function

@@ -1364,43 +1364,43 @@ Function IQQQ跨码展擎_校验持仓区域( _
         '--------------------------------------------------------------------------------
         Dim 典值池数 As New Dictionary
         With 典值池数
-            .Add Key:="池全", Item:=0
-            .Add Key:="池金", Item:=0
-            .Add Key:="池白", Item:=0
-            .Add Key:="池基", Item:=0
-            .Add Key:="池外", Item:=0
+            .Add key:="池全", Item:=0
+            .Add key:="池金", Item:=0
+            .Add key:="池白", Item:=0
+            .Add key:="池基", Item:=0
+            .Add key:="池外", Item:=0
         End With
         Dim 典值池额 As New Dictionary
         With 典值池额
-            .Add Key:="池全", Item:=0
-            .Add Key:="池金", Item:=0
-            .Add Key:="池白", Item:=0
-            .Add Key:="池基", Item:=0
-            .Add Key:="池外", Item:=0
+            .Add key:="池全", Item:=0
+            .Add key:="池金", Item:=0
+            .Add key:="池白", Item:=0
+            .Add key:="池基", Item:=0
+            .Add key:="池外", Item:=0
         End With
         Dim 典值池赚收 As New Dictionary
         With 典值池赚收
-            .Add Key:="池全", Item:=0
-            .Add Key:="池金", Item:=0
-            .Add Key:="池白", Item:=0
-            .Add Key:="池基", Item:=0
-            .Add Key:="池外", Item:=0
+            .Add key:="池全", Item:=0
+            .Add key:="池金", Item:=0
+            .Add key:="池白", Item:=0
+            .Add key:="池基", Item:=0
+            .Add key:="池外", Item:=0
         End With
         Dim 典值池赚高 As New Dictionary
         With 典值池赚高
-            .Add Key:="池全", Item:=0
-            .Add Key:="池金", Item:=0
-            .Add Key:="池白", Item:=0
-            .Add Key:="池基", Item:=0
-            .Add Key:="池外", Item:=0
+            .Add key:="池全", Item:=0
+            .Add key:="池金", Item:=0
+            .Add key:="池白", Item:=0
+            .Add key:="池基", Item:=0
+            .Add key:="池外", Item:=0
         End With
         Dim 典值池赚低 As New Dictionary
         With 典值池赚低
-            .Add Key:="池全", Item:=0
-            .Add Key:="池金", Item:=0
-            .Add Key:="池白", Item:=0
-            .Add Key:="池基", Item:=0
-            .Add Key:="池外", Item:=0
+            .Add key:="池全", Item:=0
+            .Add key:="池金", Item:=0
+            .Add key:="池白", Item:=0
+            .Add key:="池基", Item:=0
+            .Add key:="池外", Item:=0
         End With
 '========================================================================================
 '确定范围

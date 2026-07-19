@@ -329,7 +329,7 @@ Function IQQQ跨码据擎_数程生成全息( _
         Dim 典码位花册 As New Dictionary
         For X = LBound(组花册, 1) To UBound(组花册, 1)
             CIDL = 组花册(X, 1)
-            典码位花册.Add Item:=X, Key:=CIDL
+            典码位花册.Add Item:=X, key:=CIDL
         Next
 '========================================================================================
 '制作：谕组

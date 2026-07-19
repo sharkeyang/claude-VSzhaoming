@@ -112,21 +112,21 @@ Function STBASE池管理_索引基程( _
     For X = LBound(谕组, 1) To UBound(谕组, 1)
         CIDL = 谕组(X, 1)
         If 谕组(X, 位qt在池) = 常池名金 Then
-            If 典集池金.Exists(CIDL) = False Then 典集池金.Add Item:=X, Key:=CIDL
-            If 典码输出.Exists(CIDL) = False And 是否索引池金 = True Then 典码输出.Add Item:=X, Key:=CIDL
+            If 典集池金.Exists(CIDL) = False Then 典集池金.Add Item:=X, key:=CIDL
+            If 典码输出.Exists(CIDL) = False And 是否索引池金 = True Then 典码输出.Add Item:=X, key:=CIDL
         ElseIf 谕组(X, 位qt在池) = 常池名银 Then
-            If 典集池银.Exists(CIDL) = False Then 典集池银.Add Item:=X, Key:=CIDL
-            If 典码输出.Exists(CIDL) = False And 是否索引池银 = True Then 典码输出.Add Item:=X, Key:=CIDL
+            If 典集池银.Exists(CIDL) = False Then 典集池银.Add Item:=X, key:=CIDL
+            If 典码输出.Exists(CIDL) = False And 是否索引池银 = True Then 典码输出.Add Item:=X, key:=CIDL
         ElseIf 谕组(X, 位qt在池) = 常池名铜 Then
-            If 典集池铜.Exists(CIDL) = False Then 典集池铜.Add Item:=X, Key:=CIDL
-            If 典码输出.Exists(CIDL) = False And 是否索引池铜 = True Then 典码输出.Add Item:=X, Key:=CIDL
+            If 典集池铜.Exists(CIDL) = False Then 典集池铜.Add Item:=X, key:=CIDL
+            If 典码输出.Exists(CIDL) = False And 是否索引池铜 = True Then 典码输出.Add Item:=X, key:=CIDL
         ElseIf 谕组(X, 位qt在池) = 常池名黑 Then
-            If 典集池黑.Exists(CIDL) = False Then 典集池黑.Add Item:=X, Key:=CIDL
-            If 典码输出.Exists(CIDL) = False And 是否索引池黑 = True Then 典码输出.Add Item:=X, Key:=CIDL
+            If 典集池黑.Exists(CIDL) = False Then 典集池黑.Add Item:=X, key:=CIDL
+            If 典码输出.Exists(CIDL) = False And 是否索引池黑 = True Then 典码输出.Add Item:=X, key:=CIDL
         End If
         If 谕组(X, 位qt今池) <> "" Then
-            If 典集池今.Exists(CIDL) = False Then 典集池今.Add Item:=X, Key:=CIDL
-            If 典码输出.Exists(CIDL) = False And 是否索引池今 = True Then 典码输出.Add Item:=X, Key:=CIDL
+            If 典集池今.Exists(CIDL) = False Then 典集池今.Add Item:=X, key:=CIDL
+            If 典码输出.Exists(CIDL) = False And 是否索引池今 = True Then 典码输出.Add Item:=X, key:=CIDL
         End If
     Next
 '========================================================================================
@@ -154,16 +154,16 @@ Function STBASE池管理_索引基程( _
             值行业 = "未分类"
         End If
         If 典集行业.Exists(CIDL) = False Then
-            典集行业.Add Item:=值行业, Key:=CIDL
+            典集行业.Add Item:=值行业, key:=CIDL
         End If
         If 典集行业大类.Exists(值行业) = False Then
-            典集行业大类.Add Item:="未分类", Key:=值行业
+            典集行业大类.Add Item:="未分类", key:=值行业
         End If
     Next
     '----------------------------------------------------------
     Dim 典集行业索引 As New Dictionary
     For i = 1 To 典集行业大类.Count
-        典集行业索引.Add Item:=i, Key:=典集行业大类.Keys(i - 1)
+        典集行业索引.Add Item:=i, key:=典集行业大类.Keys(i - 1)
     Next
 '========================================================================================
 '进行列表
@@ -419,138 +419,138 @@ Function STBASE池管理_设置必选行业(典集行业分类 As Dictionary)
 '========================================================================================
     With 典集行业分类
         '---------------------------------------
-        .Add Item:="必须", Key:="港股"
-        .Add Item:="必须", Key:="未分类"
+        .Add Item:="必须", key:="港股"
+        .Add Item:="必须", key:="未分类"
 '----------------------------------------------------------------------------------------
 '上升趋势
 '----------------------------------------------------------------------------------------
         '---------------------------------------
         '类别：TMT
-        .Add Item:="TMT行业", Key:="通信设备"
-        .Add Item:="TMT行业", Key:="通信服务"
-        .Add Item:="TMT行业", Key:="IT设备"
-        .Add Item:="TMT行业", Key:="电子设备"
-        .Add Item:="TMT行业", Key:="软件服务"
-        .Add Item:="TMT行业", Key:="电子元器件"
-        .Add Item:="TMT行业", Key:="通用设备"
-        .Add Item:="TMT行业", Key:="专用设备"
+        .Add Item:="TMT行业", key:="通信设备"
+        .Add Item:="TMT行业", key:="通信服务"
+        .Add Item:="TMT行业", key:="IT设备"
+        .Add Item:="TMT行业", key:="电子设备"
+        .Add Item:="TMT行业", key:="软件服务"
+        .Add Item:="TMT行业", key:="电子元器件"
+        .Add Item:="TMT行业", key:="通用设备"
+        .Add Item:="TMT行业", key:="专用设备"
         '---------------------------------------
         '类别：军工
-        .Add Item:="军工制造", Key:="航天国防"
-        .Add Item:="军工制造", Key:="船舶制造"
-        .Add Item:="军工制造", Key:="仪器仪表"
-        .Add Item:="军工制造", Key:="机床设备"
+        .Add Item:="军工制造", key:="航天国防"
+        .Add Item:="军工制造", key:="船舶制造"
+        .Add Item:="军工制造", key:="仪器仪表"
+        .Add Item:="军工制造", key:="机床设备"
         '---------------------------------------
         '类别：汽车相关
-        .Add Item:="汽车制造", Key:="汽车制造"
-        .Add Item:="汽车制造", Key:="汽车服务"
-        .Add Item:="汽车制造", Key:="电机"
-        .Add Item:="汽车制造", Key:="汽车零部件"
+        .Add Item:="汽车制造", key:="汽车制造"
+        .Add Item:="汽车制造", key:="汽车服务"
+        .Add Item:="汽车制造", key:="电机"
+        .Add Item:="汽车制造", key:="汽车零部件"
         '---------------------------------------
         '类别：碳中和
-        .Add Item:="电力", Key:="电力"
-        .Add Item:="电力", Key:="电气智能化设备"
-        .Add Item:="电力", Key:="高低压设备"
-        .Add Item:="电力", Key:="电源设备"
+        .Add Item:="电力", key:="电力"
+        .Add Item:="电力", key:="电气智能化设备"
+        .Add Item:="电力", key:="高低压设备"
+        .Add Item:="电力", key:="电源设备"
         '---------------------------------------
         '类别：原材料
-        .Add Item:="原材料", Key:="化学制品"
-        .Add Item:="原材料", Key:="化学原料"
-        .Add Item:="原材料", Key:="金属制品"
-        .Add Item:="原材料", Key:="新材料"
-        .Add Item:="原材料", Key:="玻璃制造"
-        .Add Item:="原材料", Key:="塑料"
-        .Add Item:="原材料", Key:="造纸"
+        .Add Item:="原材料", key:="化学制品"
+        .Add Item:="原材料", key:="化学原料"
+        .Add Item:="原材料", key:="金属制品"
+        .Add Item:="原材料", key:="新材料"
+        .Add Item:="原材料", key:="玻璃制造"
+        .Add Item:="原材料", key:="塑料"
+        .Add Item:="原材料", key:="造纸"
         '---------------------------------------
         '类别：人口刺激
-        .Add Item:="文化娱乐", Key:="互联网传媒"
-        .Add Item:="文化娱乐", Key:="文化传媒"
-        .Add Item:="文化娱乐", Key:="营销传播"
-        .Add Item:="文化娱乐", Key:="包装印刷"
+        .Add Item:="文化娱乐", key:="互联网传媒"
+        .Add Item:="文化娱乐", key:="文化传媒"
+        .Add Item:="文化娱乐", key:="营销传播"
+        .Add Item:="文化娱乐", key:="包装印刷"
         '---------------------------------------
         '类别：交运类
-        .Add Item:="交运", Key:="航空运输"
-        .Add Item:="交运", Key:="高速公路"
-        .Add Item:="交运", Key:="港口"
-        .Add Item:="交运", Key:="水上运输"
-        .Add Item:="交运", Key:="公共交通"
-        .Add Item:="交运", Key:="铁路运输"
-        .Add Item:="交运", Key:="仓储物流"
-        .Add Item:="交运", Key:="其他交运设备"
+        .Add Item:="交运", key:="航空运输"
+        .Add Item:="交运", key:="高速公路"
+        .Add Item:="交运", key:="港口"
+        .Add Item:="交运", key:="水上运输"
+        .Add Item:="交运", key:="公共交通"
+        .Add Item:="交运", key:="铁路运输"
+        .Add Item:="交运", key:="仓储物流"
+        .Add Item:="交运", key:="其他交运设备"
         '---------------------------------------
-        .Add Item:="关税", Key:="纺织"
-        .Add Item:="关税", Key:="服装"
-        .Add Item:="关税", Key:="轻工产品"
-        .Add Item:="关税", Key:="化纤"
-        .Add Item:="关税", Key:="贸易"
+        .Add Item:="关税", key:="纺织"
+        .Add Item:="关税", key:="服装"
+        .Add Item:="关税", key:="轻工产品"
+        .Add Item:="关税", key:="化纤"
+        .Add Item:="关税", key:="贸易"
 '----------------------------------------------------------------------------------------
 '震荡
 '----------------------------------------------------------------------------------------
         '---------------------------------------
         '类别：基建类
-        .Add Item:="基建", Key:="工程建筑"
-        .Add Item:="基建", Key:="工程机械"
-        .Add Item:="基建", Key:="水泥"
-        .Add Item:="基建", Key:="建材"
-        .Add Item:="基建", Key:="轻工机械"
-        .Add Item:="基建", Key:="重型机械"
+        .Add Item:="基建", key:="工程建筑"
+        .Add Item:="基建", key:="工程机械"
+        .Add Item:="基建", key:="水泥"
+        .Add Item:="基建", key:="建材"
+        .Add Item:="基建", key:="轻工机械"
+        .Add Item:="基建", key:="重型机械"
         '---------------------------------------
         '类别：石油石化
-        .Add Item:="石化碳中和", Key:="石油石化"
-        .Add Item:="石化碳中和", Key:="采掘服务业"
-        .Add Item:="石化碳中和", Key:="其他采掘"
+        .Add Item:="石化碳中和", key:="石油石化"
+        .Add Item:="石化碳中和", key:="采掘服务业"
+        .Add Item:="石化碳中和", key:="其他采掘"
         '---------------------------------------
         '类别：黑色
-        .Add Item:="黑色碳中和", Key:="煤炭开采"
-        .Add Item:="黑色碳中和", Key:="有色金属"
-        .Add Item:="黑色碳中和", Key:="钢铁"
+        .Add Item:="黑色碳中和", key:="煤炭开采"
+        .Add Item:="黑色碳中和", key:="有色金属"
+        .Add Item:="黑色碳中和", key:="钢铁"
         '---------------------------------------
         '类别：环保 碳中和
-        .Add Item:="环保", Key:="环境保护"
-        .Add Item:="环保", Key:="园林工程"
-        .Add Item:="环保", Key:="公用事业"
-        .Add Item:="环保", Key:="综合行业"
+        .Add Item:="环保", key:="环境保护"
+        .Add Item:="环保", key:="园林工程"
+        .Add Item:="环保", key:="公用事业"
+        .Add Item:="环保", key:="综合行业"
 '----------------------------------------------------------------------------------------
 '下降趋势
 '----------------------------------------------------------------------------------------
         '---------------------------------------
         '类别：大消费
-        .Add Item:="消费", Key:="景点"
-        .Add Item:="消费", Key:="旅游综合"
-        .Add Item:="消费", Key:="酒店餐饮"
-        .Add Item:="消费", Key:="零售业"
-        .Add Item:="消费", Key:="影视动漫"
+        .Add Item:="消费", key:="景点"
+        .Add Item:="消费", key:="旅游综合"
+        .Add Item:="消费", key:="酒店餐饮"
+        .Add Item:="消费", key:="零售业"
+        .Add Item:="消费", key:="影视动漫"
         '---------------------------------------
         '类别：月2e
-        .Add Item:="大消费", Key:="饮料制造"
-        .Add Item:="大消费", Key:="酿酒"
-        .Add Item:="大消费", Key:="食品加工"
+        .Add Item:="大消费", key:="饮料制造"
+        .Add Item:="大消费", key:="酿酒"
+        .Add Item:="大消费", key:="食品加工"
         '---------------------------------------
         '类别：医疗行业
-        .Add Item:="医疗行业", Key:="医药制造"
-        .Add Item:="医疗行业", Key:="生物制品"
-        .Add Item:="医疗行业", Key:="中药"
-        .Add Item:="医疗行业", Key:="医疗服务"
-        .Add Item:="医疗行业", Key:="医疗器械"
-        .Add Item:="医疗行业", Key:="医药流通"
+        .Add Item:="医疗行业", key:="医药制造"
+        .Add Item:="医疗行业", key:="生物制品"
+        .Add Item:="医疗行业", key:="中药"
+        .Add Item:="医疗行业", key:="医疗服务"
+        .Add Item:="医疗行业", key:="医疗器械"
+        .Add Item:="医疗行业", key:="医药流通"
         '---------------------------------------
         '类别：房地产
-        .Add Item:="房地产", Key:="房地产"
-        .Add Item:="房地产", Key:="装修装饰"
-        .Add Item:="房地产", Key:="家电"
+        .Add Item:="房地产", key:="房地产"
+        .Add Item:="房地产", key:="装修装饰"
+        .Add Item:="房地产", key:="家电"
         '---------------------------------------
         '类别：金融
-        .Add Item:="金融", Key:="银行"
-        .Add Item:="金融", Key:="证券期货"
-        .Add Item:="金融", Key:="多元金融"
+        .Add Item:="金融", key:="银行"
+        .Add Item:="金融", key:="证券期货"
+        .Add Item:="金融", key:="多元金融"
         '---------------------------------------
         '类别：农业
-        .Add Item:="农业", Key:="农林"
-        .Add Item:="农业", Key:="化肥"
-        .Add Item:="农业", Key:="农药"
-        .Add Item:="农业", Key:="牧渔"
-        .Add Item:="农业", Key:="饲料加工"
-        .Add Item:="农业", Key:="农业服务"
+        .Add Item:="农业", key:="农林"
+        .Add Item:="农业", key:="化肥"
+        .Add Item:="农业", key:="农药"
+        .Add Item:="农业", key:="牧渔"
+        .Add Item:="农业", key:="饲料加工"
+        .Add Item:="农业", key:="农业服务"
         '---------------------------------------
     End With
 End Function

@@ -408,7 +408,7 @@ Function 后台族群精分引擎正程( _
                 If (来市日 >= 过滤市日开始 And 来市日 <= 过滤市日结束) Then
                 群名 = 来内容组(Y)
                 If Not 典群花册.Exists(群名) Then
-                    典群花册.Add Item:=群名, Key:=群名
+                    典群花册.Add Item:=群名, key:=群名
                 End If
                 End If
             Next Y
@@ -424,7 +424,7 @@ Function 后台族群精分引擎正程( _
             For Y = LBound(来内容组) To UBound(来内容组)
                 群名 = 来内容组(k)
                 If Not 典群花册.Exists(群名) Then
-                    典群花册.Add Item:=群名, Key:=群名
+                    典群花册.Add Item:=群名, key:=群名
                 End If
             Next Y
             Erase 来内容组
@@ -441,7 +441,7 @@ Function 后台族群精分引擎正程( _
     For Y = LBound(组族群(X), 1) + 1 To UBound(组族群(X), 1)
         群名 = 组族群(X)(Y)
         If Not 典群族群.Exists(群名) Then
-            典群族群.Add Item:=群名, Key:=群名
+            典群族群.Add Item:=群名, key:=群名
         End If
     Next Y
     Next X
@@ -732,7 +732,7 @@ Function 后台族群精分引擎正程( _
                     '---------------------------------------------------------------------
                     群成分代码 = 来簿.Cells(k, 位列花天CIDL)
                     If Len(群成分代码) > 0 Then
-                        群成分码集.Add Item:=群成分代码, Key:=群成分代码
+                        群成分码集.Add Item:=群成分代码, key:=群成分代码
                     End If
                     '---------------------------------------------------------------------
                 End If
@@ -886,7 +886,7 @@ Private Sub 后台族群精分辅程_准备类组()
                 End If
                 If 典类名去重.Exists(类名) = False Then
                     类列表 = 类列表 & "," & Chr(34) & 类名 & Chr(34)
-                    典类名去重.Add Key:=类名, Item:=类名
+                    典类名去重.Add key:=类名, Item:=类名
                 End If
             End If
         Next 维纵

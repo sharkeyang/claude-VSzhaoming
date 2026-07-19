@@ -313,7 +313,7 @@ Public Sub ZPY_批量算展()
     ' 遍历全部股票，按市板分组
     For Each key In 全部股票.Keys
         市板 = Split(全部股票(key), "|")(0)
-        If Not 各市板列表.exists(市板) Then Set 各市板列表(市板) = CreateObject("Scripting.Dictionary")
+        If Not 各市板列表.Exists(市板) Then Set 各市板列表(市板) = CreateObject("Scripting.Dictionary")
         各市板列表(市板)(key) = 全部股票(key)
     Next
 
@@ -337,7 +337,7 @@ Public Sub ZPY_批量算展()
         Dim 已有数 As Long: 已有数 = 0
         Dim 待生 As Object: Set 待生 = CreateObject("Scripting.Dictionary")
         For Each key In 各市板列表(市板).Keys
-            If 已有文件.exists(key) Then
+            If 已有文件.Exists(key) Then
                 已有数 = 已有数 + 1
             Else
                 待生(key) = 全部股票(key)

@@ -138,7 +138,7 @@ Function 历调过程正程( _
             CIDL = MSFM.Cells(行号遍历, 位qt代码).Value
             代称 = MSFM.Cells(行号遍历, 位qt代称).Value
             If UBCID是代码(CIDL) Then
-                If 典码称.Exists(CIDL) = False Then 典码称.Add Item:=代称, Key:=CIDL
+                If 典码称.Exists(CIDL) = False Then 典码称.Add Item:=代称, key:=CIDL
             End If
         Next
     Else
@@ -146,7 +146,7 @@ Function 历调过程正程( _
             CIDL = MSFM.Cells(行号遍历, 位列花天CIDL).Value
             代称 = MSFM.Cells(行号遍历, 位列花天代称).Value
             If UBCID是代码(CIDL) And MSFM.Cells(行号遍历, 位列花天市板) Like 被研市板 Then
-                If 典码称.Exists(CIDL) = False Then 典码称.Add Item:=代称, Key:=CIDL
+                If 典码称.Exists(CIDL) = False Then 典码称.Add Item:=代称, key:=CIDL
             End If
             '仅用于测试提高效率
             If 是否测试模式 = True And 典码称.Count > 10 Then Exit For

@@ -117,9 +117,9 @@ Private Function PSOP格整理质程_检查重复(WS As Worksheet, Optional 是�
             CIDL = CIDCL.Value
             
             If 集合全部.Exists(CIDL) Then
-                集合重复.Add Item:=CIDL, Key:=CIDL
+                集合重复.Add Item:=CIDL, key:=CIDL
             Else
-                集合全部.Add Item:=CIDL, Key:=CIDL
+                集合全部.Add Item:=CIDL, key:=CIDL
             End If
         End If
         '--------------------------------------------------------------------------------
@@ -136,10 +136,10 @@ Private Function PSOP格整理质程_检查重复(WS As Worksheet, Optional 是�
         If 集合重复.Exists(CIDL) Then
             If 集合重复首次.Exists(CIDL) Then
                 CIDCL.Interior.Color = 常色十红
-                集合重复删除.Add Item:=k, Key:=k
+                集合重复删除.Add Item:=k, key:=k
             Else
                 CIDCL.Font.Color = 常色十红
-                集合重复首次.Add Item:=CIDL, Key:=CIDL
+                集合重复首次.Add Item:=CIDL, key:=CIDL
             End If
         End If
         '--------------------------------------------------------------------------------

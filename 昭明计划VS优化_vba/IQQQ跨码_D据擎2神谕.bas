@@ -461,48 +461,52 @@ Public Const 位谕终of族月均 = 位谕of月类占位
 Public Const 位谕始of族策 = 位谕终of族月均 + 1
 '--- 策传 ---
 Public Const 位谕of策传 = 位谕始of族策 + 0      '策传综合信息，供Python读取
-'-----------
-Public Const 位谕of周层四域 = 位谕始of族策 + 1
-Public Const 位谕of日层四域 = 位谕始of族策 + 2
-Public Const 位谕of日层段 = 位谕始of族策 + 3
-Public Const 位谕of日层机警 = 位谕始of族策 + 4
 '--- 月基三变量 ---
 '月基策略：月基持仓的底层分类，按周层四域映射为7类
 '  V1 月基命分 = 股性分（历史基因），衡量该股历史上沿长期均线操作是否容易赚钱
 '  V2 月基策分 = 存续分（走势维持），仅对多长三分类评分，预示后续1~5周是否维持月基状态
 '  V3 月基带向 = 双向带动+，WXAB→WXCD带动 + WJB下破带动 + 柱排启示（待扩展）
-Public Const 位谕of月基策略 = 位谕始of族策 + 5     '月基策略: 多长(积极)/多长(消极)/多长(不定)/多被(金)/多被(银)/NA(空看)/NA(空长)
-Public Const 位谕of月基命分 = 位谕始of族策 + 6     'V1 月基命分: 股性分(0~100)，从CSV查表，恶庄天然过滤
-Public Const 位谕of月基策分 = 位谕始of族策 + 7     'V2 月基策分(5周): 当前周波型×柱排状态, 5周后是否仍在多长(续持率取整), 仅对多长评分
-Public Const 位谕of月基带向 = 位谕始of族策 + 8     'V3 月基双向带动: 11双好/10反险/01正潜/00双差，WXAB→WXCD联动
+Public Const 位谕of月基策略 = 位谕始of族策 + 1     '月基策略: 多长(积极)/多长(消极)/多长(不定)/多被(金)/多被(银)/NA(空看)/NA(空长)
+Public Const 位谕of月基命分 = 位谕始of族策 + 2     'V1 月基命分: 股性分(0~100)，从CSV查表，恶庄天然过滤
+Public Const 位谕of月基策分 = 位谕始of族策 + 3     'V2 月基策分(5周): 当前周波型×柱排状态, 5周后是否仍在多长(续持率取整), 仅对多长评分
+Public Const 位谕of月基带向 = 位谕始of族策 + 4     'V3 月基双向带动: 11双好/10反险/01正潜/00双差，WXAB→WXCD联动
 '--- 周冲系 ---
-Public Const 位谕of周冲策略 = 位谕始of族策 + 9     '周冲策略: 匹配的策略名(如"金+多长+升排+非孕")
-Public Const 位谕of周冲策分 = 位谕始of族策 + 10    '周冲策分: 冲高概率(P>=3%)
-Public Const 位谕终of族策 = 位谕of周冲策分
+Public Const 位谕of周冲策略 = 位谕始of族策 + 5     '周冲策略: 匹配的策略名(如"金+多长+升排+非孕")
+Public Const 位谕of周冲策分 = 位谕始of族策 + 6    '周冲策分: 冲高概率(P>=3%)
+'-----------
+Public Const 位谕of周层四域 = 位谕始of族策 + 7
+Public Const 位谕of日层四域 = 位谕始of族策 + 8
+Public Const 位谕of日层段 = 位谕始of族策 + 9
+Public Const 位谕of日层机警 = 位谕始of族策 + 10
+Public Const 位谕终of族策 = 位谕of日层机警
 '----------------------------------------------------------------------------------------
 Public Const 位谕列终全部 = 位谕终of族策
 '----------------------------------------------------------------------------------------
 
+
+
+
+
+
 'V1 月基命分查表（股性分）
-'设计思路：命分衡量"多长介入→持有→WXZC<0退出"平均每次能赚多少。
-'  几何均值自然惩罚波动，过滤假信号。命分低的股票天然不参与月基策略。
-'数据源：_产出物\月基命分结果.csv（全量7463只回测生成）
-'评分公式：几何均值 = (∏(1+每次收益))^(1/交易次数) - 1
-'评级：仁慈>=20分 / 正常10~20分 / 震荡0~10分 / 凶残<0分
+'设计思路：股性分衡量一只股票的历史"基因"——当你依据长期均线操作时，
+'  是否容易赚钱？好股突破有效、回踩不破线，恶庄突破贯穿/暴力回踩/长阴破多线。
+'  命分低的股票天然不参与月基策略，避免在恶庄上浪费仓位。
+'数据源：_产出物\月基策分结果.csv（离线全量回测生成）
+'评分公式：年化×胜率×盈亏比×均单次/(1+震仓)
 Private 命分表 As Object 'Dictionary (代码→月基命分)
 Private 命分表已加载 As Boolean
 
 '----------------------------------------------------------------------------------------
 '加载月基命分CSV，按代码查表赋值
-'CSV路径：_产出物\月基命分结果.csv，与xlsm同目录
-'CSV列：代码,命分_几何均值,算术均值,最大收益,最大亏损,胜率,交易次数
+'CSV路径：_产出物\月基策分结果.csv，与xlsm同目录
 '----------------------------------------------------------------------------------------
 Private Sub 加载月基命分表()
     If 命分表已加载 Then Exit Sub
     Set 命分表 = CreateObject("Scripting.Dictionary")
 
     Dim CSV路径 As String
-    CSV路径 = ThisWorkbook.Path & "\_产出物\月基命分结果.csv"
+    CSV路径 = ThisWorkbook.Path & "\_产出物\月基策分结果.csv"
 
     Dim FSO As Object: Set FSO = CreateObject("Scripting.FileSystemObject")
     If Not FSO.FileExists(CSV路径) Then
@@ -520,7 +524,7 @@ Private Sub 加载月基命分表()
         If 行号 = 1 Then GoTo 下一行 '跳过表头
         字段 = Split(行, ",")
         If UBound(字段) >= 1 Then
-            '字段0=代码, 字段1=命分_几何均值
+            '字段0=代码, 字段1=月基策分(股性分)
             命分表.Add Trim$(字段(0)), CDbl(Trim$(字段(1)))
         End If
 下一行:
@@ -3555,10 +3559,10 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
         月基分类 = "NA(空看)"  '兜底
     End Select
 
-    'V1 月基命分（几何均值）— 从CSV查表
-    'CSV路径：_产出物\月基命分结果.csv，按代码(CIDL)匹配
-    '评分公式：几何均值 = (∏(1+每次收益))^(1/交易次数) - 1
-    '评级：仁慈>=20分 / 正常10~20分 / 震荡0~10分 / 凶残<0分
+    'V1 月基命分（股性分）— 从CSV查表
+    'CSV路径：_产出物\月基策分结果.csv，按代码(CIDL)匹配
+    '评分公式：年化×胜率×盈亏比×均单次/(1+震仓)
+    '评级：?仁慈≥0.8  ?正常≥0.3  ??震荡≥0  ?凶残<0
     '逻辑：命分低=恶庄→天然不参与，命分高=好股→优先考虑月基持有
     加载月基命分表
     If 命分表.Exists(CIDL) Then
@@ -4824,6 +4828,116 @@ Function STBASE结算引擎_单点衍生核程(ByRef ARROS As Variant) As Intege
             '----------------------------------------------------------------------------
             ARROS(位os层界) = 值层界
             '============================================================================
+            '层护级
+            '============================================================================
+                '------------------------------------------------------------------------
+                '位os层护级CD
+                '位2：WXAB护。依赖WJB与WJA
+                '------------------------------------------------------------------------
+                ARROS(位os层护级CD) = ""
+                If ARROS(位osBTCD) > 0 Then
+                        If ARROS(位osBTZC) > 0 Then
+                            ARROS(位os层护级CD) = ARROS(位os层护级CD) & "上"
+                        ElseIf ARROS(位osBTZD) > 0 Then
+                            ARROS(位os层护级CD) = ARROS(位os层护级CD) & "中"   '另外设置变量寻找BTZA<0的机会
+                        Else
+                            ARROS(位os层护级CD) = ARROS(位os层护级CD) & "下"   '另外设置变量寻找BTZA<0的机会
+                        End If
+                Else
+                        If ARROS(位osBTZD) > 0 Then
+                            ARROS(位os层护级CD) = ARROS(位os层护级CD) & "忐"   '应该仅仅试仓
+                        ElseIf ARROS(位osBTZC) > 0 Then
+                            ARROS(位os层护级CD) = ARROS(位os层护级CD) & "忠"
+                        Else
+                            ARROS(位os层护级CD) = ARROS(位os层护级CD) & "忑"   '另外设置变量寻找BTZA<0的机会
+                        End If
+                End If
+                '------------------------------------------------------------------------
+                '位os层护级AB
+                '位2：WXAB护。依赖WJB与WJA
+                '------------------------------------------------------------------------
+                ARROS(位os层护级AB) = ""
+                If ARROS(位osBTAB) > 0 Then
+                        If ARROS(位osBTZA) > 0 Then
+                            ARROS(位os层护级AB) = ARROS(位os层护级AB) & "上"
+                        ElseIf ARROS(位osBTZB) > 0 Then
+                            ARROS(位os层护级AB) = ARROS(位os层护级AB) & "中"   '另外设置变量寻找BTZA<0的机会
+                        Else
+                            ARROS(位os层护级AB) = ARROS(位os层护级AB) & "下"   '另外设置变量寻找BTZA<0的机会
+                        End If
+                Else
+                        If ARROS(位osBTZB) > 0 Then
+                            ARROS(位os层护级AB) = ARROS(位os层护级AB) & "忐"   '应该仅仅试仓
+                        ElseIf ARROS(位osBTZA) > 0 Then
+                            ARROS(位os层护级AB) = ARROS(位os层护级AB) & "忠"
+                        Else
+                            ARROS(位os层护级AB) = ARROS(位os层护级AB) & "忑"   '另外设置变量寻找BTZA<0的机会
+                        End If
+                End If
+            '============================================================================
+            '层护段
+            '============================================================================
+                '------------------------------------------------------------------------
+                '位os层护段CD
+                '正一段：（导致WXAB正交）或（上破WJA且WTZA≥4）
+                '正二段：WXZB>0且WTZA≤3
+                '正三段：WTZB＜0
+                '------------------------------------------------------------------------
+                ARROS(位os层护段CD) = ""
+                If ARROS(位osBTCD) > 0 Then
+                        If ARROS(位osBTZD) < 0 Then
+                            ARROS(位os层护段CD) = ARROS(位os层护段CD) & "c丙"
+                        ElseIf ARROS(位osBTZC) < 0 Then
+                            ARROS(位os层护段CD) = ARROS(位os层护段CD) & "b乙"
+                        'ElseIf ARROS(位osBTZC) <= 3 And ARROS(位osBTZC) < ARROS(位osBTCD) Then
+                        ElseIf ARROS(位osBTZC) < ARROS(位osBTCD) Then
+                            ARROS(位os层护段CD) = ARROS(位os层护段CD) & "b乙"
+                        Else
+                            ARROS(位os层护段CD) = ARROS(位os层护段CD) & "a甲"
+                        End If
+                Else
+                        If ARROS(位osBTZD) > 0 Then
+                            ARROS(位os层护段CD) = ARROS(位os层护段CD) & "r己"
+                        ElseIf ARROS(位osBTZC) > 0 Then
+                            ARROS(位os层护段CD) = ARROS(位os层护段CD) & "y戊"
+                        'ElseIf ARROS(位osBTZC) >= -3 And ARROS(位osBTZC) > ARROS(位osBTCD) Then
+                        ElseIf ARROS(位osBTZC) > ARROS(位osBTCD) Then
+                            ARROS(位os层护段CD) = ARROS(位os层护段CD) & "y戊"
+                        Else
+                            ARROS(位os层护段CD) = ARROS(位os层护段CD) & "z丁"
+                        End If
+                End If
+                '------------------------------------------------------------------------
+                '位os层护段AB
+                '正一段：（导致WXAB正交）或（上破WJA且WTZA≥4）
+                '正二段：WXZB>0且WTZA≤3
+                '正三段：WTZB＜0
+                '------------------------------------------------------------------------
+                ARROS(位os层护段AB) = ""
+                If ARROS(位osBTAB) > 0 Then
+                        If ARROS(位osBTZB) < 0 Then
+                            ARROS(位os层护段AB) = ARROS(位os层护段AB) & "c丙"
+                        ElseIf ARROS(位osBTZA) < 0 Then
+                            ARROS(位os层护段AB) = ARROS(位os层护段AB) & "b乙"
+                        'ElseIf ARROS(位osBTZA) <= 3 And ARROS(位osBTZA) < ARROS(位osBTAB) Then
+                        ElseIf ARROS(位osBTZA) < ARROS(位osBTAB) Then
+                            ARROS(位os层护段AB) = ARROS(位os层护段AB) & "b乙"
+                        Else
+                            ARROS(位os层护段AB) = ARROS(位os层护段AB) & "a甲"
+                        End If
+                Else
+                        If ARROS(位osBTZB) > 0 Then
+                            ARROS(位os层护段AB) = ARROS(位os层护段AB) & "r己"
+                        ElseIf ARROS(位osBTZA) > 0 Then
+                            ARROS(位os层护段AB) = ARROS(位os层护段AB) & "y戊"
+                        'ElseIf ARROS(位osBTZA) >= -3 And ARROS(位osBTZA) > ARROS(位osBTAB) Then
+                        ElseIf ARROS(位osBTZA) > ARROS(位osBTAB) Then
+                            ARROS(位os层护段AB) = ARROS(位os层护段AB) & "y戊"
+                        Else
+                            ARROS(位os层护段AB) = ARROS(位os层护段AB) & "z丁"
+                        End If
+                End If
+            '============================================================================
             '============================================================================
             '层护型
             '注20240911：【层护型】用于指引大势，所以将WJC与WJB作为核心均线，负责处置在管中行进的节奏。WJA上下都属于可持。
@@ -4834,34 +4948,9 @@ Function STBASE结算引擎_单点衍生核程(ByRef ARROS As Variant) As Intege
             '============================================================================
                 值层护型 = ""
                 '------------------------------------------------------------------------
-                '位1：层段
-                '正一段：（导致WXAB正交）或（上破WJA且WTZA≥4）
-                '正二段：WXZB>0且WTZA≤3
-                '正三段：WTZB＜0
+                '位1：位os层护段AB
                 '------------------------------------------------------------------------
-                If ARROS(位osBTAB) > 0 Then
-                        If ARROS(位osBTZB) < 0 Then
-                            值层护型 = 值层护型 & "c丙"
-                        ElseIf ARROS(位osBTZA) < 0 Then
-                            值层护型 = 值层护型 & "b乙"
-                        'ElseIf ARROS(位osBTZA) <= 3 And ARROS(位osBTZA) < ARROS(位osBTAB) Then
-                        ElseIf ARROS(位osBTZA) < ARROS(位osBTAB) Then
-                            值层护型 = 值层护型 & "b乙"
-                        Else
-                            值层护型 = 值层护型 & "a甲"
-                        End If
-                Else
-                        If ARROS(位osBTZB) > 0 Then
-                            值层护型 = 值层护型 & "r己"
-                        ElseIf ARROS(位osBTZA) > 0 Then
-                            值层护型 = 值层护型 & "y戊"
-                        'ElseIf ARROS(位osBTZA) >= -3 And ARROS(位osBTZA) > ARROS(位osBTAB) Then
-                        ElseIf ARROS(位osBTZA) > ARROS(位osBTAB) Then
-                            值层护型 = 值层护型 & "y戊"
-                        Else
-                            值层护型 = 值层护型 & "z丁"
-                        End If
-                End If
+                值层护型 = ARROS(位os层护段AB)
                 '------------------------------------------------------------------------
                 '位2：方向
                 '------------------------------------------------------------------------
@@ -4879,25 +4968,8 @@ Function STBASE结算引擎_单点衍生核程(ByRef ARROS As Variant) As Intege
                 '------------------------------------------------------------------------
                 '位2：WXAB护。依赖WJB与WJA
                 '------------------------------------------------------------------------
-                If ARROS(位osBTAB) > 0 Then
-                        If ARROS(位osBTZA) > 0 Then
-                            值层护型 = 值层护型 & "上"
-                        ElseIf ARROS(位osBTZB) > 0 Then
-                            值层护型 = 值层护型 & "中" '另外设置变量寻找BTZA<0的机会
-                        Else
-                            值层护型 = 值层护型 & "下" '另外设置变量寻找BTZA<0的机会
-                        End If
-                        值层护型 = 值层护型 & ARROS(位osBTAB)
-                Else
-                        If ARROS(位osBTZB) > 0 Then
-                            值层护型 = 值层护型 & "忐" '应该仅仅试仓
-                        ElseIf ARROS(位osBTZA) > 0 Then
-                            值层护型 = 值层护型 & "忠"
-                        Else
-                            值层护型 = 值层护型 & "忑" '另外设置变量寻找BTZA<0的机会
-                        End If
-                        值层护型 = 值层护型 & ARROS(位osBTAB)
-                End If
+                值层护型 = 值层护型 & ARROS(位os层护级AB)
+                值层护型 = 值层护型 & ARROS(位osBTAB)
                 '------------------------------------------------------------------------
                 '分割：重要的持仓信息，在前2位已经总结完毕，后续信息都是展开注释。
                 '------------------------------------------------------------------------
@@ -4921,24 +4993,6 @@ Function STBASE结算引擎_单点衍生核程(ByRef ARROS As Variant) As Intege
                 值层护型 = 值层护型 & ARROS(位osBTZA暂下破)
             '----------------------------------------------------------------------------
             ARROS(位os层护型) = 值层护型
-            '----------------------------------------------------------------------------
-            '写入层护段/层护级（AB/CD）
-            '值层护型格式: [护段][WXAB等级][方向][护级][BTAB].[WJA信息]
-            '               位1     位2     位3   位4    位5+
-            '
-            '护段AB (动态概念, 基于DXAB正交状态):
-            '   a=BTAB>0且BTZA>=BTAB(正交最强) b=BTAB>0且BTZA<BTAB(正交偏弱)
-            '   c=BTAB>0且BTZB<0(正交但ZB劫)   r=BTAB<=0且BTZB>0(负交但ZB>0)
-            '   y=BTAB<=0且BTZA>0(负交但ZA>0)  z=BTAB<=0且BTZA<=BTAB(负交最弱)
-            '护级AB (静态概念, 基于DJE/DJCD均线位置):
-            '   上=BTAB>0且BTZA>0(DJA之上)  中=BTAB>0且BTZB>0(DJB之上)
-            '   下=BTAB>0且BTZA<=0(DJA之下) 忐=BTAB<=0且BTZB>0(DJB之上负交)
-            '   忠=BTAB<=0且BTZA>0(DJA之上负交) 忑=BTAB<=0且BTZA<=0(均线之下负交)
-            '----------------------------------------------------------------------------
-            ARROS(位os层护段AB) = Left$(值层护型, 1)   '护段：位1 (a/b/c/r/y/z)
-            ARROS(位os层护级AB) = Mid$(值层护型, 4, 1)  '护级：位4 (上/中/下/忐/忠/忑)
-            ARROS(位os层护段CD) = Left$(值层护型, 1)   '护段CD（暂同AB，待独立实现）
-            ARROS(位os层护级CD) = Mid$(值层护型, 4, 1)  '护级CD（暂同AB，待独立实现）
             '============================================================================
             '============================================================================
             '层地型
@@ -6835,10 +6889,10 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层机警).Interior.TintAndShade = -0.5
         .Columns(位谕of策传).Interior.Color = 常色四灰
         
-        .Columns(位谕of月基策略).Interior.Color = 常色四青
-        .Columns(位谕of月基命分).Interior.Color = 常色五青
-        .Columns(位谕of月基策分).Interior.Color = 常色五青
-        .Columns(位谕of月基带向).Interior.Color = 常色五青
+        .Columns(位谕of月基策略).Interior.Color = 常色四碧
+        .Columns(位谕of月基命分).Interior.Color = 常色七碧
+        .Columns(位谕of月基策分).Interior.Color = 常色六碧
+        .Columns(位谕of月基带向).Interior.Color = 常色五碧
         .Columns(位谕of周冲策略).Interior.Color = 常色四靛
         .Columns(位谕of周冲策分).Interior.Color = 常色五靛
     End With
@@ -6850,13 +6904,14 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层四域).ColumnWidth = 4
         .Columns(位谕of日层段).ColumnWidth = 4
         .Columns(位谕of日层机警).ColumnWidth = 8
-        .Columns(位谕of月基策略).ColumnWidth = 10
+        .Columns(位谕of月基策略).ColumnWidth = 9
         .Columns(位谕of月基命分).ColumnWidth = 4
         .Columns(位谕of月基策分).ColumnWidth = 4
         .Columns(位谕of月基带向).ColumnWidth = 6
         .Columns(位谕of月基带向).HorizontalAlignment = xlCenter
-        .Columns(位谕of周冲策略).ColumnWidth = 20
+        .Columns(位谕of周冲策略).ColumnWidth = 10
         .Columns(位谕of周冲策分).ColumnWidth = 4
+        .Columns(位谕of策传).ColumnWidth = 0.2
     End With
     '------------------------------------------------------------------------------------
     '列：显示

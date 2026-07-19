@@ -79,9 +79,9 @@ Function XL历研阶析前调模板( _
         And (Len(市日) > 0 And 市日 < 阈值市日) _
         Then
             If Len(被研市板) = 0 Then
-                被研码集.Add Key:=CIDL, Item:=代称
+                被研码集.Add key:=CIDL, Item:=代称
             ElseIf MSFM.Cells(行号遍历, 位列花天市板) = 被研市板 Then
-                被研码集.Add Key:=CIDL, Item:=代称
+                被研码集.Add key:=CIDL, Item:=代称
             End If
         End If
     Next
@@ -448,10 +448,10 @@ Function XLSOP统时全码_标析格程阶标分布( _
 '========================================================================================
     With WSJC
         .Sort.SortFields.Clear
-        .Sort.SortFields.Add Key:=.Columns(位阶码矩列代码) _
+        .Sort.SortFields.Add key:=.Columns(位阶码矩列代码) _
             , SortOn:=xlSortOnValues, Order:=xlAscending _
             , DataOption:=xlSortNormal
-        .Sort.SortFields.Add Key:=.Columns(位阶码矩列期类) _
+        .Sort.SortFields.Add key:=.Columns(位阶码矩列期类) _
             , SortOn:=xlSortOnValues, Order:=xlAscending, CustomOrder:="M,W,D" _
             , DataOption:=xlSortNormal
     End With
@@ -1623,7 +1623,7 @@ Function XLSOP统时全码基程_设置典阶标(典阶标 As Dictionary, 期类
     For Y = LBound(组阶标单期(X), 1) + 1 To UBound(组阶标单期(X), 1)
         序数典集 = 序数典集 + 1
         元素典集 = 组阶标单期(X)(Y)
-        典阶标.Add Item:=序数典集, Key:=元素典集
+        典阶标.Add Item:=序数典集, key:=元素典集
     Next
     Next
     Erase 组阶标单期
@@ -1657,7 +1657,7 @@ Function XLSOP统时全码基程_设置典阶涨(典阶涨 As Dictionary, 期类
     For X = LBound(组阶涨) To UBound(组阶涨)
         序数典集 = 序数典集 + 1
         元素典集 = 组阶涨(X)
-        典阶涨.Add Item:=元素典集, Key:=序数典集
+        典阶涨.Add Item:=元素典集, key:=序数典集
     Next
     '------------------------------------------------------------------------------------
     Erase 组阶涨

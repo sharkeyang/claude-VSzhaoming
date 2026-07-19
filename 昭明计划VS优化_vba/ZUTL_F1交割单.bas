@@ -132,31 +132,31 @@ Sub STCALL割册管理_瓜分交割单()
         ARRYM(R, 位列割成交日期) = DateSerial(Left$(sdate, 4), Mid$(sdate, 5, 2), Mid$(sdate, 7, 2))
         '-----------------------------------------------
         If 值委托类别 = "申购还款" Then
-            典集委类申购还款.Add Key:=R, Item:=R
+            典集委类申购还款.Add key:=R, Item:=R
         ElseIf 值委托类别 = "申购扣款" Then
-            典集委类申购扣款.Add Key:=R, Item:=R
+            典集委类申购扣款.Add key:=R, Item:=R
         ElseIf 值委托类别 = "中签扣款" Then
-            典集委类中签扣款.Add Key:=R, Item:=R
+            典集委类中签扣款.Add key:=R, Item:=R
         ElseIf 值委托类别 = "中签通知" Then
-            典集委类中签通知.Add Key:=R, Item:=R
+            典集委类中签通知.Add key:=R, Item:=R
         ElseIf 值委托类别 = "配号" Then
-            典集委类配号.Add Key:=R, Item:=R
+            典集委类配号.Add key:=R, Item:=R
         ElseIf 值委托类别 = "托管转入" Then
-            典集委类托管转入.Add Key:=R, Item:=R
+            典集委类托管转入.Add key:=R, Item:=R
         ElseIf 值委托类别 = "托管转出" Then
-            典集委类托管转出.Add Key:=R, Item:=R
+            典集委类托管转出.Add key:=R, Item:=R
         '-----------------------------------------------
         ElseIf 值委托类别 = "融券" Then
-            典集委类融券.Add Key:=R, Item:=R
+            典集委类融券.Add key:=R, Item:=R
         ElseIf 值委托类别 = "融券购回" Then
-            典集委类融券购回.Add Key:=R, Item:=R
+            典集委类融券购回.Add key:=R, Item:=R
         '-----------------------------------------------
         ElseIf 值委托类别 = "组合费用" Then
-            典集委类组合费用.Add Key:=R, Item:=R
+            典集委类组合费用.Add key:=R, Item:=R
         ElseIf 值委托类别 = "其他" Then
-            典集委类其他.Add Key:=R, Item:=R
+            典集委类其他.Add key:=R, Item:=R
         ElseIf 值委托类别 = "红利" Then
-            典集委类红利.Add Key:=R, Item:=R
+            典集委类红利.Add key:=R, Item:=R
         '-----------------------------------------------
         ElseIf 值委托类别 = "买入" Or 值委托类别 = "卖出" Then
             CIDV = ARRYM(R, 位列割证券代码)
@@ -168,11 +168,11 @@ Sub STCALL割册管理_瓜分交割单()
                 ARRYM(R, 位列割成交数量) = -1 * ARRYM(R, 位列割成交数量)
             End If
             If UBCID是中股基(CIDL) = True Then
-                If 典集委类交易码票.Exists(CIDL) = False Then 典集委类交易码票.Add Key:=CIDL, Item:=CIDL
+                If 典集委类交易码票.Exists(CIDL) = False Then 典集委类交易码票.Add key:=CIDL, Item:=CIDL
             ElseIf UBCID是中股票(CIDL) = True Then
-                If 典集委类交易码票.Exists(CIDL) = False Then 典集委类交易码票.Add Key:=CIDL, Item:=CIDL
+                If 典集委类交易码票.Exists(CIDL) = False Then 典集委类交易码票.Add key:=CIDL, Item:=CIDL
             Else
-                典集委类交易码他.Add Key:=R, Item:=R
+                典集委类交易码他.Add key:=R, Item:=R
             End If
         '-----------------------------------------------
         Else
@@ -215,25 +215,25 @@ Sub STCALL割册管理_瓜分交割单()
             End If
         Next R
         If 值累数 > 0 Then
-                典集码类数正.Add Key:=CIDL, Item:=值累数
+                典集码类数正.Add key:=CIDL, Item:=值累数
                 值累额码类数正 = 值累额码类数正 + 值累额
         ElseIf 值累数 < 0 Then
-                典集码类数负.Add Key:=CIDL, Item:=值累数
+                典集码类数负.Add key:=CIDL, Item:=值累数
                 值累额码类数负 = 值累额码类数负 + 值累额
         Else
             '过滤近30天交易
             If 值成交日期 >= Date - 30 Then
-                典集码类数零近.Add Key:=CIDL, Item:=值累数
+                典集码类数零近.Add key:=CIDL, Item:=值累数
                 值累额码类数零近月 = 值累额码类数零近月 + 值累额
             ElseIf 值累额 >= 0 Then
-                典集码类数零赚.Add Key:=CIDL, Item:=值累数
+                典集码类数零赚.Add key:=CIDL, Item:=值累数
                 值累额码类数零远赚 = 值累额码类数零远赚 + 值累额
             Else
-                典集码类数零赔.Add Key:=CIDL, Item:=值累数
+                典集码类数零赔.Add key:=CIDL, Item:=值累数
                 值累额码类数零远赔 = 值累额码类数零远赔 + 值累额
             End If
         End If
-        典集码类额.Add Key:=CIDL, Item:=值累额
+        典集码类额.Add key:=CIDL, Item:=值累额
         Debug.Print X, CIDL, 值累数
 '        If X > 55 Then Exit For
     Next X
@@ -247,7 +247,7 @@ Sub STCALL割册管理_瓜分交割单()
         CIDL = 典集码类数零近.Keys(X - 1)
        For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
             If ARRYM(R, 位列割证券CIDL) = CIDL Then
-                典集委类交易个票.Add Key:=R, Item:=R
+                典集委类交易个票.Add key:=R, Item:=R
             End If
         Next R
         Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色主靛, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
@@ -258,7 +258,7 @@ Sub STCALL割册管理_瓜分交割单()
         CIDL = 典集码类数零赚.Keys(X - 1)
         For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
             If ARRYM(R, 位列割证券CIDL) = CIDL Then
-                典集委类交易个票.Add Key:=R, Item:=R
+                典集委类交易个票.Add key:=R, Item:=R
             End If
         Next R
         Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色主靛, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
@@ -269,7 +269,7 @@ Sub STCALL割册管理_瓜分交割单()
         CIDL = 典集码类数零赔.Keys(X - 1)
         For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
             If ARRYM(R, 位列割证券CIDL) = CIDL Then
-                典集委类交易个票.Add Key:=R, Item:=R
+                典集委类交易个票.Add key:=R, Item:=R
             End If
         Next R
         Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色主靛, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
@@ -280,7 +280,7 @@ Sub STCALL割册管理_瓜分交割单()
         CIDL = 典集码类数正.Keys(X - 1)
         For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
             If ARRYM(R, 位列割证券CIDL) = CIDL Then
-                典集委类交易个票.Add Key:=R, Item:=R
+                典集委类交易个票.Add key:=R, Item:=R
             End If
         Next R
         Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色主靛, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
@@ -291,7 +291,7 @@ Sub STCALL割册管理_瓜分交割单()
         CIDL = 典集码类数负.Keys(X - 1)
         For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
             If ARRYM(R, 位列割证券CIDL) = CIDL Then
-                典集委类交易个票.Add Key:=R, Item:=R
+                典集委类交易个票.Add key:=R, Item:=R
             End If
         Next R
         Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色主靛, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
