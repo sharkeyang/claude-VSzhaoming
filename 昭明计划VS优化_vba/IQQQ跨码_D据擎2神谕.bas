@@ -87,28 +87,26 @@ Public Const 位谕of周管BT鼎 = 位谕始of族周管 + 7
 '周管波动
 Public Const 位谕of周管并符范 = 位谕始of族周管 + 8
 Public Const 位谕of周管并符串 = 位谕始of族周管 + 9
-Public Const 位谕of周层类IS管 = 位谕始of族周管 + 10
+Public Const 位谕of周层类 = 位谕始of族周管 + 10
 Public Const 位谕终of族周管 = 位谕始of族周管 + 10
 '----------------------------------------------------
 '指标群：周层
 Public Const 位谕始of族周层 = 位谕终of族周管 + 1
-Public Const 位谕of周层类IS粒 = 位谕始of族周层 + 0
-Public Const 位谕of周层类合 = 位谕始of族周层 + 1
 ''验证涨幅
-Public Const 位谕of周层盈丘幅 = 位谕始of族周层 + 2      'WJC丘根本目标：丘宽哼JC
-Public Const 位谕of周层盈顶幅 = 位谕始of族周层 + 3
-Public Const 位谕of周层盈提示 = 位谕始of族周层 + 4
+Public Const 位谕of周层盈丘幅 = 位谕始of族周层 + 0      'WJC丘根本目标：丘宽哼JC
+Public Const 位谕of周层盈顶幅 = 位谕始of族周层 + 1
+Public Const 位谕of周层盈提示 = 位谕始of族周层 + 2
 '周机：包含下周冲高专项机会
-Public Const 位谕of周层三鳄 = 位谕始of族周层 + 5        'WJC丘优化一：限定可操作范围。
-Public Const 位谕of周层界 = 位谕始of族周层 + 6          'WJC丘优化一：限定可操作范围。
-Public Const 位谕of周层护型 = 位谕始of族周层 + 7        'WJC丘优化一：限定可操作范围。
-Public Const 位谕of周层波型 = 位谕始of族周层 + 8        'WJC丘优化一：限定可操作范围。
-Public Const 位谕of周层柱型 = 位谕始of族周层 + 9        'WXAB护丘：围绕WXAB护丘提供信息，结合顶型与柱排列。
-Public Const 位谕of周层柱排 = 位谕始of族周层 + 10        'WJA柱排列。
-Public Const 位谕of周层大局 = 位谕始of族周层 + 11
+Public Const 位谕of周层三鳄 = 位谕始of族周层 + 3        'WJC丘优化一：限定可操作范围。
+Public Const 位谕of周层界 = 位谕始of族周层 + 4          'WJC丘优化一：限定可操作范围。
+Public Const 位谕of周层护型 = 位谕始of族周层 + 5        'WJC丘优化一：限定可操作范围。
+Public Const 位谕of周层波型 = 位谕始of族周层 + 6        'WJC丘优化一：限定可操作范围。
+Public Const 位谕of周层柱型 = 位谕始of族周层 + 7        'WXAB护丘：围绕WXAB护丘提供信息，结合顶型与柱排列。
+Public Const 位谕of周层柱排 = 位谕始of族周层 + 8        'WJA柱排列。
+Public Const 位谕of周层大局 = 位谕始of族周层 + 9
 '衔接日类：形成周日联动
-Public Const 位谕of周层猪操作 = 位谕始of族周层 + 12      '月基策略的日线操作指示（长多基仓/浮仓/减仓/清仓）
-Public Const 位谕终of族周层 = 位谕始of族周层 + 12
+Public Const 位谕of周层猪操作 = 位谕始of族周层 + 10      '月基策略的日线操作指示（长多基仓/浮仓/减仓/清仓）
+Public Const 位谕终of族周层 = 位谕始of族周层 + 10
 '----------------------------------------------------------------------------------------
 '----------------------------------------------------------------------------------------
 '指标群：日类乾坤体系
@@ -1405,12 +1403,7 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             '============================================================================
             '周层类
             '============================================================================
-            谕组(X, 位谕of周层类合) = 组结算(X, 基位周类 + 位os基层类)
-            If InStr(组结算(X, 基位周类 + 位os基层类), 常枚层别管) > 0 Then
-                谕组(X, 位谕of周层类IS管) = VBA.Replace(组结算(X, 基位周类 + 位os基层类), 常枚层别管, "")
-            Else
-                谕组(X, 位谕of周层类IS粒) = 组结算(X, 基位周类 + 位os基层类)
-            End If
+            谕组(X, 位谕of周层类) = 组结算(X, 基位周类 + 位os基层类)
             '============================================================================
             '周德状态
             '主要原则：区分【鸡蛋挑骨头】与【沙子里淘金】
@@ -5538,7 +5531,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of周管BT鼎) = "鼎BT" & vbCrLf & "周"
         .Cells(1, 位谕of周管并符范) = "并符范" & vbCrLf & "周"
         .Cells(1, 位谕of周管并符串) = "并符串" & vbCrLf & "周"
-        .Cells(1, 位谕of周层类IS管) = "IS管" & vbCrLf & "周"
+        .Cells(1, 位谕of周层类) = "层类" & vbCrLf & "周"
     End With
     '------------------------------------------------------------------------------------
     '列：边框
@@ -5573,8 +5566,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周管中符范).Interior.TintAndShade = -0.45
         .Columns(位谕of周管BT鼎).Interior.TintAndShade = -0.2
         .Columns(位谕of周管并符串).Interior.TintAndShade = -0.4
-        .Columns(位谕of周层类IS管).Interior.TintAndShade = -0.8
-        .Columns(位谕of周层类IS管).Font.Color = 常色六灰
+        .Columns(位谕of周层类).Interior.TintAndShade = -0.8
     End With
     '------------------------------------------------------------------------------------
     '列：列宽
@@ -5589,8 +5581,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周管中符范).ColumnWidth = 5
         .Columns(位谕of周管中符串).ColumnWidth = 5
         .Columns(位谕of周管BT鼎).ColumnWidth = 2.5
-        .Columns(位谕of周层类IS管).ColumnWidth = 4
-        .Columns(位谕of周层类IS管).HorizontalAlignment = xlLeft
+        .Columns(位谕of周层类).ColumnWidth = 4.5
     End With
     '------------------------------------------------------------------------------------
     '列：显示
@@ -5610,8 +5601,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '首行
     '------------------------------------------------------------------------------------
      With WS.Cells(基行, 基列)
-        .Cells(1, 位谕of周层类IS粒) = "粒IS" & vbCrLf & "周"
-        .Cells(1, 位谕of周层类合) = "层类" & vbCrLf & "周"
         .Cells(1, 位谕of周层大局) = "大局(WXCD+WJC+WXAB)" & vbCrLf & "周"
         .Cells(1, 位谕of周层三鳄) = "三鳄" & vbCrLf & "周"
         .Cells(1, 位谕of周层界) = "层界=范围" & vbCrLf & "周"
@@ -5643,9 +5632,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Font.Size = 9
     End With
     With WS.Columns(基列)
-        .Columns(位谕of周层类IS粒).Interior.TintAndShade = -0.8
-        .Columns(位谕of周层类IS粒).Font.Color = 常色六灰
-        .Columns(位谕of周层类合).Interior.TintAndShade = -0.3
         .Columns(位谕of周层界).Interior.TintAndShade = -0.2
         .Columns(位谕of周层大局).Interior.TintAndShade = 0.1
         .Columns(位谕of周层三鳄).Interior.TintAndShade = 0.1
@@ -5662,8 +5648,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '列：列宽
     '------------------------------------------------------------------------------------
     With WS.Columns(基列)
-        .Columns(位谕of周层类IS粒).ColumnWidth = 4.5
-        .Columns(位谕of周层类合).ColumnWidth = 4.5
         .Columns(位谕of周层界).ColumnWidth = 7.5
         .Columns(位谕of周层大局).ColumnWidth = 15
         .Columns(位谕of周层三鳄).ColumnWidth = 10
@@ -5683,7 +5667,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '列：显示隐藏
     '------------------------------------------------------------------------------------
     With WS.Columns(基列)
-        .Columns(位谕of周层类合).Hidden = True
         .Columns(位谕of周层盈顶幅).Hidden = True
         .Columns(位谕of周层柱排).Hidden = True
         .Columns(位谕of周层波型).Hidden = True
@@ -6009,7 +5992,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .ColumnWidth = 2
     End With
     With WS.Columns(基列)
-        .Columns(位谕of日基月局).ColumnWidth = 3
+        .Columns(位谕of日基月局).ColumnWidth = 2
         .Columns(位谕of日基乾局).ColumnWidth = 8
         .Columns(位谕of日基坤局).ColumnWidth = 7.5
     End With
@@ -6963,7 +6946,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of月基命分) = "月基命分"
         .Cells(1, 位谕of月基策分) = "月基策分" & vbCrLf & "(5周维持)"
         .Cells(1, 位谕of月基带周) = "月基带周"
-        .Cells(1, 位谕of月基带日) = "月基带日"
+        .Cells(1, 位谕of月基带日) = "月基带日(AB-CD-EF)"
         '四域列
         .Cells(1, 位谕of周层四域) = "四域周"
         .Cells(1, 位谕of日层四域) = "四域日"

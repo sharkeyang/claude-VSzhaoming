@@ -520,3 +520,83 @@ Private Function 展探窗取_标准差(Buf() As Double, 指针 As Integer, 最�
     For i = 0 To win - 1: 方差 = 方差 + (临时(i) - 均值) ^ 2: Next
     方差 = 方差 / (win - 1): 展探窗取_标准差 = Sqr(方差)
 End Function
+'========================================================================================
+' 测试_热加载VBA — 在线加载 .bas 文件，无需关闭工作簿
+' 功能：从昭明计划VS优化_vba/ 目录读取所有 .bas 文件，直接注入当前 VBA 工程
+' 安全：不会删除自己所在的模块（PX算研_ZPY接口）
+'
+' 使用方法：
+'   1. 修改 .bas 文件（用文本编辑器）
+'   2. 在 Excel 中按 Alt+F8 → 选择「测试_热加载VBA」→ 运行
+'   3. 弹窗显示「热加载完成」即生效，花册/藏库全部在线不受影响
+'
+' 注意事项：
+'   1. 本宏自身（PX算研_ZPY接口）的改动不会被热加载，
+'      需用 vba2EXCEL 正式导入一次
+'   2. 热加载前建议先备份（vba2EXCEL 会自动备份）
+'   3. 如果某个 .bas 有语法错误，Import 会报错跳过，
+'      不影响已导入的模块
+'   4. 首次使用前需先 vba2EXCEL 导入一次，让此宏出现在菜单中
+'========================================================================================
+Public Sub 测试_热加载VBA()
+    Dim 目录 As String
+    目录 = "D:\@VSwork\VS昭明计划VBA优化\昭明计划VS优化_vba\"
+
+    Dim fso As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If fso.FolderExists(目录) = False Then
+        MsgBox "目录不存在：" & 目录, vbCritical
+        Exit Sub
+    End If
+
+    Dim vbproj As Object
+    Set vbproj = Application.VBE.ActiveVBProject
+
+    Dim comp As Object, 自名 As String
+    自名 = "PX算研_ZPY接口"
+
+    Dim 删除计数 As Long, 导入计数 As Long
+    Dim 删除类() As String, 删除数 As Long
+    Dim i As Long
+
+    ' ① 收集要删除的模块（不能边遍历边删）
+    删除数 = 0
+    For Each comp In vbproj.VBComponents
+        If comp.Type = 1 Then    'vbext_ct_StdModule = 1
+            If comp.Name <> 自名 Then
+                ReDim Preserve 删除类(删除数)
+                删除类(删除数) = comp.Name
+                删除数 = 删除数 + 1
+            End If
+        End If
+    Next
+
+    ' ② 删除
+    For i = 0 To 删除数 - 1
+        On Error Resume Next
+        vbproj.VBComponents.Remove vbproj.VBComponents(删除类(i))
+        If Err.Number = 0 Then 删除计数 = 删除计数 + 1
+        On Error GoTo 0
+    Next
+
+    ' ③ 导入 .bas
+    Dim file As Object
+    For Each file In fso.GetFolder(目录).Files
+        If LCase(fso.GetExtensionName(file.Name)) = "bas" Then
+            On Error Resume Next
+            vbproj.VBComponents.Import file.Path
+            If Err.Number = 0 Then
+                导入计数 = 导入计数 + 1
+            Else
+                Debug.Print "导入失败: " & file.Name & " — " & Err.Description
+            End If
+            On Error GoTo 0
+        End If
+    Next
+
+    MsgBox "热加载完成" & vbCrLf & _
+           "删除 " & 删除计数 & " 个旧模块" & vbCrLf & _
+           "导入 " & 导入计数 & " 个新模块" & vbCrLf & _
+           "（跳过 " & 自名 & " 自身）", _
+           vbInformation, "热加载VBA"
+End Sub

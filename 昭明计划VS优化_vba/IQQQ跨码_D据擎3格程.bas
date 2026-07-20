@@ -444,7 +444,7 @@ End If
                 '========================================================================
                 '底色：周波
                 '========================================================================
-                If Left$(.Cells(1, 位谕of周层类合).Value, 1) = "_" Then
+                If Left$(.Cells(1, 位谕of周层类).Value, 1) = "_" Then
                                 For Y = 位谕始of族周波 To 位谕终of族周波
                                     With .Cells(1, Y)
                                         值TintAndShade = .Interior.TintAndShade
@@ -594,20 +594,24 @@ End If
                     '--------------------------------------------------------------------
                     '设置背景：周管系统
                     '--------------------------------------------------------------------
-                    If .Cells(1, 位谕of周层类IS管) = "" Then
+                    If InStr(.Cells(1, 位谕of周层类), 常枚层别管) = 0 Then
                                     For Y = 位谕始of族周管 To 位谕终of族周管
                                         With .Cells(1, Y)
                                             值TintAndShade = .Interior.TintAndShade
                                             .Interior.Color = 常色二灰
                                             .Interior.TintAndShade = 值TintAndShade
+                                            '设置字色：周管系统
+                                            .Font.Color = .Interior.Color
                                         End With
                                     Next
-                    ElseIf Left$(.Cells(1, 位谕of周层类IS管), 1) = "_" Then
+                    ElseIf Left$(.Cells(1, 位谕of周层类), 1) = "_" Then
                                     For Y = 位谕始of族周管 To 位谕终of族周管
                                         With .Cells(1, Y)
                                             值TintAndShade = .Interior.TintAndShade
                                             .Interior.Color = 常色四灰
                                             .Interior.TintAndShade = 值TintAndShade
+                                            '对非管隐藏字体；对WJC线下管设置【常色四黄】字色
+                                            .Font.Color = 常色四黄
                                         End With
                                     Next
                     Else
@@ -619,36 +623,27 @@ End If
                                     Next
                     End If
                     '--------------------------------------------------------------------
-                    '设置字色：周管系统
-                    '对非管隐藏字体；对WJC线下管设置【常色四黄】字色
+                    '设置字色：位谕of周层类
                     '--------------------------------------------------------------------
-                    If .Cells(1, 位谕of周层类IS管).Value = "" Then
-                            For Y = 位谕始of族周管 To 位谕终of族周管
-                                With .Cells(1, Y)
-                                    .Font.Color = .Interior.Color
-                                End With
-                            Next
-                    ElseIf Left$(.Cells(1, 位谕of周层类IS管).Value, 1) = "_" Then
-                            For Y = 位谕始of族周管 To 位谕终of族周管
-                                With .Cells(1, Y)
-                                    .Font.Color = 常色四黄
-                                End With
-                            Next
-                    End If
-                    '--------------------------------------------------------------------
-                    '设置字色：周粒系统
-                    '--------------------------------------------------------------------
-                    If .Cells(1, 位谕of周层类IS粒) <> "" Then
-                            With .Cells(1, 位谕of周层类IS粒)
-                                If Left$(.Value, 1) = "_" Then
-                                    .Font.Color = 常色四黄
-                                End If
-                            End With
-                    End If
+                    With .Cells(1, 位谕of周层类)
+                        If Left$(.Value, 1) = "_" Then
+                            If InStr(.Value, 常枚层别管) > 0 Then
+                                .Font.Color = 常色五黄
+                            Else
+                                .Font.Color = 常色三黄
+                            End If
+                        Else
+                            If InStr(.Value, 常枚层别管) > 0 Then
+                                .Font.Color = 常色五灰
+                            Else
+                                .Font.Color = 常色三灰
+                            End If
+                        End If
+                    End With
                 '========================================================================
                 '标注：周管系统
                 '========================================================================
-                If .Cells(1, 位谕of周层类IS管) <> "" Then
+                If InStr(.Cells(1, 位谕of周层类), 常枚层别管) > 0 Then
                         '-----------------------------------------------
                         '预警暴升：使用叭宽【哼JA】
                         '默认不需要考虑的情况，特殊情况在下面设置提醒颜色
