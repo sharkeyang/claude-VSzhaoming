@@ -318,12 +318,11 @@ def cmd_import(args):
 
     was_excel_running = False
     try:
-        excel = win32com.client.GetActiveObject("Excel.Application")
-        was_excel_running = True
-        print("Connected to existing Excel instance.")
+        excel = win32com.client.DispatchEx("Excel.Application")
+        print("Created new Excel instance.")
     except Exception:
         excel = win32com.client.Dispatch("Excel.Application")
-        print("Created new Excel instance.")
+        print("Created new Excel instance (fallback).")
 
     try:
         prev_visible = excel.Visible
