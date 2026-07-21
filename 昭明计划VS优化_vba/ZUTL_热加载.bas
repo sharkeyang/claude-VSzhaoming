@@ -1,0 +1,131 @@
+Attribute VB_Name = "ZUTL_热加载"
+'========================================================================================
+' ZUTL_热加载 — 在线加载 .bas 文件，无需关闭工作簿
+'========================================================================================
+' 功能：从昭明计划VS优化_vba/ 目录读取所有 .bas 文件，直接注入当前 VBA 工程
+' 安全：不会删除自己所在的模块（ZUTL_热加载）
+' 依赖：_工具/热加载_转GBK.py（将 UTF-8 .bas 转为 GBK 编码）
+'
+' 使用方法：
+'   1. 修改 .bas 文件（用文本编辑器）
+'   2. 点击菜单「更新」→「热加载VBA」或按 Alt+F8 → 选择「ZUTL_热加载」→ 运行
+'   3. 弹窗显示「热加载完成」即生效，花册/藏库全部在线不受影响
+'
+' 注意事项：
+'   1. 本模块自身不会被热加载重载，需 vba2EXCEL 正式导入一次
+'   2. 热加载前建议先备份（vba2EXCEL 会自动备份）
+'   3. 语法错误的 .bas 会跳过，不影响已导入的模块
+'   4. 依赖 Python 环境（_工具/热加载_转GBK.py）
+'========================================================================================
+Public Sub ZUTL_热加载()
+    Call 热加载_执行("D:\@VSwork\VS昭明计划VBA优化\昭明计划VS优化_vba\", True)
+End Sub
+
+'========================================================================================
+' 热加载_执行 — 核心导入函数
+' 调用 Python 脚本将 UTF-8 .bas 转为 GBK 临时目录，再用 Import 注入
+'========================================================================================
+Private Sub 热加载_执行(ByVal 目录 As String, Optional 是否弹窗 As Boolean = True)
+    Dim 自名 As String, 脚本路径 As String, 临时GBK目录 As String, cmd As String, 模块名 As String, 首行 As String
+    Dim fso As Object, vbproj As Object, comp As Object, file As Object
+    Dim shell As Object, 流 As Object
+    Dim 删除类() As String, 删除数 As Long, i As Long, 引号1 As Long, 引号2 As Long
+    Dim 删除计数 As Long, 导入计数 As Long
+
+    自名 = "ZUTL_热加载"
+    脚本路径 = "D:\@VSwork\VS昭明计划VBA优化\_工具\热加载_转GBK.py"
+
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If fso.FolderExists(目录) = False Then
+        If 是否弹窗 Then MsgBox "目录不存在：" & 目录, vbCritical
+        Exit Sub
+    End If
+    If fso.FileExists(脚本路径) = False Then
+        If 是否弹窗 Then MsgBox "Python脚本不存在：" & 脚本路径, vbCritical
+        Exit Sub
+    End If
+
+    ' ① 调用 Python 脚本，将 UTF-8 .bas 转为 GBK 临时目录
+    Set shell = CreateObject("WScript.Shell")
+    cmd = "C:\ProgramData\anaconda3\python.exe """ & 脚本路径 & """"
+    shell.Run cmd, 0, True
+
+    ' ② 临时目录固定为 %TEMP%\vba_hot_reload\
+    临时GBK目录 = Environ("TEMP") & "\vba_hot_reload"
+    If fso.FolderExists(临时GBK目录) = False Then
+        If 是否弹窗 Then MsgBox "Python 脚本执行失败，无法创建临时目录", vbCritical
+        Exit Sub
+    End If
+
+    ' ③ 收集要删除的模块
+    Set vbproj = Application.VBE.ActiveVBProject
+    删除数 = 0
+    For Each comp In vbproj.VBComponents
+        If comp.Type = 1 Then
+            If comp.Name <> 自名 Then
+                ReDim Preserve 删除类(删除数)
+                删除类(删除数) = comp.Name
+                删除数 = 删除数 + 1
+            End If
+        End If
+    Next
+
+    ' ④ 删除
+    For i = 0 To 删除数 - 1
+        On Error Resume Next
+        vbproj.VBComponents.Remove vbproj.VBComponents(删除类(i))
+        If Err.Number = 0 Then 删除计数 = 删除计数 + 1
+        On Error GoTo 0
+    Next
+
+    ' ⑤ 从 GBK 临时目录导入（先删同名模块，避免二义性）
+    Set 流 = CreateObject("ADODB.Stream")
+    流.Type = 2
+    流.Charset = "gbk"
+
+    For Each file In fso.GetFolder(临时GBK目录).Files
+        If LCase(fso.GetExtensionName(file.Name)) = "bas" And file.Name <> "ZUTL_热加载.bas" Then
+            ' 读取文件第一行，提取模块名
+            流.Open
+            流.LoadFromFile file.Path
+            首行 = 流.ReadText(-2)
+            流.Close
+            引号1 = InStr(首行, """")
+            If 引号1 > 0 Then
+                引号2 = InStr(引号1 + 1, 首行, """")
+                If 引号2 > 0 Then
+                    模块名 = Mid$(首行, 引号1 + 1, 引号2 - 引号1 - 1)
+                    ' 如果模块已存在，先删除
+                    On Error Resume Next
+                    vbproj.VBComponents.Remove vbproj.VBComponents(模块名)
+                    Err.Clear
+                    On Error GoTo 0
+                End If
+            End If
+            ' 导入
+            On Error Resume Next
+            vbproj.VBComponents.Import file.Path
+            If Err.Number = 0 Then
+                导入计数 = 导入计数 + 1
+            Else
+                Debug.Print "导入失败: " & file.Name & " - " & Err.Description
+                Err.Clear
+            End If
+            On Error GoTo 0
+        End If
+    Next
+    Set 流 = Nothing
+
+    ' ⑥ 清理临时目录
+    On Error Resume Next
+    fso.DeleteFolder 临时GBK目录, True
+    On Error GoTo 0
+
+    If 是否弹窗 Then
+        MsgBox "热加载完成" & vbCrLf & _
+               "删除 " & 删除计数 & " 个旧模块" & vbCrLf & _
+               "导入 " & 导入计数 & " 个新模块" & vbCrLf & _
+               "（跳过 " & 自名 & " 自身）", _
+               vbInformation, "热加载VBA"
+    End If
+End Sub

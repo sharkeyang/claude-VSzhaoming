@@ -797,6 +797,13 @@ Public Sub UGSOP_MENU_生成()
         .Caption = "Clean Worksheet"
         .FaceId = 108
     End With
+    '热加载
+    With 菜项更新.Controls.Add(Type:=msoControlButton)
+        .BeginGroup = True
+        .OnAction = "ZUTL_热加载"
+        .Caption = "热加载VBA"
+        .FaceId = 243
+    End With
 '========================================================================================
 '菜项池
 '========================================================================================
