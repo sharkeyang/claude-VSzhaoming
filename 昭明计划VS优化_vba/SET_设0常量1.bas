@@ -73,6 +73,11 @@ Public Const 常仓名宝合 = "Z"
 Public Const 常仓名宝周 = ".ZW"      '池周
 Public Const 常仓名宝福 = ".ZF"
 Public Const 常仓名宝彦 = ".ZJ"
+'股东代码（用于匹配账户）
+Public Const 常股代宝彦_上证 = "A788782902"
+Public Const 常股代宝彦_深证 = "0290783645"
+Public Const 常股代宝福_上证 = "A583398489"
+Public Const 常股代宝福_深证 = "0156039487"
 '-----------
 Public Const 常池名今 = "Z0"      '池今
 Public Const 常池名金 = "Z1"      '池金：下周冲高
