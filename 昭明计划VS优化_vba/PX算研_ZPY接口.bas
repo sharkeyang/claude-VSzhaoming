@@ -538,31 +538,51 @@ End Function
 '      不影响已导入的模块
 '   4. 首次使用前需先 vba2EXCEL 导入一次，让此宏出现在菜单中
 '========================================================================================
-Public Sub 测试_热加载VBA()
+Public Sub 测试_热加载VBA(Optional 是否弹窗 As Boolean = True)
     Dim 目录 As String
-    目录 = "D:\@VSwork\VS昭明计划VBA优化\昭明计划VS优化_vba\"
+    目录 = "D:\@VSwork\VS昭明计划VBA优化\昭明计划VS优化_vba"
+    Call 热加载_执行(目录, 是否弹窗)
+End Sub
 
-    Dim fso As Object
+'========================================================================================
+' 热加载_执行 — 核心导入函数
+' 调用 Python 脚本将 UTF-8 .bas 转为 GBK 临时目录，再用 Import 注入
+' 依赖：_工具/热加载_转GBK.py
+'========================================================================================
+Private Sub 热加载_执行(ByVal 目录 As String, Optional 是否弹窗 As Boolean = True)
+    Dim 自名 As String, 脚本路径 As String, 临时GBK目录 As String
+    Dim fso As Object, vbproj As Object, comp As Object, file As Object
+    Dim shell As Object, exec As Object
+    Dim 删除类() As String, 删除数 As Long, i As Long
+    Dim 删除计数 As Long, 导入计数 As Long
+
+    自名 = "PX算研_ZPY接口"
+    脚本路径 = "D:\@VSwork\VS昭明计划VBA优化\_工具\热加载_转GBK.py"
+
     Set fso = CreateObject("Scripting.FileSystemObject")
     If fso.FolderExists(目录) = False Then
-        MsgBox "目录不存在：" & 目录, vbCritical
+        If 是否弹窗 Then MsgBox "目录不存在：" & 目录, vbCritical
+        Exit Sub
+    End If
+    If fso.FileExists(脚本路径) = False Then
+        If 是否弹窗 Then MsgBox "Python脚本不存在：" & 脚本路径, vbCritical
         Exit Sub
     End If
 
-    Dim vbproj As Object
+    ' ① 调用 Python 脚本，将 UTF-8 .bas 转为 GBK 临时目录
+    Set shell = CreateObject("WScript.Shell")
+    Set exec = shell.Exec("python """ & 脚本路径 & """" """ & 目录 & """"")
+    临时GBK目录 = Trim(exec.StdOut.ReadAll)
+    If fso.FolderExists(临时GBK目录) = False Then
+        If 是否弹窗 Then MsgBox "Python 脚本执行失败，无法创建临时目录", vbCritical
+        Exit Sub
+    End If
+
+    ' ② 收集要删除的模块
     Set vbproj = Application.VBE.ActiveVBProject
-
-    Dim comp As Object, 自名 As String
-    自名 = "PX算研_ZPY接口"
-
-    Dim 删除计数 As Long, 导入计数 As Long
-    Dim 删除类() As String, 删除数 As Long
-    Dim i As Long
-
-    ' ① 收集要删除的模块（不能边遍历边删）
     删除数 = 0
     For Each comp In vbproj.VBComponents
-        If comp.Type = 1 Then    'vbext_ct_StdModule = 1
+        If comp.Type = 1 Then
             If comp.Name <> 自名 Then
                 ReDim Preserve 删除类(删除数)
                 删除类(删除数) = comp.Name
@@ -571,7 +591,7 @@ Public Sub 测试_热加载VBA()
         End If
     Next
 
-    ' ② 删除
+    ' ③ 删除
     For i = 0 To 删除数 - 1
         On Error Resume Next
         vbproj.VBComponents.Remove vbproj.VBComponents(删除类(i))
@@ -579,24 +599,31 @@ Public Sub 测试_热加载VBA()
         On Error GoTo 0
     Next
 
-    ' ③ 导入 .bas
-    Dim file As Object
-    For Each file In fso.GetFolder(目录).Files
+    ' ④ 从 GBK 临时目录导入
+    For Each file In fso.GetFolder(临时GBK目录).Files
         If LCase(fso.GetExtensionName(file.Name)) = "bas" Then
             On Error Resume Next
             vbproj.VBComponents.Import file.Path
             If Err.Number = 0 Then
                 导入计数 = 导入计数 + 1
             Else
-                Debug.Print "导入失败: " & file.Name & " — " & Err.Description
+                Debug.Print "导入失败: " & file.Name & " - " & Err.Description
+                Err.Clear
             End If
             On Error GoTo 0
         End If
     Next
 
-    MsgBox "热加载完成" & vbCrLf & _
-           "删除 " & 删除计数 & " 个旧模块" & vbCrLf & _
-           "导入 " & 导入计数 & " 个新模块" & vbCrLf & _
-           "（跳过 " & 自名 & " 自身）", _
-           vbInformation, "热加载VBA"
+    ' ⑤ 清理临时目录
+    On Error Resume Next
+    fso.DeleteFolder 临时GBK目录, True
+    On Error GoTo 0
+
+    If 是否弹窗 Then
+        MsgBox "热加载完成" & vbCrLf & _
+               "删除 " & 删除计数 & " 个旧模块" & vbCrLf & _
+               "导入 " & 导入计数 & " 个新模块" & vbCrLf & _
+               "（跳过 " & 自名 & " 自身）", _
+               vbInformation, "热加载VBA"
+    End If
 End Sub
