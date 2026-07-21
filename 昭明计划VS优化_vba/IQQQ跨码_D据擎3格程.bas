@@ -1078,7 +1078,7 @@ End If
                     End If
                 End With
                 '------------------------------------------------------------------------
-                With .Cells(1, 位谕of月基带向)
+                With .Cells(1, 位谕of月基带周)
                     If InStr(.Value, "00") > 0 Then
                         .Font.Color = 常色二红
                     ElseIf InStr(.Value, "10") > 0 Then

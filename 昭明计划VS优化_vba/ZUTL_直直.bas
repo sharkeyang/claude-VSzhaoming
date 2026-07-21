@@ -288,12 +288,12 @@ Private Sub 后台质程操作_获取文件夹内容(ByVal nPath As String, ByRe
     Next
 End Sub
 Private Sub 后台质程操作_导入()
-    Dim wb As Workbook
+    Dim WB As Workbook
     Dim ARR
     
-    Set wb = GetObject(Application.GetOpenFilename("csv文件,*.csv", , "请选择", , False))
-    ARR = wb.ActiveSheet.Range("A1").CurrentRegion
-    wb.Close False
+    Set WB = GetObject(Application.GetOpenFilename("csv文件,*.csv", , "请选择", , False))
+    ARR = WB.ActiveSheet.Range("A1").CurrentRegion
+    WB.Close False
     
     Range("A1").Resize(UBound(ARR), UBound(ARR, 2)) = ARR
 End Sub

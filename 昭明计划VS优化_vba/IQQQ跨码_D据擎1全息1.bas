@@ -27,20 +27,20 @@ End Sub
 Sub IQQQ乾坤分布调程花天sSCC_仓宝合()
     Call IQQQ乾坤分布基程花天sSCC_仓宝合(ThisWorkbook)
 End Sub
-Function IQQQ乾坤分布基程花天sSCC_仓宝合(Optional ByRef wb As Workbook)
+Function IQQQ乾坤分布基程花天sSCC_仓宝合(Optional ByRef WB As Workbook)
     UTL宏工具_BEGIN
     '--------------------------------------------------------------------------------
     Dim 指定表名 As String
     指定表名 = 常仓名宝合
-    Call IQQQ乾坤分布质程(指定表名, 常花中股, wb:=wb, 实结类型:="sSCC", 采样列号:=位列花天仓宝彦, 采样列值:="仓", 基色底:=常色主黑, 出章模式:="混", 出节模式:="日层", 是否建表:=True)
-    Call IQQQ乾坤分布质程(指定表名, 常花中股, wb:=wb, 实结类型:="sSCC", 采样列号:=位列花天仓宝福, 采样列值:="仓", 基色底:=常色主黑, 出章模式:="混", 出节模式:="日层", 是否建表:=False)
+    Call IQQQ乾坤分布质程(指定表名, 常花中股, WB:=WB, 实结类型:="sSCC", 采样列号:=位列花天仓宝彦, 采样列值:="仓", 基色底:=常色主黑, 出章模式:="混", 出节模式:="日层", 是否建表:=True)
+    Call IQQQ乾坤分布质程(指定表名, 常花中股, WB:=WB, 实结类型:="sSCC", 采样列号:=位列花天仓宝福, 采样列值:="仓", 基色底:=常色主黑, 出章模式:="混", 出节模式:="日层", 是否建表:=False)
     '--------------------------------------------------------------------------------
-    Call IQQQ展擎出程至页(wb, 指定表名, 是否建表:=False, 章色:=常色六灰, 章签:="核心指数")
+    Call IQQQ展擎出程至页(WB, 指定表名, 是否建表:=False, 章色:=常色六灰, 章签:="核心指数")
     Dim 典核心指数 As New Dictionary
     Call 后台族非票精分调程_WA_设置典核心宽基(典核心指数)
-    Call IQQQ展擎筛程_出程更新通用(wb, 指定表名, 典码输出:=典核心指数, 实结类型:="sSCC", 基色底:=常色主黑, 区签:="核心指数")
+    Call IQQQ展擎筛程_出程更新通用(WB, 指定表名, 典码输出:=典核心指数, 实结类型:="sSCC", 基色底:=常色主黑, 区签:="核心指数")
     Call 后台族非票精分调程_WA_设置典核心行业(典核心指数)
-    Call IQQQ展擎筛程_出程更新通用(wb, 指定表名, 典码输出:=典核心指数, 实结类型:="sSCC", 基色底:=常色主黑, 区签:="行业指数")
+    Call IQQQ展擎筛程_出程更新通用(WB, 指定表名, 典码输出:=典核心指数, 实结类型:="sSCC", 基色底:=常色主黑, 区签:="行业指数")
     '--------------------------------------------------------------------------------
     UTL宏工具_END
 End Function
@@ -66,10 +66,10 @@ End Sub
 Sub IQQQ乾坤分布调程花天sSCC_仓宝周()
     Call IQQQ乾坤分布基程花天sSCC_仓宝周(ThisWorkbook)
 End Sub
-Function IQQQ乾坤分布基程花天sSCC_仓宝周(Optional ByRef wb As Workbook, Optional 指定表名 As String = 常仓名宝周)  '汇总周池：用于检验上周选股准确度与本周卖出时点
+Function IQQQ乾坤分布基程花天sSCC_仓宝周(Optional ByRef WB As Workbook, Optional 指定表名 As String = 常仓名宝周)  '汇总周池：用于检验上周选股准确度与本周卖出时点
     UTL宏工具_BEGIN
     '--------------------------------------------------------------------------------
-    Call IQQQ乾坤分布质程(指定表名, 常花中股, wb:=wb, 实结类型:="sSCC", 采样列号:=位列花天仓周, 采样列值:="仓", 基色底:=常色主黑, 出章模式:="周仓", 出节模式:="周地")
+    Call IQQQ乾坤分布质程(指定表名, 常花中股, WB:=WB, 实结类型:="sSCC", 采样列号:=位列花天仓周, 采样列值:="仓", 基色底:=常色主黑, 出章模式:="周仓", 出节模式:="周地")
 '    Call IQQQ展擎瓜页引擎正程(WB.Sheets(常仓名宝周), "更新排仓", "sSCC", 基色底:=常色指金)
     '--------------------------------------------------------------------------------
     UTL宏工具_END
@@ -100,7 +100,7 @@ End Sub
 Function IQQQ乾坤分布质程( _
           ByVal 指定表名 As String _
         , ByVal 指定花册 As String _
-        , Optional ByRef wb As Workbook _
+        , Optional ByRef WB As Workbook _
         , Optional ByVal 实结类型 As String = "cCCC" _
         , Optional ByRef 采样典码 As Dictionary _
         , Optional ByVal 采样列号 As Integer = 0 _
@@ -120,20 +120,20 @@ Function IQQQ乾坤分布质程( _
 '========================================================================================
 '输出
 '========================================================================================
-    If wb Is Nothing Then Set wb = ThisWorkbook
-    Call IQQQ展擎筛程至C0章按通用(wb, 指定表名, 谕组, 章色:=基色底, 章签:=指定表名, 出章模式:=出章模式, 出节模式:=出节模式, 出全是否:=出全是否, 是否建表:=是否建表)
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    Call IQQQ展擎筛程至C0章按通用(WB, 指定表名, 谕组, 章色:=基色底, 章签:=指定表名, 出章模式:=出章模式, 出节模式:=出节模式, 出全是否:=出全是否, 是否建表:=是否建表)
 '========================================================================================
 '格式化
 '========================================================================================
-    With wb.Sheets(指定表名)
+    With WB.Sheets(指定表名)
         If 实结类型 = "cCCC" Then
             .Columns(位qt量比).Hidden = True
             .Columns(位qt换手).Hidden = True
         End If
     End With
     If 指定花册 <> 常花中股 Then
-        wb.Sheets(指定表名).Cells(1, 位谕始of族日段).Resize(1, 位谕终of族日段 - 位谕始of族日段 + 1).EntireColumn.Hidden = True
-        wb.Sheets(指定表名).Columns(位qt今收).ColumnWidth = 7
+        WB.Sheets(指定表名).Cells(1, 位谕始of族日段).Resize(1, 位谕终of族日段 - 位谕始of族日段 + 1).EntireColumn.Hidden = True
+        WB.Sheets(指定表名).Columns(位qt今收).ColumnWidth = 7
     End If
 '========================================================================================
 End Function

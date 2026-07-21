@@ -174,7 +174,7 @@ If 是否外簿 = True Then
     '输出：昭明决策
     '====================================================================================
     MSG = MSG & vbCrLf
-    MSG = MSG & IQQQ展擎主前调正程(实结类型:="sSCC", 是否外簿:=True, 是否剔黑:=False, 是否筛决策:=True, 参of筛决策剔池:=False, 参of筛决策详表:=True, 是否筛市类:=True, 是否筛频谱:=True, 出章模式:="周仓", 出节模式:="周地", wb:=MB)
+    MSG = MSG & IQQQ展擎主前调正程(实结类型:="sSCC", 是否外簿:=True, 是否剔黑:=False, 是否筛决策:=True, 参of筛决策剔池:=False, 参of筛决策详表:=True, 是否筛市类:=True, 是否筛频谱:=True, 出章模式:="周仓", 出节模式:="周地", WB:=MB)
     '====================================================================================
 End If
 '========================================================================================
@@ -187,7 +187,7 @@ If 是否外簿 = True Then
     Dim 表名统码 As String
     表名统码 = "轮"
     MSG = MSG & vbCrLf
-    MSG = MSG & 历研统码基程_展日码总(常期类为日, 表名统码, wb:=MB)
+    MSG = MSG & 历研统码基程_展日码总(常期类为日, 表名统码, WB:=MB)
     MB.Sheets(表名统码).Activate
     '====================================================================================
 End If
@@ -449,7 +449,7 @@ Function 现市子程_全局全球(MB As Workbook) As String
     Dim 表名 As String
     表名 = "G"
     Dim MS As Worksheet
-    Call PBASE格程工具_表操工表新增(MS, 表名, wb:=MB)
+    Call PBASE格程工具_表操工表新增(MS, 表名, WB:=MB)
     MS.Cells.Font.Name = "宋体"
     MS.Cells.Font.Size = 9
     MS.Tab.ColorIndex = 56
@@ -468,7 +468,7 @@ Function 现市子程_全局监视(MB As Workbook, Optional 是否排序 As XlSo
     Dim 表名 As String
     表名 = "W"
     Dim MS As Worksheet
-    Call PBASE格程工具_表操工表新增(MS, 表名, wb:=MB)
+    Call PBASE格程工具_表操工表新增(MS, 表名, WB:=MB)
     MS.Cells.Font.Name = "宋体"
     MS.Cells.Font.Size = 9
     MS.Tab.ColorIndex = 56
@@ -492,7 +492,7 @@ Function 现市子程_市场港股(MB As Workbook, Optional 是否排序 As XlSo
     Dim 表名 As String
     表名 = "港"
     Dim MS As Worksheet
-    Call PBASE格程工具_表操工表新增(MS, 表名, wb:=MB)
+    Call PBASE格程工具_表操工表新增(MS, 表名, WB:=MB)
     MS.Cells.Font.Name = "宋体"
     MS.Cells.Font.Size = 9
     MS.Tab.ColorIndex = 49
@@ -511,7 +511,7 @@ Function 现市子程_市场美股(MB As Workbook, Optional 是否排序 As XlSo
     Dim 表名 As String
     表名 = "美"
     Dim MS As Worksheet
-    Call PBASE格程工具_表操工表新增(MS, 表名, wb:=MB)
+    Call PBASE格程工具_表操工表新增(MS, 表名, WB:=MB)
     MS.Cells.Font.Name = "宋体"
     MS.Cells.Font.Size = 9
     MS.Tab.ColorIndex = 49
@@ -533,7 +533,7 @@ Function 现市子程_中股异常(MB As Workbook, Optional 天组 As Variant, O
     Dim 表名 As String
     表名 = "异"
     Dim MS As Worksheet
-    Call PBASE格程工具_表操工表新增(MS, 表名, wb:=MB)
+    Call PBASE格程工具_表操工表新增(MS, 表名, WB:=MB)
     MS.Cells.Font.Name = "宋体"
     MS.Cells.Font.Size = 9
     MS.Tab.Color = 常色主靛
@@ -556,7 +556,7 @@ Function 现市子程_中股精分行业益盟(MB As Workbook, Optional 是否�
     Dim 表名 As String
     表名 = "行益"
     Dim MS As Worksheet
-    Call PBASE格程工具_表操工表新增(MS, 表名, wb:=MB)
+    Call PBASE格程工具_表操工表新增(MS, 表名, WB:=MB)
     MS.Cells.Font.Name = "宋体"
     MS.Cells.Font.Size = 9
     MS.Tab.ColorIndex = 49
@@ -576,7 +576,7 @@ Function 现市子程_中股精分概念益盟(MB As Workbook, Optional 是否�
     Dim 表名 As String
     表名 = "概念"
     Dim MS As Worksheet
-    Call PBASE格程工具_表操工表新增(MS, 表名, wb:=MB)
+    Call PBASE格程工具_表操工表新增(MS, 表名, WB:=MB)
     MS.Cells.Font.Name = "宋体"
     MS.Cells.Font.Size = 9
     MS.Tab.ColorIndex = 49

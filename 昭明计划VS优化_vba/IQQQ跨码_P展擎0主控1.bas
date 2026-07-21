@@ -291,7 +291,7 @@ Function IQQQ展擎主前调正程( _
         , Optional ByVal 基色底 As Long = 常色主碧 _
         , Optional ByVal 出章模式 As String = "" _
         , Optional ByVal 出节模式 As String = "周层" _
-        , Optional ByRef wb As Workbook _
+        , Optional ByRef WB As Workbook _
         ) As String
 '========================================================================================
     Dim TT As Long
@@ -330,12 +330,12 @@ Function IQQQ展擎主前调正程( _
     Dim 是否另存 As Boolean
     Dim 是否弹窗 As Boolean
     If 是否外簿 = False Then
-            Set wb = ThisWorkbook
+            Set WB = ThisWorkbook
             是否另存 = False
             是否弹窗 = True
     Else
-        If wb Is Nothing Then
-            Set wb = Workbooks.Add
+        If WB Is Nothing Then
+            Set WB = Workbooks.Add
             是否另存 = True
             是否弹窗 = True
         Else    '已指定外部输出文件
@@ -352,7 +352,7 @@ Function IQQQ展擎主前调正程( _
     If 是否筛频谱 = True Then
             TTT = Timer
             MSG = MSG & "【QQQ输出频谱】" & vbCrLf
-            Call IQQQ展擎频谱输出分程(wb, 谕组, 参of筛频谱日类:=参of筛频谱日类, 实结类型:=实结类型)
+            Call IQQQ展擎频谱输出分程(WB, 谕组, 参of筛频谱日类:=参of筛频谱日类, 实结类型:=实结类型)
             MSG = MSG & ">>QQQ输出频谱耗时：" & CLng(Timer - TTT) & vbCrLf
     End If
     '====================================================================================
@@ -362,7 +362,7 @@ Function IQQQ展擎主前调正程( _
     If 是否筛市类 = True Then
             TTT = Timer
             MSG = MSG & "【QQQ筛选市类】" & vbCrLf
-            MSG = MSG & IQQQ展擎筛程至A2册按市类(wb, 谕组, 出章模式:=出章模式, 出节模式:=出节模式)
+            MSG = MSG & IQQQ展擎筛程至A2册按市类(WB, 谕组, 出章模式:=出章模式, 出节模式:=出节模式)
             MSG = MSG & ">>QQQ输出市类耗时：" & CLng(Timer - TTT) & vbCrLf
     End If
     '====================================================================================
@@ -374,7 +374,7 @@ Function IQQQ展擎主前调正程( _
             '            If 参of筛决策详表 = True Then
             '                MSG = MSG & IQQQ展擎筛程至A2册按市类(WB, 谕组, 出节模式:=出节模式)
             '            End If
-            MSG = MSG & IQQQ展擎筛程至A1册按全数据(wb, 谕组, 参of筛决策剔池:=参of筛决策剔池, 参of筛决策详表:=参of筛决策详表, 出章模式:=出章模式, 出节模式:=出节模式)
+            MSG = MSG & IQQQ展擎筛程至A1册按全数据(WB, 谕组, 参of筛决策剔池:=参of筛决策剔池, 参of筛决策详表:=参of筛决策详表, 出章模式:=出章模式, 出节模式:=出节模式)
             MSG = MSG & ">>QQQ输出决策耗时：" & CLng(Timer - TTT) & vbCrLf
     End If
     '====================================================================================
@@ -383,7 +383,7 @@ Function IQQQ展擎主前调正程( _
     If 是否筛股性 = True Then
             TTT = Timer
             MSG = MSG & "【QQQ筛选股性】" & vbCrLf
-            MSG = MSG & IQQQ展擎筛程至A9册按股性(wb, 谕组, 出章模式:=出章模式, 出节模式:=出节模式)
+            MSG = MSG & IQQQ展擎筛程至A9册按股性(WB, 谕组, 出章模式:=出章模式, 出节模式:=出节模式)
             MSG = MSG & ">>QQQ输出股性耗时：" & CLng(Timer - TTT) & vbCrLf
     End If
     '====================================================================================
@@ -412,12 +412,12 @@ If 是否另存 = True Then
     '------------------------------------------------------------------------------------
     '进行保存
     '------------------------------------------------------------------------------------
-    If wb.Name <> ThisWorkbook.Name Then
-        MSG = MSG & vbCrLf & PBASE格程工具_表操保存外簿(wb, 工簿简称)
+    If WB.Name <> ThisWorkbook.Name Then
+        MSG = MSG & vbCrLf & PBASE格程工具_表操保存外簿(WB, 工簿简称)
         'WB.Close
-        wb.Activate
+        WB.Activate
     End If
-    Set wb = Nothing
+    Set WB = Nothing
     '------------------------------------------------------------------------------------
 End If
 '========================================================================================

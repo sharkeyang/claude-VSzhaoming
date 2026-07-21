@@ -21,13 +21,16 @@ Public Sub ZUTL_热加载()
     Call 热加载_执行("D:\@VSwork\VS昭明计划VBA优化\昭明计划VS优化_vba\", True)
 End Sub
 
+
+
+
 '========================================================================================
 ' 热加载_执行 — 核心导入函数
 ' 调用 Python 脚本将 UTF-8 .bas 转为 GBK 临时目录，再用 Import 注入
 '========================================================================================
 Private Sub 热加载_执行(ByVal 目录 As String, Optional 是否弹窗 As Boolean = True)
     Dim 自名 As String, 脚本路径 As String, 临时GBK目录 As String, cmd As String, 模块名 As String, 首行 As String
-    Dim fso As Object, vbproj As Object, comp As Object, file As Object
+    Dim FSO As Object, vbproj As Object, comp As Object, file As Object
     Dim shell As Object, 流 As Object
     Dim 删除类() As String, 删除数 As Long, i As Long, 引号1 As Long, 引号2 As Long
     Dim 删除计数 As Long, 导入计数 As Long
@@ -35,12 +38,12 @@ Private Sub 热加载_执行(ByVal 目录 As String, Optional 是否弹窗 As Bo
     自名 = "ZUTL_热加载"
     脚本路径 = "D:\@VSwork\VS昭明计划VBA优化\_工具\热加载_转GBK.py"
 
-    Set fso = CreateObject("Scripting.FileSystemObject")
-    If fso.FolderExists(目录) = False Then
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    If FSO.FolderExists(目录) = False Then
         If 是否弹窗 Then MsgBox "目录不存在：" & 目录, vbCritical
         Exit Sub
     End If
-    If fso.FileExists(脚本路径) = False Then
+    If FSO.FileExists(脚本路径) = False Then
         If 是否弹窗 Then MsgBox "Python脚本不存在：" & 脚本路径, vbCritical
         Exit Sub
     End If
@@ -52,7 +55,7 @@ Private Sub 热加载_执行(ByVal 目录 As String, Optional 是否弹窗 As Bo
 
     ' ② 临时目录固定为 %TEMP%\vba_hot_reload\
     临时GBK目录 = Environ("TEMP") & "\vba_hot_reload"
-    If fso.FolderExists(临时GBK目录) = False Then
+    If FSO.FolderExists(临时GBK目录) = False Then
         If 是否弹窗 Then MsgBox "Python 脚本执行失败，无法创建临时目录", vbCritical
         Exit Sub
     End If
@@ -83,8 +86,8 @@ Private Sub 热加载_执行(ByVal 目录 As String, Optional 是否弹窗 As Bo
     流.Type = 2
     流.Charset = "gbk"
 
-    For Each file In fso.GetFolder(临时GBK目录).Files
-        If LCase(fso.GetExtensionName(file.Name)) = "bas" And file.Name <> "ZUTL_热加载.bas" Then
+    For Each file In FSO.GetFolder(临时GBK目录).Files
+        If LCase(FSO.GetExtensionName(file.Name)) = "bas" And file.Name <> "ZUTL_热加载.bas" Then
             ' 读取文件第一行，提取模块名
             流.Open
             流.LoadFromFile file.Path
@@ -118,7 +121,7 @@ Private Sub 热加载_执行(ByVal 目录 As String, Optional 是否弹窗 As Bo
 
     ' ⑥ 清理临时目录
     On Error Resume Next
-    fso.DeleteFolder 临时GBK目录, True
+    FSO.DeleteFolder 临时GBK目录, True
     On Error GoTo 0
 
     If 是否弹窗 Then

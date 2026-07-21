@@ -324,16 +324,16 @@ End Function
 Function UTL数据转换_集WS名2典码( _
           典码 As Dictionary _
         , WS名 As String _
-        , Optional wb As Workbook _
+        , Optional WB As Workbook _
         , Optional 始行 As Integer = 2 _
         , Optional 始列 As Integer = 1 _
         , Optional 总行 As Integer = 0 _
         , Optional 总列 As Integer = 花宽全道 _
         ) As Integer
     '------------------------------------------------------------------------------------
-    If wb Is Nothing Then Set wb = ThisWorkbook
-    If UTL判断工表存在(WS名, wb) = True Then
-        Call UTL数据转换_集WS2典码(典码, wb.Sheets(WS名))
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    If UTL判断工表存在(WS名, WB) = True Then
+        Call UTL数据转换_集WS2典码(典码, WB.Sheets(WS名))
     End If
     '------------------------------------------------------------------------------------
     UTL数据转换_集WS名2典码 = 典码.Count

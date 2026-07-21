@@ -85,15 +85,15 @@ End Sub
 Public Sub UTL宏工具_显示指定工作簿(文件名 As String)
     '按文件名查找已打开的工作簿，如果找到则激活显示
     On Error Resume Next
-    Dim wb As Workbook
-    Set wb = Workbooks(文件名)
-    If Not wb Is Nothing Then
+    Dim WB As Workbook
+    Set WB = Workbooks(文件名)
+    If Not WB Is Nothing Then
         Application.Visible = True
-        wb.Windows(1).Visible = True
-        wb.Windows(1).WindowState = xlNormal
-        wb.Activate
+        WB.Windows(1).Visible = True
+        WB.Windows(1).WindowState = xlNormal
+        WB.Activate
     End If
-    Set wb = Nothing
+    Set WB = Nothing
     On Error GoTo 0
 End Sub
 '########################################################################################
@@ -339,19 +339,19 @@ Sub UGSOP全局清理工簿_昭明全部()
     Dim 是否保留 As Boolean
     
     On Error Resume Next
-    Dim wb As Workbook
-    For Each wb In Workbooks
-        Debug.Print wb.Name
+    Dim WB As Workbook
+    For Each WB In Workbooks
+        Debug.Print WB.Name
         '--------------------------------------------------------------------------------
         '排除删除
         '--------------------------------------------------------------------------------
-        If wb.Name <> ThisWorkbook.Name Then
-            wb.Close False
+        If WB.Name <> ThisWorkbook.Name Then
+            WB.Close False
         End If
         '--------------------------------------------------------------------------------
-    Next wb
+    Next WB
     On Error GoTo 0
-    Set wb = Nothing
+    Set WB = Nothing
 '========================================================================================
     UTL宏工具_END
 End Sub
@@ -1103,23 +1103,23 @@ End Function
 Function PBASE格程工具_表操工表新增( _
           WS As Worksheet _
         , sWS As String _
-        , Optional wb As Workbook _
+        , Optional WB As Workbook _
         , Optional 基色底 As Long = 常色十红 _
         ) As Boolean
     PBASE格程工具_表操工表新增 = False
-    If wb Is Nothing Then Set wb = ThisWorkbook
+    If WB Is Nothing Then Set WB = ThisWorkbook
     If Len(sWS) = 0 Then Exit Function
     ' 删除旧表（如有）
-    If UTL判断工表存在(sWS, wb) Then
+    If UTL判断工表存在(sWS, WB) Then
         Dim bSave As Boolean
         bSave = Application.DisplayAlerts
         Application.DisplayAlerts = False
-        wb.Sheets(sWS).Delete
+        WB.Sheets(sWS).Delete
         Application.DisplayAlerts = bSave
     End If
     ' 新建表
     Dim WSNEW As Worksheet
-    Set WSNEW = wb.Sheets.Add(after:=wb.Sheets(wb.Sheets.Count))
+    Set WSNEW = WB.Sheets.Add(after:=WB.Sheets(WB.Sheets.Count))
     WSNEW.Name = sWS
     WSNEW.Tab.Color = 基色底
     Set WS = WSNEW
@@ -1127,15 +1127,15 @@ Function PBASE格程工具_表操工表新增( _
 End Function
 Function PBASE格程工具_表操工表删除( _
           sWS As String _
-        , Optional wb As Workbook _
+        , Optional WB As Workbook _
         ) As Boolean
     PBASE格程工具_表操工表删除 = False
-    If wb Is Nothing Then Set wb = ThisWorkbook
-    If UTL判断工表存在(sWS, wb) Then
+    If WB Is Nothing Then Set WB = ThisWorkbook
+    If UTL判断工表存在(sWS, WB) Then
         Dim bSave As Boolean
         bSave = Application.DisplayAlerts
         Application.DisplayAlerts = False
-        wb.Sheets(sWS).Delete
+        WB.Sheets(sWS).Delete
         Application.DisplayAlerts = bSave
         PBASE格程工具_表操工表删除 = True
     End If
@@ -1147,7 +1147,7 @@ End Function
 
 
 
-Function PBASE格程工具_表操保存外簿(wb As Excel.Workbook, 工簿简称 As String, Optional 物理地址 As String = "") As String
+Function PBASE格程工具_表操保存外簿(WB As Excel.Workbook, 工簿简称 As String, Optional 物理地址 As String = "") As String
     '------------------------------------------------------------------------------------
     Dim 工簿路径 As String
     If (InStr(物理地址, "\") > 0 And UTL判断路径存在(物理地址) = False) Or 物理地址 = "" Then
@@ -1157,12 +1157,12 @@ Function PBASE格程工具_表操保存外簿(wb As Excel.Workbook, 工簿简称
     
     Debug.Print 工簿路径
     '------------------------------------------------------------------------------------
-    If UTL判断工表存在("Sheet1", wb) Then Call PBASE格程工具_表操工表删除("Sheet1", wb)
+    If UTL判断工表存在("Sheet1", WB) Then Call PBASE格程工具_表操工表删除("Sheet1", WB)
     '------------------------------------------------------------------------------------
     On Error Resume Next
     If UTL判断工簿打开(工簿简称) Then Workbooks(工簿简称).Close True
     Kill 工簿路径
-    wb.SaveAs 工簿路径
+    WB.SaveAs 工簿路径
     'WB.Close
     On Error GoTo 0
     '------------------------------------------------------------------------------------
@@ -1177,14 +1177,14 @@ End Function
 '========================================================================================
 Public Function UTL判断工表存在( _
           sWS As String _
-        , Optional wb As Workbook _
+        , Optional WB As Workbook _
         ) As Boolean
     '------------------------------------------------------------------------------------
-    If wb Is Nothing Then Set wb = ThisWorkbook
+    If WB Is Nothing Then Set WB = ThisWorkbook
     
     Dim X As Object
     On Error Resume Next
-    Set X = wb.Sheets(sWS)
+    Set X = WB.Sheets(sWS)
     
     If X Is Nothing Then
         UTL判断工表存在 = False

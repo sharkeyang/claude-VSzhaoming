@@ -854,7 +854,7 @@ Private Sub 后台质程_搜索代码(市场 As String, 代码起始 As Long, �
     End Select
     '---------------------------------------------------------------------------------
     Dim MS As Worksheet
-    Call PBASE格程工具_表操工表新增(MS, sWS, wb:=ThisWorkbook, 基色底:=常色主黄)
+    Call PBASE格程工具_表操工表新增(MS, sWS, WB:=ThisWorkbook, 基色底:=常色主黄)
     Dim nZROW As Integer
     nZROW = MS.[a65536].End(xlUp).Row
 '=====================================================================================

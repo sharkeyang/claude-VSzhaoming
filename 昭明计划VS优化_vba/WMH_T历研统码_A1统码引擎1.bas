@@ -79,19 +79,19 @@ Function 历研统码基程_展日码总( _
           ByVal 指定期类 As String _
         , ByVal 表名统码 As String _
         , Optional ByVal 指定结期下限 As Date = 常结期下限历短 _
-        , Optional ByVal wb As Workbook _
+        , Optional ByVal WB As Workbook _
         ) As String
     Dim 典码称 As New Dictionary
     Dim MSG As String
     Dim TT历码 As Single: TT历码 = Timer
-    If wb Is Nothing Then Set wb = ThisWorkbook
+    If WB Is Nothing Then Set WB = ThisWorkbook
     '------------------------------------------------------------------------------------
     '---- 票 ----
     '------------------------------------------------------------------------------------
     Dim TT票 As Single: TT票 = Timer
     Call STCALL花册工具_提取典码花天按市池(典码称, 包含市指:=False, 包含市基:=False, 包含市票:=True, 测试限数:=-1)
     Dim MSG票计 As String
-    MSG票计 = 历研统码引擎1主程("历码票", 典码称, 指定期类, 指定结期下限:=指定结期下限, 是否神谕指标:=False, 显否宽基:=False, 显否排名:=False, 显否马赛克:=False, 显否神谕主页:=False, 表名统码:=表名统码, 是否建表:=True, wb:=wb)
+    MSG票计 = 历研统码引擎1主程("历码票", 典码称, 指定期类, 指定结期下限:=指定结期下限, 是否神谕指标:=False, 显否宽基:=False, 显否排名:=False, 显否马赛克:=False, 显否神谕主页:=False, 表名统码:=表名统码, 是否建表:=True, WB:=WB)
     MSG = MSG & ">>历码票耗时：" & CLng(Timer - TT票) & vbCrLf
     典码称.RemoveAll
     '------------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ Function 历研统码基程_展日码总( _
     Dim TT行业 As Single: TT行业 = Timer
     Call 后台族非票精分调程_WA_设置典核心行业(典码称)
     Dim MSG核计 As String
-    MSG核计 = 历研统码引擎1主程("历码核", 典码称, 指定期类, 指定结期下限:=指定结期下限, 是否神谕指标:=True, 显否宽基:=True, 显否排名:=True, 显否马赛克:=True, 显否神谕主页:=True, 表名统码:=表名统码, 是否建表:=False, wb:=wb)
+    MSG核计 = 历研统码引擎1主程("历码核", 典码称, 指定期类, 指定结期下限:=指定结期下限, 是否神谕指标:=True, 显否宽基:=True, 显否排名:=True, 显否马赛克:=True, 显否神谕主页:=True, 表名统码:=表名统码, 是否建表:=False, WB:=WB)
     MSG = MSG & ">>历码核耗时：" & CLng(Timer - TT行业) & vbCrLf
     典码称.RemoveAll
     '------------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ Sub 历研统码调程__展日码核L版()
     Dim MSG核计 As String
     Dim 表名统码 As String
     表名统码 = "历码核"
-    MSG核计 = 历研统码引擎1主程("历码核", 典码称, 指定期类, 指定结期下限:=指定结期下限, 是否更新源TR:=False, 是否神谕指标:=True, 显否宽基:=True, 显否排名:=True, 显否马赛克:=True, 显否神谕主页:=True, 表名统码:=表名统码, 是否建表:=True, wb:=ThisWorkbook)
+    MSG核计 = 历研统码引擎1主程("历码核", 典码称, 指定期类, 指定结期下限:=指定结期下限, 是否更新源TR:=False, 是否神谕指标:=True, 显否宽基:=True, 显否排名:=True, 显否马赛克:=True, 显否神谕主页:=True, 表名统码:=表名统码, 是否建表:=True, WB:=ThisWorkbook)
     MSG = MSG & ">>历码核耗时：" & CLng(Timer - TT行业) & vbCrLf
     典码称.RemoveAll
     '------------------------------------------------------------------------------------
@@ -274,7 +274,7 @@ Function 历研统码引擎1主程( _
         , Optional ByVal 是否建表 As Boolean = True _
         , Optional ByVal 表名统码 As String = "" _
         , Optional ByVal 基色底 As Long = 常色六青 _
-        , Optional ByVal wb As Workbook _
+        , Optional ByVal WB As Workbook _
         ) As String
 '========================================================================================
 '准备数据
@@ -294,8 +294,8 @@ Function 历研统码引擎1主程( _
 '输出工表
 '========================================================================================
     TT_段 = Timer
-    If wb Is Nothing Then
-        Set wb = ThisWorkbook
+    If WB Is Nothing Then
+        Set WB = ThisWorkbook
     End If
     '------------------------------------------------------------------------------------
     '建页
@@ -308,8 +308,8 @@ Function 历研统码引擎1主程( _
         End If
     End If
     Dim WSTO As Worksheet
-    If 是否建表 = True Or UTL判断工表存在(表名统码, wb) = False Then
-        Call PBASE格程工具_表操工表新增(WSTO, 表名统码, wb, 基色底:=基色底)
+    If 是否建表 = True Or UTL判断工表存在(表名统码, WB) = False Then
+        Call PBASE格程工具_表操工表新增(WSTO, 表名统码, WB, 基色底:=基色底)
         With WSTO.Cells
             .HorizontalAlignment = xlRight
             .Interior.Color = 常色主黑
@@ -323,7 +323,7 @@ Function 历研统码引擎1主程( _
         End With
         Call PBASE格程工具_表冻结锁定(WSTO, 3, 始列, 缩放:=100)
     End If
-    Set WSTO = wb.Sheets(表名统码)
+    Set WSTO = WB.Sheets(表名统码)
     Dim 末行 As Integer
     末行 = PBASE格程工具_表参末行指定(WSTO, 1)
     '------------------------------------------------------------------------------------

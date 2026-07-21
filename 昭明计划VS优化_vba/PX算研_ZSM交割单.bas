@@ -1,12 +1,14 @@
-Attribute VB_Name = "ZUTL_F1交割单"
+Attribute VB_Name = "PX算研_ZSM交割单"
 Option Explicit
 Public Const 常册交割单 = "花割"
+Public Const 常册割析 = "割析"
+Public Const 位列割成交日期 = 1
+Public Const 位列割成交时间 = 2
 Public Const 位列割证券CIDL = 3
 Public Const 位列割证券代码 = 4
 Public Const 位列割证券名称 = 5
-Public Const 位列割成交日期 = 1
-Public Const 位列割成交时间 = 2
 Public Const 位列割委托类别 = 6
+Public Const 位列割成交价格 = 7
 Public Const 位列割成交数量 = 8
 Public Const 位列割成交金额 = 9
 Public Const 位列割发生金额 = 10
@@ -15,13 +17,28 @@ Public Const 位列割印花税 = 12
 Public Const 位列割过户费 = 13
 Public Const 位列割其他费 = 14
 Public Const 位列割成交编号 = 15
+'------------------------------------------------------------------------------------
+Private Const 时段早盘 = "早盘9:30-10:00"
+Private Const 时段上午中 = "上午中段10:00-11:30"
+Private Const 时段午前收盘 = "午前收盘11:00-11:30"
+Private Const 时段午盘 = "午盘13:00-14:00"
+Private Const 时段尾盘 = "尾盘14:00-15:00"
+Private Const 时段其他 = "其他时段"
+'------------------------------------------------------------------------------------
+'仓位分段标签（带数字前缀保序）
+Private Const 位小微 = "1小微<5千"
+Private Const 位小 = "2小1-2万"
+Private Const 位中 = "3中2-5万"
+Private Const 位中大 = "4中大5-10万"
+Private Const 位大 = "5大10-20万"
+Private Const 位超大 = "6超大>20万"
 
 '========================================================================================
 '========================================================================================
 '导入信息：交割单
 '========================================================================================
 '========================================================================================
-Sub STCALL割册管理_瓜分交割单()
+Sub STCALL割册管理_XLS交割单G1导入()
     Dim MSG As String
 '========================================================================================
 '验证文件存在
@@ -51,8 +68,11 @@ Sub STCALL割册管理_瓜分交割单()
     '------------------------------------------------------------------------------------
     '导入数组
     '------------------------------------------------------------------------------------
+    '注：必须设为自动计算，否则 ="..." 公式不会被求值，显示为 0
+    Application.Calculation = xlCalculationAutomatic
     Dim WB割 As Workbook
     Set WB割 = GetObject(FILEOPEN)
+    WB割.Application.Calculate  ' 强制计算 ="..." 公式
     Dim ARRYM As Variant
     With WB割.ActiveSheet
         ARRYM = .Range("A1").CurrentRegion
@@ -122,15 +142,30 @@ Sub STCALL割册管理_瓜分交割单()
     '------------------------------------------------------------------------------------
     Dim CIDV As Variant
     Dim CIDL As String
-    Dim sdate As String
+    Dim sdate As Variant
     Dim R As Integer
     Dim 值委托类别 As String
     Dim 表名 As String
     Dim X As Integer
     For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
         值委托类别 = ARRYM(R, 位列割委托类别)
+        ' 去掉 ="" 包装（华宝交割单导出格式）
+        值委托类别 = Replace(值委托类别, "=", "")
+        值委托类别 = Replace(值委托类别, """", "")
+        ' 跳过空行或无效行
+        If 值委托类别 = "" Or 值委托类别 = "0" Then GoTo 下一行
         sdate = ARRYM(R, 位列割成交日期)
-        ARRYM(R, 位列割成交日期) = DateSerial(Left$(sdate, 4), Mid$(sdate, 5, 2), Mid$(sdate, 7, 2))
+        ' 处理日期：可能为 8位数字串("20260105")、="20260105"格式、或Excel日期序列号
+        If IsDate(sdate) Then
+            ARRYM(R, 位列割成交日期) = CDate(sdate)
+        ElseIf VarType(sdate) = vbString Then
+            ' 去掉 ="" 包装
+            sdate = Replace(sdate, "=", "")
+            sdate = Replace(sdate, """", "")
+            If Len(sdate) >= 8 Then
+                ARRYM(R, 位列割成交日期) = DateSerial(CLng(Left$(sdate, 4)), CLng(Mid$(sdate, 5, 2)), CLng(Mid$(sdate, 7, 2)))
+            End If
+        End If
         '-----------------------------------------------
         If 值委托类别 = "申购还款" Then
             典集委类申购还款.Add key:=R, Item:=R
@@ -161,6 +196,11 @@ Sub STCALL割册管理_瓜分交割单()
         '-----------------------------------------------
         ElseIf 值委托类别 = "买入" Or 值委托类别 = "卖出" Then
             CIDV = ARRYM(R, 位列割证券代码)
+            ' 去掉 ="" 包装
+            If VarType(CIDV) = vbString Then
+                CIDV = Replace(CIDV, "=", "")
+                CIDV = Replace(CIDV, """", "")
+            End If
             CIDL = UBCID规制代码(CIDV)
             ARRYM(R, 位列割证券CIDL) = CIDL
             If 值委托类别 = "买入" Then
@@ -180,12 +220,12 @@ Sub STCALL割册管理_瓜分交割单()
             Stop
             '出现了未曾出现过的委托类别
         End If
-    Next R
+下一行: Next R
     '------------------------------------------------------------------------------------
     '输出
     '------------------------------------------------------------------------------------
-    Dim wb As Workbook
-    Set wb = ThisWorkbook
+    Dim WB As Workbook
+    Set WB = ThisWorkbook
     '--------------------------------------------------------------------------------
     '买卖相关
     '--------------------------------------------------------------------------------
@@ -203,6 +243,7 @@ Sub STCALL割册管理_瓜分交割单()
     Dim 值累额码类数零近月 As Double
     Dim 值累额码类数零远赚 As Double
     Dim 值累额码类数零远赔 As Double
+    '--------------------------------------------------------------------------------
     For X = 1 To 典集委类交易码票.Count
         CIDL = 典集委类交易码票.Keys(X - 1)
         值累数 = 0
@@ -235,48 +276,42 @@ Sub STCALL割册管理_瓜分交割单()
             End If
         End If
         典集码类额.Add key:=CIDL, Item:=值累额
+        '----------------------------------------------------------------------------
         Debug.Print X, CIDL, 值累数
-'        If X > 55 Then Exit For
+        'If X > 55 Then Exit For
+        '----------------------------------------------------------------------------
     Next X
     '--------------------------------------------------------------------------------
-    表名 = "IO割BS"
-    Call IQQQ展擎出程至页割版(wb, 表名, 是否建表:=True, 章色:=常色四青, 章签:="【交易】")
+    '格式化
+    '--------------------------------------------------------------------------------
+    表名 = "交割单"
+    Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=True, 章色:=常色四青, 章签:="【交易完全列表】")
+    WB.Sheets(表名).Columns(位列割发生金额).HorizontalAlignment = xlRight
+    WB.Sheets(表名).Columns(位列割成交数量).HorizontalAlignment = xlRight
+    WB.Sheets(表名).Columns(位列割成交日期).NumberFormatLocal = 全设格式of日期
+    WB.Sheets(表名).Columns(位列割成交日期).ColumnWidth = 14
+    WB.Sheets(表名).Columns(位列割成交时间).ColumnWidth = 10
+    WB.Sheets(表名).Columns(位列割证券名称).ColumnWidth = 12
+    WB.Sheets(表名).Columns(位列割证券CIDL).ColumnWidth = 10
+    WB.Sheets(表名).Columns(位列割证券CIDL).Font.Color = 常色五灰
+    WB.Sheets(表名).Columns(位列割其他费).Hidden = True
+    WB.Sheets(表名).Columns(位列割成交编号).Hidden = True
+    WB.Sheets(表名).Columns(位列割发生金额).ColumnWidth = 10
+    WB.Sheets(表名).Columns(位列割发生金额).NumberFormatLocal = 全设格式of零位
+'    WB.Sheets(表名).Columns(位列割发生金额).Font.Bold = True
+    WB.Sheets(表名).Columns(位列割成交金额).NumberFormatLocal = 全设格式of零位
+    WB.Sheets(表名).Columns(位列割成交金额).Font.Color = 常色五灰
+    WB.Sheets(表名).Columns(位列割佣金).Font.Color = 常色五灰
+    WB.Sheets(表名).Columns(位列割印花税).Font.Color = 常色五灰
+    WB.Sheets(表名).Columns(位列割过户费).Font.Color = 常色五灰
+    WB.Sheets(表名).Columns(位列割其他费).Font.Color = 常色五灰
+    WB.Sheets(表名).Columns(位列割成交价格).Font.Color = 常色二灰
+    WB.Sheets(表名).Columns(位列割成交数量).ColumnWidth = 12
+    WB.Sheets(表名).Columns(位列割成交数量).NumberFormatLocal = "[黑色]0_);[蓝色](0)"
+    '--------------------------------------------------------------------------------
     Dim 典集委类交易个票 As New Dictionary
     '--------------------------------------------------------------------------------
-    Call IQQQ展擎出程至页割版(wb, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【交易】类数〇（近30日）：" & 典集码类数零近.Count & " , " & 值累额码类数零近月)
-    For X = 1 To 典集码类数零近.Count
-        CIDL = 典集码类数零近.Keys(X - 1)
-       For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
-            If ARRYM(R, 位列割证券CIDL) = CIDL Then
-                典集委类交易个票.Add key:=R, Item:=R
-            End If
-        Next R
-        Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色主靛, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
-    Next X
-    '--------------------------------------------------------------------------------
-    Call IQQQ展擎出程至页割版(wb, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【交易】类数〇（远赚）：" & 典集码类数零赚.Count & " , " & 值累额码类数零远赚)
-    For X = 1 To 典集码类数零赚.Count
-        CIDL = 典集码类数零赚.Keys(X - 1)
-        For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
-            If ARRYM(R, 位列割证券CIDL) = CIDL Then
-                典集委类交易个票.Add key:=R, Item:=R
-            End If
-        Next R
-        Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色主靛, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
-    Next X
-    '--------------------------------------------------------------------------------
-    Call IQQQ展擎出程至页割版(wb, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【交易】类数〇（远赔）：" & 典集码类数零赔.Count & " , " & 值累额码类数零远赔)
-    For X = 1 To 典集码类数零赔.Count
-        CIDL = 典集码类数零赔.Keys(X - 1)
-        For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
-            If ARRYM(R, 位列割证券CIDL) = CIDL Then
-                典集委类交易个票.Add key:=R, Item:=R
-            End If
-        Next R
-        Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色主靛, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
-    Next X
-    '--------------------------------------------------------------------------------
-    Call IQQQ展擎出程至页割版(wb, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【交易】类数正（未清仓）：" & 典集码类数正.Count)
+    Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【交易】累数正（未清仓）：" & 典集码类数正.Count)
     For X = 1 To 典集码类数正.Count
         CIDL = 典集码类数正.Keys(X - 1)
         For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
@@ -284,10 +319,43 @@ Sub STCALL割册管理_瓜分交割单()
                 典集委类交易个票.Add key:=R, Item:=R
             End If
         Next R
-        Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色主靛, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
+        Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色主靛, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
     Next X
     '--------------------------------------------------------------------------------
-    Call IQQQ展擎出程至页割版(wb, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【交易】类数负（不完整）：" & 典集码类数负.Count)
+    Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【交易】累数〇（30日内）：" & 典集码类数零近.Count & " , " & CLng(值累额码类数零近月))
+    For X = 1 To 典集码类数零近.Count
+        CIDL = 典集码类数零近.Keys(X - 1)
+       For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
+            If ARRYM(R, 位列割证券CIDL) = CIDL Then
+                典集委类交易个票.Add key:=R, Item:=R
+            End If
+        Next R
+        Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色蒂芙尼蓝, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
+    Next X
+    '--------------------------------------------------------------------------------
+    Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【交易】累数〇（30日前.赚）：" & 典集码类数零赚.Count & " , " & CLng(值累额码类数零远赚))
+    For X = 1 To 典集码类数零赚.Count
+        CIDL = 典集码类数零赚.Keys(X - 1)
+        For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
+            If ARRYM(R, 位列割证券CIDL) = CIDL Then
+                典集委类交易个票.Add key:=R, Item:=R
+            End If
+        Next R
+        Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色六青, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
+    Next X
+    '--------------------------------------------------------------------------------
+    Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【交易】累数〇（30日前.赔）：" & 典集码类数零赔.Count & " , " & CLng(值累额码类数零远赔))
+    For X = 1 To 典集码类数零赔.Count
+        CIDL = 典集码类数零赔.Keys(X - 1)
+        For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
+            If ARRYM(R, 位列割证券CIDL) = CIDL Then
+                典集委类交易个票.Add key:=R, Item:=R
+            End If
+        Next R
+        Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色四青, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
+    Next X
+    '--------------------------------------------------------------------------------
+    Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【交易】累数负（不完整）：" & 典集码类数负.Count)
     For X = 1 To 典集码类数负.Count
         CIDL = 典集码类数负.Keys(X - 1)
         For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
@@ -295,7 +363,7 @@ Sub STCALL割册管理_瓜分交割单()
                 典集委类交易个票.Add key:=R, Item:=R
             End If
         Next R
-        Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色主靛, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
+        Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色五黄, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
     Next X
     '--------------------------------------------------------------------------------
     Set 典集委类交易个票 = Nothing
@@ -304,21 +372,21 @@ Sub STCALL割册管理_瓜分交割单()
     '--------------------------------------------------------------------------------
     '表名 = "IO割SS"
     '剔除类别
-    Call IQQQ展擎出程至页割版(wb, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【剔除类别】")
-    Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色八蓝, 典码输出:=典集委类融券, 区签:="融券", 区释:="")
-    Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色八蓝, 典码输出:=典集委类融券购回, 区签:="融券购回", 区释:="")
-    Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色六蓝, 典码输出:=典集委类其他, 区签:="其他", 区释:="")
-    Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色六蓝, 典码输出:=典集委类红利, 区签:="红利", 区释:="")
+    Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【剔除类别】")
+    Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色八蓝, 典码输出:=典集委类融券, 区签:="融券", 区释:="")
+    Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色八蓝, 典码输出:=典集委类融券购回, 区签:="融券购回", 区释:="")
+    Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色六蓝, 典码输出:=典集委类其他, 区签:="其他", 区释:="")
+    Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色六蓝, 典码输出:=典集委类红利, 区签:="红利", 区释:="")
     'Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色十红, 典码输出:=典集委类组合费用, 区签:="组合费用", 区释:="")
     '新股相关
-    Call IQQQ展擎出程至页割版(wb, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【新股类别】")
-    Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色六青, 典码输出:=典集委类申购还款, 区签:="申购还款", 区释:="")
-    Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色六青, 典码输出:=典集委类申购扣款, 区签:="申购扣款", 区释:="")
-    Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色六青, 典码输出:=典集委类中签扣款, 区签:="中签扣款", 区释:="")
-    Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色六青, 典码输出:=典集委类中签通知, 区签:="中签通知", 区释:="")
-    Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色四青, 典码输出:=典集委类托管转入, 区签:="托管转入", 区释:="")
-    Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色四青, 典码输出:=典集委类托管转出, 区签:="托管转出", 区释:="")
-    Call IQQQ展擎出程至页割版(wb, 表名, ARRYM, 基色底:=常色二青, 典码输出:=典集委类配号, 区签:="配号", 区释:="")
+    Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【新股类别】")
+    Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色六青, 典码输出:=典集委类申购还款, 区签:="申购还款", 区释:="")
+    Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色六青, 典码输出:=典集委类申购扣款, 区签:="申购扣款", 区释:="")
+    Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色六青, 典码输出:=典集委类中签扣款, 区签:="中签扣款", 区释:="")
+    Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色六青, 典码输出:=典集委类中签通知, 区签:="中签通知", 区释:="")
+    Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色四青, 典码输出:=典集委类托管转入, 区签:="托管转入", 区释:="")
+    Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色四青, 典码输出:=典集委类托管转出, 区签:="托管转出", 区释:="")
+    Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色二青, 典码输出:=典集委类配号, 区签:="配号", 区释:="")
 '========================================================================================
     UTL宏工具_END
     MSG = "导入华宝交割单" & vbCrLf
@@ -332,7 +400,7 @@ End Sub
 '注意：【表名输出】（工表的名字）不能是数字类型
 '========================================================================================
 Function IQQQ展擎出程至页割版( _
-          ByRef wb As Workbook _
+          ByRef WB As Workbook _
         , ByVal 表名输出 As String _
         , Optional ByRef 谕组 As Variant _
         , Optional ByRef 典码输出 As Dictionary _
@@ -358,6 +426,7 @@ Function IQQQ展擎出程至页割版( _
     割列标签注释 = 2
     Dim 割列标签计数 As Integer
     割列标签计数 = 3
+    Dim X As Integer, Y As Integer
 '========================================================================================
 '准备工作
 '========================================================================================
@@ -365,8 +434,8 @@ Function IQQQ展擎出程至页割版( _
     '建页
     '------------------------------------------------------------------------------------
     Dim WSTO As Worksheet
-    If 是否建表 = True Or UTL判断工表存在(表名输出, wb) = False Then
-        Call PBASE格程工具_表操工表新增(WSTO, 表名输出, wb:=wb, 基色底:=章色)
+    If 是否建表 = True Or UTL判断工表存在(表名输出, WB) = False Then
+        Call PBASE格程工具_表操工表新增(WSTO, 表名输出, WB:=WB, 基色底:=章色)
 '        Call IQQQ跨码展擎_按列汇总(WSTO, 基色底:=章色)
             '============================================================================
             '全局设置
@@ -387,7 +456,7 @@ Function IQQQ展擎出程至页割版( _
             Call PBASE格程工具_表冻结锁定(WSTO, 基列:=2)
             '============================================================================
     End If
-    Set WSTO = wb.Sheets(表名输出)
+    Set WSTO = WB.Sheets(表名输出)
     Dim 末行 As Integer
     末行 = PBASE格程工具_表参末行指定(WSTO, 1)
     '------------------------------------------------------------------------------------
@@ -488,7 +557,6 @@ Function IQQQ展擎出程至页割版( _
     '准备数据
     '------------------------------------------------------------------------------------
     Dim 定位原序 As Integer
-    Dim Y As Integer
     For X = 1 To 典码输出.Count
         定位原序 = 典码输出.Items(X - 1)
         For Y = LBound(谕组, 2) To UBound(谕组, 2)
@@ -496,7 +564,6 @@ Function IQQQ展擎出程至页割版( _
         Next Y
     Next X
     典码输出.RemoveAll
-    Set 典码输出 = Nothing
     '------------------------------------------------------------------------------------
     '统计
     '------------------------------------------------------------------------------------
@@ -509,6 +576,11 @@ Function IQQQ展擎出程至页割版( _
     With WSTO.Cells(行号标签, 位列割发生金额)
         .Font.Color = IIf(.Value > 0, 常色十红, 常色十绿)
     End With
+    WSTO.Cells(行号标签, 位列割证券名称).HorizontalAlignment = xlRight
+    WSTO.Cells(行号标签, 位列割委托类别).HorizontalAlignment = xlRight
+    WSTO.Cells(行号标签, 位列割成交数量).Font.Color = 常色六灰
+    WSTO.Cells(行号标签, 位列割成交数量).HorizontalAlignment = xlRight
+    WSTO.Cells(行号标签, 位列割发生金额).HorizontalAlignment = xlRight
     '------------------------------------------------------------------------------------
     '输出
     '------------------------------------------------------------------------------------
@@ -527,16 +599,12 @@ Function IQQQ展擎出程至页割版( _
         With .Resize(计数输出, 计列输出)
             .Interior.Color = 基色底
             .Interior.TintAndShade = 0.8
+            .HorizontalAlignment = xlRight
         End With
         With .Cells(1, 1).Resize(计数输出, 1)
             .Interior.TintAndShade = 0.5
         End With
     End With
-    WSTO.Columns(位列割发生金额).HorizontalAlignment = xlRight
-    WSTO.Columns(位列割成交数量).HorizontalAlignment = xlRight
-    WSTO.Columns(位列割成交编号).Hidden = True
-    WSTO.Columns(位列割成交日期).NumberFormatLocal = 全设格式of日期
-    WSTO.Columns(位列割成交日期).ColumnWidth = 10
     '------------------------------------------------------------------------------------
     '排序
     '------------------------------------------------------------------------------------
@@ -577,52 +645,20 @@ End Function
 
 
 
-Option Explicit
 '========================================================================================
 '交割单深度分析 — 5维度：⑥择时 → ⑦仓位 → ⑤成本 → ①盈亏 → ③T+0
-'数据源：华宝证券交割单查询 TXT 文件（GBK编码、字段间3+空格分隔）
+'数据源：华宝证券交割单查询 XLS 文件
 '========================================================================================
 '========================================================================================
 '常量
 '========================================================================================
-Public Const 常册割析 = "割析"
-'------------------------------------------------------------------------------------
-'列位常量（与 ZUTL_F1交割单 对齐）
-Public Const 位列割成交日期 = 1
-Public Const 位列割成交时间 = 2
-Public Const 位列割证券CIDL = 3
-Public Const 位列割证券代码 = 4
-Public Const 位列割证券名称 = 5
-Public Const 位列割委托类别 = 6
-Public Const 位列割成交数量 = 8
-Public Const 位列割成交金额 = 9
-Public Const 位列割发生金额 = 10
-Public Const 位列割佣金 = 11
-Public Const 位列割印花税 = 12
-Public Const 位列割过户费 = 13
-Public Const 位列割其他费 = 14
-'------------------------------------------------------------------------------------
-'时段标签
-Private Const 时段早盘 = "早盘9:30-10:00"
-Private Const 时段上午中 = "上午中段10:00-11:30"
-Private Const 时段午前收盘 = "午前收盘11:00-11:30"
-Private Const 时段午盘 = "午盘13:00-14:00"
-Private Const 时段尾盘 = "尾盘14:00-15:00"
-Private Const 时段其他 = "其他时段"
-'------------------------------------------------------------------------------------
-'仓位分段标签（带数字前缀保序）
-Private Const 位小微 = "1小微<5千"
-Private Const 位小 = "2小1-2万"
-Private Const 位中 = "3中2-5万"
-Private Const 位中大 = "4中大5-10万"
-Private Const 位大 = "5大10-20万"
-Private Const 位超大 = "6超大>20万"
+'------------------------------------------------------------------------------------'时段标签
 '========================================================================================
 '========================================================================================
 '入口主调
 '========================================================================================
 '========================================================================================
-Sub STCALL割析_交单分析()
+Sub STCALL割册管理_XLS交割单G2解析()
 '========================================================================================
 '选择文件
 '========================================================================================
@@ -637,7 +673,8 @@ Sub STCALL割析_交单分析()
     Dim WS割 As Worksheet
     Call PBASE格程工具_表操工表新增(WS割, 常册割析, 基色底:=常色马尔斯绿)
 '========================================================================================
-    '读取 XLS 文件到数组
+    '读取 XLS 文件到数组（自动计算，确保 ="..." 公式被求值）
+    Application.Calculation = xlCalculationAutomatic
     Dim WB割 As Workbook
     Set WB割 = GetObject(FILEOPEN)
     Dim ARR原始 As Variant
@@ -653,7 +690,10 @@ Sub STCALL割析_交单分析()
     计数交易 = 0
     Dim R As Long, j As Long
     For R = 2 To 计数原始
-        If Trim(ARR原始(R, 6)) = "买入" Or Trim(ARR原始(R, 6)) = "卖出" Then 计数交易 = 计数交易 + 1
+        Dim 类别 As String
+        类别 = Replace(ARR原始(R, 6), "=", "")
+        类别 = Replace(类别, """", "")
+        If 类别 = "买入" Or 类别 = "卖出" Then 计数交易 = 计数交易 + 1
     Next
     If 计数交易 = 0 Then
         WS割.Cells(1, 1) = "无有效交易记录"
@@ -661,13 +701,26 @@ Sub STCALL割析_交单分析()
         Exit Sub
     End If
     Dim ARR买卖 As Variant
+    Dim 指针 As Long, vDate As Variant, sD As String
     ReDim ARR买卖(1 To 计数交易, 1 To 15)
-    Dim 指针 As Long
     指针 = 0
     For R = 2 To 计数原始
-        If Trim(ARR原始(R, 6)) = "买入" Or Trim(ARR原始(R, 6)) = "卖出" Then
+        类别 = Replace(ARR原始(R, 6), "=", "")
+        类别 = Replace(类别, """", "")
+        If 类别 = "买入" Or 类别 = "卖出" Then
             指针 = 指针 + 1
             For j = 1 To 15: ARR买卖(指针, j) = ARR原始(R, j): Next
+            ' 解析日期
+                        vDate = ARR原始(R, 1)
+            If IsDate(vDate) Then
+                ARR买卖(指针, 1) = CDate(vDate)
+            ElseIf VarType(vDate) = vbString Then
+                                sD = Replace(vDate, "=", "")
+                sD = Replace(sD, """", "")
+                If Len(sD) >= 8 Then
+                    ARR买卖(指针, 1) = DateSerial(CLng(Left$(sD, 4)), CLng(Mid$(sD, 5, 2)), CLng(Mid$(sD, 7, 2)))
+                End If
+            End If
         End If
     Next
     Set ARR原始 = Nothing
@@ -703,137 +756,7 @@ End Sub
 '读取文件
 '========================================================================================
 '========================================================================================
-Private Sub 后台辅程割析_读数(ByVal sFILE As String, ByRef ARRTO As Variant)
-'========================================================================================
-    '二进制读入（TXT = GBK编码）
-    Dim nFile As Integer
-    nFile = FreeFile
-    Open sFILE For Binary Access Read As #nFile
-    Dim rawBytes() As Byte
-    ReDim rawBytes(1 To LOF(nFile))
-    Get #nFile, , rawBytes
-    Close #nFile
-'------------------------------------------------------------------------------------
-    'GBK → Unicode
-    Dim sAll As String
-    sAll = StrConv(rawBytes, vbUnicode, &H804)
-'------------------------------------------------------------------------------------
-    '分行
-    Dim lines As Variant
-    lines = Split(sAll, vbCrLf)
-    Dim 计数行 As Long
-    计数行 = UBound(lines) - LBound(lines) + 1
-'------------------------------------------------------------------------------------
-    '先数有效行，分配数组
-    Dim 计数有效 As Long
-    Dim i As Long
-    计数有效 = 0
-    For i = 3 To 计数行 - 1    '跳过前3行（分隔线/空行/表头），最后一行可能空
-        Dim sLINE As String
-        sLINE = Trim(lines(i))
-        If Len(sLINE) > 20 Then  '有实质内容
-            计数有效 = 计数有效 + 1
-        End If
-    Next
-'------------------------------------------------------------------------------------
-    '分配结果数组
-    ReDim ARRTO(1 To 计数有效, 1 To 15)
-    Dim 行号 As Long
-    行号 = 0
-    Dim 字段 As Variant
 
-    For i = 3 To 计数行 - 1
-        sLINE = Trim(lines(i))
-        If Len(sLINE) < 20 Then GoTo 下一行
-
-        字段 = 后台辅程割析_分割字段(sLINE)
-        If IsEmpty(字段) Then GoTo 下一行
-        '只保留买卖记录，排除配号
-        If 字段(6) <> "买入" And 字段(6) <> "卖出" Then GoTo 下一行
-
-        行号 = 行号 + 1
-        Dim j As Long
-        For j = 1 To 15
-            ARRTO(行号, j) = 字段(j)
-        Next
-下一行:
-    Next
-'------------------------------------------------------------------------------------
-    '缩减数组
-    If 行号 < 计数有效 Then
-        If 行号 = 0 Then
-            ReDim ARRTO(1, 1 To 15)
-            ARRTO(1, 1) = ""
-            Exit Sub
-        End If
-        Dim ARRTMP As Variant
-        ARRTMP = ARRTO
-        ReDim ARRTO(1 To 行号, 1 To 15)
-        For i = 1 To 行号
-            For j = 1 To 15
-                ARRTO(i, j) = ARRTMP(i, j)
-            Next
-        Next
-    End If
-End Sub
-'========================================================================================
-'========================================================================================
-'分割字段：扫描3+连续空格作为分隔符
-'========================================================================================
-'========================================================================================
-Private Function 后台辅程割析_分割字段(ByVal sLINE As String) As Variant
-'========================================================================================
-    Dim result(1 To 15) As Variant
-    Dim i As Long, nField As Long
-    Dim inField As Boolean
-    Dim fieldStart As Long
-    Dim ch As String
-
-    nField = 0
-    inField = False
-
-    For i = 1 To Len(sLINE)
-        ch = Mid(sLINE, i, 1)
-        If ch <> " " Then
-            If Not inField Then
-                inField = True
-                fieldStart = i
-            End If
-        Else
-            If inField Then
-                '检查是否3+连续空格（字段分隔符）
-                If i + 2 <= Len(sLINE) Then
-                    If Mid(sLINE, i, 3) = "   " Then
-                        nField = nField + 1
-                        If nField <= 15 Then
-                            result(nField) = Trim(Mid(sLINE, fieldStart, i - fieldStart))
-                        End If
-                        inField = False
-                        '跳过所有后续空格
-                        Do While i <= Len(sLINE) And Mid(sLINE, i, 1) = " "
-                            i = i + 1
-                        Loop
-                        i = i - 1  'For循环会+1
-                    End If
-                End If
-            End If
-        End If
-    Next
-
-    '最后一个字段
-    If inField Then
-        nField = nField + 1
-        If nField <= 15 Then
-            result(nField) = Trim(Mid(sLINE, fieldStart))
-        End If
-    End If
-
-    If nField >= 15 Then
-        后台辅程割析_分割字段 = result
-    Else
-        后台辅程割析_分割字段 = Empty
-    End If
-End Function
 '========================================================================================
 '========================================================================================
 '⑥ 择时分析
@@ -1464,4 +1387,217 @@ Private Sub 后台辅程割析_格式化(ByVal WS As Worksheet)
     WS.Rows("1:1").RowHeight = 25
     WS.Activate
     ActiveWindow.Zoom = 90
+End Sub
+'========================================================================================
+' 持仓校准交割单 — 以当前持仓为基准，反向递推分离不完整交易
+' 数据源：花册（当前持仓）+ 华宝交割单 XLS
+' 算法：从最新交易倒推，持仓配不上的部分单独拎出
+'========================================================================================
+Public Sub STCALL割册管理_XLS交割单G3校准()
+    Dim FILEOPEN As Variant
+    FILEOPEN = Application.GetOpenFilename("华宝交割单信息,*.xls", , "选择交割单 XLS", , False)
+    If FILEOPEN = False Then Exit Sub
+    UTL宏工具_BEGIN
+    ' ① 读取花册当前持仓
+    Dim WS花 As Worksheet
+    If STBASE外簿工具_花册链接(WS花, 常花中股) = False Then
+        MsgBox "花册链接失败", vbCritical: Exit Sub
+    End If
+    Dim 末行 As Long
+    末行 = WS花.Cells(65536, 1).End(xlUp).Row
+    Dim 典集持仓 As Object
+    Set 典集持仓 = CreateObject("Scripting.Dictionary")
+    Dim R As Long
+    For R = 2 To 末行
+        Dim CIDL As String
+        CIDL = Trim(WS花.Cells(R, 位列花天CIDL).Value)
+        Dim 仓值 As String
+        仓值 = Trim(WS花.Cells(R, 位列花天仓宝彦).Value)
+        If CIDL <> "" And 仓值 <> "" Then
+            Dim 逗号位 As Integer
+            逗号位 = InStr(仓值, ",")
+            If 逗号位 > 0 Then
+                Dim 持仓量 As Double
+                持仓量 = Val(Left$(仓值, 逗号位 - 1))
+                If 持仓量 > 0 Then 典集持仓.Add key:=CIDL, Item:=持仓量
+            End If
+        End If
+    Next
+    Set WS花 = Nothing
+    ' ② 读取交割单
+    Application.Calculation = xlCalculationAutomatic
+    Dim WB割 As Workbook
+    Set WB割 = GetObject(FILEOPEN)
+    WB割.Application.Calculate
+    Dim ARRYM As Variant
+    With WB割.ActiveSheet
+        ARRYM = .Range("A1").CurrentRegion
+    End With
+    WB割.Close False
+    Set WB割 = Nothing
+    ' ③ 构建输出表
+    Dim WS出 As Worksheet
+    Call PBASE格程工具_表操工表新增(WS出, "持仓校准", 基色底:=常色主碧)
+    WS出.Cells(1, 1) = "证券代码": WS出.Cells(1, 2) = "证券名称"
+    WS出.Cells(1, 3) = "当前持仓": WS出.Cells(1, 4) = "日期"
+    WS出.Cells(1, 5) = "委托类别": WS出.Cells(1, 6) = "成交数量"
+    WS出.Cells(1, 7) = "成交金额": WS出.Cells(1, 8) = "状态"
+    WS出.Rows(1).Font.Bold = True
+    Dim 行号 As Long: 行号 = 2
+    Dim 总完整 As Long: 总完整 = 0
+    Dim 总不完整 As Long: 总不完整 = 0
+    ' ④ 按股票分组处理
+    Dim 总行 As Long: 总行 = UBound(ARRYM, 1)
+    Dim 已处理 As Object
+    Set 已处理 = CreateObject("Scripting.Dictionary")
+    Dim i As Long, j As Long
+    For i = 2 To 总行
+        ' 清理委托类别
+        Dim 类别 As String
+        类别 = ARRYM(i, 6)
+        If VarType(类别) = vbString Then
+            类别 = Replace(类别, "=", "")
+            类别 = Replace(类别, """", "")
+        End If
+        If 类别 <> "买入" And 类别 <> "卖出" Then GoTo 跳过
+        ' 清理股票代码
+        Dim sCIDL As String, sCIDV As Variant
+        sCIDV = ARRYM(i, 4)
+        If VarType(sCIDV) = vbString Then
+            sCIDV = Replace(sCIDV, "=", "")
+            sCIDV = Replace(sCIDV, """", "")
+        End If
+        sCIDL = UBCID规制代码(sCIDV)
+        If sCIDL = "" Then GoTo 跳过
+        If 已处理.Exists(sCIDL) Then GoTo 跳过
+        已处理.Add sCIDL, True
+        ' 收集该股票所有交易
+        Dim 交易行() As Long
+        Dim 计数 As Long: 计数 = 0
+        For j = 2 To 总行
+            Dim jCIDL As String, jCIDV2 As Variant
+            jCIDV2 = ARRYM(j, 4)
+            If VarType(jCIDV2) = vbString Then
+                jCIDV2 = Replace(jCIDV2, "=", "")
+                jCIDV2 = Replace(jCIDV2, """", "")
+            End If
+            jCIDL = UBCID规制代码(jCIDV2)
+            If jCIDL = sCIDL Then
+                Dim j类别 As String
+                j类别 = ARRYM(j, 6)
+                If VarType(j类别) = vbString Then
+                    j类别 = Replace(j类别, "=", "")
+                    j类别 = Replace(j类别, """", "")
+                End If
+                If j类别 = "买入" Or j类别 = "卖出" Then
+                    计数 = 计数 + 1
+                    ReDim Preserve 交易行(1 To 计数)
+                    交易行(计数) = j
+                End If
+            End If
+        Next
+        If 计数 = 0 Then GoTo 跳过
+        ' 当前持仓
+        If 典集持仓.Exists(sCIDL) Then 持仓量 = 典集持仓(sCIDL) Else 持仓量 = 0
+        ' 反向递推（从最新到最旧）
+        Dim 剩余 As Double
+        剩余 = 持仓量
+        Dim 交易索引 As Long
+        Dim 拆分 As Boolean: 拆分 = False
+        Dim 不完整数量 As Double: 不完整数量 = 0
+        Dim 不完整行 As Long: 不完整行 = 0
+        For 交易索引 = 计数 To 1 Step -1
+            R = 交易行(交易索引)
+            Dim qty As Double
+            qty = Val(ARRYM(R, 8))
+            Dim 类别r As String
+            类别r = ARRYM(R, 6)
+            If VarType(类别r) = vbString Then
+                类别r = Replace(类别r, "=", "")
+                类别r = Replace(类别r, """", "")
+            End If
+            If 类别r = "买入" Then
+                If 剩余 >= qty Then
+                    剩余 = 剩余 - qty
+                Else
+                    拆分 = True
+                    不完整数量 = qty - 剩余
+                    不完整行 = R
+                    剩余 = 0
+                End If
+            Else
+                剩余 = 剩余 + qty
+            End If
+        Next
+        ' 输出该股票结果
+        Dim 名称 As String
+        名称 = Trim(ARRYM(交易行(1), 5))
+        WS出.Cells(行号, 1) = sCIDL
+        WS出.Cells(行号, 2) = 名称
+        WS出.Cells(行号, 3) = 持仓量
+        WS出.Cells(行号, 4) = "---"
+        WS出.Cells(行号, 5) = "---"
+        WS出.Cells(行号, 6) = "---"
+        WS出.Cells(行号, 7) = "---"
+        WS出.Cells(行号, 8) = "汇总"
+        WS出.Rows(行号).Font.Bold = True
+        行号 = 行号 + 1
+        总完整 = 总完整 + 1
+        ' 逐笔输出
+        For 交易索引 = 计数 To 1 Step -1
+            R = 交易行(交易索引)
+            qty = Val(ARRYM(R, 8))
+            类别r = ARRYM(R, 6)
+            If VarType(类别r) = vbString Then
+                类别r = Replace(类别r, "=", "")
+                类别r = Replace(类别r, """", "")
+            End If
+            If 拆分 And R = 不完整行 Then
+                WS出.Cells(行号, 3) = ""
+                WS出.Cells(行号, 4) = ARRYM(R, 1)
+                WS出.Cells(行号, 5) = 类别r
+                WS出.Cells(行号, 6) = qty - 不完整数量
+                WS出.Cells(行号, 7) = Val(ARRYM(R, 9)) * (qty - 不完整数量) / qty
+                WS出.Cells(行号, 8) = "完整"
+                WS出.Rows(行号).Interior.Color = 常色十绿
+                行号 = 行号 + 1
+                WS出.Cells(行号, 3) = ""
+                WS出.Cells(行号, 4) = ARRYM(R, 1)
+                WS出.Cells(行号, 5) = 类别r
+                WS出.Cells(行号, 6) = 不完整数量
+                WS出.Cells(行号, 7) = Val(ARRYM(R, 9)) * 不完整数量 / qty
+                WS出.Cells(行号, 8) = "不完整"
+                WS出.Rows(行号).Interior.Color = 常色十红
+                行号 = 行号 + 1
+                总不完整 = 总不完整 + 1
+            Else
+                WS出.Cells(行号, 3) = ""
+                WS出.Cells(行号, 4) = ARRYM(R, 1)
+                WS出.Cells(行号, 5) = 类别r
+                WS出.Cells(行号, 6) = qty
+                WS出.Cells(行号, 7) = Val(ARRYM(R, 9))
+                WS出.Cells(行号, 8) = "完整"
+                行号 = 行号 + 1
+            End If
+        Next
+        ' 剩余老仓
+        If 剩余 > 0 Then
+            WS出.Cells(行号, 3) = ""
+            WS出.Cells(行号, 4) = "---"
+            WS出.Cells(行号, 5) = "老仓"
+            WS出.Cells(行号, 6) = 剩余
+            WS出.Cells(行号, 7) = "---"
+            WS出.Cells(行号, 8) = "历史数据"
+            行号 = 行号 + 1
+        End If
+跳过:
+    Next
+    ' ⑤ 格式化
+    WS出.Columns("A:H").AutoFit
+    WS出.Cells(2, 1).Activate
+    Call PBASE格程工具_表冻结锁定(WS出, 基行:=1, 基列:=2)
+    MsgBox "持仓校准完成" & vbCrLf & _
+           "完整交易: " & 总完整 & " 只" & vbCrLf & _
+           "不完整交易: " & 总不完整 & " 笔", vbInformation, "持仓校准"
+    UTL宏工具_END
 End Sub

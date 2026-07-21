@@ -217,16 +217,16 @@ Function XL算展引擎正程( _
     '------------------------------------------------------------------------------------
     '设置：工簿
     '------------------------------------------------------------------------------------
-    Dim wb As Workbook
+    Dim WB As Workbook
     If 是否外簿 = False Then
-        Set wb = ThisWorkbook
+        Set WB = ThisWorkbook
     Else
-        Set wb = Workbooks.Add
+        Set WB = Workbooks.Add
     End If
 '========================================================================================
 '运行
 '========================================================================================
-    计数明细 = XL算展引擎子程跨期(wb, 被研代码, 被研期类, 被研算法, 基色底:=基色底)
+    计数明细 = XL算展引擎子程跨期(WB, 被研代码, 被研期类, 被研算法, 基色底:=基色底)
 '========================================================================================
 '工区：外部存档
 '========================================================================================
@@ -235,12 +235,12 @@ Function XL算展引擎正程( _
     '------------------------------------------------------------------------------------
     '进行保存
     '------------------------------------------------------------------------------------
-    If wb.Name <> ThisWorkbook.Name Then
-        MSG = MSG & vbCrLf & PBASE格程工具_表操保存外簿(wb, 工簿简称)
-        wb.Save
-        If 是否关闭 Then wb.Close False
+    If WB.Name <> ThisWorkbook.Name Then
+        MSG = MSG & vbCrLf & PBASE格程工具_表操保存外簿(WB, 工簿简称)
+        WB.Save
+        If 是否关闭 Then WB.Close False
     End If
-    Set wb = Nothing
+    Set WB = Nothing
 '========================================================================================
 '返回
 '========================================================================================
@@ -257,7 +257,7 @@ End Function
 '========================================================================================
 '========================================================================================
 Function XL算展引擎子程跨期( _
-          wb As Workbook _
+          WB As Workbook _
         , 被研代码 As String _
         , 被研期类 As String _
         , 被研算法 As String _
@@ -269,7 +269,7 @@ Function XL算展引擎子程跨期( _
     Dim 设定表名 As String
     设定表名 = "L" & 被研期类 & Right(被研代码, 6)
     Dim WSLLL As Worksheet
-    Call PBASE格程工具_表操工表新增(WSLLL, 设定表名, wb:=wb, 基色底:=基色底)
+    Call PBASE格程工具_表操工表新增(WSLLL, 设定表名, WB:=WB, 基色底:=基色底)
 '========================================================================================
 '步骤一：明细准备
 '增加复杂度：如果能读取CSV文件，就从CSV文件导入。否则从藏库进行导入
@@ -293,7 +293,7 @@ Function XL算展引擎子程跨期( _
 '步骤四：统算展
 '========================================================================================
     Dim WSANA As Worksheet
-    Call PBASE格程工具_表操工表新增(WSANA, "汇算展", wb:=wb, 基色底:=基色底)
+    Call PBASE格程工具_表操工表新增(WSANA, "汇算展", WB:=WB, 基色底:=基色底)
     Call XL算展统程跨期(WSANA, ARRLLL, 被研期类, 算法类型:=常算法类型为跨期, WSIN:=WSLLL)
     Set WSANA = Nothing
 '========================================================================================
@@ -1743,19 +1743,19 @@ Public Sub XL算展生成_单股(ByVal 被研代码 As String)
     Dim 计数 As Integer
     计数 = XL算展数程跨期(ARRLLL, 被研代码, , , 谕组, "T@乾坤", "W")
     If 计数 < 1 Then Exit Sub
-    Dim wb As Workbook
-    Set wb = Workbooks.Add
+    Dim WB As Workbook
+    Set WB = Workbooks.Add
     Dim WS As Worksheet
-    Set WS = wb.Sheets(1)
+    Set WS = WB.Sheets(1)
     WS.Name = "LD" & 被研代码
     计数 = XL算展格程跨期_通用生成(ARRLLL, WS, , , , 谕组)
     If 计数 > 0 Then
         Dim 路径 As String
         路径 = ThisWorkbook.Path & "\昭明算展\算展." & 被研代码 & ".xlsx"
         Application.DisplayAlerts = False
-        wb.SaveAs 路径, 51
+        WB.SaveAs 路径, 51
         Application.DisplayAlerts = True
     End If
-    wb.Close False
+    WB.Close False
 End Sub
 

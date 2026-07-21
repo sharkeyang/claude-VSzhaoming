@@ -319,7 +319,7 @@ Private Sub 时程后台加工_生成交易日工表()
     Else
         Set 花册簿 = WS交期.Parent
     End If
-    Call PBASE格程工具_表操工表新增(WS交期, 常花结期, wb:=花册簿, 基色底:=常色主黑)
+    Call PBASE格程工具_表操工表新增(WS交期, 常花结期, WB:=花册簿, 基色底:=常色主黑)
     With WS交期
         .Cells(1, 1) = "结日"
         For i = 1 To 典交易日.Count

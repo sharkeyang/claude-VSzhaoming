@@ -120,7 +120,7 @@ Function STBASE藏库引擎_更新主程( _
     Dim WS藏库 As Worksheet
     If 是否新建藏库 = True Then
         Set 藏库令 = Workbooks.Add
-        Call PBASE格程工具_表操工表新增(WS藏库, 指定期类, wb:=藏库令, 基色底:=常色主黑)
+        Call PBASE格程工具_表操工表新增(WS藏库, 指定期类, WB:=藏库令, 基色底:=常色主黑)
         Call PBASE格程工具_表操保存外簿(藏库令, "昭明藏库" & 指定期类, 全设基夹根)
         Set WS藏库 = Nothing
         Set 藏库令 = Nothing

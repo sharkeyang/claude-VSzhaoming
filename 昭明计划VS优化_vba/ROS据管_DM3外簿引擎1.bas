@@ -182,16 +182,16 @@ End Function
 '通用外簿引擎 — 切换前台窗口显示/隐藏
 '========================================================================================
 Sub STBASE外簿引擎_前台显隐(ByVal 簿名全径 As String)
-    Dim wb As Workbook
+    Dim WB As Workbook
     Dim 簿名 As String
     簿名 = Dir(簿名全径)
     If UTL判断工簿打开(簿名) Then
-        For Each wb In Workbooks
-            If wb.Name = 簿名 Then
-                wb.Windows(1).Visible = Not wb.Windows(1).Visible
+        For Each WB In Workbooks
+            If WB.Name = 簿名 Then
+                WB.Windows(1).Visible = Not WB.Windows(1).Visible
                 Exit For
             End If
-        Next wb
+        Next WB
     End If
 End Sub
 '========================================================================================
@@ -340,20 +340,20 @@ Sub STBASE外簿工具_外簿调程罗列()
     MSG = MSG & "──────────────────────" & vbCrLf
     ' ---- 前台实例 ----
     MSG = MSG & "[前台]" & vbCrLf
-    Dim wb As Workbook
+    Dim WB As Workbook
     Dim idx As Integer
     idx = 0
-    For Each wb In Workbooks
+    For Each WB In Workbooks
         idx = idx + 1
         Dim vis As String
-        If wb.Windows(1).Visible Then
+        If WB.Windows(1).Visible Then
             vis = "  [可见]"
         Else
             vis = "  [隐藏]"
         End If
-        MSG = MSG & "  " & idx & ". " & wb.Name & vis & vbCrLf
-        MSG = MSG & "     " & wb.FullName & vbCrLf
-    Next wb
+        MSG = MSG & "  " & idx & ". " & WB.Name & vis & vbCrLf
+        MSG = MSG & "     " & WB.FullName & vbCrLf
+    Next WB
     If idx = 0 Then MSG = MSG & "  (无)" & vbCrLf
     MSG = MSG & vbCrLf & "  共 " & idx & " 个" & vbCrLf
     MSG = MSG & "──────────────────────" & vbCrLf
@@ -368,9 +368,9 @@ Sub STBASE外簿工具_外簿调程罗列()
 
     Dim 已检全径 As Object
     Set 已检全径 = CreateObject("Scripting.Dictionary")
-    For Each wb In Workbooks
-        已检全径.Add wb.FullName, True
-    Next wb
+    For Each WB In Workbooks
+        已检全径.Add WB.FullName, True
+    Next WB
 
     On Error Resume Next
     Dim i As Integer
