@@ -812,29 +812,19 @@ Public Sub UGSOP_MENU_生成()
     '------------------------------------------------------------------------------------
     With 菜项池.Controls.Add(Type:=msoControlButton)
         .BeginGroup = True
-        .OnAction = "STCALL花册管理_重制花天P3调程导入仓宝福"
-        .Caption = "导入仓宝福"
-        .FaceId = 263  '481  '263 '42
+        .OnAction = "STCALL花册管理_重制花天P3调程导入华宝"
+        .Caption = "导入华宝持仓"
+        .FaceId = 263
     End With
     With 菜项池.Controls.Add(Type:=msoControlButton)
-        .OnAction = "STCALL花册管理_重制花天P3调程导入仓宝彦"
-        .Caption = "导入仓宝彦"
-        .FaceId = 263  '481  '263 '42
+        .OnAction = "STCALL花册管理_重制花天P3调程导入华宝周池"
+        .Caption = "导入华宝持仓 周池"
+        .FaceId = 263
     End With
     With 菜项池.Controls.Add(Type:=msoControlButton)
         .OnAction = "STBASE池管理_表导入调程由选择文件池今"
         .Caption = "导入索引池 今 sSCC"
         .FaceId = 271  '22 '42
-    End With
-    With 菜项池.Controls.Add(Type:=msoControlButton)
-        .OnAction = "STCALL花册管理_重制花天P3调程导入仓宝福周池"
-        .Caption = "导入仓宝福周池"
-        .FaceId = 263  '481  '263 '42
-    End With
-    With 菜项池.Controls.Add(Type:=msoControlButton)
-        .OnAction = "STCALL花册管理_重制花天P3调程导入仓宝彦周池"
-        .Caption = "导入仓宝彦周池"
-        .FaceId = 263  '481  '263 '42
     End With
     '------------------------------------------------------------------------------------
     '模块：统一操作 池

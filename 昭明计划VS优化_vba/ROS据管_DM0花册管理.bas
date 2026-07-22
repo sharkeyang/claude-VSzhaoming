@@ -86,40 +86,24 @@ End Sub
 '========================================================================================
 '导入华宝持仓
 '========================================================================================
-Sub STCALL花册管理_重制花天P3调程导入仓宝福()
-    Dim 计数导入 As Integer
-    计数导入 = STCALL花册管理_重制花天P3正程导入华宝(位列花天仓宝福, 是否更新仓周:=False)
+Sub STCALL花册管理_重制花天P3调程导入华宝()
+    Dim 计数导入 As Integer, 账户 As String
+    计数导入 = STCALL花册管理_重制花天P3正程导入华宝(是否更新仓周:=False, 账户:=账户)
     If 计数导入 > 0 Then
         MSG = MSG & STCALL花册管理_重制花天P9正程设置信息(是否更新市板:=True, 是否更新在池:=True, 是否更新停牌:=True, 是否更新代称:=False)
-        Call IQQQ乾坤分布调程花天sSCC_仓宝福
-        MsgBox MSG, vbOKOnly, "花册导入仓宝福"
+        If 账户 = 常仓名宝福 Then Call IQQQ乾坤分布调程花天sSCC_仓宝福
+        If 账户 = 常仓名宝彦 Then Call IQQQ乾坤分布调程花天sSCC_仓宝彦
+        MsgBox MSG, vbOKOnly, "花册导入华宝持仓"
     End If
 End Sub
-Sub STCALL花册管理_重制花天P3调程导入仓宝福周池()
-    Dim 计数导入 As Integer
-    计数导入 = STCALL花册管理_重制花天P3正程导入华宝(位列花天仓宝福, 是否更新仓周:=True)
+Sub STCALL花册管理_重制花天P3调程导入华宝周池()
+    Dim 计数导入 As Integer, 账户 As String
+    计数导入 = STCALL花册管理_重制花天P3正程导入华宝(是否更新仓周:=True, 账户:=账户)
     If 计数导入 > 0 Then
         MSG = MSG & STCALL花册管理_重制花天P9正程设置信息(是否更新市板:=True, 是否更新在池:=True, 是否更新停牌:=True, 是否更新代称:=False)
-        Call IQQQ乾坤分布调程花天sSCC_仓宝福
-        MsgBox MSG, vbOKOnly, "花册导入仓宝福"
-    End If
-End Sub
-Sub STCALL花册管理_重制花天P3调程导入仓宝彦()
-    Dim 计数导入 As Integer
-    计数导入 = STCALL花册管理_重制花天P3正程导入华宝(位列花天仓宝彦, 是否更新仓周:=False)
-    If 计数导入 > 0 Then
-        MSG = MSG & STCALL花册管理_重制花天P9正程设置信息(是否更新市板:=True, 是否更新在池:=True, 是否更新停牌:=True, 是否更新代称:=False)
-        Call IQQQ乾坤分布调程花天sSCC_仓宝彦
-        MsgBox MSG, vbOKOnly, "花册导入持仓宝彦"
-    End If
-End Sub
-Sub STCALL花册管理_重制花天P3调程导入仓宝彦周池()
-    Dim 计数导入 As Integer
-    计数导入 = STCALL花册管理_重制花天P3正程导入华宝(位列花天仓宝彦, 是否更新仓周:=True)
-    If 计数导入 > 0 Then
-        MSG = MSG & STCALL花册管理_重制花天P9正程设置信息(是否更新市板:=True, 是否更新在池:=True, 是否更新停牌:=True, 是否更新代称:=False)
-        Call IQQQ乾坤分布调程花天sSCC_仓宝彦
-        MsgBox MSG, vbOKOnly, "花册导入持仓宝彦"
+        If 账户 = 常仓名宝福 Then Call IQQQ乾坤分布调程花天sSCC_仓宝福
+        If 账户 = 常仓名宝彦 Then Call IQQQ乾坤分布调程花天sSCC_仓宝彦
+        MsgBox MSG, vbOKOnly, "花册导入华宝持仓"
     End If
 End Sub
 '========================================================================================
@@ -346,7 +330,7 @@ End Function
 '功能：1.导入华宝持仓
 '========================================================================================
 '========================================================================================
-Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional 指定列仓 As Integer = 位列花天仓宝福, Optional 是否更新仓周 As Boolean = False) As Integer
+Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional 是否更新仓周 As Boolean = False, Optional ByRef 账户 As String = "") As Integer
 '========================================================================================
 '注2025061：用于区分是否属于周仓：用于排序。临时仓位排在前面，周仓位排在后面。
 '在每周结算日导入周仓，其余交易日导入日仓。在Z陈列时，将日仓放在前面，将周仓放在后面。
@@ -354,12 +338,7 @@ Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional 指
     '====================================================================================
     '设置：根据仓列确定池
     '====================================================================================
-    Dim 值常池名  As String
-    If 指定列仓 = 位列花天仓宝福 Then
-        值常池名 = 常仓名宝福
-    ElseIf 指定列仓 = 位列花天仓宝彦 Then
-        值常池名 = 常仓名宝彦
-    End If
+    Dim 值常池名 As String, 指定列仓 As Integer
     '====================================================================================
     '设置：导入验证：周仓只在周五-周日可以导入，其他时间必须人工确认。
     '====================================================================================
@@ -388,13 +367,13 @@ Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional 指
 '========================================================================================
 '导入数组
 '========================================================================================
-    Dim 所在区域 As Range
     Dim 位列TS代码 As Integer
     Dim 位列TS代称 As Integer
     Dim 位列TS摊薄成本 As Integer
     Dim 位列TS持仓数量 As Integer
     Dim 位列TS持仓金额 As Integer
     Dim 位列TS交易所名 As Integer
+    Dim 位列TS股东代码 As Integer
     '-------------------------------
     Application.Calculation = xlCalculationAutomatic
     '注20260610：必须设置这个选项，否则将导致文件导入不正确。
@@ -405,6 +384,8 @@ Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional 指
     '-------------------------------
     Dim WBTS As Workbook
     Set WBTS = GetObject(FILEOPEN)
+    ' 自动识别账户
+    Dim 所在区域 As Range
     Dim ARRTS  As Variant
     With WBTS.ActiveSheet
             Set 所在区域 = .Columns(1).Find(What:="证券代码").CurrentRegion
@@ -415,8 +396,18 @@ Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional 指
             位列TS摊薄成本 = 所在区域.Rows(1).Find(What:="摊薄成本").Column
             位列TS持仓金额 = 所在区域.Rows(1).Find(What:="最新市值").Column
             位列TS交易所名 = 所在区域.Rows(1).Find(What:="交易所名称").Column
+            位列TS股东代码 = 所在区域.Rows(1).Find(What:="股东代码").Column
             Set 所在区域 = Nothing
     End With
+    '-------------------------------
+    Dim 值股东代码 As String
+    值股东代码 = Trim(ARRTS(2, 位列TS股东代码))
+    Select Case 值股东代码
+        Case 常股代宝彦_上证, 常股代宝彦_深证: 指定列仓 = 位列花天仓宝彦: 值常池名 = 常仓名宝彦: 账户 = 常仓名宝彦
+        Case 常股代宝福_上证, 常股代宝福_深证: 指定列仓 = 位列花天仓宝福: 值常池名 = 常仓名宝福: 账户 = 常仓名宝福
+        Case Else: MsgBox "无法识别股东代码：" & 值股东代码: Exit Function
+    End Select
+    '-------------------------------
     WBTS.Close False
     Set WBTS = Nothing
 '========================================================================================
