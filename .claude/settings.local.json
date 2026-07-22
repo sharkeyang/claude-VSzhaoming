@@ -45,7 +45,10 @@
       "Bash(grep -oP '.{0,100}长空.{0,100}' \"C:/Users/SharkWork/.claude/projects/d---VSwork-VS----VBA--/28ca5888-f44b-4e8a-b0ba-0b4fba247426.jsonl\")",
       "Bash(python fix_pigop.py)",
       "Bash(python fix_c_doc.py)",
-      "Bash(rm fix_c_doc.py)"
+      "Bash(rm fix_c_doc.py)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Write(//c/Users/SharkWork/.claude/**)"
     ]
   }
 }
