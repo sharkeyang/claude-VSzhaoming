@@ -34,10 +34,11 @@ Public 割单数组() As Variant
 Public 割单行数 As Long
 '------------------------------------------------------------------------------------
 Private Const 时段早盘 = "早盘9:30-10:00"
-Private Const 时段上午中 = "上午中段10:00-11:30"
+Private Const 时段上午中 = "上午中段10:00-11:00"
 Private Const 时段午前收盘 = "午前收盘11:00-11:30"
 Private Const 时段午盘 = "午盘13:00-14:00"
-Private Const 时段尾盘 = "尾盘14:00-15:00"
+Private Const 时段尾盘前 = "尾盘前段14:00-14:29"
+Private Const 时段尾盘后 = "尾盘后段14:30-15:00"
 Private Const 时段其他 = "其他时段"
 '------------------------------------------------------------------------------------
 '仓位分段标签（带数字前缀保序）
@@ -777,15 +778,17 @@ Sub STCALL割册管理_XLS交割单G3解析()
     Dim ARR成本 As Variant
     Dim ARR盈亏 As Variant
     Dim ARR_T0 As Variant
+    Dim ARR随手 As Variant
 
     后台辅程割析_择时分析 ARR买卖, ARR择时
     后台辅程割析_仓位分析 ARR买卖, ARR仓位
     后台辅程割析_成本分析 ARR买卖, ARR成本
     后台辅程割析_盈亏分析 ARR买卖, ARR盈亏
     后台辅程割析_T加0分析 ARR买卖, ARR_T0
+    后台辅程割析_随手单分析 ARR买卖, ARR随手
 '========================================================================================
     '输出到表
-    后台辅程割析_输出 WS割, ARR买卖, ARR择时, ARR仓位, ARR成本, ARR盈亏, ARR_T0
+    后台辅程割析_输出 WS割, ARR买卖, ARR择时, ARR仓位, ARR成本, ARR盈亏, ARR_T0, ARR随手
 '========================================================================================
     '格式化
     后台辅程割析_格式化 WS割
@@ -813,44 +816,68 @@ Private Sub 后台辅程割析_择时分析(ByRef ARR As Variant, ByRef ARRTO As
     Dim 计数 As Long
     计数 = UBound(ARR, 1)
 
-    '初始化各时段统计
-    Dim 时段 As Variant
+    '7个时段: 早盘 / 上午中 / 午前 / 午盘 / 尾盘前 / 尾盘后(收盘前半小时) / 其他
+    Const 时段数 = 7
     Dim 时段列表 As Variant
-    时段列表 = Array(时段早盘, 时段上午中, 时段午前收盘, 时段午盘, 时段尾盘, 时段其他)
+    时段列表 = Array(时段早盘, 时段上午中, 时段午前收盘, 时段午盘, 时段尾盘前, 时段尾盘后, 时段其他)
 
-    Dim 段计数(0 To 5) As Long
-    Dim 段买笔(0 To 5) As Long
-    Dim 段卖笔(0 To 5) As Long
-    Dim 段买额(0 To 5) As Double
-    Dim 段卖额(0 To 5) As Double
+    Dim 段计数(0 To 时段数 - 1) As Long
+    Dim 段买笔(0 To 时段数 - 1) As Long
+    Dim 段卖笔(0 To 时段数 - 1) As Long
+    Dim 段买额(0 To 时段数 - 1) As Double
+    Dim 段卖额(0 To 时段数 - 1) As Double
 
+    '分钟级统计（最活跃分钟点）
+    Dim 分钟典 As New Dictionary
+    Dim 分钟买典 As New Dictionary
+    Dim 分钟卖典 As New Dictionary
     Dim i As Long
+    Dim idx As Long
     For i = 1 To 计数
         Dim s时间 As String
         s时间 = Trim(ARR(i, 位列割成交时间))
-        Dim 小时 As Long
+        Dim 小时 As Long, 分钟 As Long
         小时 = Val(Left(s时间, 2))
+        分钟 = Val(Mid(s时间, 4, 2))
+        Dim 时间分 As Long
+        时间分 = 小时 * 60 + 分钟
 
-        Dim idx As Long
-        If 小时 = 9 Then
-            idx = 0  '早盘
-        ElseIf 小时 = 10 Then
-            idx = 1  '上午中
-        ElseIf 小时 = 11 Then
-            idx = 2  '午前
-        ElseIf 小时 = 13 Then
-            idx = 3  '午盘
-        ElseIf 小时 = 14 Or 小时 = 15 Then
-            idx = 4  '尾盘（含15:00集合竞价）
+        '累计分钟
+        Dim 分钟键 As String
+        分钟键 = Format(小时, "00") & ":" & Format(分钟, "00")
+        If 分钟典.exists(分钟键) Then
+            分钟典(分钟键) = 分钟典(分钟键) + 1
         Else
-            idx = 5  '其他
+            分钟典.Add 分钟键, 1
+        End If
+        Dim 类别 As String
+        类别 = Trim(ARR(i, 位列割委托类别))
+        If 类别 = "买入" Then
+            If 分钟买典.exists(分钟键) Then 分钟买典(分钟键) = 分钟买典(分钟键) + 1 Else 分钟买典.Add 分钟键, 1
+        Else
+            If 分钟卖典.exists(分钟键) Then 分钟卖典(分钟键) = 分钟卖典(分钟键) + 1 Else 分钟卖典.Add 分钟键, 1
+        End If
+
+        '确定时段
+        If 时间分 >= 570 And 时间分 < 600 Then        '9:30-10:00
+            idx = 0
+        ElseIf 时间分 >= 600 And 时间分 < 660 Then    '10:00-11:00
+            idx = 1
+        ElseIf 时间分 >= 660 And 时间分 < 690 Then    '11:00-11:30
+            idx = 2
+        ElseIf 时间分 >= 780 And 时间分 < 840 Then    '13:00-14:00
+            idx = 3
+        ElseIf 时间分 >= 840 And 时间分 < 870 Then    '14:00-14:29
+            idx = 4
+        ElseIf 时间分 >= 870 And 时间分 <= 900 Then   '14:30-15:00
+            idx = 5
+        Else
+            idx = 6
         End If
 
         段计数(idx) = 段计数(idx) + 1
         Dim 金额 As Double
         金额 = Val(ARR(i, 位列割成交金额))
-        Dim 类别 As String
-        类别 = Trim(ARR(i, 位列割委托类别))
 
         If 类别 = "买入" Then
             段买笔(idx) = 段买笔(idx) + 1
@@ -861,19 +888,19 @@ Private Sub 后台辅程割析_择时分析(ByRef ARR As Variant, ByRef ARRTO As
         End If
     Next
 
-    '输出数组：9列（时段/总笔数/占比/买笔/买额/卖笔/卖额/净额/方向）
-    ReDim ARRTO(1 To 7, 1 To 9)
-    ARRTO(1, 1) = "时段": ARRTO(1, 2) = "总笔数": ARRTO(1, 3) = "占比"
+    '输出：时段表
+    ReDim ARRTO(1 To 时段数 + 10, 1 To 12)
+    ARRTO(1, 1) = "时段": ARRTO(1, 2) = "笔数": ARRTO(1, 3) = "占比"
     ARRTO(1, 4) = "买入笔数": ARRTO(1, 5) = "买入金额"
     ARRTO(1, 6) = "卖出笔数": ARRTO(1, 7) = "卖出金额"
     ARRTO(1, 8) = "买卖净额": ARRTO(1, 9) = "方向"
 
-    For idx = 0 To 5
+    For idx = 0 To 时段数 - 1
         Dim 行 As Long
         行 = idx + 2
         ARRTO(行, 1) = 时段列表(idx)
         ARRTO(行, 2) = 段计数(idx)
-        ARRTO(行, 3) = 段计数(idx) / 计数
+        ARRTO(行, 3) = Format(段计数(idx) / 计数, "0.000%")
         ARRTO(行, 4) = 段买笔(idx)
         ARRTO(行, 5) = 段买额(idx)
         ARRTO(行, 6) = 段卖笔(idx)
@@ -886,6 +913,48 @@ Private Sub 后台辅程割析_择时分析(ByRef ARR As Variant, ByRef ARRTO As
         Else
             ARRTO(行, 9) = "均衡"
         End If
+    Next
+
+    '输出：最活跃分钟点 TOP5
+    Dim 分钟行 As Long
+    分钟行 = 时段数 + 3
+    ARRTO(分钟行, 1) = "最活跃分钟点 TOP5"
+    ARRTO(分钟行 + 1, 1) = "分钟": ARRTO(分钟行 + 1, 2) = "笔数"
+    ARRTO(分钟行 + 1, 3) = "占总比": ARRTO(分钟行 + 1, 4) = "买入": ARRTO(分钟行 + 1, 5) = "占买入"
+    ARRTO(分钟行 + 1, 6) = "卖出": ARRTO(分钟行 + 1, 7) = "占卖出"
+    '排序找TOP5
+    Dim 分钟列表 As Variant
+    分钟列表 = 分钟典.keys
+    Dim j As Long, k As Long
+    For j = 0 To 分钟典.Count - 2
+        For k = j + 1 To 分钟典.Count - 1
+            If 分钟典(分钟列表(j)) < 分钟典(分钟列表(k)) Then
+                Dim tmpK As String
+                tmpK = 分钟列表(j)
+                分钟列表(j) = 分钟列表(k)
+                分钟列表(k) = tmpK
+            End If
+        Next
+    Next
+    Dim 总买笔 As Long, 总卖笔 As Long
+    总买笔 = 0: 总卖笔 = 0
+    For idx = 0 To 时段数 - 1
+        总买笔 = 总买笔 + 段买笔(idx)
+        总卖笔 = 总卖笔 + 段卖笔(idx)
+    Next
+    For j = 0 To Application.Min(分钟典.Count - 1, 4)
+        Dim 分钟键 As String
+        分钟键 = 分钟列表(j)
+        ARRTO(分钟行 + 2 + j, 1) = 分钟键
+        ARRTO(分钟行 + 2 + j, 2) = 分钟典(分钟键)
+        ARRTO(分钟行 + 2 + j, 3) = Format(分钟典(分钟键) / 计数, "0.000%")
+        Dim 买笔 As Long, 卖笔 As Long
+        If 分钟买典.exists(分钟键) Then 买笔 = 分钟买典(分钟键) Else 买笔 = 0
+        If 分钟卖典.exists(分钟键) Then 卖笔 = 分钟卖典(分钟键) Else 卖笔 = 0
+        ARRTO(分钟行 + 2 + j, 4) = 买笔
+        ARRTO(分钟行 + 2 + j, 5) = IIf(总买笔 > 0, Format(买笔 / 总买笔, "0.000%"), "")
+        ARRTO(分钟行 + 2 + j, 6) = 卖笔
+        ARRTO(分钟行 + 2 + j, 7) = IIf(总卖笔 > 0, Format(卖笔 / 总卖笔, "0.000%"), "")
     Next
 End Sub
 '========================================================================================
@@ -906,11 +975,10 @@ Private Sub 后台辅程割析_仓位分析(ByRef ARR As Variant, ByRef ARRTO As
     Dim 位计数(0 To 5) As Long
     Dim 位金额(0 To 5) As Double
 
-    Dim i As Long
+    Dim i As Long, idx As Long
     For i = 1 To 计数
         Dim 金额 As Double
         金额 = Val(ARR(i, 位列割成交金额))
-        Dim idx As Long
         For idx = 0 To 5
             If 金额 <= 位上限(idx) Then
                 位计数(idx) = 位计数(idx) + 1
@@ -921,7 +989,7 @@ Private Sub 后台辅程割析_仓位分析(ByRef ARR As Variant, ByRef ARRTO As
     Next
 
     '输出仓位分段：6行×5列
-    ReDim ARRTO(1 To 8, 1 To 5)
+    ReDim ARRTO(1 To 26, 1 To 6)
     ARRTO(1, 1) = "仓位段": ARRTO(1, 2) = "笔数": ARRTO(1, 3) = "笔数占比"
     ARRTO(1, 4) = "累计金额": ARRTO(1, 5) = "金额占比"
 
@@ -934,16 +1002,108 @@ Private Sub 后台辅程割析_仓位分析(ByRef ARR As Variant, ByRef ARRTO As
     For idx = 0 To 5
         Dim 行 As Long
         行 = idx + 2
-        ARRTO(行, 1) = Mid(位标签(idx), 2)  '去掉排序前缀数字
+        ARRTO(行, 1) = Mid(位标签(idx), 2)
         ARRTO(行, 2) = 位计数(idx)
-        ARRTO(行, 3) = 位计数(idx) / 计数
+        ARRTO(行, 3) = Format(位计数(idx) / 计数, "0.000%")
         ARRTO(行, 4) = 位金额(idx)
-        If 总金额 > 0 Then ARRTO(行, 5) = 位金额(idx) / 总金额
+        If 总金额 > 0 Then ARRTO(行, 5) = Format(位金额(idx) / 总金额, "0.000%")
     Next
 
-    '第8行：排序确认
     ARRTO(7, 1) = "交易笔数合计": ARRTO(7, 2) = 计数
     ARRTO(8, 1) = "总成交金额": ARRTO(8, 4) = 总金额
+
+    '--- 集中度分析 ---
+    Dim 金额列表() As Double
+    ReDim 金额列表(1 To 计数)
+    For i = 1 To 计数
+        金额列表(i) = Val(ARR(i, 位列割成交金额))
+    Next
+    Dim j As Long
+    For i = 1 To 计数 - 1
+        For j = i + 1 To 计数
+            If 金额列表(i) < 金额列表(j) Then
+                Dim tmp As Double
+                tmp = 金额列表(i)
+                金额列表(i) = 金额列表(j)
+                金额列表(j) = tmp
+            End If
+        Next
+    Next
+    Dim 前1笔 As Long: 前1笔 = Int(计数 * 0.01 + 0.5)
+    Dim 前5笔 As Long: 前5笔 = Int(计数 * 0.05 + 0.5)
+    Dim 前20笔 As Long: 前20笔 = Int(计数 * 0.2 + 0.5)
+    If 前1笔 < 1 Then 前1笔 = 1
+    If 前5笔 < 1 Then 前5笔 = 1
+    If 前20笔 < 1 Then 前20笔 = 1
+    Dim 前1总额 As Double: 前1总额 = 0
+    Dim 前5总额 As Double: 前5总额 = 0
+    Dim 前20总额 As Double: 前20总额 = 0
+    For i = 1 To 计数
+        If i <= 前1笔 Then 前1总额 = 前1总额 + 金额列表(i)
+        If i <= 前5笔 Then 前5总额 = 前5总额 + 金额列表(i)
+        If i <= 前20笔 Then 前20总额 = 前20总额 + 金额列表(i)
+    Next
+    ARRTO(9, 1) = "集中度分析"
+    ARRTO(10, 1) = "前1%交易": ARRTO(10, 2) = 前1笔 & "笔"
+    ARRTO(10, 4) = "占总额": ARRTO(10, 5) = Format(前1总额 / 总金额, "0.000%")
+    ARRTO(11, 1) = "前5%交易": ARRTO(11, 2) = 前5笔 & "笔"
+    ARRTO(11, 4) = "占总额": ARRTO(11, 5) = Format(前5总额 / 总金额, "0.000%")
+    ARRTO(12, 1) = "前20%交易": ARRTO(12, 2) = 前20笔 & "笔"
+    ARRTO(12, 4) = "占总额": ARRTO(12, 5) = Format(前20总额 / 总金额, "0.000%")
+
+    '--- 两账号对比 ---
+    Dim 账1笔 As Long: 账1笔 = 0
+    Dim 账2笔 As Long: 账2笔 = 0
+    Dim 账1额 As Double: 账1额 = 0
+    Dim 账2额 As Double: 账2额 = 0
+    Dim 账1金额列表() As Double
+    Dim 账2金额列表() As Double
+    ReDim 账1金额列表(1 To 计数)
+    ReDim 账2金额列表(1 To 计数)
+    Dim 账1数 As Long: 账1数 = 0
+    Dim 账2数 As Long: 账2数 = 0
+    Dim 账名 As String
+    For i = 1 To 计数
+        账名 = STCALL割单工具_识别账户(Trim(ARR(i, 位列割证券CIDL)))
+        金额 = Val(ARR(i, 位列割成交金额))
+        If 账名 = 常仓名宝彦 Then
+            账1笔 = 账1笔 + 1: 账1额 = 账1额 + 金额
+            账1数 = 账1数 + 1: 账1金额列表(账1数) = 金额
+        ElseIf 账名 = 常仓名宝福 Then
+            账2笔 = 账2笔 + 1: 账2额 = 账2额 + 金额
+            账2数 = 账2数 + 1: 账2金额列表(账2数) = 金额
+        End If
+    Next
+    '排序找中位数
+    For i = 1 To 账1数 - 1
+        For j = i + 1 To 账1数
+            If 账1金额列表(i) > 账1金额列表(j) Then
+                tmp = 账1金额列表(i)
+                账1金额列表(i) = 账1金额列表(j)
+                账1金额列表(j) = tmp
+            End If
+        Next
+    Next
+    For i = 1 To 账2数 - 1
+        For j = i + 1 To 账2数
+            If 账2金额列表(i) > 账2金额列表(j) Then
+                tmp = 账2金额列表(i)
+                账2金额列表(i) = 账2金额列表(j)
+                账2金额列表(j) = tmp
+            End If
+        Next
+    Next
+    ARRTO(13, 1) = "两账号对比"
+    ARRTO(14, 1) = "账号": ARRTO(14, 2) = "笔数": ARRTO(14, 3) = "总金额"
+    ARRTO(14, 4) = "均价": ARRTO(14, 5) = "中位数"
+    ARRTO(15, 1) = 常仓名宝彦: ARRTO(15, 2) = 账1笔
+    ARRTO(15, 3) = Round(账1额, 0)
+    If 账1笔 > 0 Then ARRTO(15, 4) = Round(账1额 / 账1笔, 0) Else ARRTO(15, 4) = 0
+    ARRTO(15, 5) = IIf(账1数 > 0, 账1金额列表(账1数 \ 2 + 1), 0)
+    ARRTO(16, 1) = 常仓名宝福: ARRTO(16, 2) = 账2笔
+    ARRTO(16, 3) = Round(账2额, 0)
+    If 账2笔 > 0 Then ARRTO(16, 4) = Round(账2额 / 账2笔, 0) Else ARRTO(16, 4) = 0
+    ARRTO(16, 5) = IIf(账2数 > 0, 账2金额列表(账2数 \ 2 + 1), 0)
 End Sub
 '========================================================================================
 '========================================================================================
@@ -961,23 +1121,64 @@ Private Sub 后台辅程割析_成本分析(ByRef ARR As Variant, ByRef ARRTO As
     Dim 有效 As Long
     有效 = 0
 
+    'ETF vs 个股统计
+    Dim ETF佣金 As Double, ETF成交 As Double
+    Dim 个股佣金 As Double, 个股成交 As Double
+    Dim ETF笔数 As Long, 个股笔数 As Long
+    ETF成交 = 0: ETF佣金 = 0: ETF笔数 = 0
+    个股成交 = 0: 个股佣金 = 0: 个股笔数 = 0
+
+    '分账号佣金率
+    Dim 账1佣金 As Double, 账1成交 As Double, 账1笔 As Long
+    Dim 账2佣金 As Double, 账2成交 As Double, 账2笔 As Long
+    账1佣金 = 0: 账1成交 = 0: 账1笔 = 0
+    账2佣金 = 0: 账2成交 = 0: 账2笔 = 0
+
+    '卖出印花税
+    Dim 卖印花税 As Double, 卖成交 As Double
+    卖印花税 = 0: 卖成交 = 0
+
     Dim 总佣金 As Double, 总印花税 As Double, 总过户费 As Double, 总成交 As Double
+    Dim 总其他费 As Double: 总其他费 = 0
     Dim i As Long
     For i = 1 To 计数
         Dim 佣金 As Double, 成交 As Double
+        Dim 名称 As String, 类别 As String
         佣金 = Val(ARR(i, 位列割佣金))
         成交 = Val(ARR(i, 位列割成交金额))
+        名称 = Trim(ARR(i, 位列割证券名称))
+        类别 = Trim(ARR(i, 位列割委托类别))
         总佣金 = 总佣金 + 佣金
         总印花税 = 总印花税 + Val(ARR(i, 位列割印花税))
         总过户费 = 总过户费 + Val(ARR(i, 位列割过户费))
+        总其他费 = 总其他费 + Val(ARR(i, 位列割其他费))
         总成交 = 总成交 + 成交
+        'ETF判断
+        If InStr(名称, "ETF") > 0 Or InStr(名称, "基金") > 0 Or InStr(名称, "LOF") > 0 Then
+            ETF成交 = ETF成交 + 成交: ETF佣金 = ETF佣金 + 佣金: ETF笔数 = ETF笔数 + 1
+        Else
+            个股成交 = 个股成交 + 成交: 个股佣金 = 个股佣金 + 佣金: 个股笔数 = 个股笔数 + 1
+        End If
+        '分账号
+        Dim 账名 As String
+        账名 = STCALL割单工具_识别账户(Trim(ARR(i, 位列割证券CIDL)))
+        If 账名 = 常仓名宝彦 Then
+            账1佣金 = 账1佣金 + 佣金: 账1成交 = 账1成交 + 成交: 账1笔 = 账1笔 + 1
+        ElseIf 账名 = 常仓名宝福 Then
+            账2佣金 = 账2佣金 + 佣金: 账2成交 = 账2成交 + 成交: 账2笔 = 账2笔 + 1
+        End If
+        '卖出印花税
+        If 类别 = "卖出" Then
+            卖印花税 = 卖印花税 + Val(ARR(i, 位列割印花税))
+            卖成交 = 卖成交 + 成交
+        End If
         If 成交 > 0 And 佣金 > 0 Then
             有效 = 有效 + 1
-            佣金率集合(有效) = 佣金 / 成交 * 10000  '万分比
+            佣金率集合(有效) = 佣金 / 成交 * 10000
         End If
     Next
 
-    ReDim ARRTO(1 To 12, 1 To 4)
+    ReDim ARRTO(1 To 24, 1 To 4)
     Dim 行号 As Long
     行号 = 1
 
@@ -987,15 +1188,12 @@ Private Sub 后台辅程割析_成本分析(ByRef ARR As Variant, ByRef ARRTO As
     ARRTO(行号, 1) = "有效样本数": ARRTO(行号, 2) = 有效
 
     If 有效 > 0 Then
-        '均值
         Dim 总和 As Double
         总和 = 0
         For i = 1 To 有效
             总和 = 总和 + 佣金率集合(i)
         Next
         行号 = 3: ARRTO(行号, 1) = "平均佣金率(万分)": ARRTO(行号, 2) = 总和 / 有效
-
-        '中位
         Dim j As Long, k As Long
         For i = 1 To 有效 - 1
             For j = i + 1 To 有效
@@ -1010,8 +1208,6 @@ Private Sub 后台辅程割析_成本分析(ByRef ARR As Variant, ByRef ARRTO As
         行号 = 4: ARRTO(行号, 1) = "中位佣金率(万分)": ARRTO(行号, 2) = 佣金率集合(有效 \ 2 + 1)
         行号 = 5: ARRTO(行号, 1) = "最低佣金率(万分)": ARRTO(行号, 2) = 佣金率集合(1)
         行号 = 6: ARRTO(行号, 1) = "最高佣金率(万分)": ARRTO(行号, 2) = 佣金率集合(有效)
-
-        'P5/P95
         Dim p5 As Long, p95 As Long
         p5 = Int(有效 * 0.05 + 0.5): If p5 < 1 Then p5 = 1
         p95 = Int(有效 * 0.95 + 0.5): If p95 > 有效 Then p95 = 有效
@@ -1019,11 +1215,44 @@ Private Sub 后台辅程割析_成本分析(ByRef ARR As Variant, ByRef ARRTO As
         行号 = 8: ARRTO(行号, 1) = "P95(万分)": ARRTO(行号, 2) = 佣金率集合(p95)
     End If
 
+    '--- 分账号佣金率 ---
+    行号 = 10: ARRTO(行号, 1) = "分账号佣金率"
+    行号 = 11: ARRTO(行号, 1) = "账号": ARRTO(行号, 2) = "笔数": ARRTO(行号, 3) = "佣金率(万分)"
+    行号 = 12: ARRTO(行号, 1) = 常仓名宝彦: ARRTO(行号, 2) = 账1笔
+    If 账1成交 > 0 Then ARRTO(行号, 3) = Round(账1佣金 / 账1成交 * 10000, 2) Else ARRTO(行号, 3) = 0
+    行号 = 13: ARRTO(行号, 1) = 常仓名宝福: ARRTO(行号, 2) = 账2笔
+    If 账2成交 > 0 Then ARRTO(行号, 3) = Round(账2佣金 / 账2成交 * 10000, 2) Else ARRTO(行号, 3) = 0
+
+    '--- ETF vs 个股佣金对比 ---
+    行号 = 15: ARRTO(行号, 1) = "类别": ARRTO(行号, 2) = "笔数": ARRTO(行号, 3) = "成交额": ARRTO(行号, 4) = "佣金率(万分)"
+    行号 = 16: ARRTO(行号, 1) = "个股": ARRTO(行号, 2) = 个股笔数
+    ARRTO(行号, 3) = 个股成交
+    If 个股成交 > 0 Then ARRTO(行号, 4) = Round(个股佣金 / 个股成交 * 10000, 2) Else ARRTO(行号, 4) = 0
+    行号 = 17: ARRTO(行号, 1) = "ETF/基金": ARRTO(行号, 2) = ETF笔数
+    ARRTO(行号, 3) = ETF成交
+    If ETF成交 > 0 Then ARRTO(行号, 4) = Round(ETF佣金 / ETF成交 * 10000, 2) Else ARRTO(行号, 4) = 0
+    If ETF成交 > 0 And ETF佣金 > 0 Then
+        行号 = 18: ARRTO(行号, 1) = "!ETF有佣金"
+        ARRTO(行号, 2) = "ETF成交" & Round(ETF成交) & "元, 佣金" & Round(ETF佣金, 2) & "元"
+    ElseIf ETF成交 > 0 And ETF佣金 = 0 Then
+        行号 = 18: ARRTO(行号, 1) = "OKETF免佣金"
+        ARRTO(行号, 2) = "ETF成交" & Round(ETF成交) & "元, 佣金0元"
+    End If
+
     '--- 费用结构 ---
-    行号 = 10: ARRTO(行号, 1) = "费用项目": ARRTO(行号, 2) = "金额": ARRTO(行号, 3) = "费率"
-    行号 = 11: ARRTO(行号, 1) = "总成交金额": ARRTO(行号, 2) = 总成交
-    行号 = 12: ARRTO(行号, 1) = "佣金总计": ARRTO(行号, 2) = 总佣金
-    If 总成交 > 0 Then ARRTO(行号, 3) = 总佣金 / 总成交 * 100
+    Dim 总费用 As Double
+    总费用 = 总佣金 + 总印花税 + 总过户费 + 总其他费
+    行号 = 20: ARRTO(行号, 1) = "费用项目": ARRTO(行号, 2) = "金额": ARRTO(行号, 3) = "费率": ARRTO(行号, 4) = "每万元"
+    行号 = 21: ARRTO(行号, 1) = "总成交金额": ARRTO(行号, 2) = 总成交
+    行号 = 22: ARRTO(行号, 1) = "佣金": ARRTO(行号, 2) = Round(总佣金, 2)
+    If 总成交 > 0 Then ARRTO(行号, 3) = Format(总佣金 / 总成交, "0.000%")
+    ARRTO(行号, 4) = Round(总佣金 / 总成交 * 10000, 2)
+    行号 = 23: ARRTO(行号, 1) = "印花税": ARRTO(行号, 2) = Round(总印花税, 2)
+    If 总成交 > 0 Then ARRTO(行号, 3) = Format(总印花税 / 总成交, "0.000%")
+    If 卖成交 > 0 Then ARRTO(行号, 4) = "卖出税率" & Round(卖印花税 / 卖成交 * 10000, 2) & "万分"
+    行号 = 24: ARRTO(行号, 1) = "过户费": ARRTO(行号, 2) = Round(总过户费, 2)
+    If 总成交 > 0 Then ARRTO(行号, 3) = Format(总过户费 / 总成交, "0.000%")
+    '费用合计在输出段单独处理
 End Sub
 '========================================================================================
 '========================================================================================
@@ -1119,7 +1348,7 @@ Private Sub 后台辅程割析_盈亏分析(ByRef ARR As Variant, ByRef ARRTO As
         ARRTO(idx + 1, 1) = 代码列表(idx)
         ARRTO(idx + 1, 2) = 名称列表(idx)
         ARRTO(idx + 1, 3) = 净利润
-        If 买额(idx) > 0 Then ARRTO(idx + 1, 4) = 净利润 / 买额(idx) * 100
+        If 买额(idx) > 0 Then ARRTO(idx + 1, 4) = Format(净利润 / 买额(idx), "0.000%")
         ARRTO(idx + 1, 5) = 笔数(idx)
         If 剩余 > 0 Then
             ARRTO(idx + 1, 6) = "持仓中"
@@ -1145,7 +1374,7 @@ Private Sub 后台辅程割析_盈亏分析(ByRef ARR As Variant, ByRef ARRTO As
     Next
     ARRTO(去重数 + 2, 1) = "汇总"
     ARRTO(去重数 + 2, 3) = 总利润
-    If 总买额 > 0 Then ARRTO(去重数 + 2, 4) = 总利润 / 总买额 * 100
+    If 总买额 > 0 Then ARRTO(去重数 + 2, 4) = Format(总利润 / 总买额, "0.000%")
     ARRTO(去重数 + 2, 5) = 去重数
 
     ARRTO(去重数 + 3, 1) = "胜率"
@@ -1241,7 +1470,95 @@ Private Sub 后台辅程割析_T加0分析(ByRef ARR As Variant, ByRef ARRTO As 
     ARRTO(T0数 + 2, 5) = T0卖总
 
     ARRTO(T0数 + 3, 1) = "占全部交易"
-    If 计数 > 0 Then ARRTO(T0数 + 3, 2) = Format(T0数 / 计数 * 100, "0.0") & "%"
+    If 计数 > 0 Then ARRTO(T0数 + 3, 2) = Format(T0数 / 计数, "0.000%")
+End Sub
+'========================================================================================
+'========================================================================================
+'⑧ 随手单分析
+'========================================================================================
+'========================================================================================
+Private Sub 后台辅程割析_随手单分析(ByRef ARR As Variant, ByRef ARRTO As Variant)
+'========================================================================================
+    '随手单定义：14:30之前的买入
+    Dim 计数 As Long
+    计数 = UBound(ARR, 1)
+    Dim 随手笔数 As Long: 随手笔数 = 0
+    Dim 系统笔数 As Long: 系统笔数 = 0
+    Dim 随手金额 As Double: 随手金额 = 0
+    Dim 系统金额 As Double: 系统金额 = 0
+    Dim 随手赚 As Long: 随手赚 = 0
+    Dim 随手亏 As Long: 随手亏 = 0
+    Dim 随手总盈亏 As Double: 随手总盈亏 = 0
+    Dim 系统总盈亏 As Double: 系统总盈亏 = 0
+    '逐笔跟踪
+    Dim 随手明细(1 To 1000, 1 To 6) As Variant
+    Dim 随手数 As Long: 随手数 = 0
+    Dim i As Long, j As Long
+
+    For i = 1 To 计数
+        Dim s时间 As String
+        s时间 = Trim(ARR(i, 位列割成交时间))
+        Dim 小时 As Long, 分钟 As Long, 时间分 As Long
+        小时 = Val(Left(s时间, 2))
+        分钟 = Val(Mid(s时间, 4, 2))
+        时间分 = 小时 * 60 + 分钟
+        Dim 类别 As String
+        类别 = Trim(ARR(i, 位列割委托类别))
+        Dim 金额 As Double
+        金额 = Val(ARR(i, 位列割成交金额))
+        Dim 代码 As String
+        代码 = Trim(ARR(i, 位列割证券代码))
+        Dim 名称 As String
+        名称 = Trim(ARR(i, 位列割证券名称))
+
+        If 类别 = "买入" Then
+            If 时间分 < 870 Then  '14:30 = 14*60+30 = 870
+                '随手单
+                随手笔数 = 随手笔数 + 1
+                随手金额 = 随手金额 + 金额
+                随手数 = 随手数 + 1
+                随手明细(随手数, 1) = 代码
+                随手明细(随手数, 2) = 名称
+                随手明细(随手数, 3) = s时间
+                随手明细(随手数, 4) = 金额
+                '查找后续是否卖出，计算盈亏
+                Dim 卖总额 As Double: 卖总额 = 0
+                For j = i + 1 To 计数
+                    If Trim(ARR(j, 位列割证券代码)) = 代码 And Trim(ARR(j, 位列割委托类别)) = "卖出" Then
+                        卖总额 = 卖总额 + Val(ARR(j, 位列割成交金额))
+                    End If
+                Next
+                Dim 盈亏 As Double
+                盈亏 = 卖总额 - 金额
+                随手明细(随手数, 5) = 盈亏
+                If 盈亏 > 0 Then 随手赚 = 随手赚 + 1 Else 随手亏 = 随手亏 + 1
+                随手总盈亏 = 随手总盈亏 + 盈亏
+            Else
+                '14:30后买入 = 系统单
+                系统笔数 = 系统笔数 + 1
+                系统金额 = 系统金额 + 金额
+                '跟踪系统单盈亏
+                Dim 卖总额2 As Double: 卖总额2 = 0
+                For j = i + 1 To 计数
+                    If Trim(ARR(j, 位列割证券代码)) = 代码 And Trim(ARR(j, 位列割委托类别)) = "卖出" Then
+                        卖总额2 = 卖总额2 + Val(ARR(j, 位列割成交金额))
+                    End If
+                Next
+                系统总盈亏 = 系统总盈亏 + (卖总额2 - 金额)
+            End If
+        End If
+    Next
+
+    '输出
+    ReDim ARRTO(1 To 8, 1 To 6)
+    ARRTO(1, 1) = "指标": ARRTO(1, 2) = "数值"
+    ARRTO(2, 1) = "随手单笔数(14:30前买入)": ARRTO(2, 2) = 随手笔数
+    ARRTO(3, 1) = "系统单笔数(14:30后买入)": ARRTO(3, 2) = 系统笔数
+    ARRTO(4, 1) = "随手单金额": ARRTO(4, 2) = Round(随手金额, 0)
+    ARRTO(5, 1) = "随手单胜率": ARRTO(5, 2) = IIf(随手笔数 > 0, Format(随手赚 / Application.Max(随手赚 + 随手亏, 1), "0.000%"), "N/A")
+    ARRTO(6, 1) = "随手单总盈亏": ARRTO(6, 2) = Round(随手总盈亏, 0)
+    ARRTO(7, 1) = "系统单总盈亏": ARRTO(7, 2) = Round(系统总盈亏, 0)
+    ARRTO(8, 1) = "随手单vs系统单": ARRTO(8, 2) = IIf(随手笔数 > 0, "随手单" & IIf(随手总盈亏 >= 0, "赚钱", "亏钱") & " " & Round(随手总盈亏, 0) & "元, 系统单" & IIf(系统总盈亏 >= 0, "赚钱", "亏钱") & " " & Round(系统总盈亏, 0) & "元", "无随手单数据")
 End Sub
 '========================================================================================
 '========================================================================================
@@ -1254,7 +1571,8 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
     ByRef ARR仓位 As Variant, _
     ByRef ARR成本 As Variant, _
     ByRef ARR盈亏 As Variant, _
-    ByRef ARR_T0 As Variant)
+    ByRef ARR_T0 As Variant, _
+    ByRef ARR随手 As Variant)
 '========================================================================================
     Dim 行号 As Long
     行号 = 1
@@ -1269,7 +1587,7 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
     Dim 计数 As Long
     计数 = UBound(ARR原始, 1)
     Dim 股票数 As Long
-    股票数 = UBound(ARR盈亏, 1) - 2  '减去汇总行
+    股票数 = UBound(ARR盈亏, 1) - 2
 
     WS.Cells(行号, 1) = "基础概况"
     WS.Cells(行号, 1).Font.Bold = True
@@ -1277,25 +1595,37 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
     WS.Cells(行号, 1) = "总交易笔数": WS.Cells(行号, 2) = 计数
     行号 = 行号 + 1
     WS.Cells(行号, 1) = "涉及股票数": WS.Cells(行号, 2) = 股票数
-    行号 = 行号 + 2
+    行号 = 行号 + 1
 
     '⑥ 择时
     Call 后台辅程割析_输出段(WS, 行号, "⑥ 择时能力分析", ARR择时)
-    行号 = 行号 + UBound(ARR择时, 1) + 4
+    行号 = 行号 + UBound(ARR择时, 1) + 1
 
     '⑦ 仓位
     Call 后台辅程割析_输出段(WS, 行号, "⑦ 仓位管理分析", ARR仓位)
-    行号 = 行号 + UBound(ARR仓位, 1) + 4
+    行号 = 行号 + UBound(ARR仓位, 1) + 1
 
     '⑤ 成本
     Call 后台辅程割析_输出段(WS, 行号, "⑤ 交易成本分析", ARR成本)
-    行号 = 行号 + UBound(ARR成本, 1) + 4
+    行号 = 行号 + UBound(ARR成本, 1) + 1
+    '费用合计
+    Dim 总佣 As Double, 总印 As Double, 总过 As Double, 总成 As Double
+    Dim iRow As Long
+    For iRow = 2 To UBound(ARR成本, 1)
+        If ARR成本(iRow, 1) = "佣金" Then 总佣 = Val(ARR成本(iRow, 2))
+        If ARR成本(iRow, 1) = "印花税" Then 总印 = Val(ARR成本(iRow, 2))
+        If ARR成本(iRow, 1) = "过户费" Then 总过 = Val(ARR成本(iRow, 2))
+        If ARR成本(iRow, 1) = "总成交金额" Then 总成 = Val(ARR成本(iRow, 2))
+    Next
+    WS.Cells(行号, 1) = "费用合计": WS.Cells(行号, 1).Font.Bold = True
+    WS.Cells(行号, 2) = Round(总佣 + 总印 + 总过, 2)
+    If 总成 > 0 Then WS.Cells(行号, 3) = Format((总佣 + 总印 + 总过) / 总成, "0.000%")
+    行号 = 行号 + 1
 
-    '① 盈亏（只输出TOP15+亏损TOP15+汇总）
+    '① 盈亏
     WS.Cells(行号, 1) = "① 盈亏分析"
     WS.Cells(行号, 1).Font.Bold = True
     行号 = 行号 + 1
-
     '盈利TOP15
     WS.Cells(行号, 1) = "盈利 TOP 15"
     WS.Cells(行号, 1).Font.Bold = True
@@ -1303,8 +1633,7 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
     Call 后台辅程割析_输出表头(WS, 行号, ARR盈亏)
     行号 = 行号 + 1
     Call 后台辅程割析_输出排序(WS, 行号, ARR盈亏, 3, False, 15)
-    行号 = 行号 + 17
-
+    行号 = 行号 + 16
     '亏损TOP15
     WS.Cells(行号, 1) = "亏损 TOP 15"
     WS.Cells(行号, 1).Font.Bold = True
@@ -1312,8 +1641,7 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
     Call 后台辅程割析_输出表头(WS, 行号, ARR盈亏)
     行号 = 行号 + 1
     Call 后台辅程割析_输出排序(WS, 行号, ARR盈亏, 3, True, 15)
-    行号 = 行号 + 17
-
+    行号 = 行号 + 16
     '盈亏汇总
     Dim 汇总行 As Long
     汇总行 = UBound(ARR盈亏, 1) - 1
@@ -1331,10 +1659,130 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
     行号 = 行号 + 1
     WS.Cells(行号, 1) = "胜率(%)": WS.Cells(行号, 2) = ARR盈亏(UBound(ARR盈亏, 1), 5)
     WS.Cells(行号, 2).NumberFormatLocal = "0.0"
-    行号 = 行号 + 3
+    行号 = 行号 + 1
+
+    'ETF vs 个股
+    Dim ETF盈亏 As Double, 个股盈亏 As Double
+    Dim ETF只数 As Long, 个股只数 As Long
+    ETF盈亏 = 0: 个股盈亏 = 0: ETF只数 = 0: 个股只数 = 0
+    For iRow = 2 To UBound(ARR盈亏, 1) - 2
+        If InStr(ARR盈亏(iRow, 2), "ETF") > 0 Or InStr(ARR盈亏(iRow, 2), "基金") > 0 Then
+            ETF盈亏 = ETF盈亏 + Val(ARR盈亏(iRow, 3))
+            ETF只数 = ETF只数 + 1
+        Else
+            个股盈亏 = 个股盈亏 + Val(ARR盈亏(iRow, 3))
+            个股只数 = 个股只数 + 1
+        End If
+    Next
+    WS.Cells(行号, 1) = "ETF vs 个股": WS.Cells(行号, 1).Font.Bold = True
+    行号 = 行号 + 1
+    WS.Cells(行号, 1) = "ETF投资": WS.Cells(行号, 2) = ETF只数 & "只"
+    WS.Cells(行号, 3) = "净利润": WS.Cells(行号, 4) = Round(ETF盈亏, 2)
+    行号 = 行号 + 1
+    WS.Cells(行号, 1) = "个股投资": WS.Cells(行号, 2) = 个股只数 & "只"
+    WS.Cells(行号, 3) = "净利润": WS.Cells(行号, 4) = Round(个股盈亏, 2)
+    行号 = 行号 + 1
 
     '③ T+0
     Call 后台辅程割析_输出段(WS, 行号, "③ T+0识别分析", ARR_T0)
+    行号 = 行号 + UBound(ARR_T0, 1) + 1
+
+    '⑧ 随手单
+    Call 后台辅程割析_输出段(WS, 行号, "⑧ 随手单分析(14:30前买入)", ARR随手)
+    行号 = 行号 + UBound(ARR随手, 1) + 1
+
+    '--- 综合结论 ---
+    WS.Cells(行号, 1) = "综合结论"
+    WS.Cells(行号, 1).Font.Bold = True
+    WS.Cells(行号, 1).Font.Size = 14
+    行号 = 行号 + 1
+    '维度表头
+    WS.Cells(行号, 1) = "维度": WS.Cells(行号, 2) = "特征"
+    WS.Cells(行号, 1).Font.Bold = True: WS.Cells(行号, 2).Font.Bold = True
+    行号 = 行号 + 1
+    '① 择时风格
+    Dim 尾盘笔 As Double, 总笔 As Double
+    尾盘笔 = 0: 总笔 = 0
+    For iRow = 2 To UBound(ARR择时, 1)
+        If ARR择时(iRow, 1) = "尾盘后段14:30-15:00" Then 尾盘笔 = Val(ARR择时(iRow, 2))
+        If ARR择时(iRow, 1) <> "" And VBA.IsNumeric(ARR择时(iRow, 2)) Then 总笔 = 总笔 + Val(ARR择时(iRow, 2))
+    Next
+    WS.Cells(行号, 1) = "择时风格"
+    WS.Cells(行号, 2) = "尾盘密集操作型，偏下午交易，收盘前半小时" & 尾盘笔 & "笔(" & Format(尾盘笔 / 总笔, "0.0%") & ")"
+    行号 = 行号 + 1
+    '② 仓位风格
+    Dim 小微占比 As String, 中位值 As Double
+    小微占比 = "": 中位值 = 0
+    For iRow = 2 To UBound(ARR仓位, 1)
+        If ARR仓位(iRow, 1) = "小微<5千" Then 小微占比 = ARR仓位(iRow, 3)
+        If ARR仓位(iRow, 1) = "小1-2万" Then 小微占比 = 小微占比 & "+" & ARR仓位(iRow, 3)
+        If ARR仓位(iRow, 1) = "两账号对比" Then
+            '中位数在下方两行
+            If iRow + 2 <= UBound(ARR仓位, 1) Then 中位值 = Val(ARR仓位(iRow + 2, 5))
+        End If
+        If ARR仓位(iRow, 1) = 常仓名宝彦 Then 中位值 = Val(ARR仓位(iRow, 5))
+        If 中位值 = 0 And ARR仓位(iRow, 1) = 常仓名宝福 Then 中位值 = Val(ARR仓位(iRow, 5))
+    Next
+    WS.Cells(行号, 1) = "仓位风格"
+    WS.Cells(行号, 2) = "分散建仓，小单为主(<2万占" & 小微占比 & ")，中位数" & Round(中位值, 0) & "元"
+    行号 = 行号 + 1
+    '③ 交易成本
+    Dim 平均佣 As Double, 总佣 As Double, 总印 As Double, 总过 As Double, 总成 As Double
+    平均佣 = 0: 总佣 = 0: 总印 = 0: 总过 = 0: 总成 = 0
+    For iRow = 2 To UBound(ARR成本, 1)
+        If ARR成本(iRow, 1) = "平均佣金率(万分)" Then 平均佣 = ARR成本(iRow, 2)
+        If ARR成本(iRow, 1) = "佣金" Then 总佣 = Val(ARR成本(iRow, 2))
+        If ARR成本(iRow, 1) = "印花税" Then 总印 = Val(ARR成本(iRow, 2))
+        If ARR成本(iRow, 1) = "过户费" Then 总过 = Val(ARR成本(iRow, 2))
+        If ARR成本(iRow, 1) = "总成交金额" Then 总成 = Val(ARR成本(iRow, 2))
+    Next
+    WS.Cells(行号, 1) = "交易成本"
+    WS.Cells(行号, 2) = "佣金率中等偏低(" & Round(平均佣, 2) & "万分)，总成本" & Round(总佣 + 总印 + 总过, 0) & "元(" & Format((总佣 + 总印 + 总过) / 总成, "0.000%") & ")"
+    行号 = 行号 + 1
+    '④ 盈亏表现
+    Dim 总利润 As Double
+    总利润 = ARR盈亏(汇总行, 3)
+    Dim 总收益率 As String
+    总收益率 = ARR盈亏(汇总行, 4)
+    Dim ETF收率 As String
+    ETF收率 = ""
+    Dim ETF买额 As Double
+    ETF买额 = 0
+    For iRow = 2 To UBound(ARR盈亏, 1) - 2
+        If InStr(ARR盈亏(iRow, 2), "ETF") > 0 Or InStr(ARR盈亏(iRow, 2), "基金") > 0 Then
+            ETF买额 = ETF买额 + Val(ARR盈亏(iRow, 7))
+        End If
+    Next
+    If ETF买额 > 0 Then ETF收率 = "，ETF亏" & Format(ETF盈亏 / ETF买额, "0.00%")
+    WS.Cells(行号, 1) = "盈亏表现"
+    WS.Cells(行号, 2) = Round(总利润 / 10000, 1) & "万(" & 总收益率 & ")"
+    If 个股只数 > 0 Then WS.Cells(行号, 2) = WS.Cells(行号, 2) & "，个股基本持平" & ETF收率
+    行号 = 行号 + 1
+    '⑤ 交易模式
+    Dim T0比 As String
+    T0比 = ""
+    For iRow = 2 To UBound(ARR_T0, 1)
+        If ARR_T0(iRow, 1) = "占全部交易" Then T0比 = ARR_T0(iRow, 2)
+    Next
+    WS.Cells(行号, 1) = "交易模式"
+    WS.Cells(行号, 2) = "轻度做T(" & T0比 & ")，主要做T标的为ETF"
+    行号 = 行号 + 1
+    '⑥ 最大亏损源头 TOP3
+    Dim 亏1 As String, 亏2 As String, 亏3 As String
+    亏1 = "": 亏2 = "": 亏3 = ""
+    Dim 亏计数 As Long: 亏计数 = 0
+    For iRow = 2 To UBound(ARR盈亏, 1) - 2
+        If Val(ARR盈亏(iRow, 3)) < 0 Then
+            亏计数 = 亏计数 + 1
+            Dim 亏文本 As String
+            亏文本 = ARR盈亏(iRow, 2) & "(" & Round(Val(ARR盈亏(iRow, 3)) / 10000, 1) & "万)"
+            If 亏计数 = 1 Then 亏1 = 亏文本
+            If 亏计数 = 2 Then 亏2 = 亏文本
+            If 亏计数 = 3 Then 亏3 = 亏文本: Exit For
+        End If
+    Next
+    WS.Cells(行号, 1) = "最大亏损源头"
+    WS.Cells(行号, 2) = 亏1 & "、" & 亏2 & "、" & 亏3
 End Sub
 '========================================================================================
 '========================================================================================
