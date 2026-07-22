@@ -943,7 +943,6 @@ Private Sub 后台辅程割析_择时分析(ByRef ARR As Variant, ByRef ARRTO As
         总卖笔 = 总卖笔 + 段卖笔(idx)
     Next
     For j = 0 To Application.Min(分钟典.Count - 1, 4)
-        Dim 分钟键 As String
         分钟键 = 分钟列表(j)
         ARRTO(分钟行 + 2 + j, 1) = 分钟键
         ARRTO(分钟行 + 2 + j, 2) = 分钟典(分钟键)
@@ -1550,7 +1549,7 @@ Private Sub 后台辅程割析_随手单分析(ByRef ARR As Variant, ByRef ARRTO
     Next
 
     '输出
-    ReDim ARRTO(1 To 8, 1 To 6)
+    ReDim ARRTO(1 To 随手数 + 8, 1 To 6)
     ARRTO(1, 1) = "指标": ARRTO(1, 2) = "数值"
     ARRTO(2, 1) = "随手单笔数(14:30前买入)": ARRTO(2, 2) = 随手笔数
     ARRTO(3, 1) = "系统单笔数(14:30后买入)": ARRTO(3, 2) = 系统笔数
@@ -1559,6 +1558,17 @@ Private Sub 后台辅程割析_随手单分析(ByRef ARR As Variant, ByRef ARRTO
     ARRTO(6, 1) = "随手单总盈亏": ARRTO(6, 2) = Round(随手总盈亏, 0)
     ARRTO(7, 1) = "系统单总盈亏": ARRTO(7, 2) = Round(系统总盈亏, 0)
     ARRTO(8, 1) = "随手单vs系统单": ARRTO(8, 2) = IIf(随手笔数 > 0, "随手单" & IIf(随手总盈亏 >= 0, "赚钱", "亏钱") & " " & Round(随手总盈亏, 0) & "元, 系统单" & IIf(系统总盈亏 >= 0, "赚钱", "亏钱") & " " & Round(系统总盈亏, 0) & "元", "无随手单数据")
+    '随手单明细（每笔盈亏）
+    If 随手数 > 0 Then
+        ARRTO(1, 4) = "代码": ARRTO(1, 5) = "名称": ARRTO(1, 6) = "盈亏"
+        For i = 1 To 随手数
+            ARRTO(i + 8, 1) = 随手明细(i, 1)
+            ARRTO(i + 8, 2) = 随手明细(i, 2)
+            ARRTO(i + 8, 3) = 随手明细(i, 3)
+            ARRTO(i + 8, 4) = 随手明细(i, 4)
+            ARRTO(i + 8, 5) = 随手明细(i, 5)
+        Next
+    End If
 End Sub
 '========================================================================================
 '========================================================================================
@@ -1599,17 +1609,17 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
 
     '⑥ 择时
     Call 后台辅程割析_输出段(WS, 行号, "⑥ 择时能力分析", ARR择时)
-    行号 = 行号 + UBound(ARR择时, 1) + 1
+    行号 = 行号 + UBound(ARR择时, 1) + 2
 
     '⑦ 仓位
     Call 后台辅程割析_输出段(WS, 行号, "⑦ 仓位管理分析", ARR仓位)
-    行号 = 行号 + UBound(ARR仓位, 1) + 1
+    行号 = 行号 + UBound(ARR仓位, 1) + 2
 
     '⑤ 成本
     Call 后台辅程割析_输出段(WS, 行号, "⑤ 交易成本分析", ARR成本)
-    行号 = 行号 + UBound(ARR成本, 1) + 1
+    行号 = 行号 + UBound(ARR成本, 1) + 2
     '费用合计
-    Dim 总佣 As Double, 总印 As Double, 总过 As Double, 总成 As Double
+    Dim 平均佣 As Double, 总佣 As Double, 总印 As Double, 总过 As Double, 总成 As Double
     Dim iRow As Long
     For iRow = 2 To UBound(ARR成本, 1)
         If ARR成本(iRow, 1) = "佣金" Then 总佣 = Val(ARR成本(iRow, 2))
@@ -1633,7 +1643,7 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
     Call 后台辅程割析_输出表头(WS, 行号, ARR盈亏)
     行号 = 行号 + 1
     Call 后台辅程割析_输出排序(WS, 行号, ARR盈亏, 3, False, 15)
-    行号 = 行号 + 16
+    行号 = 行号 + 17
     '亏损TOP15
     WS.Cells(行号, 1) = "亏损 TOP 15"
     WS.Cells(行号, 1).Font.Bold = True
@@ -1641,7 +1651,7 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
     Call 后台辅程割析_输出表头(WS, 行号, ARR盈亏)
     行号 = 行号 + 1
     Call 后台辅程割析_输出排序(WS, 行号, ARR盈亏, 3, True, 15)
-    行号 = 行号 + 16
+    行号 = 行号 + 17
     '盈亏汇总
     Dim 汇总行 As Long
     汇总行 = UBound(ARR盈亏, 1) - 1
@@ -1685,11 +1695,11 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
 
     '③ T+0
     Call 后台辅程割析_输出段(WS, 行号, "③ T+0识别分析", ARR_T0)
-    行号 = 行号 + UBound(ARR_T0, 1) + 1
+    行号 = 行号 + UBound(ARR_T0, 1) + 2
 
     '⑧ 随手单
     Call 后台辅程割析_输出段(WS, 行号, "⑧ 随手单分析(14:30前买入)", ARR随手)
-    行号 = 行号 + UBound(ARR随手, 1) + 1
+    行号 = 行号 + UBound(ARR随手, 1) + 2
 
     '--- 综合结论 ---
     WS.Cells(行号, 1) = "综合结论"
@@ -1727,7 +1737,6 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
     WS.Cells(行号, 2) = "分散建仓，小单为主(<2万占" & 小微占比 & ")，中位数" & Round(中位值, 0) & "元"
     行号 = 行号 + 1
     '③ 交易成本
-    Dim 平均佣 As Double, 总佣 As Double, 总印 As Double, 总过 As Double, 总成 As Double
     平均佣 = 0: 总佣 = 0: 总印 = 0: 总过 = 0: 总成 = 0
     For iRow = 2 To UBound(ARR成本, 1)
         If ARR成本(iRow, 1) = "平均佣金率(万分)" Then 平均佣 = ARR成本(iRow, 2)
