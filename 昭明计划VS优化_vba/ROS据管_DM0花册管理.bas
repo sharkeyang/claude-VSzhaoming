@@ -384,6 +384,20 @@ Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional 是
     '-------------------------------
     Dim WBTS As Workbook
     Set WBTS = GetObject(FILEOPEN)
+    WBTS.Application.Calculate  ' 确保 ="..." 公式被求值
+    ' 读取资金汇总（前两行，仅新格式有）
+    Dim 总资产 As Double, 参考市值 As Double, 可用 As Double
+    Dim 首格 As Variant
+    首格 = WBTS.ActiveSheet.Cells(1, 1)
+    If VarType(首格) = vbString Then
+        首格 = Replace(首格, "=", ""): 首格 = Replace(首格, """", "")
+    End If
+    If 首格 = "币种" Then
+        总资产 = Val(WBTS.ActiveSheet.Cells(2, 5))
+        参考市值 = Val(WBTS.ActiveSheet.Cells(2, 4))
+        可用 = Val(WBTS.ActiveSheet.Cells(2, 3))
+    End If
+    Debug.Print "资金汇总: 首格=" & 首格 & " 总资产=" & 总资产 & " 市值=" & 参考市值 & " 可用=" & 可用
     ' 自动识别账户
     Dim 所在区域 As Range
     Dim ARRTS  As Variant
@@ -496,6 +510,31 @@ Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional 是
     '格式化：花册
     '------------------------------------------------------------------------------------
     Call STCALL花册工具_花册格程(WS花册)
+    ' 写入资金汇总到 Name（按账户区分）
+    Debug.Print "Names创建前: ActiveWB=" & ActiveWorkbook.Name & " ThisWB=" & ThisWorkbook.Name
+    Dim 名 As String
+    名 = 值常池名 & "总资产"
+    If UTL判断名字存在(名) Then
+        ThisWorkbook.Names(名).RefersTo = "=" & 总资产
+    Else
+        ThisWorkbook.Names.Add Name:=名, RefersTo:="=" & 总资产
+    End If
+    名 = 值常池名 & "市值总额"
+    If UTL判断名字存在(名) Then
+        ThisWorkbook.Names(名).RefersTo = "=" & 参考市值
+    Else
+        ThisWorkbook.Names.Add Name:=名, RefersTo:="=" & 参考市值
+    End If
+    名 = 值常池名 & "可用资金"
+    If UTL判断名字存在(名) Then
+        ThisWorkbook.Names(名).RefersTo = "=" & 可用
+    Else
+        ThisWorkbook.Names.Add Name:=名, RefersTo:="=" & 可用
+    End If
+    ' 验证Name
+    Debug.Print "Name验证: " & 值常池名 & "总资产=" & Evaluate(值常池名 & "总资产")
+    Debug.Print "Name验证: " & 值常池名 & "市值总额=" & Evaluate(值常池名 & "市值总额")
+    Debug.Print "Name验证: " & 值常池名 & "可用资金=" & Evaluate(值常池名 & "可用资金")
     'WS花册.Activate
     Set WS花册 = Nothing
 '========================================================================================
@@ -505,6 +544,31 @@ Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional 是
     MSG = "导入持仓 >>" & 计数导入 & vbCrLf
     STCALL花册管理_重制花天P3正程导入华宝 = 计数导入
 End Function
+'========================================================================================
+' 测试_验证资金Name — 检查所有资金汇总 Name 是否存在并显示值
+'========================================================================================
+Public Sub 测试_验证资金Name()
+    Dim 账户列表 As Variant
+    账户列表 = Array(常仓名宝福, 常仓名宝彦)
+    Dim 名称列表 As Variant
+    名称列表 = Array("总资产", "市值总额", "可用资金")
+    Dim i As Long, j As Long, 名 As String, MSG As String
+    MSG = "资金汇总 Name 检查结果：" & vbCrLf & vbCrLf
+    MSG = MSG & "当前工作簿Name总数=" & ThisWorkbook.Names.Count & vbCrLf & vbCrLf
+    For i = LBound(账户列表) To UBound(账户列表)
+        MSG = MSG & "【" & 账户列表(i) & "】" & vbCrLf
+        For j = LBound(名称列表) To UBound(名称列表)
+            名 = 账户列表(i) & 名称列表(j)
+            If UTL判断名字存在(名) Then
+                MSG = MSG & "  [OK] " & 名称列表(j) & " = " & Evaluate(名) & vbCrLf
+            Else
+                MSG = MSG & "  [FAIL] " & 名称列表(j) & " 不存在" & vbCrLf
+            End If
+        Next
+        MSG = MSG & vbCrLf
+    Next
+    Debug.Print MSG
+End Sub
 
 
 

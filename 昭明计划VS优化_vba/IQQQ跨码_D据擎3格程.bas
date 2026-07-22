@@ -228,7 +228,7 @@ Function IQQQ跨码展擎_按列QT区域( _
         .Columns(位qt今期).ColumnWidth = 9
         .Columns(位qt市板).ColumnWidth = 3
         .Columns(位qt今池).ColumnWidth = 2
-        .Columns(位qt仓主).ColumnWidth = 2
+        .Columns(位qt仓主).ColumnWidth = 3
         .Columns(位qt仓周).ColumnWidth = 2
         .Columns(位qt在池).ColumnWidth = 2
         .Columns(位qt盯盘类别).ColumnWidth = 7

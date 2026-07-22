@@ -53,7 +53,7 @@ Private Const 位超大 = "6超大>20万"
 '导入信息：交割单
 '========================================================================================
 '========================================================================================
-Sub STCALL割册管理_XLS交割单G1导入()
+Sub STCALL割册管理_XLS交割单G2导入()
     Dim MSG As String
     ' 如果割单数组已有数据，跳过文件选择
     Dim ARRYM As Variant
@@ -154,6 +154,7 @@ Sub STCALL割册管理_XLS交割单G1导入()
     Dim 典集委类融券购回 As New Dictionary
     Dim 典集委类其他 As New Dictionary
     Dim 典集委类红利 As New Dictionary
+    Dim 典集委类送股 As New Dictionary
     Dim 典集委类配号 As New Dictionary
     Dim 典集委类交易码票 As New Dictionary
     Dim 典集委类交易码基 As New Dictionary
@@ -214,6 +215,8 @@ Sub STCALL割册管理_XLS交割单G1导入()
             典集委类其他.Add key:=R, Item:=R
         ElseIf 值委托类别 = "红利" Then
             典集委类红利.Add key:=R, Item:=R
+        ElseIf 值委托类别 = "送股" Then
+            典集委类送股.Add key:=R, Item:=R
         '-----------------------------------------------
         ElseIf 值委托类别 = "买入" Or 值委托类别 = "卖出" Then
             CIDV = ARRYM(R, 位列割证券代码)
@@ -256,6 +259,7 @@ Sub STCALL割册管理_XLS交割单G1导入()
     Dim 典集码类数零赔 As New Dictionary
     Dim 典集码类数正 As New Dictionary
     Dim 典集码类数负 As New Dictionary
+    Dim 典集码类数未配对 As New Dictionary
     Dim 值累数 As Long
     Dim 值累额 As Double
     Dim 值成交日期 As Date
@@ -270,13 +274,22 @@ Sub STCALL割册管理_XLS交割单G1导入()
         值累数 = 0
         值累额 = 0
         值成交日期 = Date - 200
+        Dim 有未配对 As Boolean: 有未配对 = False
         For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
             If ARRYM(R, 位列割证券CIDL) = CIDL Then
                 值累数 = 值累数 + ARRYM(R, 位列割成交数量)
                 值累额 = 值累额 + ARRYM(R, 位列割发生金额)
+                If 割单行数 > 0 Then
+                    If ARRYM(R, 常割单列状态) = "未配对交易" Then
+                        值累数 = 值累数 - ARRYM(R, 位列割成交数量)
+                        值累额 = 值累额 - ARRYM(R, 位列割发生金额)
+                        有未配对 = True
+                    End If
+                End If
                 If ARRYM(R, 位列割成交日期) > 值成交日期 Then 值成交日期 = ARRYM(R, 位列割成交日期)
             End If
         Next R
+        If 有未配对 Then 典集码类数未配对.Add key:=CIDL, Item:=0
         If 值累数 > 0 Then
                 典集码类数正.Add key:=CIDL, Item:=值累数
                 值累额码类数正 = 值累额码类数正 + 值累额
@@ -376,15 +389,19 @@ Sub STCALL割册管理_XLS交割单G1导入()
         Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色四青, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
     Next X
     '--------------------------------------------------------------------------------
-    Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【交易】累数负（不完整）：" & 典集码类数负.Count)
-    For X = 1 To 典集码类数负.Count
-        CIDL = 典集码类数负.Keys(X - 1)
+    Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【交易】累数负（不完整）：" & 典集码类数未配对.Count)
+    For X = 1 To 典集码类数未配对.Count
+        CIDL = 典集码类数未配对.Keys(X - 1)
         For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
             If ARRYM(R, 位列割证券CIDL) = CIDL Then
-                典集委类交易个票.Add key:=R, Item:=R
+                If 割单行数 = 0 Or ARRYM(R, 常割单列状态) = "未配对交易" Then
+                    典集委类交易个票.Add key:=R, Item:=R
+                End If
             End If
         Next R
-        Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色五黄, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
+        If 典集委类交易个票.Count > 0 Then
+            Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色五黄, 强列:=位列割证券代码, 强序:=xlAscending, 典码输出:=典集委类交易个票, 区签:=CIDL, 区释:="")
+        End If
     Next X
     '--------------------------------------------------------------------------------
     Set 典集委类交易个票 = Nothing
@@ -398,6 +415,7 @@ Sub STCALL割册管理_XLS交割单G1导入()
     Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色八蓝, 典码输出:=典集委类融券购回, 区签:="融券购回", 区释:="")
     Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色六蓝, 典码输出:=典集委类其他, 区签:="其他", 区释:="")
     Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色六蓝, 典码输出:=典集委类红利, 区签:="红利", 区释:="")
+    Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色六蓝, 典码输出:=典集委类送股, 区签:="送股", 区释:="")
     'Call IQQQ展擎出程至页割版(WB, 表名, ARRYM, 基色底:=常色十红, 典码输出:=典集委类组合费用, 区签:="组合费用", 区释:="")
     '新股相关
     Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=False, 章色:=常色四青, 章签:="【新股类别】")
@@ -679,7 +697,7 @@ End Function
 '入口主调
 '========================================================================================
 '========================================================================================
-Sub STCALL割册管理_XLS交割单G2解析()
+Sub STCALL割册管理_XLS交割单G3解析()
     ' 如果割单数组已有数据，跳过文件选择
     Dim ARR原始 As Variant
     If 割单行数 > 0 Then
@@ -1417,7 +1435,7 @@ End Sub
 ' 数据源：花册（当前持仓）+ 华宝交割单 XLS
 ' 算法：从最新交易倒推，持仓配不上的部分单独拎出
 '========================================================================================
-Public Sub STCALL割册管理_XLS交割单G3校准()
+Public Sub STCALL割册管理_XLS交割单G1校准()
     Dim FILEOPEN As Variant
     FILEOPEN = Application.GetOpenFilename("华宝交割单信息,*.xls", , "选择交割单 XLS", , False)
     If FILEOPEN = False Then Exit Sub
@@ -1472,6 +1490,8 @@ Public Sub STCALL割册管理_XLS交割单G3校准()
     Dim 行号 As Long: 行号 = 2
     Dim 总完整 As Long: 总完整 = 0
     Dim 总不完整 As Long: 总不完整 = 0
+    Dim 未配对行() As Long, 未配对计数 As Long, upi As Long, upr As Long
+    ReDim 未配对行(1 To 5000)
     ' ④ 按股票分组处理
     Dim 总行 As Long: 总行 = UBound(ARRYM, 1)
     Dim 已处理 As Object
@@ -1485,7 +1505,16 @@ Public Sub STCALL割册管理_XLS交割单G3校准()
             类别 = Replace(类别, "=", "")
             类别 = Replace(类别, """", "")
         End If
-        If 类别 <> "买入" And 类别 <> "卖出" Then GoTo 跳过
+        If 类别 <> "买入" And 类别 <> "卖出" Then
+            ' 非交易类行，直接加入割单数组
+            割单行数 = 割单行数 + 1
+            Dim ac_other As Long
+            For ac_other = 1 To 15: 割单数组(割单行数, ac_other) = ARRYM(i, ac_other): Next
+            割单数组(割单行数, 6) = 类别
+            割单数组(割单行数, 常割单列状态) = "其他"
+            割单数组(割单行数, 常割单列账户) = STCALL割单工具_识别账户(ARRYM(i, 3))
+            GoTo 跳过
+        End If
         ' 清理股票代码
         Dim sCIDL As String, sCIDV As Variant
         sCIDV = ARRYM(i, 4)
@@ -1526,29 +1555,21 @@ Public Sub STCALL割册管理_XLS交割单G3校准()
         If 计数 = 0 Then GoTo 跳过
         ' 当前持仓
         If 典集持仓.Exists(sCIDL) Then 持仓量 = 典集持仓(sCIDL) Else 持仓量 = 0
-        ' 反向递推（从最新到最旧）
-        Dim 剩余 As Double
-        剩余 = 持仓量
-        For 交易索引 = 计数 To 1 Step -1
+        ' 计算净余和持仓量
+        Dim 净余 As Double, qty As Double, 类别r As String, 标记 As String
+        净余 = 0
+        For 交易索引 = 1 To 计数
             R = 交易行(交易索引)
-            Dim qty As Double
             qty = Val(ARRYM(R, 8))
-            Dim 类别r As String
             类别r = ARRYM(R, 6)
             If VarType(类别r) = vbString Then
                 类别r = Replace(类别r, "=", "")
                 类别r = Replace(类别r, """", "")
             End If
-            If 类别r = "买入" Then
-                If 剩余 >= qty Then
-                    剩余 = 剩余 - qty
-                Else
-                    剩余 = 0
-                End If
-            Else
-                剩余 = 剩余 + qty
-            End If
+            If 类别r = "买入" Then 净余 = 净余 + qty Else 净余 = 净余 - qty
         Next
+        Dim 老仓 As Double
+        老仓 = 持仓量 - 净余
         ' 输出该股票结果
         Dim 名称 As String
         名称 = Trim(ARRYM(交易行(1), 5))
@@ -1563,98 +1584,163 @@ Public Sub STCALL割册管理_XLS交割单G3校准()
         WS出.Rows(行号).Font.Bold = True
         行号 = 行号 + 1
         总完整 = 总完整 + 1
-        ' 逐笔输出（从最新到最旧）
-        Dim 未配对 As Double, 拆分行 As Long
-        未配对 = 0: 拆分行 = 0
-        If 剩余 > 0 Then
-            ' 找到第一笔卖出交易（从最旧到最新），拆出未配对部分
-            Dim t As Long
-            For t = 1 To 计数
-                Dim 类别t As String
-                类别t = ARRYM(交易行(t), 6)
-                If VarType(类别t) = vbString Then
-                    类别t = Replace(类别t, "=", "")
-                    类别t = Replace(类别t, """", "")
-                End If
-                If 类别t = "卖出" Then
-                    Dim 卖出量 As Double
-                    卖出量 = Val(ARRYM(交易行(t), 8))
-                    未配对 = 剩余
-                    If 卖出量 < 未配对 Then 未配对 = 卖出量
-                    拆分行 = t
-                    Exit For
-                End If
-            Next
-        End If
-        For 交易索引 = 计数 To 1 Step -1
-            r = 交易行(交易索引)
-            qty = Val(ARRYM(r, 8))
-            类别r = ARRYM(r, 6)
+        ' 从最旧到最新遍历，标记未配对交易
+        Dim 待中和 As Double
+        待中和 = 老仓
+        For 交易索引 = 1 To 计数
+            R = 交易行(交易索引)
+            qty = Val(ARRYM(R, 8))
+            类别r = ARRYM(R, 6)
             If VarType(类别r) = vbString Then
                 类别r = Replace(类别r, "=", "")
                 类别r = Replace(类别r, """", "")
             End If
-            If 未配对 > 0 And 交易索引 = 拆分行 Then
-                ' 拆分：配对部分 + 未配对部分
-                Dim 配对数量 As Double
-                配对数量 = qty - 未配对
-                If 配对数量 > 0 Then
+            ' 决定标记
+            If 待中和 > 0 And 类别r = "卖出" Then
+                ' 卖出是在平老仓
+                If qty <= 待中和 Then
+                    标记 = "未配对交易"
+                    待中和 = 待中和 - qty
+                Else
+                    ' 拆分卖出：待中和(未配对) + 剩余(配对)
+                    ' 先输出未配对部分
                     WS出.Cells(行号, 3) = ""
-                    WS出.Cells(行号, 4) = ARRYM(r, 1)
+                    WS出.Cells(行号, 4) = ARRYM(R, 1)
                     WS出.Cells(行号, 5) = 类别r
-                    WS出.Cells(行号, 6) = 配对数量
-                    WS出.Cells(行号, 7) = Val(ARRYM(r, 9)) * 配对数量 / qty
-                    WS出.Cells(行号, 8) = "配对交易"
-                    行号 = 行号 + 1
+                    WS出.Cells(行号, 6) = 待中和
+                    WS出.Cells(行号, 7) = Val(ARRYM(R, 9)) * 待中和 / qty
+                    WS出.Cells(行号, 8) = "未配对交易"
+                    WS出.Rows(行号).Interior.Color = 常色十红
                     割单行数 = 割单行数 + 1
-                    Dim ac2 As Long
-                    For ac2 = 1 To 15: 割单数组(割单行数, ac2) = ARRYM(r, ac2): Next
+                    Dim ac_s As Long
+                    For ac_s = 1 To 15: 割单数组(割单行数, ac_s) = ARRYM(R, ac_s): Next
                     割单数组(割单行数, 6) = 类别r
-                    割单数组(割单行数, 8) = 配对数量
-                    割单数组(割单行数, 9) = Val(ARRYM(r, 9)) * 配对数量 / qty
+                    割单数组(割单行数, 8) = 待中和
+                    割单数组(割单行数, 9) = Val(ARRYM(R, 9)) * 待中和 / qty
+                    割单数组(割单行数, 常割单列状态) = "未配对交易"
+                    割单数组(割单行数, 常割单列账户) = STCALL割单工具_识别账户(ARRYM(R, 3))
+                    未配对计数 = 未配对计数 + 1
+                    未配对行(未配对计数) = 割单行数
+                    总不完整 = 总不完整 + 1
+                    行号 = 行号 + 1
+                    ' 输出配对部分
+                    WS出.Cells(行号, 3) = ""
+                    WS出.Cells(行号, 4) = ARRYM(R, 1)
+                    WS出.Cells(行号, 5) = 类别r
+                    WS出.Cells(行号, 6) = qty - 待中和
+                    WS出.Cells(行号, 7) = Val(ARRYM(R, 9)) * (qty - 待中和) / qty
+                    WS出.Cells(行号, 8) = "配对交易"
+                    割单行数 = 割单行数 + 1
+                    For ac_s = 1 To 15: 割单数组(割单行数, ac_s) = ARRYM(R, ac_s): Next
+                    割单数组(割单行数, 6) = 类别r
+                    割单数组(割单行数, 8) = qty - 待中和
+                    割单数组(割单行数, 9) = Val(ARRYM(R, 9)) * (qty - 待中和) / qty
                     割单数组(割单行数, 常割单列状态) = "配对交易"
-                    割单数组(割单行数, 常割单列配对类型) = "和持仓配对"
-                    割单数组(割单行数, 常割单列账户) = STCALL割单工具_识别账户(ARRYM(r, 3))
+                    割单数组(割单行数, 常割单列配对类型) = "历史买卖配对"
+                    割单数组(割单行数, 常割单列账户) = STCALL割单工具_识别账户(ARRYM(R, 3))
+                    行号 = 行号 + 1
+                    待中和 = 0
+                    GoTo 下一交易
                 End If
-                WS出.Cells(行号, 3) = ""
-                WS出.Cells(行号, 4) = ARRYM(r, 1)
-                WS出.Cells(行号, 5) = 类别r
-                WS出.Cells(行号, 6) = 未配对
-                WS出.Cells(行号, 7) = Val(ARRYM(r, 9)) * 未配对 / qty
-                WS出.Cells(行号, 8) = "未配对交易"
-                WS出.Rows(行号).Interior.Color = 常色十红
-                割单行数 = 割单行数 + 1
-                Dim ac3 As Long
-                For ac3 = 1 To 15: 割单数组(割单行数, ac3) = ARRYM(r, ac3): Next
-                割单数组(割单行数, 6) = 类别r
-                割单数组(割单行数, 8) = 未配对
-                割单数组(割单行数, 9) = Val(ARRYM(r, 9)) * 未配对 / qty
-                割单数组(割单行数, 常割单列状态) = "未配对交易"
-                割单数组(割单行数, 常割单列账户) = STCALL割单工具_识别账户(ARRYM(r, 3))
-                行号 = 行号 + 1
-                总不完整 = 总不完整 + 1
+            ElseIf 待中和 < 0 And 类别r = "买入" Then
+                ' 买入是在填补缺口
+                If qty <= -待中和 Then
+                    标记 = "未配对交易"
+                    待中和 = 待中和 + qty
+                Else
+                    ' 拆分买入
+                    WS出.Cells(行号, 3) = ""
+                    WS出.Cells(行号, 4) = ARRYM(R, 1)
+                    WS出.Cells(行号, 5) = 类别r
+                    WS出.Cells(行号, 6) = -待中和
+                    WS出.Cells(行号, 7) = Val(ARRYM(R, 9)) * (-待中和) / qty
+                    WS出.Cells(行号, 8) = "未配对交易"
+                    WS出.Rows(行号).Interior.Color = 常色十红
+                    割单行数 = 割单行数 + 1
+                    Dim ac_b As Long
+                    For ac_b = 1 To 15: 割单数组(割单行数, ac_b) = ARRYM(R, ac_b): Next
+                    割单数组(割单行数, 6) = 类别r
+                    割单数组(割单行数, 8) = -待中和
+                    割单数组(割单行数, 9) = Val(ARRYM(R, 9)) * (-待中和) / qty
+                    割单数组(割单行数, 常割单列状态) = "未配对交易"
+                    割单数组(割单行数, 常割单列账户) = STCALL割单工具_识别账户(ARRYM(R, 3))
+                    未配对计数 = 未配对计数 + 1
+                    未配对行(未配对计数) = 割单行数
+                    总不完整 = 总不完整 + 1
+                    行号 = 行号 + 1
+                    ' 输出配对部分
+                    WS出.Cells(行号, 3) = ""
+                    WS出.Cells(行号, 4) = ARRYM(R, 1)
+                    WS出.Cells(行号, 5) = 类别r
+                    WS出.Cells(行号, 6) = qty + 待中和
+                    WS出.Cells(行号, 7) = Val(ARRYM(R, 9)) * (qty + 待中和) / qty
+                    WS出.Cells(行号, 8) = "配对交易"
+                    割单行数 = 割单行数 + 1
+                    For ac_b = 1 To 15: 割单数组(割单行数, ac_b) = ARRYM(R, ac_b): Next
+                    割单数组(割单行数, 6) = 类别r
+                    割单数组(割单行数, 8) = qty + 待中和
+                    割单数组(割单行数, 9) = Val(ARRYM(R, 9)) * (qty + 待中和) / qty
+                    割单数组(割单行数, 常割单列状态) = "配对交易"
+                    割单数组(割单行数, 常割单列配对类型) = "历史买卖配对"
+                    割单数组(割单行数, 常割单列账户) = STCALL割单工具_识别账户(ARRYM(R, 3))
+                    行号 = 行号 + 1
+                    待中和 = 0
+                    GoTo 下一交易
+                End If
             Else
-                WS出.Cells(行号, 3) = ""
-                WS出.Cells(行号, 4) = ARRYM(r, 1)
-                WS出.Cells(行号, 5) = 类别r
-                WS出.Cells(行号, 6) = qty
-                WS出.Cells(行号, 7) = Val(ARRYM(r, 9))
-                WS出.Cells(行号, 8) = "配对交易"
-                行号 = 行号 + 1
-                割单行数 = 割单行数 + 1
-                Dim ac4 As Long
-                For ac4 = 1 To 15: 割单数组(割单行数, ac4) = ARRYM(r, ac4): Next
-                割单数组(割单行数, 6) = 类别r
-                割单数组(割单行数, 8) = qty
-                割单数组(割单行数, 9) = Val(ARRYM(r, 9))
-                割单数组(割单行数, 常割单列状态) = "配对交易"
-                割单数组(割单行数, 常割单列配对类型) = "历史买卖配对"
-                割单数组(割单行数, 常割单列账户) = STCALL割单工具_识别账户(ARRYM(r, 3))
+                标记 = "配对交易"
             End If
+            ' 输出交易
+            WS出.Cells(行号, 3) = ""
+            WS出.Cells(行号, 4) = ARRYM(R, 1)
+            WS出.Cells(行号, 5) = 类别r
+            WS出.Cells(行号, 6) = qty
+            WS出.Cells(行号, 7) = Val(ARRYM(R, 9))
+            WS出.Cells(行号, 8) = 标记
+            If 标记 = "未配对交易" Then
+                WS出.Rows(行号).Interior.Color = 常色十红
+                总不完整 = 总不完整 + 1
+            End If
+            割单行数 = 割单行数 + 1
+            Dim ac As Long
+            For ac = 1 To 15: 割单数组(割单行数, ac) = ARRYM(R, ac): Next
+            割单数组(割单行数, 6) = 类别r
+            割单数组(割单行数, 8) = qty
+            割单数组(割单行数, 9) = Val(ARRYM(R, 9))
+            割单数组(割单行数, 常割单列状态) = 标记
+            If 标记 = "未配对交易" Then
+                未配对计数 = 未配对计数 + 1
+                未配对行(未配对计数) = 割单行数
+            Else
+                割单数组(割单行数, 常割单列配对类型) = "历史买卖配对"
+            End If
+            割单数组(割单行数, 常割单列账户) = STCALL割单工具_识别账户(ARRYM(R, 3))
+            行号 = 行号 + 1
+下一交易:
         Next
-        跳过:
+跳过:
     Next
-    ' ⑤ 格式化
+    ' ⑤ 输出未配对交易（第二段）
+    If 未配对计数 > 0 Then
+        WS出.Cells(行号, 1) = "=== 未配对交易 ==="
+        WS出.Rows(行号).Font.Bold = True
+        WS出.Rows(行号).Font.Color = 常色十红
+        行号 = 行号 + 1
+        For upi = 1 To 未配对计数
+            upr = 未配对行(upi)
+            WS出.Cells(行号, 1) = 割单数组(upr, 4)
+            WS出.Cells(行号, 2) = 割单数组(upr, 5)
+            WS出.Cells(行号, 3) = ""
+            WS出.Cells(行号, 4) = 割单数组(upr, 1)
+            WS出.Cells(行号, 5) = 割单数组(upr, 6)
+            WS出.Cells(行号, 6) = 割单数组(upr, 8)
+            WS出.Cells(行号, 7) = 割单数组(upr, 9)
+            WS出.Cells(行号, 8) = "未配对交易"
+            WS出.Rows(行号).Interior.Color = 常色十红
+            行号 = 行号 + 1
+        Next
+    End If
+    ' ⑥ 格式化
     WS出.Columns("A:H").AutoFit
     WS出.Cells(2, 1).Activate
     Call PBASE格程工具_表冻结锁定(WS出, 基行:=1, 基列:=2)
@@ -1676,11 +1762,14 @@ End Function
 '========================================================================================
 ' 割册管理_交割单总流程 — 三步串联
 '========================================================================================
-Public Sub STCALL割册管理_交割单总流程()
+Public Sub STCALL割册管理_XLS交割单G0总流程()
     UTL宏工具_BEGIN
-    Call STCALL割册管理_XLS交割单G3校准
-    Call STCALL割册管理_XLS交割单G1导入
-    Call STCALL割册管理_XLS交割单G2解析
+    Call STCALL割册管理_XLS交割单G1校准
+    Call STCALL割册管理_XLS交割单G2导入
+    Call STCALL割册管理_XLS交割单G3解析
     UTL宏工具_END
     MsgBox "交割单分析完成", vbInformation
 End Sub
+'========================================================================================
+' 验证Name — 检查所有资金汇总 Name 是否存在并显示值
+'========================================================================================

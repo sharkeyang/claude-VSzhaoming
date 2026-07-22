@@ -70,9 +70,9 @@ Public Const 常簿缀研究 = "L"
 Public Const 常簿缀历统 = "R"
 '-----------------------------------------------
 Public Const 常仓名宝合 = "Z"
-Public Const 常仓名宝周 = ".ZW"      '池周
-Public Const 常仓名宝福 = ".ZF"
-Public Const 常仓名宝彦 = ".ZJ"
+Public Const 常仓名宝周 = "ZW"      '池周
+Public Const 常仓名宝福 = "ZF"
+Public Const 常仓名宝彦 = "ZJ"
 '股东代码（用于匹配账户）
 Public Const 常股代宝彦_上证 = "A788782902"
 Public Const 常股代宝彦_深证 = "0290783645"
