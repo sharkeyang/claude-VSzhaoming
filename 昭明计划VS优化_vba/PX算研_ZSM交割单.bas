@@ -2435,12 +2435,17 @@ End Function
 Private Function 后台辅程_账户后缀(ByRef ARR As Variant, Optional ByVal 行号 As Long = 1) As String
     Dim 账名 As String
     On Error Resume Next
-    账名 = STCALL割单工具_识别账户(Trim(ARR(行号, 位列割证券CIDL)))
+    '先试第18列（常割单列账户，G1校准已写入账号）
+    账名 = Trim(ARR(行号, 常割单列账户))
+    If 账名 = "" Then
+        '再试第3列（股东代码）
+        账名 = STCALL割单工具_识别账户(Trim(ARR(行号, 位列割证券CIDL)))
+    End If
     If 账名 = "" And 行号 < 10 Then
-        '第一行没找到，尝试后面几行
         Dim i As Long
         For i = 行号 + 1 To 10
-            账名 = STCALL割单工具_识别账户(Trim(ARR(i, 位列割证券CIDL)))
+            账名 = Trim(ARR(i, 常割单列账户))
+            If 账名 = "" Then 账名 = STCALL割单工具_识别账户(Trim(ARR(i, 位列割证券CIDL)))
             If 账名 <> "" Then Exit For
         Next
     End If
