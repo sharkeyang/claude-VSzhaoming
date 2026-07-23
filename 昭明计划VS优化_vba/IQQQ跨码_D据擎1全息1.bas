@@ -1447,6 +1447,110 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Columns("J").ColumnWidth = 6
     WSTO.Columns("K").ColumnWidth = 10
 '========================================================================================
+'输出：组合调整建议
+'========================================================================================
+    末行 = 明细行 + 2
+    WSTO.Cells(末行, 1).Value = "组合调整建议（最小修改方案）"
+    WSTO.Cells(末行, 1).Font.Bold = True
+    WSTO.Cells(末行, 1).Font.Size = 14
+    末行 = 末行 + 1
+    WSTO.Cells(末行, 1).Value = "维度"
+    WSTO.Cells(末行, 2).Value = "当前状态"
+    WSTO.Cells(末行, 3).Value = "建议调整"
+    With WSTO.Rows(末行).Font: .Bold = True: End With
+    With WSTO.Rows(末行).Interior: .Color = 常色九灰: End With
+    末行 = 末行 + 1
+    Dim 建议数 As Integer: 建议数 = 0
+    '--- 行业集中度建议 ---
+    Dim 行业 As Variant
+    For Each 行业 In 行业典集.keys
+        行业额 = 行业典集(行业)
+        If 行业额 / 总持仓额 > 0.3 Then
+            建议数 = 建议数 + 1
+            WSTO.Cells(末行, 1).Value = "行业集中度"
+            WSTO.Cells(末行, 2).Value = 行业 & "超限(" & Format(行业额 / 总持仓额, "0%") & ">30%)"
+            WSTO.Cells(末行, 3).Value = "减仓" & 行业 & Round(行业额 - 总持仓额 * 0.3, 1) & "千元至30%"
+            WSTO.Cells(末行, 3).Font.Color = 常色主黄
+            末行 = 末行 + 1
+        End If
+    Next
+    '--- 单票超限建议 ---
+    If Len(单票超限) > 0 Then
+        Dim 单票行 As Variant
+        单票行 = Split(单票超限, vbCrLf)
+        For i = 0 To UBound(单票行)
+            If 单票行(i) <> "" Then
+                建议数 = 建议数 + 1
+                WSTO.Cells(末行, 1).Value = "单票超限"
+                WSTO.Cells(末行, 2).Value = 单票行(i)
+                WSTO.Cells(末行, 3).Value = "减仓至仓位比≤1"
+                WSTO.Cells(末行, 3).Font.Color = 常色主黄
+                末行 = 末行 + 1
+            End If
+        Next
+    End If
+    '--- 仓周类上限建议 ---
+    If Len(仓周违规) > 0 Then
+        Dim 仓周行 As Variant
+        仓周行 = Split(仓周违规, vbCrLf)
+        For i = 0 To UBound(仓周行)
+            If 仓周行(i) <> "" Then
+                建议数 = 建议数 + 1
+                WSTO.Cells(末行, 1).Value = "仓周类上限"
+                WSTO.Cells(末行, 2).Value = 仓周行(i)
+                WSTO.Cells(末行, 3).Value = "减仓至组合占比≤上限"
+                WSTO.Cells(末行, 3).Font.Color = 常色主黄
+                末行 = 末行 + 1
+            End If
+        Next
+    End If
+    '--- 账户目标偏离建议 ---
+    If 福总资 > 0 Then
+        Dim 福满 As Double: 福满 = 福仓额 / 福总资
+        If Abs(福满 - 0.3) > 0.15 Then
+            建议数 = 建议数 + 1
+            WSTO.Cells(末行, 1).Value = "宝福仓位目标"
+            WSTO.Cells(末行, 2).Value = "当前" & Format(福满, "0%") & "(目标30%)"
+            If 福满 > 0.45 Then
+                WSTO.Cells(末行, 3).Value = "减仓至30%，释放" & Round((福满 - 0.3) * 福总资, 1) & "千元"
+            ElseIf 福满 < 0.15 Then
+                WSTO.Cells(末行, 3).Value = "可加仓至30%，增加" & Round((0.3 - 福满) * 福总资, 1) & "千元"
+            End If
+            WSTO.Cells(末行, 3).Font.Color = 常色主黄
+            末行 = 末行 + 1
+        End If
+    End If
+    If 彦总资 > 0 Then
+        Dim 彦满 As Double: 彦满 = 彦仓额 / 彦总资
+        If Abs(彦满 - 0.6) > 0.2 Then
+            建议数 = 建议数 + 1
+            WSTO.Cells(末行, 1).Value = "宝彦仓位目标"
+            WSTO.Cells(末行, 2).Value = "当前" & Format(彦满, "0%") & "(目标60%)"
+            If 彦满 > 0.8 Then
+                WSTO.Cells(末行, 3).Value = "减仓至60%，释放" & Round((彦满 - 0.6) * 彦总资, 1) & "千元"
+            ElseIf 彦满 < 0.4 Then
+                WSTO.Cells(末行, 3).Value = "可加仓至60%，增加" & Round((0.6 - 彦满) * 彦总资, 1) & "千元"
+            End If
+            WSTO.Cells(末行, 3).Font.Color = 常色主黄
+            末行 = 末行 + 1
+        End If
+    End If
+    '--- 板块不足建议 ---
+    If 行业典集.Count < 3 Then
+        建议数 = 建议数 + 1
+        WSTO.Cells(末行, 1).Value = "板块分散度"
+        WSTO.Cells(末行, 2).Value = "仅" & 行业典集.Count & "个板块，不足3个"
+        WSTO.Cells(末行, 3).Value = "建议新增1-2个板块分散风险"
+        WSTO.Cells(末行, 3).Font.Color = 常色主黄
+        末行 = 末行 + 1
+    End If
+    '--- 无建议 ---
+    If 建议数 = 0 Then
+        WSTO.Cells(末行, 1).Value = "OK组合合规"
+        WSTO.Cells(末行, 1).Font.Color = 常色主绿
+        WSTO.Cells(末行, 2).Value = "当前持仓符合所有规则，无需调整"
+    End If
+'========================================================================================
 '返回
 '========================================================================================
     MSG = MSG & "【组合管理】体检报告已生成→" & 表名 & vbCrLf
