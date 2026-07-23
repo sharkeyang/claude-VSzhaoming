@@ -1402,13 +1402,12 @@ Private Sub 后台辅程割析_P5T加0分析(ByRef ARR As Variant, ByRef ARRTO A
     Dim 组数 As Long
     组数 = 0
 
-    Dim i As Long, j As Long
+    Dim i As Long, j As Long, idx As Long
     For i = 1 To 计数
         Dim s日期 As String, s代码 As String
         s日期 = Trim(ARR(i, 位列割成交日期))
         s代码 = Trim(ARR(i, 位列割证券代码))
 
-        Dim idx As Long
         idx = 0
         For j = 1 To 组数
             If 组日期(j) = s日期 And 组代码(j) = s代码 Then
@@ -1440,7 +1439,6 @@ Private Sub 后台辅程割析_P5T加0分析(ByRef ARR As Variant, ByRef ARRTO A
     '筛选同时有买和卖的组(T+0)
     Dim T0数 As Long
     T0数 = 0
-    Dim idx As Long
     For idx = 1 To 组数
         If 组买笔(idx) > 0 And 组卖笔(idx) > 0 Then T0数 = T0数 + 1
     Next
