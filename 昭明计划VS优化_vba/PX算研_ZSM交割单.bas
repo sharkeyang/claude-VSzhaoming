@@ -779,6 +779,9 @@ Sub STCALL割册管理_XLS交割单G3解析()
     Dim ARR盈亏 As Variant
     Dim ARR_T0 As Variant
     Dim ARR随手 As Variant
+    Dim ARR月度 As Variant
+    Dim ARR活跃 As Variant
+    Dim ARR板块 As Variant
 
     后台辅程割析_P1择时分析 ARR买卖, ARR择时
     后台辅程割析_P2仓位分析 ARR买卖, ARR仓位
@@ -786,9 +789,12 @@ Sub STCALL割册管理_XLS交割单G3解析()
     后台辅程割析_P4盈亏分析 ARR买卖, ARR盈亏
     后台辅程割析_P5T加0分析 ARR买卖, ARR_T0
     后台辅程割析_P6随手单分析 ARR买卖, ARR随手
+    后台辅程割析_P7月度趋势 ARR买卖, ARR月度
+    后台辅程割析_P8活跃股票 ARR买卖, ARR活跃
+    后台辅程割析_P9板块偏好 ARR买卖, ARR板块
 '========================================================================================
     '输出到表
-    后台辅程割析_输出 WS割, ARR买卖, ARR择时, ARR仓位, ARR成本, ARR盈亏, ARR_T0, ARR随手
+    后台辅程割析_输出 WS割, ARR买卖, ARR择时, ARR仓位, ARR成本, ARR盈亏, ARR_T0, ARR随手, ARR月度, ARR活跃, ARR板块
 '========================================================================================
     '格式化
     后台辅程割析_格式化 WS割
@@ -1577,7 +1583,189 @@ Private Sub 后台辅程割析_P6随手单分析(ByRef ARR As Variant, ByRef ARR
 End Sub
 '========================================================================================
 '========================================================================================
-'输出到表
+'⑨ 月度趋势
+'========================================================================================
+'========================================================================================
+Private Sub 后台辅程割析_P7月度趋势(ByRef ARR As Variant, ByRef ARRTO As Variant)
+'========================================================================================
+    Dim 计数 As Long
+    计数 = UBound(ARR, 1)
+    Dim 月份 As New Dictionary
+    Dim i As Long
+    For i = 1 To 计数
+        Dim vDate As Variant
+        vDate = ARR(i, 位列割成交日期)
+        Dim 月键 As String
+        If IsDate(vDate) Then
+            月键 = Format(CDate(vDate), "YYYY-MM")
+        Else
+            Dim sD As String
+            sD = Trim(vDate)
+            If Len(sD) >= 6 Then 月键 = Left(sD, 4) & "-" & Mid(sD, 5, 2)
+        End If
+        If 月键 <> "" Then
+            If 月份.exists(月键) Then
+                月份(月键) = 月份(月键) + 1
+            Else
+                月份.Add 月键, 1
+            End If
+        End If
+    Next
+    '排序输出
+    Dim 月列表 As Variant
+    月列表 = 月份.keys
+    Dim j As Long, k As Long
+    For j = 0 To 月份.Count - 2
+        For k = j + 1 To 月份.Count - 1
+            If 月列表(j) > 月列表(k) Then
+                Dim tmpM As String
+                tmpM = 月列表(j)
+                月列表(j) = 月列表(k)
+                月列表(k) = tmpM
+            End If
+        Next
+    Next
+    ReDim ARRTO(1 To 月份.Count + 2, 1 To 4)
+    ARRTO(1, 1) = "月份": ARRTO(1, 2) = "笔数": ARRTO(1, 3) = "日均"
+    For j = 0 To 月份.Count - 1
+        月键 = 月列表(j)
+        Dim 笔数 As Long
+        笔数 = 月份(月键)
+        ARRTO(j + 2, 1) = 月键
+        ARRTO(j + 2, 2) = 笔数
+        '粗略日均：按30天/月估算
+        ARRTO(j + 2, 3) = Round(笔数 / 30, 1)
+    Next
+    ARRTO(月份.Count + 2, 1) = "合计"
+    ARRTO(月份.Count + 2, 2) = 计数
+End Sub
+'========================================================================================
+'========================================================================================
+'⑩ 活跃股票TOP15
+'========================================================================================
+'========================================================================================
+Private Sub 后台辅程割析_P8活跃股票(ByRef ARR As Variant, ByRef ARRTO As Variant)
+'========================================================================================
+    Dim 计数 As Long
+    计数 = UBound(ARR, 1)
+    Dim 股典 As New Dictionary
+    Dim i As Long
+    For i = 1 To 计数
+        Dim 代码 As String
+        代码 = Trim(ARR(i, 位列割证券代码))
+        If 代码 <> "" Then
+            If 股典.exists(代码) Then
+                股典(代码) = 股典(代码) + 1
+            Else
+                股典.Add 代码, 1
+            End If
+        End If
+    Next
+    '排序找TOP15
+    Dim 码列表 As Variant
+    码列表 = 股典.keys
+    Dim j As Long, k As Long
+    For j = 0 To 股典.Count - 2
+        For k = j + 1 To 股典.Count - 1
+            If 股典(码列表(j)) < 股典(码列表(k)) Then
+                Dim tmpC As String
+                tmpC = 码列表(j)
+                码列表(j) = 码列表(k)
+                码列表(k) = tmpC
+            End If
+        Next
+    Next
+    Dim 输出数 As Long
+    输出数 = Application.Min(股典.Count, 15)
+    ReDim ARRTO(1 To 输出数 + 2, 1 To 4)
+    ARRTO(1, 1) = "代码": ARRTO(1, 2) = "名称": ARRTO(1, 3) = "次数"
+    For j = 0 To 输出数 - 1
+        代码 = 码列表(j)
+        ARRTO(j + 2, 1) = 代码
+        '查找名称
+        Dim 名称 As String
+        名称 = ""
+        Dim i2 As Long
+        For i2 = 1 To 计数
+            If Trim(ARR(i2, 位列割证券代码)) = 代码 Then
+                名称 = Trim(ARR(i2, 位列割证券名称))
+                Exit For
+            End If
+        Next
+        ARRTO(j + 2, 2) = 名称
+        ARRTO(j + 2, 3) = 股典(代码)
+    Next
+    ARRTO(输出数 + 2, 1) = "涉及股票总数"
+    ARRTO(输出数 + 2, 2) = 股典.Count
+End Sub
+'========================================================================================
+'========================================================================================
+'(11)板块偏好
+'========================================================================================
+'========================================================================================
+Private Sub 后台辅程割析_P9板块偏好(ByRef ARR As Variant, ByRef ARRTO As Variant)
+'========================================================================================
+    Dim 计数 As Long
+    计数 = UBound(ARR, 1)
+    Dim 板典 As New Dictionary
+    Dim 行典 As New Dictionary
+    Dim i As Long
+    For i = 1 To 计数
+        Dim 代码 As String
+        代码 = Trim(ARR(i, 位列割证券代码))
+        Dim 板块 As String
+        If Left(代码, 1) = "6" Then
+            板块 = "主板沪"
+        ElseIf Left(代码, 3) = "300" Then
+            板块 = "创业板"
+        ElseIf Left(代码, 3) = "688" Then
+            板块 = "科创板"
+        ElseIf Left(代码, 1) = "0" Or Left(代码, 1) = "2" Then
+            板块 = "主板深"
+        ElseIf Left(代码, 1) = "4" Or Left(代码, 1) = "8" Then
+            板块 = "北交所"
+        Else
+            板块 = "其他"
+        End If
+        If 板典.exists(板块) Then
+            板典(板块) = 板典(板块) + 1
+        Else
+            板典.Add 板块, 1
+        End If
+        '行业（从名称判断）
+        Dim 名称 As String
+        名称 = Trim(ARR(i, 位列割证券名称))
+        If InStr(名称, "ETF") > 0 Or InStr(名称, "基金") > 0 Then
+            Dim 行业 As String
+            行业 = "ETF"
+            If 行典.exists(行业) Then 行典(行业) = 行典(行业) + 1 Else 行典.Add 行业, 1
+        End If
+    Next
+    '输出板块分布
+    ReDim ARRTO(1 To 板典.Count + 行典.Count + 3, 1 To 4)
+    ARRTO(1, 1) = "板块": ARRTO(1, 2) = "笔数": ARRTO(1, 3) = "占比"
+    Dim 行号 As Long
+    行号 = 2
+    Dim 总笔 As Long
+    总笔 = 0
+    Dim 板列表 As Variant
+    板列表 = 板典.keys
+    Dim j As Long
+    For j = 0 To 板典.Count - 1
+        ARRTO(行号, 1) = 板列表(j)
+        ARRTO(行号, 2) = 板典(板列表(j))
+        总笔 = 总笔 + 板典(板列表(j))
+        ARRTO(行号, 3) = Format(板典(板列表(j)) / 计数, "0.000%")
+        行号 = 行号 + 1
+    Next
+    ARRTO(行号, 1) = "行业": ARRTO(行号, 2) = "笔数": ARRTO(行号, 3) = "占比"
+    行号 = 行号 + 1
+    If 行典.exists("ETF") Then
+        ARRTO(行号, 1) = "ETF/基金"
+        ARRTO(行号, 2) = 行典("ETF")
+        ARRTO(行号, 3) = Format(行典("ETF") / 计数, "0.000%")
+    End If
+End Sub
 '========================================================================================
 '========================================================================================
 Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
@@ -1587,7 +1775,10 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
     ByRef ARR成本 As Variant, _
     ByRef ARR盈亏 As Variant, _
     ByRef ARR_T0 As Variant, _
-    ByRef ARR随手 As Variant)
+    ByRef ARR随手 As Variant, _
+    ByRef ARR月度 As Variant, _
+    ByRef ARR活跃 As Variant, _
+    ByRef ARR板块 As Variant)
 '========================================================================================
     Dim 行号 As Long
     行号 = 1
@@ -1800,6 +1991,18 @@ Private Sub 后台辅程割析_输出(ByVal WS As Worksheet, _
     Next
     WS.Cells(行号, 1) = "最大亏损源头"
     WS.Cells(行号, 2) = 亏1 & "、" & 亏2 & "、" & 亏3
+    行号 = 行号 + 2
+
+    '⑨ 月度趋势
+    Call 后台辅程割析_输出段(WS, 行号, "⑨ 月度交易量趋势", ARR月度)
+    行号 = 行号 + UBound(ARR月度, 1) + 2
+
+    '⑩ 活跃股票
+    Call 后台辅程割析_输出段(WS, 行号, "⑩ 最活跃股票 TOP15", ARR活跃)
+    行号 = 行号 + UBound(ARR活跃, 1) + 2
+
+    '(11)板块偏好
+    Call 后台辅程割析_输出段(WS, 行号, "(11)板块偏好分布", ARR板块)
 End Sub
 '========================================================================================
 '========================================================================================
