@@ -2434,8 +2434,18 @@ End Function
 '========================================================================================
 Private Function 后台辅程_账户后缀(ByRef ARR As Variant, Optional ByVal 行号 As Long = 1) As String
     Dim 账名 As String
+    On Error Resume Next
     账名 = STCALL割单工具_识别账户(Trim(ARR(行号, 位列割证券CIDL)))
-    If 账名 <> "" Then 后台辅程_账户后缀 = "_" & 账名 Else 后台辅程_账户后缀 = ""
+    If 账名 = "" And 行号 < 10 Then
+        '第一行没找到，尝试后面几行
+        Dim i As Long
+        For i = 行号 + 1 To 10
+            账名 = STCALL割单工具_识别账户(Trim(ARR(i, 位列割证券CIDL)))
+            If 账名 <> "" Then Exit For
+        Next
+    End If
+    On Error GoTo 0
+    If 账名 <> "" Then 后台辅程_账户后缀 = 账名 Else 后台辅程_账户后缀 = ""
 End Function
 '========================================================================================
 ' 割册管理_交割单总流程 — 三步串联
