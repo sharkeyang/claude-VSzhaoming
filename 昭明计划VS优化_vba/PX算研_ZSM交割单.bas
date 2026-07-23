@@ -1,6 +1,6 @@
 Attribute VB_Name = "PX算研_ZSM交割单"
 Option Explicit
-Public Const 常册交割单 = "花割"
+Public Const 常册交割单 = "割单"
 Public Const 常册割析 = "割析"
 Public Const 位列割成交日期 = 1
 Public Const 位列割成交时间 = 2
@@ -319,7 +319,7 @@ Sub STCALL割册管理_XLS交割单G2导入()
     '--------------------------------------------------------------------------------
     '格式化
     '--------------------------------------------------------------------------------
-    表名 = "交割单"
+    表名 = "割单" & 后台辅程_账户后缀(ARRYM, 2)
     Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=True, 章色:=常色四青, 章签:="【交易完全列表】")
     WB.Sheets(表名).Columns(位列割发生金额).HorizontalAlignment = xlRight
     WB.Sheets(表名).Columns(位列割成交数量).HorizontalAlignment = xlRight
@@ -728,8 +728,10 @@ Sub STCALL割册管理_XLS交割单G3解析()
     End With
     WB割.Close False
     Set WB割 = Nothing
+    '重命名Sheet加上账户后缀
+    WS割.Name = 常册割析 & 后台辅程_账户后缀(ARR原始, 2)
 开始处理2:
-    If WS割 Is Nothing Then Call PBASE格程工具_表操工表新增(WS割, 常册割析, 基色底:=常色马尔斯绿)
+    If WS割 Is Nothing Then Call PBASE格程工具_表操工表新增(WS割, 常册割析 & 后台辅程_账户后缀(ARR原始, 2), 基色底:=常色马尔斯绿)
     '过滤只保留买卖记录
     Dim 计数原始 As Long
     计数原始 = UBound(ARR原始, 1)
@@ -851,7 +853,7 @@ Private Sub 后台辅程割析_P1择时分析(ByRef ARR As Variant, ByRef ARRTO 
         '累计分钟
         Dim 分钟键 As String
         分钟键 = Format(小时, "00") & ":" & Format(分钟, "00")
-        If 分钟典.exists(分钟键) Then
+        If 分钟典.Exists(分钟键) Then
             分钟典(分钟键) = 分钟典(分钟键) + 1
         Else
             分钟典.Add 分钟键, 1
@@ -859,9 +861,9 @@ Private Sub 后台辅程割析_P1择时分析(ByRef ARR As Variant, ByRef ARRTO 
         Dim 类别 As String
         类别 = Trim(ARR(i, 位列割委托类别))
         If 类别 = "买入" Then
-            If 分钟买典.exists(分钟键) Then 分钟买典(分钟键) = 分钟买典(分钟键) + 1 Else 分钟买典.Add 分钟键, 1
+            If 分钟买典.Exists(分钟键) Then 分钟买典(分钟键) = 分钟买典(分钟键) + 1 Else 分钟买典.Add 分钟键, 1
         Else
-            If 分钟卖典.exists(分钟键) Then 分钟卖典(分钟键) = 分钟卖典(分钟键) + 1 Else 分钟卖典.Add 分钟键, 1
+            If 分钟卖典.Exists(分钟键) Then 分钟卖典(分钟键) = 分钟卖典(分钟键) + 1 Else 分钟卖典.Add 分钟键, 1
         End If
 
         '确定时段
@@ -930,7 +932,7 @@ Private Sub 后台辅程割析_P1择时分析(ByRef ARR As Variant, ByRef ARRTO 
     ARRTO(分钟行 + 1, 6) = "卖出": ARRTO(分钟行 + 1, 7) = "占卖出"
     '排序找TOP5
     Dim 分钟列表 As Variant
-    分钟列表 = 分钟典.keys
+    分钟列表 = 分钟典.Keys
     Dim j As Long, k As Long
     For j = 0 To 分钟典.Count - 2
         For k = j + 1 To 分钟典.Count - 1
@@ -954,8 +956,8 @@ Private Sub 后台辅程割析_P1择时分析(ByRef ARR As Variant, ByRef ARRTO 
         ARRTO(分钟行 + 2 + j, 2) = 分钟典(分钟键)
         ARRTO(分钟行 + 2 + j, 3) = Format(分钟典(分钟键) / 计数, "0.000%")
         Dim 买笔 As Long, 卖笔 As Long
-        If 分钟买典.exists(分钟键) Then 买笔 = 分钟买典(分钟键) Else 买笔 = 0
-        If 分钟卖典.exists(分钟键) Then 卖笔 = 分钟卖典(分钟键) Else 卖笔 = 0
+        If 分钟买典.Exists(分钟键) Then 买笔 = 分钟买典(分钟键) Else 买笔 = 0
+        If 分钟卖典.Exists(分钟键) Then 卖笔 = 分钟卖典(分钟键) Else 卖笔 = 0
         ARRTO(分钟行 + 2 + j, 4) = 买笔
         ARRTO(分钟行 + 2 + j, 5) = IIf(总买笔 > 0, Format(买笔 / 总买笔, "0.000%"), "")
         ARRTO(分钟行 + 2 + j, 6) = 卖笔
@@ -1604,7 +1606,7 @@ Private Sub 后台辅程割析_P7月度趋势(ByRef ARR As Variant, ByRef ARRTO 
             If Len(sD) >= 6 Then 月键 = Left(sD, 4) & "-" & Mid(sD, 5, 2)
         End If
         If 月键 <> "" Then
-            If 月份.exists(月键) Then
+            If 月份.Exists(月键) Then
                 月份(月键) = 月份(月键) + 1
             Else
                 月份.Add 月键, 1
@@ -1613,7 +1615,7 @@ Private Sub 后台辅程割析_P7月度趋势(ByRef ARR As Variant, ByRef ARRTO 
     Next
     '排序输出
     Dim 月列表 As Variant
-    月列表 = 月份.keys
+    月列表 = 月份.Keys
     Dim j As Long, k As Long
     For j = 0 To 月份.Count - 2
         For k = j + 1 To 月份.Count - 1
@@ -1654,7 +1656,7 @@ Private Sub 后台辅程割析_P8活跃股票(ByRef ARR As Variant, ByRef ARRTO 
         Dim 代码 As String
         代码 = Trim(ARR(i, 位列割证券代码))
         If 代码 <> "" Then
-            If 股典.exists(代码) Then
+            If 股典.Exists(代码) Then
                 股典(代码) = 股典(代码) + 1
             Else
                 股典.Add 代码, 1
@@ -1663,7 +1665,7 @@ Private Sub 后台辅程割析_P8活跃股票(ByRef ARR As Variant, ByRef ARRTO 
     Next
     '排序找TOP15
     Dim 码列表 As Variant
-    码列表 = 股典.keys
+    码列表 = 股典.Keys
     Dim j As Long, k As Long
     For j = 0 To 股典.Count - 2
         For k = j + 1 To 股典.Count - 1
@@ -1727,7 +1729,7 @@ Private Sub 后台辅程割析_P9板块偏好(ByRef ARR As Variant, ByRef ARRTO 
         Else
             板块 = "其他"
         End If
-        If 板典.exists(板块) Then
+        If 板典.Exists(板块) Then
             板典(板块) = 板典(板块) + 1
         Else
             板典.Add 板块, 1
@@ -1738,7 +1740,7 @@ Private Sub 后台辅程割析_P9板块偏好(ByRef ARR As Variant, ByRef ARRTO 
         If InStr(名称, "ETF") > 0 Or InStr(名称, "基金") > 0 Then
             Dim 行业 As String
             行业 = "ETF"
-            If 行典.exists(行业) Then 行典(行业) = 行典(行业) + 1 Else 行典.Add 行业, 1
+            If 行典.Exists(行业) Then 行典(行业) = 行典(行业) + 1 Else 行典.Add 行业, 1
         End If
     Next
     '输出板块分布
@@ -1749,7 +1751,7 @@ Private Sub 后台辅程割析_P9板块偏好(ByRef ARR As Variant, ByRef ARRTO 
     Dim 总笔 As Long
     总笔 = 0
     Dim 板列表 As Variant
-    板列表 = 板典.keys
+    板列表 = 板典.Keys
     Dim j As Long
     For j = 0 To 板典.Count - 1
         ARRTO(行号, 1) = 板列表(j)
@@ -1760,7 +1762,7 @@ Private Sub 后台辅程割析_P9板块偏好(ByRef ARR As Variant, ByRef ARRTO 
     Next
     ARRTO(行号, 1) = "行业": ARRTO(行号, 2) = "笔数": ARRTO(行号, 3) = "占比"
     行号 = 行号 + 1
-    If 行典.exists("ETF") Then
+    If 行典.Exists("ETF") Then
         ARRTO(行号, 1) = "ETF/基金"
         ARRTO(行号, 2) = 行典("ETF")
         ARRTO(行号, 3) = Format(行典("ETF") / 计数, "0.000%")
@@ -2147,7 +2149,7 @@ Public Sub STCALL割册管理_XLS交割单G1校准()
     Set WB割 = Nothing
     ' ③ 构建输出表
     Dim WS出 As Worksheet
-    Call PBASE格程工具_表操工表新增(WS出, "持仓校准", 基色底:=常色主碧)
+    Call PBASE格程工具_表操工表新增(WS出, "割校准" & 后台辅程_账户后缀(ARRYM, 2), 基色底:=常色主碧)
     WS出.Cells(1, 1) = "证券代码"
     ReDim 割单数组(1 To 5000, 1 To 常割单列数)
     割单行数 = 0: WS出.Cells(1, 2) = "证券名称"
@@ -2412,9 +2414,9 @@ Public Sub STCALL割册管理_XLS交割单G1校准()
     WS出.Columns("A:H").AutoFit
     WS出.Cells(2, 1).Activate
     Call PBASE格程工具_表冻结锁定(WS出, 基行:=1, 基列:=2)
-    MsgBox "持仓校准完成" & vbCrLf & _
+    MsgBox "割校准完成" & vbCrLf & _
            "完整交易: " & 总完整 & " 只" & vbCrLf & _
-           "不完整交易: " & 总不完整 & " 笔", vbInformation, "持仓校准"
+           "不完整交易: " & 总不完整 & " 笔", vbInformation, "割校准"
     UTL宏工具_END
 End Sub
 '========================================================================================
@@ -2426,6 +2428,14 @@ Public Function STCALL割单工具_识别账户(ByVal 股东代码 As String) As
     Case 常股代宝福_上证, 常股代宝福_深证: STCALL割单工具_识别账户 = 常仓名宝福
     Case Else: STCALL割单工具_识别账户 = ""
     End Select
+End Function
+'========================================================================================
+' 获取账户后缀（用于Sheet命名）
+'========================================================================================
+Private Function 后台辅程_账户后缀(ByRef ARR As Variant, Optional ByVal 行号 As Long = 1) As String
+    Dim 账名 As String
+    账名 = STCALL割单工具_识别账户(Trim(ARR(行号, 位列割证券CIDL)))
+    If 账名 <> "" Then 后台辅程_账户后缀 = "_" & 账名 Else 后台辅程_账户后缀 = ""
 End Function
 '========================================================================================
 ' 割册管理_交割单总流程 — 三步串联

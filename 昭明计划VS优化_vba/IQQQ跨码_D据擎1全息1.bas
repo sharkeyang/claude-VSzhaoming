@@ -832,7 +832,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     For 行号 = 2 To WS花册.UsedRange.Rows.Count
         CIDL = Trim(WS花册.Cells(行号, 位列花天CIDL).Value)
         If CIDL <> "" Then
-            If 典码位花册.exists(CIDL) = False Then
+            If 典码位花册.Exists(CIDL) = False Then
                 典码位花册.Add CIDL, 行号
             End If
         End If
@@ -859,7 +859,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             总持仓额 = 总持仓额 + 单票额
             '--- 双账户分解 ---
             福仓数 = 0: 彦仓数 = 0
-            If 典码位花册.exists(CIDL) Then
+            If 典码位花册.Exists(CIDL) Then
                 行号 = 典码位花册(CIDL)
                 福仓字 = Trim(WS花册.Cells(行号, 位列花天仓宝福).Value)
                 彦仓字 = Trim(WS花册.Cells(行号, 位列花天仓宝彦).Value)
@@ -877,7 +877,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             '--- 行业统计 ---
             行业 = 谕组(X, 位qt行益)
             If 行业 <> "" Then
-                If 行业典集.exists(行业) Then
+                If 行业典集.Exists(行业) Then
                     行业额 = 行业典集(行业) + 单票额
                 Else
                     行业额 = 单票额
@@ -887,7 +887,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             '--- 板块轮动统计 ---
             轮动 = Left$(谕组(X, 位谕of仓周类), 1)
             If 轮动 <> "" Then
-                If 行业轮动典集.exists(行业) = False Then
+                If 行业轮动典集.Exists(行业) = False Then
                     行业轮动典集.Add 行业, 轮动
                 Else
                     行业轮动典集(行业) = 行业轮动典集(行业) & 轮动
@@ -896,7 +896,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             '--- 策略统计 ---
             月基策略 = 谕组(X, 位谕of月基策略)
             If 月基策略 <> "" Then
-                If 策略典集.exists(月基策略) Then
+                If 策略典集.Exists(月基策略) Then
                     策略典集(月基策略) = 策略典集(月基策略) + 1
                 Else
                     策略典集(月基策略) = 1
@@ -1056,7 +1056,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     With WSTO.Rows(末行).Font: .Bold = True: End With
     With WSTO.Rows(末行).Interior: .Color = 常色九灰: End With
     末行 = 14
-    For Each 行业 In 行业典集.keys
+    For Each 行业 In 行业典集.Keys
         行业额 = 行业典集(行业)
         WSTO.Cells(末行, 1).Value = 行业
         WSTO.Cells(末行, 2).Value = Round(行业额, 1)
@@ -1094,7 +1094,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     Dim 轮动行业 As Variant
     Dim 轮动行 As Integer
     轮动行 = 末行
-    For Each 轮动行业 In 行业轮动典集.keys
+    For Each 轮动行业 In 行业轮动典集.Keys
         Dim 轮动串 As String
         轮动串 = 行业轮动典集(轮动行业)
         Dim 主升数 As Long: 主升数 = 0
@@ -1147,7 +1147,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     With WSTO.Rows(末行).Font: .Bold = True: End With
     With WSTO.Rows(末行).Interior: .Color = 常色九灰: End With
     末行 = 末行 + 1
-    For Each 月基策略 In 策略典集.keys
+    For Each 月基策略 In 策略典集.Keys
         WSTO.Cells(末行, 1).Value = 月基策略
         WSTO.Cells(末行, 2).Value = 策略典集(月基策略)
         WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
@@ -1363,7 +1363,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
         If 谕组(X, 位谕of仓持数) > 0 Then
             CIDL = 谕组(X, 位qt代码)
             福仓数 = 0
-            If 典码位花册.exists(CIDL) Then
+            If 典码位花册.Exists(CIDL) Then
                 行号 = 典码位花册(CIDL)
                 福仓字 = Trim(WS花册.Cells(行号, 位列花天仓宝福).Value)
                 If InStr(福仓字, ",") > 0 Then 福仓数 = Val(Left$(福仓字, InStr(福仓字, ",") - 1))
@@ -1410,7 +1410,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
         If 谕组(X, 位谕of仓持数) > 0 Then
             CIDL = 谕组(X, 位qt代码)
             彦仓数 = 0
-            If 典码位花册.exists(CIDL) Then
+            If 典码位花册.Exists(CIDL) Then
                 行号 = 典码位花册(CIDL)
                 彦仓字 = Trim(WS花册.Cells(行号, 位列花天仓宝彦).Value)
                 If InStr(彦仓字, ",") > 0 Then 彦仓数 = Val(Left$(彦仓字, InStr(彦仓字, ",") - 1))
