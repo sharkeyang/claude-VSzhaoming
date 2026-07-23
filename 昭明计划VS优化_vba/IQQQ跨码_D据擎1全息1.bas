@@ -773,6 +773,8 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     Dim 行业 As Variant
     Dim 行业额 As Double
     Dim 行业典集 As New Dictionary
+    Dim 行业轮动典集 As New Dictionary
+    Dim 轮动 As String
     '--- 策略统计 ---
     Dim 策略典集 As New Dictionary
     Dim 总命分 As Double: 总命分 = 0
@@ -881,6 +883,15 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
                     行业额 = 单票额
                 End If
                 行业典集(行业) = 行业额
+            End If
+            '--- 板块轮动统计 ---
+            轮动 = Left$(谕组(X, 位谕of仓周类), 1)
+            If 轮动 <> "" Then
+                If 行业轮动典集.exists(行业) = False Then
+                    行业轮动典集.Add 行业, 轮动
+                Else
+                    行业轮动典集(行业) = 行业轮动典集(行业) & 轮动
+                End If
             End If
             '--- 策略统计 ---
             月基策略 = 谕组(X, 位谕of月基策略)
@@ -1064,6 +1075,64 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
         End If
         末行 = 末行 + 1
     Next
+'========================================================================================
+'输出：二B、板块轮动状态
+'========================================================================================
+    末行 = 末行 + 1
+    WSTO.Cells(末行, 1).Value = "二B、板块轮动状态"
+    WSTO.Cells(末行, 1).Font.Bold = True
+    WSTO.Cells(末行, 1).Font.Size = 14
+    末行 = 末行 + 1
+    WSTO.Cells(末行, 1).Value = "行业"
+    WSTO.Cells(末行, 2).Value = "主升票数"
+    WSTO.Cells(末行, 3).Value = "弱势票数"
+    WSTO.Cells(末行, 4).Value = "状态"
+    WSTO.Cells(末行, 5).Value = "建议仓位"
+    With WSTO.Rows(末行).Font: .Bold = True: End With
+    With WSTO.Rows(末行).Interior: .Color = 常色九灰: End With
+    末行 = 末行 + 1
+    Dim 轮动行业 As Variant
+    Dim 轮动行 As Integer
+    轮动行 = 末行
+    For Each 轮动行业 In 行业轮动典集.keys
+        Dim 轮动串 As String
+        轮动串 = 行业轮动典集(轮动行业)
+        Dim 主升数 As Long: 主升数 = 0
+        Dim 弱势数 As Long: 弱势数 = 0
+        Dim c As Long
+        For c = 1 To Len(轮动串)
+            Dim ch As String
+            ch = Mid$(轮动串, c, 1)
+            If ch = "金" Or ch = "银" Then 主升数 = 主升数 + 1
+            If ch = "屎" Or ch = "尿" Then 弱势数 = 弱势数 + 1
+        Next
+        WSTO.Cells(轮动行, 1).Value = 轮动行业
+        WSTO.Cells(轮动行, 2).Value = 主升数
+        WSTO.Cells(轮动行, 3).Value = 弱势数
+        '状态判定
+        Dim 轮动状态 As String
+        Dim 建议仓位 As String
+        If 主升数 > 弱势数 And 主升数 >= 2 Then
+            轮动状态 = "主升"
+            建议仓位 = "40-50%"
+            WSTO.Cells(轮动行, 4).Font.Color = 常色主绿
+        ElseIf 主升数 > 0 And 主升数 >= 弱势数 Then
+            轮动状态 = "轮动候选"
+            建议仓位 = "20-30%"
+            WSTO.Cells(轮动行, 4).Font.Color = 常色主黄
+        ElseIf 主升数 = 0 And 弱势数 = 0 Then
+            轮动状态 = "震荡"
+            建议仓位 = "10-20%"
+        Else
+            轮动状态 = "回避"
+            建议仓位 = "0-5%"
+            WSTO.Cells(轮动行, 4).Font.Color = 常色主红
+        End If
+        WSTO.Cells(轮动行, 4).Value = 轮动状态
+        WSTO.Cells(轮动行, 5).Value = 建议仓位
+        轮动行 = 轮动行 + 1
+    Next
+    末行 = 轮动行 + 1
 '========================================================================================
 '输出：三、策略分布
 '========================================================================================
