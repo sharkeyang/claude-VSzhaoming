@@ -320,7 +320,7 @@ Sub STCALL割册管理_XLS交割单G2导入()
     '格式化
     '--------------------------------------------------------------------------------
     表名 = "割单" & 后台辅程_账户后缀(ARRYM, 2)
-    Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=True, 章色:=常色四青, 章签:="【交易完全列表】")
+    Call IQQQ展擎出程至页割版(WB, 表名, 是否建表:=True, 章色:=常色十蓝, 章签:="【交易完全列表】")
     WB.Sheets(表名).Columns(位列割发生金额).HorizontalAlignment = xlRight
     WB.Sheets(表名).Columns(位列割成交数量).HorizontalAlignment = xlRight
     WB.Sheets(表名).Columns(位列割成交日期).NumberFormatLocal = 全设格式of日期
@@ -480,7 +480,7 @@ Function IQQQ展擎出程至页割版( _
             '============================================================================
             '全局设置
             '============================================================================
-            WSTO.Tab.Color = 常色主黑
+            WSTO.Tab.Color = 章色
             With WSTO.Cells
                 .ClearFormats
                 .Interior.ColorIndex = 56
@@ -717,7 +717,7 @@ Sub STCALL割册管理_XLS交割单G3解析()
 '========================================================================================
     '创建输出表
     Dim WS割 As Worksheet
-    Call PBASE格程工具_表操工表新增(WS割, 常册割析, 基色底:=常色马尔斯绿)
+    Call PBASE格程工具_表操工表新增(WS割, 常册割析, 基色底:=常色十蓝)
 '========================================================================================
     '读取 XLS 文件到数组（自动计算，确保 ="..." 公式被求值）
     Application.Calculation = xlCalculationAutomatic
@@ -731,7 +731,7 @@ Sub STCALL割册管理_XLS交割单G3解析()
     '重命名Sheet加上账户后缀
     WS割.Name = 常册割析 & 后台辅程_账户后缀(ARR原始, 2)
 开始处理2:
-    If WS割 Is Nothing Then Call PBASE格程工具_表操工表新增(WS割, 常册割析 & 后台辅程_账户后缀(ARR原始, 2), 基色底:=常色马尔斯绿)
+    If WS割 Is Nothing Then Call PBASE格程工具_表操工表新增(WS割, 常册割析 & 后台辅程_账户后缀(ARR原始, 2), 基色底:=常色十蓝)
     '过滤只保留买卖记录
     Dim 计数原始 As Long
     计数原始 = UBound(ARR原始, 1)
@@ -2149,7 +2149,7 @@ Public Sub STCALL割册管理_XLS交割单G1校准()
     Set WB割 = Nothing
     ' ③ 构建输出表
     Dim WS出 As Worksheet
-    Call PBASE格程工具_表操工表新增(WS出, "割校准" & 后台辅程_账户后缀(ARRYM, 2), 基色底:=常色主碧)
+    Call PBASE格程工具_表操工表新增(WS出, "割校准" & 后台辅程_账户后缀(ARRYM, 2), 基色底:=常色十蓝)
     WS出.Cells(1, 1) = "证券代码"
     ReDim 割单数组(1 To 5000, 1 To 常割单列数)
     割单行数 = 0: WS出.Cells(1, 2) = "证券名称"
