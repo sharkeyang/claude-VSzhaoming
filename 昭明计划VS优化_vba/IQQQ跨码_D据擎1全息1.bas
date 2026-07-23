@@ -1024,16 +1024,16 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 4).Value = Round(福总资 + 彦总资, 1)
     末行 = 9
     WSTO.Cells(末行, 1).Value = "满仓率"
-    WSTO.Cells(末行, 2).Value = IIf(福总资 > 0, Format(福仓额 / 福总资, "0%"), "")
-    WSTO.Cells(末行, 3).Value = IIf(彦总资 > 0, Format(彦仓额 / 彦总资, "0%"), "")
-    WSTO.Cells(末行, 4).Value = IIf(福总资 + 彦总资 > 0, Format(总持仓额 / (福总资 + 彦总资), "0%"), "")
+    If 福总资 > 0 Then WSTO.Cells(末行, 2).Value = Format(福仓额 / 福总资, "0%")
+    If 彦总资 > 0 Then WSTO.Cells(末行, 3).Value = Format(彦仓额 / 彦总资, "0%")
+    If 福总资 + 彦总资 > 0 Then WSTO.Cells(末行, 4).Value = Format(总持仓额 / (福总资 + 彦总资), "0%")
     末行 = 10
     WSTO.Cells(末行, 1).Value = "仓位目标"
-    WSTO.Cells(末行, 2).Value = IIf(福总资 > 0, Format(福仓额 / 福总资, "0%") & "(目标30%)", "")
-    WSTO.Cells(末行, 2).Font.Color = IIf(福总资 > 0 And Abs(福仓额 / 福总资 - 0.3) > 0.15, 常色主黄, 常色主黑)
-    WSTO.Cells(末行, 3).Value = IIf(彦总资 > 0, Format(彦仓额 / 彦总资, "0%") & "(目标60%)", "")
-    WSTO.Cells(末行, 3).Font.Color = IIf(彦总资 > 0 And Abs(彦仓额 / 彦总资 - 0.6) > 0.2, 常色主黄, 常色主黑)
-    WSTO.Cells(末行, 4).Value = Format(总持仓额 / (福总资 + 彦总资), "0%")
+    If 福总资 > 0 Then WSTO.Cells(末行, 2).Value = Format(福仓额 / 福总资, "0%") & "(目标30%)"
+    If 福总资 > 0 Then WSTO.Cells(末行, 2).Font.Color = IIf(Abs(福仓额 / 福总资 - 0.3) > 0.15, 常色主黄, 常色主黑)
+    If 彦总资 > 0 Then WSTO.Cells(末行, 3).Value = Format(彦仓额 / 彦总资, "0%") & "(目标60%)"
+    If 彦总资 > 0 Then WSTO.Cells(末行, 3).Font.Color = IIf(Abs(彦仓额 / 彦总资 - 0.6) > 0.2, 常色主黄, 常色主黑)
+    If 福总资 + 彦总资 > 0 Then WSTO.Cells(末行, 4).Value = Format(总持仓额 / (福总资 + 彦总资), "0%")
     '--- 概览数字格式 ---
     For X = 5 To 8
         With WSTO.Rows(X).Cells(2).Resize(1, 3)
