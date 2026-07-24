@@ -86,17 +86,14 @@ Private Sub 热加载_执行(ByVal 目录 As String, Optional 是否弹窗 As Bo
     Next
 
     ' ⑤ 从 GBK 临时目录导入（先删同名模块，避免二义性）
-    Set 流 = CreateObject("ADODB.Stream")
-    流.Type = 2
-    流.Charset = "gbk"
-
     For Each file In FSO.GetFolder(临时GBK目录).Files
         If LCase(FSO.GetExtensionName(file.Name)) = "bas" And file.Name <> "ZUTL_热加载.bas" Then
-            ' 读取文件第一行，提取模块名
-            流.Open
-            流.LoadFromFile file.Path
-            首行 = 流.ReadText(-2)
-            流.Close
+            ' 用 Open 语句读取第一行提取模块名（比ADODB.Stream更稳定）
+            Dim 文件号 As Integer
+            文件号 = FreeFile
+            Open file.Path For Input As #文件号
+            Line Input #文件号, 首行
+            Close #文件号
             引号1 = InStr(首行, """")
             If 引号1 > 0 Then
                 引号2 = InStr(引号1 + 1, 首行, """")
