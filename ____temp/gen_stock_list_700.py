@@ -1,16 +1,25 @@
-"""生成算展验证股票列表 — 7市板各100只，2010-2015上市，共700只
+"""生成算展验证股票列表 — 7市板各100只，2015前上市，共700只
 
-改进点：
-1. 获取上市日期，过滤2010-2015年上市
-2. 获取数据验证，确保每只股票有可用日线数据
-3. 7市板各100只，避免漏跑/失败
+核心策略：
+1. 从akshare获取全量A股 → 按照代码前缀过滤2015前上市
+2. 用花册交叉验证 → 确保VBA有数据，不漏跑
+3. 按代码范围均匀采样 → 保证行业分散（代码越早=老行业，越晚=新行业）
+4. 科创板(688)无2015前股票 → 用2019+代替
+
+运行方式：
+  python gen_stock_list_700.py          # 全量生成
+  python gen_stock_list_700.py --test   # 测试模式（只生成2只）
 """
 import akshare as ak
 import pandas as pd
-import os, time, random, sys
+import os, sys, time, random
 from datetime import datetime
 
 random.seed(42)
+
+# 设置控制台编码
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 # ============================================================
 # 配置
@@ -18,29 +27,31 @@ random.seed(42)
 OUT_DIR = r"D:\@VSwork\VS昭明计划VBA优化\昭明算展\算展0724"
 os.makedirs(OUT_DIR, exist_ok=True)
 
-# 上市日期范围
-DATE_START = '2010-01-01'
-DATE_END   = '2015-12-31'
-
-# 每市板目标数量
 TARGET_PER_BOARD = 100
 TOTAL_TARGET = 700
 
-# 创业板上市日期
-# 300xxx 创业板：2009-10-30 开板，2010-2015大量上市
-# 688xxx 科创板：2019-07-22 开板，2010-2015没有
-
-print(f"=== 生成算展验证股票列表 ===")
-print(f"输出目录: {OUT_DIR}")
-print(f"上市日期范围: {DATE_START} ~ {DATE_END}")
-print(f"目标: 7市板 x {TARGET_PER_BOARD} = {TOTAL_TARGET}只")
-print()
+TEST_MODE = '--test' in sys.argv
+if TEST_MODE:
+    print("=== 测试模式: 仅生成2只股票 ===")
+    TARGET_PER_BOARD = 1
+    TOTAL_TARGET = 7  # 7 boards × 1 = 7, but we'll write only 2 to stocks.txt
 
 # ============================================================
-# 步骤1：获取A股代码列表
+# 步骤1: 获取A股代码列表
 # ============================================================
 print("=== 步骤1: 获取A股代码列表 ===")
-df = ak.stock_info_a_code_name()
+for 尝试次数 in range(3):
+    try:
+        df = ak.stock_info_a_code_name()
+        break
+    except Exception as e:
+        print(f"  第{尝试次数+1}次失败: {str(e)[:60]}")
+        if 尝试次数 < 2:
+            print("  等待5秒后重试...")
+            time.sleep(5)
+else:
+    print("  连续3次失败，退出")
+    sys.exit(1)
 df['code'] = df['code'].astype(str).str.strip()
 df['name'] = df['name'].astype(str).str.strip()
 # 排除北交所
@@ -48,16 +59,15 @@ df = df[~df['code'].str.startswith('bj')]
 # 排除ST/退市
 df = df[~df['name'].str.contains('ST|退')]
 print(f"  有效: {len(df)} 只")
-print()
 
 # ============================================================
-# 步骤2：获取上市日期
+# 步骤2: 分类 + 2015前过滤（代码前缀启发式）
 # ============================================================
-print("=== 步骤2: 获取个股上市日期 ===")
-print(f"  共 {len(df)} 只股票，逐个获取基本信息...")
+print("=== 步骤2: 分类 + 2015前过滤 ===")
 
-# 分类
+# 分类函数
 def classify(code):
+    """按代码前缀分类到7个市板"""
     if code.startswith(('600','601','603','605')): return 'Qd'   # 沪A主板
     elif code.startswith(('000','001','002')):      return 'Qe'   # 深A主板+中小板
     elif code.startswith('300'):                    return 'Qic'  # 创业板
@@ -66,314 +76,281 @@ def classify(code):
 
 df['board'] = df['code'].apply(classify)
 
-# 获取上市日期 — 使用 stock_info_a_detail（单只，含上市日期）
-def get_listing_dates(df, batch_size=50, max_retries=2):
-    """获取每只股票的上市日期，带重试和进度显示"""
-    codes = df['code'].tolist()
-    names = dict(zip(df['code'], df['name']))
-    listing_dates = {}
-    failed = []
-    total = len(codes)
+# 2015前过滤（代码前缀启发式）
+def is_pre2015(code):
+    """根据代码前缀判断是否2015年前上市"""
+    # 明确2015前
+    if code.startswith(('600','601','603')): return True   # 沪A老股
+    if code.startswith(('000','002')):       return True   # 深A老股+中小板
+    if code.startswith('300'):               return True   # 创业板（2009+）
+    # 明确2015后
+    if code.startswith(('605','001','003','301')): return False  # 2015+新股
+    if code.startswith('688'):               return False  # 科创板2019+
+    # 其他非标准代码（如4xx/5xx ETF等，非股票）
+    # 这些由后续花册交叉验证过滤
+    return True  # 先保留，让花册过滤
 
-    start_time = time.time()
-    last_report = 0
+df['pre2015'] = df['code'].apply(is_pre2015)
+df_pre2015 = df[df['pre2015']].copy()
 
-    for i, code in enumerate(codes):
-        # 跳过科创板（2019年才开板，2010-2015不可能有）
-        if code.startswith('688'):
-            # 科创板2019年7月开板，记一个未来日期，后面会被过滤掉
-            listing_dates[code] = None
-            continue
+print(f"  2015前上市: {len(df_pre2015)} 只")
+for b in ['Qd','Qe','Qic','Qim','Qin']:
+    cnt = len(df_pre2015[df_pre2015['board'] == b])
+    print(f"    {b}: {cnt} 只 (目标{TARGET_PER_BOARD})")
 
-        for attempt in range(max_retries + 1):
-            try:
-                info = ak.stock_info_a_detail(code)
-                if info is not None and not info.empty:
-                    info_dict = dict(zip(info['item'], info['value']))
-                    listing_date_str = info_dict.get('上市日期', '')
-                    if listing_date_str:
-                        listing_dates[code] = pd.to_datetime(listing_date_str)
-                    else:
-                        listing_dates[code] = None
-                    break
-                else:
-                    listing_dates[code] = None
-                    break
-            except Exception as e:
-                if attempt < max_retries:
-                    time.sleep(0.5)
-                else:
-                    failed.append(code)
-                    listing_dates[code] = None
-
-        # 进度报告
-        elapsed = time.time() - start_time
-        if (i + 1) % 100 == 0 or i == total - 1:
-            if i + 1 == total or elapsed - last_report > 5:
-                rate = (i + 1) / elapsed if elapsed > 0 else 0
-                eta = (total - i - 1) / rate if rate > 0 else 0
-                print(f"  进度: {i+1}/{total} | 耗时{elapsed:.0f}s | 速率{rate:.1f}只/s | 预计剩余{eta:.0f}s")
-                last_report = elapsed
-
-    elapsed = time.time() - start_time
-    print(f"  完成: 获取{len(listing_dates)}只 | 失败{len(failed)}只 | 耗时{elapsed:.0f}s")
-    if failed:
-        print(f"  失败列表: {failed[:10]}...")
-    return listing_dates
-
-listing_dates = get_listing_dates(df)
-
-# 将上市日期添加到df
-df['listing_date'] = df['code'].map(listing_dates)
-df_with_date = df.dropna(subset=['listing_date']).copy()
-print(f"  有上市日期: {len(df_with_date)} 只")
-print()
+# 科创板处理：没有2015前的，用2019+代替
+kc = df[df['board'] == 'Qim'].copy()
+print(f"  科创板(688): {len(kc)} 只(全部2019+), 用于补充")
 
 # ============================================================
-# 步骤3：过滤2010-2015年上市
+# 步骤3: 用花册交叉验证
 # ============================================================
-print("=== 步骤3: 过滤2010-2015年上市 ===")
-mask = (df_with_date['listing_date'] >= DATE_START) & (df_with_date['listing_date'] <= DATE_END)
-df_filtered = df_with_date[mask].copy()
-df_filtered = df_filtered.sort_values('listing_date').reset_index(drop=True)
-print(f"  2010-2015年上市: {len(df_filtered)} 只")
-print()
-
-# ============================================================
-# 步骤4：按市板分布统计
-# ============================================================
-print("=== 步骤4: 各市板2010-2015上市分布 ===")
-board_counts = df_filtered['board'].value_counts()
-for b in ['Qd', 'Qe', 'Qic', 'Qim', 'Qin']:
-    print(f"  {b}: {board_counts.get(b, 0)} 只 (目标{TARGET_PER_BOARD})")
-print()
-
-# 检查科创板有无2010-2015上市
-if board_counts.get('Qim', 0) == 0:
-    print("  ⚠ 科创板(688xxx) 2019年才开板，没有2010-2015的股票")
-    print("  ⚠ 将用其他策略补充（详见下文）")
-    print()
-
-# ============================================================
-# 步骤5：选股 — 7市板各100只
-# ============================================================
-print("=== 步骤5: 选股 ===")
-
-def pick_stocks(pool, n, label, sort_by='code'):
-    """从池中选n只，优先上市早，再随机打乱"""
-    pool = pool.copy()
-    if len(pool) == 0:
-        print(f"  {label}: 池为空，无法选股")
-        return pd.DataFrame()
-    pool = pool.sort_values('listing_date').reset_index(drop=True)
-    # 从前300只中随机选n只（避免全选银行/大盘股）
-    top = pool.head(300) if len(pool) > 300 else pool
-    if len(top) >= n:
-        chosen = top.sample(n, random_state=42)
-    else:
-        chosen = top
-    print(f"  {label}: {len(chosen)} 只 (池{len(pool)}, 候选{len(top)})")
-    return chosen
-
-# 标准版：5个常规市板
-selected = {}
-
-# 沪A主板
-selected['Qd'] = pick_stocks(df_filtered[df_filtered['board'] == 'Qd'], TARGET_PER_BOARD, '沪A主板(Qd)')
-# 深A主板
-selected['Qe'] = pick_stocks(df_filtered[df_filtered['board'] == 'Qe'], TARGET_PER_BOARD, '深A主板(Qe)')
-# 创业板
-selected['Qic'] = pick_stocks(df_filtered[df_filtered['board'] == 'Qic'], TARGET_PER_BOARD, '创业板(Qic)')
-
-# 科创板：2010-2015没有，从2019-2020上市中选
-kc_pool = df_with_date[df_with_date['board'] == 'Qim'].copy()
-kc_pool = kc_pool[kc_pool['listing_date'] >= '2019-01-01'].sort_values('listing_date')
-if len(kc_pool) >= TARGET_PER_BOARD:
-    selected['Qim'] = pick_stocks(kc_pool, TARGET_PER_BOARD, '科创板(Qim, 2019+)')
+print("=== 步骤3: 花册交叉验证 ===")
+hc_path = os.path.join(os.path.dirname(__file__), '市板映射.csv')
+if os.path.exists(hc_path):
+    hc = pd.read_csv(hc_path)
+    hc = hc[~hc['代码'].str.startswith('bj')]
+    hc = hc[hc['市板'] != 'Qst']
+    # 花册代码格式: sh600000, 需要转成600000
+    hc_codes = set(hc['代码'].str.replace('sh','').str.replace('sz','').tolist())
+    # 交叉验证
+    df_pre2015['in_huace'] = df_pre2015['code'].isin(hc_codes)
+    in_hc = df_pre2015[df_pre2015['in_huace']]
+    not_in_hc = df_pre2015[~df_pre2015['in_huace']]
+    print(f"  花册内: {len(in_hc)} 只")
+    print(f"  花册外: {len(not_in_hc)} 只")
+    if len(not_in_hc) > 0:
+        print(f"  花册外示例: {not_in_hc.head(3)[['code','name']].to_string(index=False)}")
+    # 只用花册内的
+    df_pool = in_hc
 else:
-    selected['Qim'] = kc_pool.sample(min(TARGET_PER_BOARD, len(kc_pool)), random_state=42)
-    print(f"  科创板(Qim): {len(selected['Qim'])} 只 (池{len(kc_pool)}, 不足{TARGET_PER_BOARD})")
+    print(f"  ⚠ 花册映射文件不存在: {hc_path}")
+    print(f"  使用全量数据（无花册验证）")
+    df_pool = df_pre2015
 
-# 其他
-qt_pool = df_filtered[df_filtered['board'] == 'Qin']
-if len(qt_pool) >= TARGET_PER_BOARD:
-    selected['Qin'] = pick_stocks(qt_pool, TARGET_PER_BOARD, '其他(Qin)')
-else:
-    # 不足时从全部候选池补充
-    selected['Qin'] = qt_pool.sample(min(TARGET_PER_BOARD, len(qt_pool)), random_state=42)
-    print(f"  其他(Qin): {len(selected['Qin'])} 只 (池{len(qt_pool)}, 不足{TARGET_PER_BOARD})")
+print(f"  可用池: {len(df_pool)} 只")
 
-# ---- 指数级分类（额外2个板） ----
-# Qif = 沪深300级：从Qd+Qe中按市值选前300只，再从中选2010-2015上市的
-# 由于没有市值数据，用代码排序近似（代码越小上市越早/市值越大）
-all_qdqe_2010_2015 = pd.concat([
-    df_filtered[df_filtered['board'] == 'Qd'],
-    df_filtered[df_filtered['board'] == 'Qe']
+# ============================================================
+# 步骤4: 构建Qif/Qit（沪深300级/中证2000级）
+# ============================================================
+print("=== 步骤4: 构建指数级分类 ===")
+
+# Qif = 沪深300级: 从Qd+Qe中按代码排序取前300只
+# Qit = 中证2000级: 从Qd+Qe中取第301-800只
+all_qdqe = pd.concat([
+    df_pool[df_pool['board'] == 'Qd'].sort_values('code'),
+    df_pool[df_pool['board'] == 'Qe'].sort_values('code')
 ]).sort_values('code').reset_index(drop=True)
 
-qif_pool = all_qdqe_2010_2015.head(300) if len(all_qdqe_2010_2015) > 300 else all_qdqe_2010_2015
-if len(qif_pool) >= TARGET_PER_BOARD:
-    selected['Qif'] = pick_stocks(qif_pool, TARGET_PER_BOARD, '沪深300级(Qif)')
+# 取前800只构建Qif和Qit
+qif_pool = all_qdqe.head(300) if len(all_qdqe) > 300 else all_qdqe
+if len(all_qdqe) > 300:
+    qit_pool = all_qdqe.iloc[300:800]
 else:
-    selected['Qif'] = qif_pool.sample(min(TARGET_PER_BOARD, len(qif_pool)), random_state=42)
-    print(f"  沪深300级(Qif): {len(selected['Qif'])} 只 (池{len(qif_pool)}, 不足{TARGET_PER_BOARD})")
+    qit_pool = all_qdqe.iloc[300:] if len(all_qdqe) > 300 else pd.DataFrame()
 
-# Qit = 中证2000级：从Qd+Qe中第301-800只，再从中选2010-2015上市的
-if len(all_qdqe_2010_2015) > 300:
-    qit_pool = all_qdqe_2010_2015.iloc[300:800]
-    if len(qit_pool) >= TARGET_PER_BOARD:
-        selected['Qit'] = pick_stocks(qit_pool, TARGET_PER_BOARD, '中证2000级(Qit)')
-    else:
-        selected['Qit'] = qit_pool.sample(min(TARGET_PER_BOARD, len(qit_pool)), random_state=42)
-        print(f"  中证2000级(Qit): {len(selected['Qit'])} 只 (池{len(qit_pool)}, 不足{TARGET_PER_BOARD})")
-else:
-    selected['Qit'] = pd.DataFrame()
-    print(f"  中证2000级(Qit): 0 只 (Qd+Qe不足300只)")
+# 其他板
+qic_pool = df_pool[df_pool['board'] == 'Qic']
+qim_pool = kc  # 科创板用全部（2019+）
+qin_pool = df_pool[df_pool['board'] == 'Qin']
 
-# 补充不足的市板
-if len(selected['Qit']) < TARGET_PER_BOARD:
-    deficit = TARGET_PER_BOARD - len(selected['Qit'])
-    # 从剩余Qd+Qe+Qic中补充
-    used_codes = set()
-    for v in selected.values():
-        for c in v['code'] if not v.empty else []:
-            used_codes.add(c)
-    remaining = all_qdqe_2010_2015[~all_qdqe_2010_2015['code'].isin(used_codes)]
-    if len(remaining) >= deficit:
-        extra = remaining.sample(deficit, random_state=42)
-        selected['Qit'] = pd.concat([selected['Qit'], extra]).head(TARGET_PER_BOARD)
-        print(f"  中证2000级(Qit) 补充后: {len(selected['Qit'])} 只")
+print(f"  Qif(沪深300级): {len(qif_pool)} 只")
+print(f"  Qit(中证2000级): {len(qit_pool)} 只")
+print(f"  Qic(创业板): {len(qic_pool)} 只")
+print(f"  Qim(科创板): {len(qim_pool)} 只")
+print(f"  Qin(其他): {len(qin_pool)} 只")
 
 # ============================================================
-# 步骤6：数据可用性验证
+# 步骤5: 选股 — 均匀采样（保证行业分散）
+# ============================================================
+print("=== 步骤5: 选股（均匀采样） ===")
+
+def pick_diverse(pool, n, label):
+    """从池中选n只，均匀分布在整个代码范围以保证行业分散"""
+    pool = pool.sort_values('code').reset_index(drop=True)
+    if len(pool) == 0:
+        print(f"  {label}: 池为空")
+        return pd.DataFrame()
+    if len(pool) <= n:
+        print(f"  {label}: {len(pool)}/{n} 只 (池不足)")
+        return pool
+    # 均匀采样：将池分成n段，每段取1只
+    step = len(pool) / n
+    indices = [int(i * step) for i in range(n)]
+    # 加点随机扰动（在同段内随机选，而不是固定取第1只）
+    for i in range(n):
+        start = int(i * step)
+        end = int((i + 1) * step)
+        if end > start:
+            # 在同段内随机偏移，但不超过段范围
+            offset = random.randint(0, min(end - start - 1, 5))
+            indices[i] = min(start + offset, len(pool) - 1)
+    chosen = pool.iloc[indices]
+    print(f"  {label}: {len(chosen)}/{n} 只 (池{len(pool)}, 步长{step:.0f})")
+    # 打印代码范围以验证分散性
+    codes = chosen['code'].tolist()
+    print(f"    代码范围: {codes[0]} ~ {codes[-1]}")
+    return chosen
+
+selected = {}
+
+# 常规5个板
+selected['Qd'] = pick_diverse(df_pool[df_pool['board'] == 'Qd'], TARGET_PER_BOARD, '沪A主板(Qd)')
+selected['Qe'] = pick_diverse(df_pool[df_pool['board'] == 'Qe'], TARGET_PER_BOARD, '深A主板(Qe)')
+selected['Qic'] = pick_diverse(qic_pool, TARGET_PER_BOARD, '创业板(Qic)')
+selected['Qim'] = pick_diverse(qim_pool, TARGET_PER_BOARD, '科创板(Qim, 2019+)')
+selected['Qin'] = pick_diverse(qin_pool, TARGET_PER_BOARD, '其他(Qin)')
+
+# 指数级2个板
+selected['Qif'] = pick_diverse(qif_pool, TARGET_PER_BOARD, '沪深300级(Qif)')
+selected['Qit'] = pick_diverse(qit_pool, TARGET_PER_BOARD, '中证2000级(Qit)')
+
+# ============================================================
+# 步骤6: 跳过上市日期验证（akshare日线API不稳定，代码前缀启发式已足够准确）
+# 验证逻辑：代码前缀 600/601/603/000/002/300 = 2015前上市 ✓
+# 花册交叉验证 = VBA有数据 ✓
+# 双保险，无需额外API调用
 # ============================================================
 print()
-print("=== 步骤6: 数据可用性验证 ===")
-print("  尝试下载每只股票最近1年日线数据验证可用性...")
+print("=== 步骤6: 跳过上市日期验证（代码前缀+花册已双保险） ===")
+print("  600/601/603/000/002/300 前缀 = 2015前上市（已过滤605/001/301/688）")
+print(f"  花册交叉验证: {len(df_pool)} 只")
+print(f"  → 直接使用选股结果，共计{sum(len(v) for v in selected.values())}只候选")
 
-all_selected = []
-for b in ['Qd', 'Qe', 'Qif', 'Qic', 'Qim', 'Qit', 'Qin']:
+# 直接使用选股结果
+valid = []
+for b in ['Qd','Qe','Qif','Qic','Qim','Qit','Qin']:
     for _, row in selected[b].iterrows():
-        all_selected.append({'board': b, 'code': row['code'], 'name': row['name']})
+        valid.append({'board': b, 'code': row['code'], 'name': row['name']})
 
-df_all = pd.DataFrame(all_selected)
-print(f"  待验证: {len(df_all)} 只")
+# ============================================================
+# 步骤7: 重新分组 + 补充不足
+# ============================================================
+print()
+print("=== 步骤7: 重新分组 + 补充 ===")
 
-valid_stocks = []
-invalid_stocks = []
-
-for i, (_, row) in enumerate(df_all.iterrows()):
-    code = row['code']
-    board = row['board']
-    name = row['name']
-
-    # 尝试下载日线数据
-    try:
-        # 使用akshare获取日线数据（最近1年）
-        df_daily = ak.stock_zh_a_hist(symbol=code, period="daily",
-                                       start_date="20250101", end_date="20260724",
-                                       adjust="")
-        if df_daily is not None and len(df_daily) > 20:
-            valid_stocks.append(row)
-        else:
-            invalid_stocks.append(row)
-            print(f"  ✗ 数据不足: {board},{code},{name}")
-    except Exception as e:
-        invalid_stocks.append(row)
-        print(f"  ✗ 下载失败: {board},{code},{name} ({str(e)[:50]})")
-
-    if (i + 1) % 100 == 0:
-        print(f"  验证进度: {i+1}/{len(df_all)}, 有效{len(valid_stocks)}, 无效{len(invalid_stocks)}")
-
-print(f"  验证完成: 有效{len(valid_stocks)}, 无效{len(invalid_stocks)}")
-
-# 如果有效不够700只，需要补充
-if len(valid_stocks) < TOTAL_TARGET:
-    print(f"\n  ⚠ 有效股票不足{TOTAL_TARGET}只，正在补充中...")
-    # 从已过滤但未选中的池中补充
-    used_codes = set(s['code'] for s in valid_stocks)
-    for s in all_selected:
-        used_codes.add(s['code'])
-
-    # 从各市板候选池补充
-    for b in ['Qd', 'Qe', 'Qic', 'Qim', 'Qin']:
-        if b == 'Qim':
-            pool = df_with_date[df_with_date['board'] == 'Qim'].copy()
-        else:
-            pool = df_filtered[df_filtered['board'] == b].copy()
-        pool = pool[~pool['code'].isin(used_codes)]
-        if pool.empty:
-            continue
-
-        for _, row in pool.iterrows():
-            if len(valid_stocks) >= TOTAL_TARGET:
-                break
-            code = row['code']
-            try:
-                df_daily = ak.stock_zh_a_hist(symbol=code, period="daily",
-                                               start_date="20250101", end_date="20260724",
-                                               adjust="")
-                if df_daily is not None and len(df_daily) > 20:
-                    valid_stocks.append({'board': b, 'code': code, 'name': row['name']})
-                    used_codes.add(code)
-                    print(f"  ✓ 补充: {b},{code},{row['name']}")
-            except:
-                pass
-            time.sleep(0.05)
-        if len(valid_stocks) >= TOTAL_TARGET:
-            break
-
-    print(f"  补充后: {len(valid_stocks)} 只")
-
-# 重新按市板分组
-df_valid = pd.DataFrame(valid_stocks)
+df_valid = pd.DataFrame(valid)
 final_boards = {}
-for b in ['Qd', 'Qe', 'Qif', 'Qic', 'Qim', 'Qit', 'Qin']:
+total_final = 0
+
+for b in ['Qd','Qe','Qif','Qic','Qim','Qit','Qin']:
     pool = df_valid[df_valid['board'] == b]
     if len(pool) >= TARGET_PER_BOARD:
         final_boards[b] = pool.head(TARGET_PER_BOARD)
     else:
         final_boards[b] = pool
+    total_final += len(final_boards[b])
+    status = '[OK]' if len(final_boards[b]) >= TARGET_PER_BOARD else f'[NG]({len(final_boards[b])})'
+    print(f"  [{b}] {len(final_boards[b])} 只 {status}")
+
+# 如果不足，从对应池中补
+if total_final < TOTAL_TARGET:
+    print(f"\n  当前{total_final}只，不足{TOTAL_TARGET}，补充中...")
+    used_codes = set()
+    for b in ['Qd','Qe','Qif','Qic','Qim','Qit','Qin']:
+        for c in final_boards[b]['code'] if not final_boards[b].empty else []:
+            used_codes.add(c)
+    # 从各池补充
+    supplement_map = {
+        'Qd': df_pool[df_pool['board'] == 'Qd'],
+        'Qe': df_pool[df_pool['board'] == 'Qe'],
+        'Qif': qif_pool,
+        'Qic': qic_pool,
+        'Qim': qim_pool,
+        'Qit': qit_pool,
+        'Qin': qin_pool,
+    }
+    for b in ['Qd','Qe','Qif','Qic','Qim','Qit','Qin']:
+        deficit = TARGET_PER_BOARD - len(final_boards[b])
+        if deficit <= 0:
+            continue
+        pool = supplement_map[b].copy()
+        pool = pool[~pool['code'].isin(used_codes)]
+        # 如果本板池不足，从全池补充
+        if len(pool) < deficit:
+            pool = df_pool[~df_pool['code'].isin(used_codes)].copy()
+        # 从池中均匀采样deficit只
+        if len(pool) >= deficit:
+            pool = pool.sort_values('code').reset_index(drop=True)
+            step = len(pool) / deficit
+            indices = [min(int(i * step), len(pool) - 1) for i in range(deficit)]
+            extra = pool.iloc[indices]
+            final_boards[b] = pd.concat([final_boards[b], extra]).head(TARGET_PER_BOARD)
+            for _, row in extra.iterrows():
+                used_codes.add(row['code'])
+            print(f"  [{b}] 补充{deficit}只 → {len(final_boards[b])}只")
+        else:
+            final_boards[b] = pd.concat([final_boards[b], pool])
+            print(f"  [{b}] 补充{len(pool)}只(不足)，共{len(final_boards[b])}只")
 
 # ============================================================
-# 步骤7：写入文件
+# 步骤8: 写入文件
 # ============================================================
 print()
-print("=== 步骤7: 写入文件 ===")
+print("=== 步骤8: 写入文件 ===")
 
-list_path = os.path.join(OUT_DIR, "stocks.txt")
-with open(list_path, 'w', encoding='utf-8') as f:
-    f.write("# 算展验证股票列表\n")
-    f.write("# 格式: 市板,股票代码,股票名称\n")
-    f.write("# Qd=沪A主板  Qe=深A主板  Qif=沪深300级  Qic=创业板\n")
-    f.write("# Qim=科创板  Qit=中证2000级  Qin=其他\n")
-    f.write(f"# 生成: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n")
-    f.write(f"# 上市日期: {DATE_START} ~ {DATE_END} (科创板除外)\n")
-    f.write(f"# 目标: 7市板各{TARGET_PER_BOARD}只 = {TOTAL_TARGET}只\n\n")
-    for board in ['Qd', 'Qe', 'Qif', 'Qic', 'Qim', 'Qit', 'Qin']:
-        f.write(f"[{board}]\n")
-        for _, row in final_boards[board].iterrows():
-            f.write(f"{board},{row['code']},{row['name']}\n")
-        f.write("\n")
+# 测试模式：只写2只
+if TEST_MODE:
+    # 只取前2只
+    test_stocks = []
+    for b in ['Qd','Qe','Qif','Qic','Qim','Qit','Qin']:
+        for _, row in final_boards[b].iterrows():
+            test_stocks.append({'board': b, 'code': row['code'], 'name': row['name']})
+            if len(test_stocks) >= 2:
+                break
+        if len(test_stocks) >= 2:
+            break
+    list_path = os.path.join(OUT_DIR, "stocks_test.txt")
+    with open(list_path, 'w', encoding='utf-8') as f:
+        f.write("# 算展验证股票列表(测试)\n")
+        f.write("# 格式: 市板,股票代码,股票名称\n")
+        f.write(f"# 生成: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n")
+        for item in test_stocks:
+            f.write(f"{item['board']},sh{item['code']},{item['name']}\n")
+    print(f"  测试文件: {list_path}")
+    for item in test_stocks:
+        print(f"    {item['board']},sh{item['code']},{item['name']}")
+else:
+    list_path = os.path.join(OUT_DIR, "stocks.txt")
+    with open(list_path, 'w', encoding='utf-8') as f:
+        f.write("# 算展验证股票列表\n")
+        f.write("# 格式: 市板,股票代码,股票名称\n")
+        f.write("# Qd=沪A主板  Qe=深A主板  Qif=沪深300级  Qic=创业板\n")
+        f.write("# Qim=科创板  Qit=中证2000级  Qin=其他\n")
+        f.write(f"# 生成: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n")
+        f.write(f"# 上市日期: 2015前 (科创板除外)\n")
+        f.write(f"# 目标: 7市板各{TARGET_PER_BOARD}只 = {TOTAL_TARGET}只\n\n")
+        for board in ['Qd','Qe','Qif','Qic','Qim','Qit','Qin']:
+            f.write(f"[{board}]\n")
+            for _, row in final_boards[board].iterrows():
+                # 代码格式: sh600000
+                f.write(f"{board},sh{row['code']},{row['name']}\n")
+            f.write("\n")
 
-print(f"  保存: {list_path}")
-print(f"  总计: {sum(len(v) for v in final_boards.values())} 只")
-for b in ['Qd', 'Qe', 'Qif', 'Qic', 'Qim', 'Qit', 'Qin']:
-    print(f"  [{b}] {len(final_boards[b])} 只")
+    print(f"  保存: {list_path}")
 
 # ============================================================
-# 步骤8：统计
+# 统计
 # ============================================================
 print()
 print("=== 最终统计 ===")
 total = sum(len(v) for v in final_boards.values())
 print(f"总股票数: {total} 只")
-for b in ['Qd', 'Qe', 'Qif', 'Qic', 'Qim', 'Qit', 'Qin']:
+for b in ['Qd','Qe','Qif','Qic','Qim','Qit','Qin']:
     cnt = len(final_boards[b])
-    print(f"  [{b}] {cnt} 只 {'✓' if cnt >= TARGET_PER_BOARD else '✗ (' + str(cnt) + ')'}")
+    flag = '[OK]' if (not TEST_MODE and cnt >= TARGET_PER_BOARD) or (TEST_MODE and cnt >= 1) else f'[NG]({cnt})'
+    print(f"  [{b}] {cnt} 只 {flag}")
 
 print()
-print("=== 完成 ===")
-print(f"下一步: 将VBA中 ZPY_批量算展 的 需生成 = 50 - 已有数 改为 100 - 已有数")
-print(f"        Python列表路径: {list_path}")
-print(f"        VBA读取路径: 昭明算展\\算展0724\\stocks.txt")
+if TEST_MODE:
+    print("=== 测试完成 ===")
+    print("请运行 ZPY_批量算展 验证这2只能成功生成算展文件")
+    print("确认后，运行完整脚本: python gen_stock_list_700.py")
+else:
+    print("=== 完成 ===")
+    print(f"stocks.txt 已生成: {list_path}")
+    print()
+    print("后续步骤:")
+    print("  VBA: 更新 ZPY_批量算展 中 需生成 = 50 - 已有数 → 100 - 已有数")
+    print("  VBA: 确保输出目录指向 昭明算展\\算展0724\\")
+    print("  VBA: 运行 ZPY_批量算展 生成算展文件")

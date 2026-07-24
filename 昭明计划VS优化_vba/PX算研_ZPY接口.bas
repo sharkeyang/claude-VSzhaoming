@@ -266,14 +266,14 @@ End Sub
 '======================================================================================== (2026-07-18)
 ' ZPY_批量算展 — 批量生成算展Excel用于验证
 '========================================================================================
-' 读取 D:\@VSwork\VS昭明计划VBA优化\昭明算展\算展0718\stocks.txt
-' 每市板50只，已有则跳过，无则生成，确保每市板50只
+' 读取 D:\@VSwork\VS昭明计划VBA优化\昭明算展\算展0724\stocks.txt
+' 每市板100只，已有则跳过，无则生成，确保每市板100只
 ' 调用：Alt+F8 → ZPY_批量算展 → 运行
 ' 进度：Excel状态栏查看
 '========================================================================================
 Public Sub ZPY_批量算展()
     Dim 输出目录 As String
-    输出目录 = ThisWorkbook.Path & "\昭明算展\算展0718\"
+    输出目录 = ThisWorkbook.Path & "\昭明算展\算展0724\"
 
     Dim FSO As Object
     Set FSO = CreateObject("Scripting.FileSystemObject")
@@ -344,8 +344,8 @@ Public Sub ZPY_批量算展()
             End If
         Next
 
-        ' 需要生成的数量 = 50 - 已有数
-        Dim 需生成 As Long: 需生成 = 50 - 已有数
+        ' 需要生成的数量 = 100 - 已有数
+        Dim 需生成 As Long: 需生成 = 100 - 已有数
         If 需生成 < 0 Then 需生成 = 0
 
         ' 输出该市板状态
@@ -361,17 +361,15 @@ Public Sub ZPY_批量算展()
 
             On Error Resume Next
             Call XL算展生成_单股(代码)
-            If Err.Number = 0 Then
+            Dim 源路径 As String: 源路径 = ThisWorkbook.Path & "\昭明算展\算展." & 代码 & ".xlsx"
+            If Err.Number = 0 And FSO.FileExists(源路径) Then
                 ' 生成成功，移动文件到输出目录
-                Dim 源路径 As String: 源路径 = ThisWorkbook.Path & "\昭明算展\算展." & 代码 & ".xlsx"
                 Dim 目标路径 As String: 目标路径 = 输出目录 & "算展." & 代码 & ".xlsx"
-                If FSO.FileExists(源路径) Then
-                    If FSO.FileExists(目标路径) Then FSO.DeleteFile 目标路径
-                    On Error Resume Next: FSO.MoveFile 源路径, 目标路径: On Error GoTo 0
-                End If
+                If FSO.FileExists(目标路径) Then FSO.DeleteFile 目标路径
+                On Error Resume Next: FSO.MoveFile 源路径, 目标路径: On Error GoTo 0
                 总生成 = 总生成 + 1: 计数 = 计数 + 1
             Else
-                Err.Clear
+                If Err.Number <> 0 Then Err.Clear
                 总失败 = 总失败 + 1
             End If
             On Error GoTo 0
