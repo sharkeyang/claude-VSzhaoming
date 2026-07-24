@@ -1727,10 +1727,10 @@ Public Sub XL算展取谕组日(被研代码 As String)
 
     Dim 基位日类 As Integer: 基位日类 = 0
     Dim X As Integer
+    Dim 日高幅 As Double
+    Dim 次日高幅 As Double
     For X = LBound(谕组, 1) To UBound(谕组, 1)
-        Dim 日高幅 As Double
         日高幅 = ARRLLL(X, 基位日类 + 位os结幅HR0)
-        Dim 次日高幅 As Double
         次日高幅 = 0
         If X < UBound(谕组, 1) Then
             次日高幅 = ARRLLL(X + 1, 基位日类 + 位os结幅HR0)
