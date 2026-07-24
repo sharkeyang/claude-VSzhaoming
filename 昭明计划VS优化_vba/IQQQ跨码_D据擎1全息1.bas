@@ -1462,8 +1462,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     末行 = 末行 + 1
     Dim 建议数 As Integer: 建议数 = 0
     '--- 行业集中度建议 ---
-    Dim 行业 As Variant
-    For Each 行业 In 行业典集.keys
+    For Each 行业 In 行业典集.Keys
         行业额 = 行业典集(行业)
         If 行业额 / 总持仓额 > 0.3 Then
             建议数 = 建议数 + 1
@@ -1476,7 +1475,6 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     Next
     '--- 单票超限建议 ---
     If Len(单票超限) > 0 Then
-        Dim 单票行 As Variant
         单票行 = Split(单票超限, vbCrLf)
         For i = 0 To UBound(单票行)
             If 单票行(i) <> "" Then
@@ -1491,7 +1489,6 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     End If
     '--- 仓周类上限建议 ---
     If Len(仓周违规) > 0 Then
-        Dim 仓周行 As Variant
         仓周行 = Split(仓周违规, vbCrLf)
         For i = 0 To UBound(仓周行)
             If 仓周行(i) <> "" Then
