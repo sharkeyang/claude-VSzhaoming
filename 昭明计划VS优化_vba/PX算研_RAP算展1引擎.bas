@@ -1735,8 +1735,9 @@ Public Sub XL算展取谕组日(被研代码 As String)
         If X < UBound(谕组, 1) Then
             次日高幅 = ARRLLL(X + 1, 基位日类 + 位os结幅HR0)
         End If
-        Print #1, _
-            ARRLLL(X, 基位日类 + 位os结期) & "," & _
+        Dim 行头 As String
+        Dim 行尾 As String
+        行头 = ARRLLL(X, 基位日类 + 位os结期) & "," & _
             ARRLLL(X, 基位日类 + 位os结收) & "," & _
             ARRLLL(X, 基位日类 + 位os结开) & "," & _
             ARRLLL(X, 基位日类 + 位os结高) & "," & _
@@ -1759,11 +1760,11 @@ Public Sub XL算展取谕组日(被研代码 As String)
             谕组(X, 位谕of日层BSAC) & "," & _
             谕组(X, 位谕of日层脸哼JA) & "," & _
             谕组(X, 位谕of日层宽哼JC) & ","
-        Print #1, _
-            谕组(X, 位谕of日层偏顶JC) & "," & _
+        行尾 = 谕组(X, 位谕of日层偏顶JC) & "," & _
             谕组(X, 位谕of日波上身) & "," & _
             谕组(X, 位谕of日波叠幅) & "," & _
             次日高幅
+        Print #1, 行头 & 行尾
     Next X
     Close #1
 End Sub
