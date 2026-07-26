@@ -152,7 +152,7 @@ Auto-discovered from `<excel_name>_passwords.txt` or `vba_passwords.txt` next to
 ## 项目结构
 
 - `_产出物/` — 交付产物（MC2-MC5代码、文档）
-- `_工具/` — VBA工作流脚本（已加入PATH，可直接运行）
+- `_产出物/_工具/` — VBA工作流脚本（已加入PATH，可直接运行）
 - `_分析输出/` — 分析报告与映射文档
 - `_分析脚本/` — 文档格式化工具
 - `_规则文档/` — 三文件+益盟公式
@@ -183,14 +183,14 @@ Auto-discovered from `<excel_name>_passwords.txt` or `vba_passwords.txt` next to
 ### 实施指南路径
 完整实施指南：`D:\@VSwork\VSteach\_SHARK\Harness工程体系实施指南.md`
 ```powershell
-vba2VS.ps1        # 导出VBA -> .bas
-vba2EXCEL.ps1     # 导入 .bas -> VBA
+_产出物\_工具\vba2VS.ps1        # 导出VBA -> .bas
+_产出物\_工具\vba2EXCEL.ps1     # 导入 .bas -> VBA
 ```
 
 ## 项目文件夹组织规则（永久遵守）
 
 ### 命名规则
-- `_` 前缀 = 系统文件夹（`_主文档/` `_产出物/` `_工具/`）
+- `_` 前缀 = 系统文件夹（`_主文档/` `_产出物/`）
 - 中文内部不用 `_` 分隔（`研究交割单` 非 `研究_交割单`）
 - 英文前缀保留 `_`（`MC1_` `MC2_` 等产出物编号照旧）
 
@@ -199,7 +199,7 @@ vba2EXCEL.ps1     # 导入 .bas -> VBA
 - 产出物按主题归入 `_产出物/` 下的 `_` 子文件夹
 - 废弃内容双保险：文档进 `_主文档/_产出物废弃分支.md`，代码进 `_产出物/_产出物废弃分支/`
 - 一次性脚本放入 `____temp/` 或 `_产出物/_临时脚本/`，用完即删
-- 用户面向的 CLI 工具（`vba2VS.ps1` `vba2EXCEL.ps1` `vba2宏操作.py`）保留根目录，为合理例外
+- 用户面向的 CLI 工具（`_产出物/_工具/vba2VS.ps1` `_产出物/_工具/vba2EXCEL.ps1` `_产出物/_工具/vba2宏操作.py`）放入 `_产出物/_工具/`
 - 不产生散落备份、衍生版、历史遗留文件夹
 - 每个概念只在一个位置
 

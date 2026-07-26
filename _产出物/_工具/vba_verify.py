@@ -5,7 +5,7 @@ VBA 修改自动验证脚本
 将 .bas 导入 xlsm 副本（新建独立 Excel 进程），运行测试，输出 JSON 结果。
 
 用法:
-    python _工具/vba_verify.py <xlsm_path> <bas_dir>
+    python _产出物\_工具/vba_verify.py <xlsm_path> <bas_dir>
 
 返回:
     stdout → JSON, exit code 0=通过 1=失败
