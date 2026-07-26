@@ -360,7 +360,7 @@ Public Sub ZPY_批量算展()
             Application.StatusBar = "正在生成 [" & 市板 & "] " & 代码 & " " & 名称 & " (" & (计数 + 1) & "/" & 需生成 & ")"
 
             On Error Resume Next
-            Call XL算展生成_单股(代码)
+            Call XL算展取单股(代码)
             Dim 源路径 As String: 源路径 = ThisWorkbook.Path & "\昭明算展\算展." & 代码 & ".xlsx"
             If Err.Number = 0 And FSO.FileExists(源路径) Then
                 ' 生成成功，移动文件到输出目录

@@ -1662,176 +1662,265 @@ End Function
 
 
 
+'########################################################################################
+'########################################################################################
+'##################################    算展统取数据     #####################################
+'########################################################################################
+'########################################################################################
+
 '========================================================================================
 '========================================================================================
-'用法：excel.Application.Run("XL算展取谕组", "sz159919")
-'效果：生成____temp/谕组_{code}.csv，约13列关键字段
-'说明：只输出验证所需的列，不生成完整xlsx，速度快
+'功能：单只 — 调用XL算展数程跨期一次，按模式输出谕组CSV
 '========================================================================================
 '========================================================================================
-Public Sub XL算展取谕组(被研代码 As String)
+'用法：Call XL算展取谕组("sz159919")           → 周+日
+'      Call XL算展取谕组("sz159919", , "周")    → 只周
+'      Call XL算展取谕组("sz159919", , "日")    → 只日
+'      Call XL算展取谕组("sz159919", "D:\p")    → 指定路径+周+日
+'参数：输出路径 — 可选，空=默认目录
+'      模式 — "周"/"日"/""，默认周+日
+'========================================================================================
+Public Sub XL算展取谕组(被研代码 As String, Optional 输出路径 As String = "", Optional 模式 As String = "")
     Dim ARRLLL As Variant, 谕组 As Variant
     Dim 计数 As Integer
     计数 = XL算展数程跨期(ARRLLL, 被研代码, , , 谕组, "T@乾坤", "W")
     If 计数 < 1 Or IsEmpty(谕组) Then Exit Sub
+    If 模式 = "" Then 模式 = "周+日"
 
-    Dim 路径 As String, FSO As Object
+    Dim FSO As Object
     Set FSO = CreateObject("Scripting.FileSystemObject")
-    路径 = ThisWorkbook.Path & "\____temp\谕组\"
-    If Not FSO.FolderExists(路径) Then FSO.CreateFolder 路径
-    路径 = 路径 & "谕组_" & 被研代码 & ".csv"
-    Open 路径 For Output As #1
-    Print #1, "主期,周涨,PR,HR,WXAB,波型,柱排周,盈提示,WXCD,ZA周,ZB周,ZC周,周龄,周键"
 
-    Dim 基位日类 As Integer: 基位日类 = 0
-    Dim 基位周类 As Integer: 基位周类 = 花宽单道
-    Dim X As Integer
-    For X = LBound(谕组, 1) To UBound(谕组, 1)
-        If ARRLLL(X, 基位周类 + 位os结期) = ARRLLL(X, 基位日类 + 位os结期) Then
-            Print #1, _
-                ARRLLL(X, 基位日类 + 位os结期) & "," & _
-                谕组(X, 位谕of周波今涨幅) & "," & _
-                谕组(X, 位谕of周波临涨幅) & "," & _
-                谕组(X, 位谕of周波临高幅) & "," & _
-                Replace(谕组(X, 位谕of周层护型), ",", ";") & "," & _
-                Replace(谕组(X, 位谕of周层波型), ",", ";") & "," & _
-                Replace(谕组(X, 位谕of周层柱排), ",", ";") & "," & _
-                谕组(X, 位谕of周层盈提示) & "," & _
-                Replace(谕组(X, 位谕of周层大局), ",", ";") & "," & _
-                谕组(X, 位谕of周类BTZA) & "," & _
-                谕组(X, 位谕of周类BTZB) & "," & _
-                谕组(X, 位谕of周类BTZC) & "," & _
-                ARRLLL(X, 基位周类 + 位os基累龄) & "," & _
-                "True"
+    '========================================================================================
+    '输出周类CSV
+    '========================================================================================
+    If 模式 = "周" Or 模式 = "周+日" Then
+        Dim 周路径 As String
+        If 输出路径 = "" Then
+            周路径 = ThisWorkbook.Path & "\昭明算展\谕组周\"
+        Else
+            周路径 = 输出路径
         End If
-    Next X
-    Close #1
-End Sub
-'========================================================================================
-'生成日线谕组CSV — 逐只跑算展导出日线数据，含DXEF/DXCD/DXAB/柱排/次日高幅
-'用法：Call XL算展取谕组日("sh600000")
-'========================================================================================
-Public Sub XL算展取谕组日(被研代码 As String)
-    Dim ARRLLL As Variant, 谕组 As Variant
-    Dim 计数 As Integer
-    计数 = XL算展数程跨期(ARRLLL, 被研代码, , , 谕组, "T@乾坤", "")
-    If 计数 < 1 Or IsEmpty(谕组) Then Exit Sub
+        If Not FSO.FolderExists(周路径) Then FSO.CreateFolder 周路径
 
-    Dim 路径 As String, FSO As Object
-    Set FSO = CreateObject("Scripting.FileSystemObject")
-    路径 = ThisWorkbook.Path & "\____temp\谕组日\"
-    If Not FSO.FolderExists(路径) Then FSO.CreateFolder 路径
-    路径 = 路径 & "谕组日_" & 被研代码 & ".csv"
-    Open 路径 For Output As #1
-    Print #1, "日期,收,开,高,低,涨幅,高幅,DXEF,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅"
+        Dim 周文件 As String
+        周文件 = 周路径 & "谕组周_" & 被研代码 & ".csv"
+        Open 周文件 For Output As #1
+        Print #1, "主期,周涨,PR,HR,WXAB,波型,柱排周,盈提示,WXCD,ZA周,ZB周,ZC周,周龄,周键"
 
-    Dim 基位日类 As Integer: 基位日类 = 0
-    Dim X As Integer
-    Dim 日高幅 As Double
-    Dim 次日高幅 As Double
-    For X = LBound(谕组, 1) To UBound(谕组, 1)
-        日高幅 = ARRLLL(X, 基位日类 + 位os结幅HR0)
-        次日高幅 = 0
-        If X < UBound(谕组, 1) Then
-            次日高幅 = ARRLLL(X + 1, 基位日类 + 位os结幅HR0)
-        End If
-        Dim 行头 As String
-        Dim 行尾 As String
-        行头 = ARRLLL(X, 基位日类 + 位os结期) & "," & _
-            ARRLLL(X, 基位日类 + 位os结收) & "," & _
-            ARRLLL(X, 基位日类 + 位os结开) & "," & _
-            ARRLLL(X, 基位日类 + 位os结高) & "," & _
-            ARRLLL(X, 基位日类 + 位os结低) & "," & _
-            ARRLLL(X, 基位日类 + 位os结幅PR0) & "," & _
-            日高幅 & "," & _
-            Replace(谕组(X, 位谕of日层联动), ",", ";") & "," & _
-            Replace(ARRLLL(X, 位os层护级CD), ",", ";") & "," & _
-            Replace(谕组(X, 位谕of日层护型), ",", ";") & "," & _
-            Replace(谕组(X, 位谕of日层柱排), ",", ";") & "," & _
-            Replace(谕组(X, 位谕of日层波型), ",", ";") & "," & _
-            谕组(X, 位谕of日层盈提示) & "," & _
-            ARRLLL(X, 基位日类 + 位osBTZA) & "," & _
-            ARRLLL(X, 基位日类 + 位osBTZC) & "," & _
-            ARRLLL(X, 基位日类 + 位osBTZE) & "," & _
-            Replace(谕组(X, 位谕of日层段), ",", ";") & "," & _
-            Replace(谕组(X, 位谕of日层机警), ",", ";") & "," & _
-            Replace(谕组(X, 位谕of日层四域), ",", ";") & "," & _
-            谕组(X, 位谕of日层BSHA) & "," & _
-            谕组(X, 位谕of日层BSAC) & "," & _
-            谕组(X, 位谕of日层脸哼JA) & "," & _
-            谕组(X, 位谕of日层宽哼JC) & ","
-        行尾 = 谕组(X, 位谕of日层偏顶JC) & "," & _
-            谕组(X, 位谕of日波上身) & "," & _
-            谕组(X, 位谕of日波叠幅) & "," & _
-            次日高幅
-        Print #1, 行头 & 行尾
-    Next X
-    Close #1
-End Sub
-
-'========================================================================================
-'批量生成谕组CSV（含ZB周）— 遍历花册，逐只跑算展导出CSV
-'用法：在Excel中运行 Call XL算展取谕组批量
-'========================================================================================
-Public Sub XL算展取谕组批量()
-    Dim WS花天 As Worksheet
-    If STBASE外簿工具_花册链接(WS花天, 常花中股) = False Then
-        MsgBox "花册链接失败", vbExclamation: Exit Sub
-    End If
-    Dim 末行 As Long, i As Long, CIDL As String, TT As Single
-    TT = Timer: 末行 = WS花天.Cells(65536, 1).End(xlUp).Row
-    For i = 2 To 末行
-        CIDL = WS花天.Cells(i, 1).Value
-        If UBCID是代码(CIDL) Then Call XL算展取谕组(CIDL)
-        If i Mod 500 = 0 Then
-            Debug.Print "已处理 " & i & "/" & 末行 & " 耗时:" & CLng(Timer - TT) & "秒"
-            DoEvents
-        End If
-    Next
-    MsgBox "完成！共处理 " & (末行 - 1) & " 只，耗时 " & CLng(Timer - TT) & " 秒", vbInformation
-End Sub
-'========================================================================================
-'批量生成日线谕组CSV — 遍历花册，逐只跑算展导出日线CSV
-'用法：在Excel中运行 Call XL算展取谕组日批量
-'注：运行时间较长，建议白天挂机跑
-'========================================================================================
-Public Sub XL算展取谕组日批量()
-    Dim WS花天 As Worksheet
-    If STBASE外簿工具_花册链接(WS花天, 常花中股) = False Then
-        MsgBox "花册链接失败", vbExclamation: Exit Sub
-    End If
-    Dim 末行 As Long, i As Long, CIDL As String, TT As Single
-    TT = Timer: 末行 = WS花天.Cells(65536, 1).End(xlUp).Row
-    Dim 计数 As Long: 计数 = 0
-    Dim 路径 As String, FSO As Object
-    Set FSO = CreateObject("Scripting.FileSystemObject")
-    路径 = ThisWorkbook.Path & "\____temp\谕组日\"
-    If Not FSO.FolderExists(路径) Then FSO.CreateFolder 路径
-    '先统计已有文件，跳过已生成的
-    Dim 已有文件 As New Dictionary
-    Dim 文件 As Object
-    If FSO.FolderExists(路径) Then
-        For Each 文件 In FSO.GetFolder(路径).Files
-            If LCase(FSO.GetExtensionName(文件.Name)) = "csv" Then
-                已有文件.Add Replace(文件.Name, ".csv", ""), True
+        Dim 基位日类 As Integer: 基位日类 = 0
+        Dim 基位周类 As Integer: 基位周类 = 花宽单道
+        Dim X As Integer
+        For X = LBound(谕组, 1) To UBound(谕组, 1)
+            If ARRLLL(X, 基位周类 + 位os结期) = ARRLLL(X, 基位日类 + 位os结期) Then
+                Print #1, _
+                    ARRLLL(X, 基位日类 + 位os结期) & "," & _
+                    谕组(X, 位谕of周波今涨幅) & "," & _
+                    谕组(X, 位谕of周波临涨幅) & "," & _
+                    谕组(X, 位谕of周波临高幅) & "," & _
+                    Replace(谕组(X, 位谕of周层护型), ",", ";") & "," & _
+                    Replace(谕组(X, 位谕of周层波型), ",", ";") & "," & _
+                    Replace(谕组(X, 位谕of周层柱排), ",", ";") & "," & _
+                    谕组(X, 位谕of周层盈提示) & "," & _
+                    Replace(谕组(X, 位谕of周层大局), ",", ";") & "," & _
+                    谕组(X, 位谕of周类BTZA) & "," & _
+                    谕组(X, 位谕of周类BTZB) & "," & _
+                    谕组(X, 位谕of周类BTZC) & "," & _
+                    ARRLLL(X, 基位周类 + 位os基累龄) & "," & _
+                    "True"
             End If
-        Next
+        Next X
+        Close #1
     End If
+
+    '========================================================================================
+    '输出日类CSV
+    '========================================================================================
+    If 模式 = "日" Or 模式 = "周+日" Then
+        Dim 日路径 As String
+        If 输出路径 = "" Then
+            日路径 = ThisWorkbook.Path & "\昭明算展\谕组日\"
+        Else
+            日路径 = 输出路径
+        End If
+        If Not FSO.FolderExists(日路径) Then FSO.CreateFolder 日路径
+
+        Dim 日文件 As String
+        日文件 = 日路径 & "谕组日_" & 被研代码 & ".csv"
+        Open 日文件 For Output As #1
+        Print #1, "日期,收,开,高,低,涨幅,高幅,DXEF,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅"
+
+        For X = LBound(谕组, 1) To UBound(谕组, 1)
+            Dim 日高幅 As Double
+            Dim 次日高幅 As Double
+            日高幅 = ARRLLL(X, 基位日类 + 位os结幅HR0)
+            次日高幅 = 0
+            If X < UBound(谕组, 1) Then
+                次日高幅 = ARRLLL(X + 1, 基位日类 + 位os结幅HR0)
+            End If
+            Dim 行头 As String
+            Dim 行尾 As String
+            行头 = ARRLLL(X, 基位日类 + 位os结期) & "," & _
+                ARRLLL(X, 基位日类 + 位os结收) & "," & _
+                ARRLLL(X, 基位日类 + 位os结开) & "," & _
+                ARRLLL(X, 基位日类 + 位os结高) & "," & _
+                ARRLLL(X, 基位日类 + 位os结低) & "," & _
+                ARRLLL(X, 基位日类 + 位os结幅PR0) & "," & _
+                日高幅 & "," & _
+                Replace(谕组(X, 位谕of日层联动), ",", ";") & "," & _
+                Replace(ARRLLL(X, 位os层护级CD), ",", ";") & "," & _
+                Replace(谕组(X, 位谕of日层护型), ",", ";") & "," & _
+                Replace(谕组(X, 位谕of日层柱排), ",", ";") & "," & _
+                Replace(谕组(X, 位谕of日层波型), ",", ";") & "," & _
+                谕组(X, 位谕of日层盈提示) & "," & _
+                ARRLLL(X, 基位日类 + 位osBTZA) & "," & _
+                ARRLLL(X, 基位日类 + 位osBTZC) & "," & _
+                ARRLLL(X, 基位日类 + 位osBTZE) & "," & _
+                Replace(谕组(X, 位谕of日层段), ",", ";") & "," & _
+                Replace(谕组(X, 位谕of日层机警), ",", ";") & "," & _
+                Replace(谕组(X, 位谕of日层四域), ",", ";") & "," & _
+                谕组(X, 位谕of日层BSHA) & "," & _
+                谕组(X, 位谕of日层BSAC) & "," & _
+                谕组(X, 位谕of日层脸哼JA) & "," & _
+                谕组(X, 位谕of日层宽哼JC) & ","
+            行尾 = 谕组(X, 位谕of日层偏顶JC) & "," & _
+                谕组(X, 位谕of日波上身) & "," & _
+                谕组(X, 位谕of日波叠幅) & "," & _
+                次日高幅
+            Print #1, 行头 & 行尾
+        Next X
+        Close #1
+    End If
+End Sub
+'========================================================================================
+'========================================================================================
+
+'========================================================================================
+'=== 向后兼容：旧函数名保持可用 ===
+'========================================================================================
+Public Sub XL算展取谕组周(被研代码 As String, Optional 输出路径 As String = "")
+    Call XL算展取谕组(被研代码, 输出路径, "周")
+End Sub
+Public Sub XL算展取谕组日(被研代码 As String, Optional 输出路径 As String = "")
+    Call XL算展取谕组(被研代码, 输出路径, "日")
+End Sub
+'========================================================================================
+'========================================================================================
+
+'========================================================================================
+'========================================================================================
+'功能：批量 — 遍历花册，一次遍历同时导出周+日谕组CSV（跳过已生成）
+'========================================================================================
+'========================================================================================
+'用法：Call XL算展取谕组批量                  → 花天(中股), 周+日
+'      Call XL算展取谕组批量 "日"             → 花天(中股), 只日
+'      Call XL算展取谕组批量 "日", "花港指"    → 港股指, 只日
+'      Call XL算展取谕组批量 , "花港通"        → 港股通, 周+日
+'参数：模式 — "周"/"日"/""，默认周+日
+'      花册名 — 花册表名，默认常花中股(花天)
+'========================================================================================
+Public Sub XL算展取谕组批量(Optional 模式 As String = "", Optional 花册名 As String = "")
+    If 模式 = "" Then 模式 = "周+日"
+    If 花册名 = "" Then 花册名 = 常花中股
+
+    Dim WS花天 As Worksheet
+    If STBASE外簿工具_花册链接(WS花天, 花册名) = False Then
+        MsgBox "花册链接失败: " & 花册名, vbExclamation: Exit Sub
+    End If
+
+    '=== 输出路径 — 集中定义，可随时修改 ===
+    Dim 周路径 As String, 日路径 As String
+    周路径 = ThisWorkbook.Path & "\昭明算展\谕组周\"
+    日路径 = ThisWorkbook.Path & "\昭明算展\谕组日\"
+
+    Dim FSO As Object
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    If 模式 = "周" Or 模式 = "周+日" Then
+        If Not FSO.FolderExists(周路径) Then FSO.CreateFolder 周路径
+    End If
+    If 模式 = "日" Or 模式 = "周+日" Then
+        If Not FSO.FolderExists(日路径) Then FSO.CreateFolder 日路径
+    End If
+
+    '--------------------------------------------------------------------------------------
+    '统计已有文件（按模式），跳过已生成的
+    '--------------------------------------------------------------------------------------
+    Dim 已有周 As New Dictionary, 已有日 As New Dictionary
+    Dim 文件 As Object
+    If 模式 = "周" Or 模式 = "周+日" Then
+        If FSO.FolderExists(周路径) Then
+            For Each 文件 In FSO.GetFolder(周路径).Files
+                If LCase(FSO.GetExtensionName(文件.Name)) = "csv" Then
+                    已有周.Add Replace(文件.Name, ".csv", ""), True
+                End If
+            Next
+        End If
+    End If
+    If 模式 = "日" Or 模式 = "周+日" Then
+        If FSO.FolderExists(日路径) Then
+            For Each 文件 In FSO.GetFolder(日路径).Files
+                If LCase(FSO.GetExtensionName(文件.Name)) = "csv" Then
+                    已有日.Add Replace(文件.Name, ".csv", ""), True
+                End If
+            Next
+        End If
+    End If
+
+    '--------------------------------------------------------------------------------------
+    '遍历花册，按需生成
+    '--------------------------------------------------------------------------------------
+    Dim 末行 As Long, i As Long, CIDL As String, TT As Single
+    Dim 计数 As Long: 计数 = 0
+    TT = Timer: 末行 = WS花天.Cells(65536, 1).End(xlUp).Row
     For i = 2 To 末行
         CIDL = Trim(WS花天.Cells(i, 位列花天CIDL).Value)
-        If UBCID是代码(CIDL) And UBCID是中股票(CIDL) Then
-            If 已有文件.exists("谕组日_" & CIDL) = False Then
-                Call XL算展取谕组日(CIDL)
+        If UBCID是代码(CIDL) Then
+            '判断实际需要生成哪些模式
+            Dim 实际模式 As String
+            If 模式 = "周" Then
+                实际模式 = "周"
+            ElseIf 模式 = "日" Then
+                实际模式 = "日"
+            Else '周+日
+                Dim 缺周 As Boolean, 缺日 As Boolean
+                缺周 = Not 已有周.exists("谕组周_" & CIDL)
+                缺日 = Not 已有日.exists("谕组日_" & CIDL)
+                If 缺周 And 缺日 Then
+                    实际模式 = "周+日"
+                ElseIf 缺周 And Not 缺日 Then
+                    实际模式 = "周"
+                ElseIf Not 缺周 And 缺日 Then
+                    实际模式 = "日"
+                Else
+                    实际模式 = "" '都已有，跳过
+                End If
+            End If
+
+            If 实际模式 <> "" Then
+                Call XL算展取谕组(CIDL, , 实际模式)
                 计数 = 计数 + 1
-                If 计数 Mod 100 = 0 Then
+                If 计数 Mod 500 = 0 Then
                     Debug.Print "已完成: " & 计数 & " 只, 耗时: " & CLng(Timer - TT) & "秒"
                     DoEvents
                 End If
             End If
         End If
     Next
-    MsgBox "日线谕组生成完成!" & vbCrLf & "新增: " & 计数 & " 只" & vbCrLf & "总耗时: " & CLng(Timer - TT) & "秒", vbInformation
+    MsgBox "谕组生成完成！" & vbCrLf & "新增: " & 计数 & " 只" & vbCrLf & "总耗时: " & CLng(Timer - TT) & " 秒", vbInformation
 End Sub
+'========================================================================================
+'========================================================================================
+
+'========================================================================================
+'=== 向后兼容：旧批量函数名保持可用 ===
+'========================================================================================
+Public Sub XL算展取谕组周批量()
+    Call XL算展取谕组批量("周")
+End Sub
+Public Sub XL算展取谕组日批量()
+    Call XL算展取谕组批量("日")
+End Sub
+'========================================================================================
+'========================================================================================
 '########################################################################################
 '########################################################################################
 '##################################    算展统算展     #####################################
@@ -1839,9 +1928,9 @@ End Sub
 '########################################################################################
 
 
-' === XL算展生成_单股: 批量生成算展(单代码), 2026-07-09 ===
-' excel.Application.Run("XL算展生成_单股", "sz159864")
-Public Sub XL算展生成_单股(ByVal 被研代码 As String)
+' === XL算展取单股: 批量生成算展(单代码), 2026-07-09 ===
+' excel.Application.Run("XL算展取单股", "sz159864")
+Public Sub XL算展取单股(ByVal 被研代码 As String)
     Dim ARRLLL As Variant, 谕组 As Variant
     Dim 计数 As Integer
     计数 = XL算展数程跨期(ARRLLL, 被研代码, , , 谕组, "T@乾坤", "W")
