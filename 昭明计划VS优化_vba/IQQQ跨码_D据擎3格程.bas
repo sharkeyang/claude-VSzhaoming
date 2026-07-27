@@ -698,25 +698,19 @@ End If
                 '注20260305：应用（WXCD+WJB止损），按照周波型进行着色。
                 '颜色分配：破（二红）初（六紫）再（四紫）主龙猪0无（十靛）主龙猪栏栅杂（六靛）主龙猪蛀（43绿）震WXZA劫（四绿）
                 '========================================================================
-                    If InStr(.Cells(1, 位谕of日层联动), "屎") > 0 Then
+                    If InStr(.Cells(1, 位谕of周层三鳄), "屎") > 0 Or InStr(.Cells(1, 位谕of周层三鳄), "尿") > 0 Then
                                 For Y = 位谕始of族日层 To 位谕终of族日管
                                     值TintAndShade = .Cells(1, Y).Interior.TintAndShade
                                     .Cells(1, Y).Interior.Color = 常色一灰
                                     .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
                                 Next
-                    ElseIf InStr(.Cells(1, 位谕of日层联动), "尿") > 0 Then
-                                For Y = 位谕始of族日层 To 位谕终of族日管
-                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色二灰
-                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
-                                Next
-                    ElseIf Left$(.Cells(1, 位谕of日层联动), 1) = "嘘" Then
+                    ElseIf InStr(.Cells(1, 位谕of周层三鳄), "嘘") > 0 Then
                                 For Y = 位谕始of族日层 To 位谕终of族日管
                                     值TintAndShade = .Cells(1, Y).Interior.TintAndShade
                                     .Cells(1, Y).Interior.Color = 常色二橙
                                     .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
                                 Next
-                    ElseIf Left$(.Cells(1, 位谕of日层联动), 1) = "唏" Then
+                    ElseIf InStr(.Cells(1, 位谕of周层三鳄), "唏") > 0 Then
                                 For Y = 位谕始of族日层 To 位谕终of族日管
                                     值TintAndShade = .Cells(1, Y).Interior.TintAndShade
                                     .Cells(1, Y).Interior.Color = 常色六蓝
@@ -725,7 +719,7 @@ End If
                     '--------------------------------------------------------------------
                     '可持有，但存在瑕疵。铜，因为WXCD还未正交，必有震荡。银，处于WJB之下。
                     '--------------------------------------------------------------------
-                    ElseIf Left$(.Cells(1, 位谕of日层联动), 1) = "银" Then
+                    ElseIf InStr(.Cells(1, 位谕of周层三鳄), "银") > 0 Then
                                 For Y = 位谕始of族日层 To 位谕终of族日管
                                     值TintAndShade = .Cells(1, Y).Interior.TintAndShade
                                     .Cells(1, Y).Interior.Color = 常色四青
@@ -864,9 +858,11 @@ End If
                         With .Cells(1, 位谕of日层联动)
                                 If Left$(.Value, 1) = "N" Then
                                     .Font.Color = 常色一红
-                                ElseIf InStr(.Value, "持") > 0 Then
+                                ElseIf InStr(.Value, "降") > 0 Then
                                     .Font.Color = .Interior.Color
-                                    .Font.TintAndShade = -0.3
+                                    .Font.TintAndShade = -0.2
+                                ElseIf InStr(.Value, "待") > 0 Then
+                                    .Font.Color = 常色四黄
                                 End If
                         End With
                         '------------------------------------------------------------
@@ -1075,14 +1071,6 @@ End If
                 With .Cells(1, 位谕of月基策略)
                     If InStr(.Value, "NA") > 0 Then
                         .Font.Color = 常色三红
-                    End If
-                End With
-                '------------------------------------------------------------------------
-                With .Cells(1, 位谕of月基带周)
-                    If InStr(.Value, "00") > 0 Then
-                        .Font.Color = 常色二红
-                    ElseIf InStr(.Value, "10") > 0 Then
-                        .Font.Color = 常色四红
                     End If
                 End With
                 '------------------------------------------------------------------------

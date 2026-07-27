@@ -4,7 +4,7 @@ Attribute VB_Name = "ZUTL_热加载"
 '========================================================================================
 ' 功能：从昭明计划VS优化_vba/ 目录读取所有 .bas 文件，直接注入当前 VBA 工程
 ' 安全：不会删除自己所在的模块（ZUTL_热加载）
-' 依赖：_工具/热加载_转GBK.py（将 UTF-8 .bas 转为 GBK 编码）
+' 依赖：_产出物/_工具/热加载_转GBK.py（将 UTF-8 .bas 转为 GBK 编码）
 '
 ' 使用方法：
 '   1. 修改 .bas 文件（用文本编辑器）
@@ -15,7 +15,7 @@ Attribute VB_Name = "ZUTL_热加载"
 '   1. 本模块自身不会被热加载重载，需 vba2EXCEL 正式导入一次
 '   2. 热加载前建议先备份（vba2EXCEL 会自动备份）
 '   3. 语法错误的 .bas 会跳过，不影响已导入的模块
-'   4. 依赖 Python 环境（_工具/热加载_转GBK.py）
+'   4. 依赖 Python 环境（_产出物/_工具/热加载_转GBK.py）
 '========================================================================================
 Public Sub ZUTL_热加载()
     Call 热加载_执行("D:\@VSwork\VS昭明计划VBA优化\昭明计划VS优化_vba\", True)
@@ -40,7 +40,7 @@ Private Sub 热加载_执行(ByVal 目录 As String, Optional 是否弹窗 As Bo
     Dim 删除计数 As Long, 导入计数 As Long
 
     自名 = "ZUTL_热加载"
-    脚本路径 = "D:\@VSwork\VS昭明计划VBA优化\_工具\热加载_转GBK.py"
+    脚本路径 = "D:\@VSwork\VS昭明计划VBA优化\_产出物\_工具\热加载_转GBK.py"
 
     Set FSO = CreateObject("Scripting.FileSystemObject")
     If FSO.FolderExists(目录) = False Then

@@ -1882,8 +1882,8 @@ Public Sub XL算展取谕组批量(Optional 模式 As String = "", Optional 花�
                 实际模式 = "日"
             Else '周+日
                 Dim 缺周 As Boolean, 缺日 As Boolean
-                缺周 = Not 已有周.exists("谕组周_" & CIDL)
-                缺日 = Not 已有日.exists("谕组日_" & CIDL)
+                缺周 = Not 已有周.Exists("谕组周_" & CIDL)
+                缺日 = Not 已有日.Exists("谕组日_" & CIDL)
                 If 缺周 And 缺日 Then
                     实际模式 = "周+日"
                 ElseIf 缺周 And Not 缺日 Then
