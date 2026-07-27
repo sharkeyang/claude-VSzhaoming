@@ -466,12 +466,12 @@ Public Const 位谕of月基命分 = 位谕始of族策 + 4     'V1 月基命分: 
 Public Const 位谕of月基策分 = 位谕始of族策 + 5     'V2 月基策分(5周): 当前周波型×柱排状态, 5周后是否仍在多长(续持率取整), 仅对多长评分
 Public Const 位谕of月基带日 = 位谕始of族策 + 6     'V4 月基带日: (DXAB)同上(DXCD)同上(DXEF) 日级别DXAB→DXCD→DXEF带动
 '--- 日冲策略 ---
-Public Const 位谕of日冲策略 = 位谕始of族策 + 7     '日冲策略: 主升/渡强/渡弱/空降 + 小样本后缀".微"(N<1000)/".小"(N<10000)
+Public Const 位谕of日层段 = 位谕始of族策 + 7       '相当于判断 →ZE>0+ZC>0+ZA>0
 Public Const 位谕of日冲策分 = 位谕始of族策 + 8     '日冲策分: →ZE>0+ZC>0+ZA>0 概率(保留1位小数)
 Public Const 位谕of日冲HA分 = 位谕始of族策 + 9     '日冲HA分: 下日DSHA>1 概率(保留1位小数)
-Public Const 位谕of日层漏提示 = 位谕始of族策 + 10     '日层漏提示: 精密捡漏信号
+Public Const 位谕of日冲策略 = 位谕始of族策 + 10     '日冲策略: 主升/渡强/渡弱/空降 + 小样本后缀".微"(N<1000)/".小"(N<10000)
 Public Const 位谕of日层联动 = 位谕始of族策 + 11     '周日联动: 周看涨但日下跌捡漏, 输出周/日
-Public Const 位谕of日层段 = 位谕始of族策 + 12
+Public Const 位谕of日层漏提示 = 位谕始of族策 + 12     '日层漏提示: 精密捡漏信号
 Public Const 位谕of日层机警 = 位谕始of族策 + 13
 Public Const 位谕of日层盈提示 = 位谕始of族策 + 14     '日层盈提示: 止盈信号
 '-----------
@@ -2723,6 +2723,7 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             '============================================================================
             '============================================================================
             '四域周
+            '============================================================================
             谕组(X, 位谕of周层四域) = ""
             If 周类BTZC > 0 Then    '满足门槛（周类JZ上JC）
                 If 周类BTZC > 0 And 周类BTCD > 0 And 周类BTZB > 0 Then
@@ -2737,7 +2738,9 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
                     谕组(X, 位谕of周层四域) = "空看"
                 End If
             End If
+            '============================================================================
             '四域日
+            '============================================================================
             谕组(X, 位谕of日层四域) = ""
             If 日类BTZE > 0 Then    '满足门槛（日类JZ上JE）
                 If 日类BTZE > 0 And 组结算(X, 基位日类 + 位osJE) > 组结算(X, 基位日类 + 位osJF) And 日类BTZD > 0 Then
@@ -2801,20 +2804,6 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
                             谕组(X, 位谕of仓日类) = 谕组(X, 位谕of仓日类) & Left$(组结算(X, 基位日类 + 位os层护级CD), 1)
                             谕组(X, 位谕of仓日类) = 谕组(X, 位谕of仓日类) & Left$(组结算(X, 基位日类 + 位os层护段AB), 1)
                     End If
-            '============================================================================
-            '基本分类（DJEDC之上仓位状态）
-            谕组(X, 位谕of日层段) = "NA"
-            If 日类BTZE > 0 Then
-                If 日类BTZC <= 0 Then
-                    谕组(X, 位谕of日层段) = "卖浮"
-                ElseIf 日类BTZA > 0 Then
-                    谕组(X, 位谕of日层段) = "持主"
-                Else
-                    谕组(X, 位谕of日层段) = "持被"
-                End If
-            End If
-            '信号分类（概率提示，暂留空）
-            谕组(X, 位谕of日层机警) = ""
 
             '============================================================================
             '============================================================================
@@ -3465,29 +3454,6 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             谕组(X, 位谕of月基命分) = 月基命分
             谕组(X, 位谕of月基策分) = 月基策分
             '============================================================================
-            '============================================================================
-            '设计思路：WXAB（护型）和WXCD（大局）是两条独立维度的核心指标，
-            '  但它们的组合能揭示"带动效应"：
-            '    WXAB正→WXCD好 = 11双好（安全持有）
-            '    WXAB负→WXCD好 = 10反险（反向风险81.6%，AB护已破但大局尚好）
-            '    WXAB正→WXCD差 = 01正潜（正向潜力61.1%，AB护完好但趋势差）
-            '    WXAB负→WXCD差 = 00双差（两者都差，观望不参与）
-            '待扩展：WJB下破对WXCDXCD的带动、柱排启示
-            '   00双差 = WXAB负+WXCD差  不参与
-            '============================================================================
-            '============================================================================
-            周局 = 谕组(X, 位谕of周层大局)
-            周护 = 谕组(X, 位谕of周层护型)
-            Dim WXCD好 As Boolean: WXCD好 = (InStr(周局, "金") + InStr(周局, "银") > 0)
-            Dim WXCD差 As Boolean: WXCD差 = (InStr(周局, "屎") + InStr(周局, "尿") + InStr(周局, "唏") + InStr(周局, "嘘") > 0)
-            Dim WXAB正 As Boolean: WXAB正 = (InStr(周护, "甲") + InStr(周护, "乙") + InStr(周护, "己") > 0)
-            Dim WXAB负 As Boolean: WXAB负 = (InStr(周护, "丙") + InStr(周护, "丁") + InStr(周护, "戊") > 0)
-            If WXAB正 And WXCD好 Then
-            ElseIf WXAB负 And WXCD好 Then
-            ElseIf WXAB正 And WXCD差 Then
-            Else
-            End If
-            '============================================================================
             'V4 月基带日（日级别三联动）— DXAB→DXCD→DXEF带动
             '设计思路：日级别三层护级串联带动效应：
             '  DXAB护级(上中下忐忠忑) → 带动 → DXCD护级(上中下忐忠忑) → 带动 → DXEF护级(金银唏嘘屎尿)
@@ -3561,6 +3527,20 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             '--------------------------------------------------------------------
             谕组(X, 位谕of月基带日) = "(" & 日EF护级 & ")" & 日CD促EF & "(" & 日CD护级 & ")" & 日AB促CD & "(" & 日AB护级 & ")"
             '============================================================================
+            '基本分类（DJEDC之上仓位状态）
+            '注20260725：就是判断现有状态是否满足（DXZE＞0，DXZC＞0，DXZA＞0）。然后参考《位谕of日冲策分》，判断下日满足（DXZE＞0，DXZC＞0，DXZA＞0）的概率。
+            '============================================================================
+            谕组(X, 位谕of日层段) = "NA"
+            If 日类BTZE > 0 Then
+                If 日类BTZC <= 0 Then
+                    谕组(X, 位谕of日层段) = "卖浮"
+                ElseIf 日类BTZA > 0 Then
+                    谕组(X, 位谕of日层段) = "持主"
+                Else
+                    谕组(X, 位谕of日层段) = "持被"
+                End If
+            End If
+            '============================================================================
             '注20260726：V5 日冲策略（三指标）— 查216分支概率表
             '============================================================================
             '注20260726：日冲策略 = 主升/渡强/渡弱/空降 + 后缀.微(N<1000)/.小(N<10000)
@@ -3592,6 +3572,10 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
                 谕组(X, 位谕of日冲策分) = 0
                 谕组(X, 位谕of日冲HA分) = 0
             End If
+            '============================================================================
+            '信号分类（概率提示，暂留空）
+            '============================================================================
+            谕组(X, 位谕of日层机警) = ""
             '============================================================================
 '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 '策传
@@ -5749,7 +5733,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '列：日层
     '------------------------------------------------------------------------------------
     With WS.Cells(基行, 基列)
-        .Cells(1, 位谕of日层联动) = "日周联动"
         .Cells(1, 位谕of日层护型) = "护型DXAB"
         .Cells(1, 位谕of日层波型) = "波型"
         .Cells(1, 位谕of日层柱型) = "柱型DJA"
@@ -5780,21 +5763,19 @@ Function IQQQ跨码展擎_按列神谕区域( _
 '        End With
     End With
     With WS.Columns(基列)
-        .Columns(位谕of日层联动).Interior.TintAndShade = 0.1
         .Columns(位谕of日层界).Interior.TintAndShade = -0.6
         .Columns(位谕of日层护型).Interior.TintAndShade = -0.1
         .Columns(位谕of日层波型).Interior.TintAndShade = -0.3
         .Columns(位谕of日层柱型).Interior.TintAndShade = -0.5
-                .Columns(位谕of日层柱排).Interior.TintAndShade = -0.5
+        .Columns(位谕of日层柱排).Interior.TintAndShade = -0.5
     End With
     With WS.Columns(基列)
-        .Columns(位谕of日层联动).ColumnWidth = 9
         .Columns(位谕of日层护型).ColumnWidth = 8
         .Columns(位谕of日层波型).ColumnWidth = 12
         .Columns(位谕of日层柱型).ColumnWidth = 6
         .Columns(位谕of日层界).ColumnWidth = 6
         .Columns(位谕of日层柱排).ColumnWidth = 12
-            End With
+    End With
     With WS.Columns(基列)
         .Columns(位谕of日层柱排).Hidden = True
         .Columns(位谕of日层界).Hidden = True
@@ -6681,6 +6662,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         '四域列
         .Cells(1, 位谕of周层四域) = "四域周"
         .Cells(1, 位谕of日层四域) = "四域日"
+        .Cells(1, 位谕of日层联动) = "日周联动"
         .Cells(1, 位谕of日层段) = "日层段"
         .Cells(1, 位谕of日层机警) = "日机警"
         .Cells(1, 位谕of日冲策略) = "日冲策略"
@@ -6702,6 +6684,8 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周层四域).Interior.TintAndShade = -0.1
         .Columns(位谕of日层四域).Interior.TintAndShade = -0.2
         .Columns(位谕of日层漏提示).Interior.TintAndShade = -0.2
+        .Columns(位谕of日冲策略).Interior.TintAndShade = -0.1
+        .Columns(位谕of日层联动).Interior.TintAndShade = 0.1
         .Columns(位谕of日层段).Interior.TintAndShade = -0.4
         .Columns(位谕of日层机警).Interior.TintAndShade = -0.5
         .Columns(位谕of策传).Interior.Color = 常色四灰
@@ -6719,9 +6703,10 @@ Function IQQQ跨码展擎_按列神谕区域( _
     With WS.Columns(基列)
         .Columns(位谕of周层四域).ColumnWidth = 4
         .Columns(位谕of日层四域).ColumnWidth = 4
+        .Columns(位谕of日层联动).ColumnWidth = 8
         .Columns(位谕of日层段).ColumnWidth = 4
         .Columns(位谕of日层机警).ColumnWidth = 8
-        .Columns(位谕of日冲策略).ColumnWidth = 6
+        .Columns(位谕of日冲策略).ColumnWidth = 5
         .Columns(位谕of日冲策分).ColumnWidth = 4
         .Columns(位谕of日冲HA分).ColumnWidth = 4
         .Columns(位谕of日层盈提示).ColumnWidth = 5
