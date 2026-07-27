@@ -473,14 +473,11 @@ Else
             '【日冲筛选】当前站上DJE+DJC即可入选
             '============================================================================
             If 谕组(X, 位谕of日类BTZE) > 0 And 谕组(X, 位谕of日类BTZC) > 0 Then
-                Dim 日冲策名 As String: 日冲策名 = 谕组(X, 位谕of日冲策略)
-                If Left$(日冲策名, 2) = "主升" Then
-                    典日策_主升.Add Item:=X, key:=CIDL
-                ElseIf Left$(日冲策名, 2) = "渡强" Then
-                    典日策_渡强.Add Item:=X, key:=CIDL
-                Else
-                    典日策_渡弱.Add Item:=X, key:=CIDL
-                End If
+                Select Case 谕组(X, 位谕of日冲策略)
+                    Case "主升": 典日策_主升.Add Item:=X, key:=CIDL
+                    Case "渡强": 典日策_渡强.Add Item:=X, key:=CIDL
+                    Case Else:   典日策_渡弱.Add Item:=X, key:=CIDL
+                End Select
             End If
             '============================================================================
             '============================================================================
