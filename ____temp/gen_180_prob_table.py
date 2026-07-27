@@ -234,10 +234,10 @@ def main():
         w = csv.writer(f)
         w.writerow([
             'DXEF', 'DXCD', 'DXAB',
-            '样本', '→ZE>0', '→ZE>0+ZC>0', '→ZE>0+ZC>0+ZA>0',
+            '→ZE>0', '→ZE>0+ZC>0', '→ZE>0+ZC>0+ZA>0',
             '下日DSHA>0', '下日DSHA>1', '下日DSHA>3',
             '均HR', '中位HR',
-            '父级样本', '收缩标记'
+            '样本', '父级样本', '收缩标记'
         ])
 
         shrink_count = 0
@@ -252,7 +252,7 @@ def main():
                     s2 = parent_stats.get(key2)
 
                     if not s3 or s3['N'] == 0:
-                        w.writerow([dxef, dxcd, dxab, 0] + [''] * 10)
+                        w.writerow([dxef, dxcd, dxab] + [''] * 11)
                         continue
 
                     n = s3['N']
@@ -287,11 +287,11 @@ def main():
                     med_hr = calc_med(hrs) if not is_shrunk else ''
 
                     w.writerow([
-                        dxef, dxcd, dxab, n,
+                        dxef, dxcd, dxab,
                         p_ze, p_zc, p_za,
                         p_dsha0, p_dsha1, p_dsha3,
                         avg_hr, med_hr,
-                        parent_n, shrink_tag
+                        n, parent_n, shrink_tag
                     ])
                     written += 1
 
