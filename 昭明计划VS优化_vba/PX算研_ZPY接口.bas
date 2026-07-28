@@ -141,7 +141,7 @@ Public Sub ZPY_概率表_验证加载()
     Debug.Print "===== 查概率表 测试 ====="
     For i = LBound(测试项) To UBound(测试项)
         策略 = 测试项(i)(0): 市板 = 测试项(i)(1): 期望 = 测试项(i)(2)
-        实际 = 查概率表(策略, 市板)
+        实际 = IQQQ跨码工具_查周冲策分(策略, 市板)
         If 实际 = 期望 Then
             Debug.Print "? " & 策略 & " | " & 市板 & " = " & 实际
         Else
@@ -222,7 +222,7 @@ Public Sub ZPY_策略匹配_模拟(Optional WXCD As String = "金", _
     Debug.Print "     柱排=" & 周柱排 & " 盈提=" & 周盈提 & " 波型=" & 周波型
     If 周策略 <> "" Then
         Debug.Print "匹配: " & 周策略
-        Debug.Print "概率(Qd): " & 查概率表(周策略, "Qd")
+        Debug.Print "概率(Qd): " & IQQQ跨码工具_查周冲策分(周策略, "Qd")
     Else: Debug.Print "匹配: 无"
     End If
 End Sub
@@ -238,7 +238,7 @@ End Sub
 '   1. 尝试打开文件（On Error捕获路径错误）
 '   2. 读取表头→显示列数
 '   3. 逐行读取→显示前3行内容
-'   4. 关闭文件→调用查概率表("全量基准","Qd")验证
+'   4. 关闭文件→调用IQQQ跨码工具_查周冲策分("全量基准","Qd")验证
 ' 典型排查场景：概率表新增策略后/文件损坏/路径变更
 '========================================================================================
 Public Sub ZPY_概率表_调试加载()
@@ -257,7 +257,7 @@ Public Sub ZPY_概率表_调试加载()
         If 行数 <= 3 Then Debug.Print "  行" & 行数 & ": " & 字段(0) & "|" & 字段(1)
     Loop
     Close #文件号: Debug.Print "? 共 " & 行数 & " 行数据"
-    Debug.Print "? 查概率表(""全量基准"",""Qd"") = " & 查概率表("全量基准", "Qd")
+    Debug.Print "? IQQQ跨码工具_查周冲策分(""全量基准"",""Qd"") = " & IQQQ跨码工具_查周冲策分("全量基准", "Qd")
     Exit Sub
 文件错误:
     Debug.Print "? " & Err.Description & " 路径: D:\zdata\照明概率.txt"
@@ -525,7 +525,7 @@ End Function
 '返回：pZA=→ZE+ZC+ZA概率, pDSHA1=下日DSHA>1概率, 小样本标记
 '数据：6战场×6DXCD×6DXAB=216分支，内嵌VBA数组
 '========================================================================================
-Public Function 日冲查概率(ByVal sDXEF As String, ByVal sDXCD As String, ByVal sDXAB As String, _
+Public Function IQQQ跨码工具_查日冲概率(ByVal sDXEF As String, ByVal sDXCD As String, ByVal sDXAB As String, _
     ByRef pZA As Double, ByRef pDSHA1 As Double, ByRef 小样本标记 As String) As Boolean
 
     Dim iEF As Long, iCD As Long, iAB As Long
@@ -539,7 +539,7 @@ Public Function 日冲查概率(ByVal sDXEF As String, ByVal sDXCD As String, By
         Case "唏": iEF = 3
         Case "屎": iEF = 4
         Case "尿": iEF = 5
-        Case Else: 日冲查概率 = False: Exit Function
+        Case Else: IQQQ跨码工具_查日冲概率 = False: Exit Function
     End Select
     '映射DXCD
     Select Case sDXCD
@@ -549,7 +549,7 @@ Public Function 日冲查概率(ByVal sDXEF As String, ByVal sDXCD As String, By
         Case "忐": iCD = 3
         Case "忠": iCD = 4
         Case "忑": iCD = 5
-        Case Else: 日冲查概率 = False: Exit Function
+        Case Else: IQQQ跨码工具_查日冲概率 = False: Exit Function
     End Select
     '映射DXAB
     Select Case sDXAB
@@ -559,13 +559,13 @@ Public Function 日冲查概率(ByVal sDXEF As String, ByVal sDXCD As String, By
         Case "忐": iAB = 3
         Case "忠": iAB = 4
         Case "忑": iAB = 5
-        Case Else: 日冲查概率 = False: Exit Function
+        Case Else: IQQQ跨码工具_查日冲概率 = False: Exit Function
     End Select
 
     '216分支概率数据（6战场×6DXCD×6DXAB）
     '格式：Array(N, →ZE>0, →ZE+ZC, →ZE+ZC+ZA, DSHA>1, 小样本标记)
     rowData = 日冲取数据(iEF, iCD, iAB)
-    If IsEmpty(rowData) Then 日冲查概率 = False: Exit Function
+    If IsEmpty(rowData) Then IQQQ跨码工具_查日冲概率 = False: Exit Function
 
     pZA = rowData(3)       '→ZE>0+ZC>0+ZA>0
     pDSHA1 = rowData(4)    '下日DSHA>1
@@ -578,7 +578,7 @@ Public Function 日冲查概率(ByVal sDXEF As String, ByVal sDXCD As String, By
     Else
         小样本标记 = ""
     End If
-    日冲查概率 = (样本N > 0)
+    IQQQ跨码工具_查日冲概率 = (样本N > 0)
 End Function
 
 '========================================================================================

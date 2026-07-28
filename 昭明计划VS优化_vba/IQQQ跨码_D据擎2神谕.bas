@@ -499,7 +499,7 @@ Private 命分表已加载 As Boolean
 'CSV路径：_产出物\_工具\vba月基命分表.csv，与xlsm同目录
 'CSV列：代码,命分,算术均值,最大收益,胜率,交易次数,备注
 '----------------------------------------------------------------------------------------
-Private Sub 加载月基命分表()
+Private Sub IQQQ跨码工具_加载月基命分表()
     If 命分表已加载 Then Exit Sub
     Set 命分表 = CreateObject("Scripting.Dictionary")
 
@@ -3171,7 +3171,7 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             Dim 周策略 As String: 周策略 = ""
             Dim 周市板 As String: 周市板 = 谕组(X, 位qt市板)
             ' 市板为空时，从花册单行查询
-            If 周市板 = "" Then 周市板 = 获取单码市板(CIDL)
+            If 周市板 = "" Then 周市板 = IQQQ跨码工具_获取单码市板(CIDL)
         
             '按条件严格度降序匹配（最严格优先）
             If InStr(周局, "金") > 0 And InStr(周护, "甲") + InStr(周护, "乙") + InStr(周护, "己") > 0 Then
@@ -3207,7 +3207,7 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             '查概率表并写入
             If 周策略 <> "" And 周市板 <> "" Then
                 谕组(X, 位谕of周冲策略) = 周策略
-                谕组(X, 位谕of周冲策分) = 查概率表(周策略, 周市板)
+                谕组(X, 位谕of周冲策分) = IQQQ跨码工具_查周冲策分(周策略, 周市板)
             End If
             '============================================================================
 '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -3328,7 +3328,7 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             '评分公式：几何均值 = (∏(1+每次收益))^(1/交易次数) - 1
             '评级：仁慈>=20分 / 正常10~20分 / 震荡0~10分
             '逻辑：命分低=恶庄→天然不参与，命分高=好股→优先考虑月基持有
-            加载月基命分表
+            IQQQ跨码工具_加载月基命分表
             If 命分表.Exists(CIDL) Then
                 月基命分 = 命分表(CIDL)
             Else
@@ -3548,7 +3548,7 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             ' 日冲HA分 = 下日DSHA>1 概率取整(0~100)
             '============================================================================
             Dim 日冲pZA As Double, 日冲pDSHA1 As Double, 日冲小样本 As String
-            If 日冲查概率(日EF护级, 日CD护级, 日AB护级, 日冲pZA, 日冲pDSHA1, 日冲小样本) Then
+            If IQQQ跨码工具_查日冲概率(日EF护级, 日CD护级, 日AB护级, 日冲pZA, 日冲pDSHA1, 日冲小样本) Then
                 谕组(X, 位谕of日冲策分) = Round(日冲pZA, 1)
                 谕组(X, 位谕of日冲HA分) = Round(日冲pDSHA1, 1)
                 ' 日冲策略：龙(金银)/雀(唏)/虎(嘘)/武(屎尿) + 强(上忐忠)/弱(中下忑)
@@ -6805,7 +6805,7 @@ End Function
 '文件路径：_产出物\_工具\vba周冲策分表.txt
 '格式: 策略\tQd\tQe\tQif\tQic\tQimit\tQin
 '========================================================================================
-Public Function 查概率表(ByVal 策略名 As String, ByVal 市板 As String) As Double
+Public Function IQQQ跨码工具_查周冲策分(ByVal 策略名 As String, ByVal 市板 As String) As Double
     Static 概率典 As Dictionary
     Static 已加载 As Boolean
     Dim 文件号 As Integer, 行内容 As String
@@ -6834,20 +6834,20 @@ Public Function 查概率表(ByVal 策略名 As String, ByVal 市板 As String) 
     键 = 策略名 & "|" & 市板
     '兼容市板重构：Qim(中证1000)/Qit(中证2000)在概率表中合并为Qimit，两者差异<1%
     If 市板 = "Qim" Or 市板 = "Qit" Then 键 = 策略名 & "|Qimit"
-    If 概率典.Exists(键) Then 查概率表 = 概率典(键) Else 查概率表 = 0
+    If 概率典.Exists(键) Then IQQQ跨码工具_查周冲策分 = 概率典(键) Else IQQQ跨码工具_查周冲策分 = 0
 End Function
 '========================================================================================
 
 '========================================================================================
 '获取单码市板 — 从花册单行查询，不加载整个数组
 '========================================================================================
-Public Function 获取单码市板(ByVal CIDL As String) As String
+Public Function IQQQ跨码工具_获取单码市板(ByVal CIDL As String) As String
     Dim WS花天 As Worksheet
     Dim RG As Range
     If STBASE外簿工具_花册链接(WS花天, 常花中股) = False Then Exit Function
     Set RG = WS花天.Columns(位列花天CIDL).Find(CIDL)
     If Not RG Is Nothing Then
-        获取单码市板 = WS花天.Cells(RG.Row, 位列花天市板).Value
+        IQQQ跨码工具_获取单码市板 = WS花天.Cells(RG.Row, 位列花天市板).Value
     End If
     Set RG = Nothing
 End Function
