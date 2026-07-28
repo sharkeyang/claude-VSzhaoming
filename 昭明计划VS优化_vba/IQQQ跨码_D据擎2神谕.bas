@@ -3551,17 +3551,24 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             If 日冲查概率(日EF护级, 日CD护级, 日AB护级, 日冲pZA, 日冲pDSHA1, 日冲小样本) Then
                 谕组(X, 位谕of日冲策分) = Round(日冲pZA, 1)
                 谕组(X, 位谕of日冲HA分) = Round(日冲pDSHA1, 1)
-                ' 日冲策略：先定主分类，再追加小样本后缀
+                ' 日冲策略：龙(金银)/雀(唏)/虎(嘘)/武(屎尿) + 强(上忐忠)/弱(中下忑)
                 Dim 日冲分类 As String
-                If (日EF护级 = "金" Or 日EF护级 = "银") And (日CD护级 = "上" Or 日CD护级 = "忐") Then
-                    日冲分类 = "主升"
-                ElseIf 日EF护级 = "唏" And (日CD护级 = "上" Or 日CD护级 = "忐") Then
-                    日冲分类 = "渡强"
-                ElseIf 日EF护级 = "屎" Or 日EF护级 = "尿" Then
-                    日冲分类 = "空降"
+                Dim 日冲战场 As String, 日冲强弱 As String
+                If 日EF护级 = "金" Or 日EF护级 = "银" Then
+                    日冲战场 = "龙"
+                ElseIf 日EF护级 = "唏" Then
+                    日冲战场 = "雀"
+                ElseIf 日EF护级 = "嘘" Then
+                    日冲战场 = "虎"
                 Else
-                    日冲分类 = "渡弱"
+                    日冲战场 = "武"
                 End If
+                If 日CD护级 = "上" Or 日CD护级 = "忐" Or 日CD护级 = "忠" Then
+                    日冲强弱 = "强"
+                Else
+                    日冲强弱 = "弱"
+                End If
+                日冲分类 = 日冲战场 & 日冲强弱
                 ' 小样本追加后缀
                 If 日冲小样本 <> "" Then
                     日冲分类 = 日冲分类 & 日冲小样本

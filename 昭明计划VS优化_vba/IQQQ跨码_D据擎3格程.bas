@@ -859,8 +859,19 @@ End If
                                 If InStr(.Value, "NA") > 0 Then
                                     .Font.Color = .Interior.Color
                                     .Font.TintAndShade = -0.1
-                                ElseIf InStr(.Value, "卖") > 0 Then
+                                ElseIf InStr(.Value, "卖浮") > 0 Then
+                                    .Font.Color = 常色四红
+                                End If
+                        End With
+                        '------------------------------------------------------------
+                        With .Cells(1, 位谕of日冲策略)
+                                If InStr(.Value, "弱") > 0 Then
+                                    .Font.Color = .Interior.Color
+                                    .Font.TintAndShade = -0.2
+                                ElseIf InStr(.Value, "武") > 0 Then
                                     .Font.Color = 常色二红
+                                ElseIf InStr(.Value, "虎") > 0 Then
+                                    .Font.Color = 常色四红
                                 End If
                         End With
                         '------------------------------------------------------------
