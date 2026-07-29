@@ -8,7 +8,7 @@ from collections import defaultdict, OrderedDict
 
 sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf-8', buffering=1)
 
-TEMP = r'd:\@VSwork\VS昭明计划VBA优化\____temp'
+TEMP = r'd:\@VSwork\VS昭明计划VBA优化\昭明算展\谕组周'
 CAT_FILE = glob.glob(os.path.join('_产出物', '*MP1*.json'))
 if CAT_FILE:
     CAT_FILE = CAT_FILE[0]
@@ -26,15 +26,25 @@ CAT_RENAME = {
 }
 NEW_CATS = ['指数', '基金ETF', '沪深300', '中证500', '中证小盘', '中证非']
 DISPLAY = ['全量'] + NEW_CATS
+# 原始分类（映射前的7类）
+ALL_CATS = list(CAT_RENAME.keys())
+
+# 加载分类映射
+if CAT_FILE:
+    with open(CAT_FILE, 'r', encoding='utf-8') as f:
         cat_map = json.load(f)
     # 实际存在的分类
     raw_json = json.dumps(cat_map, ensure_ascii=False)
-    cats = [c for c in ALL_CATS if c in raw_json]
+    cats = list(set(c for c in ALL_CATS if c in raw_json) | set(NEW_CATS))
     print(f'已加载分类映射: {len(cat_map)}只')
     print(f'类别: {cats}')
 else:
-    cats = ['未分类']
+    cats = list(NEW_CATS)
     print('未找到分类映射文件')
+
+# 始终包含"未分类"兜底
+if '未分类' not in cats:
+    cats.append('未分类')
 print()
 
 # ============================================================
@@ -45,12 +55,13 @@ TESTS = OrderedDict()
 # 基准
 TESTS['全量基准'] = {}
 
-# 金系（原策分卡条件）
-TESTS['金+甲乙己(多长)'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}}
-TESTS['金+甲乙己+升排'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升'}
-TESTS['金+甲乙己+升排+非孕'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True}
-TESTS['金+甲乙己+升排+非孕+盈高'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True, 'yingtishi_high': True}
-TESTS['最优(全部)'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True, 'yingtishi_high': True, 'boxing_set': {'龙猪','龙管'}}
+# 金系（与VBA神谕.bas完全一致）
+# 注意：条件不互斥，每个条件独立匹配。概率表为VBA查表使用。
+TESTS['金最优(全部)'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True, 'yingtishi_high': True, 'boxing_set': {'龙猪','龙管'}}
+TESTS['金+多长+升排+非孕+盈高'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True, 'yingtishi_high': True}
+TESTS['金+多长+升排+非孕'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True}
+TESTS['金+多长+升排'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升'}
+TESTS['金+多长'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'not_zhupai': '升'}
 
 # 银系
 TESTS['银_不限WXAB'] = {'wxcd': '银'}
@@ -105,6 +116,9 @@ def match_condition(row, cond):
             return False
         if cond['zhupai'] == '人' and not ('人' in zhupai and not zhupai.startswith('升') and not zhupai.startswith('跌')):
             return False
+    if 'not_zhupai' in cond:
+        if cond['not_zhupai'] == '升' and zhupai.startswith('升'):
+            return False
     if cond.get('no_weifanyun') and '尾反孕' in zhupai:
         return False
     if 'yingtishi_has' in cond and cond['yingtishi_has']:
@@ -122,32 +136,36 @@ def match_condition(row, cond):
 # ============================================================
 # 扫描所有谕组CSV
 # ============================================================
-files = sorted([f for f in os.listdir(TEMP) if f.startswith('谕组_') and f.endswith('.csv')])
+files = sorted([f for f in os.listdir(TEMP) if f.startswith('谕组周_') and f.endswith('.csv')])
 print(f'扫描文件数: {len(files)}')
 print(f'测试条件数: {len(TESTS)}')
 print(f'分类数: {len(cats)}')
 print()
 
 for fi, fn in enumerate(files):
-    code = fn.replace('谕组_', '').replace('.csv', '')
-    cat = cat_map.get(code, '非板块')
+    code = fn.replace('谕组周_', '').replace('.csv', '')
+    old_cat = cat_map.get(code, '非板块')
+    cat = CAT_RENAME.get(old_cat, old_cat)  # 映射到新分类名
     if cat not in cats:
         cat = '未分类'
 
     fp = os.path.join(TEMP, fn)
     with open(fp, 'r', encoding='gbk') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            try:
-                hr = float(row.get('HR', 0) or 0)
-            except:
-                continue
+        rows = list(csv.DictReader(f))
 
-            for k, cond in TESTS.items():
-                if match_condition(row, cond):
-                    results[k][cat]['total'] += 1
-                    results[k][cat]['surge'] += 1 if hr > 0 else 0
-                    results[k][cat]['hrs'].append(hr)
+    for i in range(len(rows) - 1):
+        row = rows[i]
+        next_row = rows[i + 1]
+        try:
+            hr = float(next_row.get('HR', 0) or 0)
+        except:
+            continue
+
+        for k, cond in TESTS.items():
+            if match_condition(row, cond):
+                results[k][cat]['total'] += 1
+                results[k][cat]['surge'] += 1 if hr > 0 else 0
+                results[k][cat]['hrs'].append(hr)
 
     if (fi + 1) % 1000 == 0:
         print(f'  已处理 {fi+1}/{len(files)} 个文件...')
@@ -156,15 +174,15 @@ for fi, fn in enumerate(files):
 # 输出结果 — 3个概率表
 # ============================================================
 # 显示列：全量(所有类别合计) + 6个主要类别
-DISPLAY_CATS = ['全量', '中证2000', '中证1000', '沪深300上证50', '基金ETF', '指数']
+DISPLAY_CATS = ['全量', '指数', '基金ETF', '沪深300', '中证500', '中证小盘', '中证非']
 # 条件显示名映射
 DISPLAY_NAMES = {
     '全量基准': '全量基准',
-    '金+甲乙己(多长)': '金+多长',
-    '金+甲乙己+升排': '金+多长+升排',
-    '金+甲乙己+升排+非孕': '金+多长+升排+非孕',
-    '金+甲乙己+升排+非孕+盈高': '金+多长+升排+非孕+盈高',
-    '最优(全部)': '最优(全部)',
+    '金最优(全部)': '金最优(全部)',
+    '金+多长+升排+非孕+盈高': '金+多长+升排+非孕+盈高',
+    '金+多长+升排+非孕': '金+多长+升排+非孕',
+    '金+多长+升排': '金+多长+升排',
+    '金+多长': '金+多长',
     '银_不限WXAB': '银(全量)',
     '银+WXAB=己': '银+WXAB=己',
     '银+WXAB=甲': '银+WXAB=甲',
@@ -213,11 +231,9 @@ def print_table(title, prob_func):
         val = prob_func(k)
         line += f'  {val:>7.1f}%'
 
-        # 各分类列
-        for c in cats:
-            if c not in DISPLAY_CATS[1:]:
-                continue
-            if c == '非板块' or c == '中证500':
+        # 各分类列（只显示存在于cats中的分类）
+        for c in DISPLAY_CATS[1:]:
+            if c not in cats:
                 continue
             v = results[k][c]
             if v['total'] >= 100:

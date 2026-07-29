@@ -7,7 +7,7 @@ from collections import defaultdict, OrderedDict
 
 sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf-8', buffering=1)
 
-TEMP = r'd:\@VSwork\VS昭明计划VBA优化\____temp'
+TEMP = r'd:\@VSwork\VS昭明计划VBA优化\昭明算展\谕组周'
 
 # ============================================================
 # 定义待测试的条件组合
@@ -151,28 +151,31 @@ def match_condition(row, cond):
 # ============================================================
 # 扫描所有谕组CSV
 # ============================================================
-files = sorted([f for f in os.listdir(TEMP) if f.startswith('谕组_') and f.endswith('.csv')])
+files = sorted([f for f in os.listdir(TEMP) if f.startswith('谕组周_') and f.endswith('.csv')])
 print(f'扫描文件数: {len(files)}')
 print(f'测试条件数: {len(TESTS)}')
 print()
 
 for fi, fn in enumerate(files):
-    code = fn.replace('谕组_', '').replace('.csv', '')
+    code = fn.replace('谕组周_', '').replace('.csv', '')
     fp = os.path.join(TEMP, fn)
     with open(fp, 'r', encoding='gbk') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            try:
-                hr = float(row.get('HR', 0) or 0)
-            except:
-                continue
+        rows = list(csv.DictReader(f))
 
-            # 对每个测试条件检查
-            for k, cond in TESTS.items():
-                if match_condition(row, cond):
-                    results[k]['total'] += 1
-                    results[k]['surge'] += 1 if hr > 0 else 0
-                    results[k]['hrs'].append(hr)
+    for i in range(len(rows) - 1):
+        row = rows[i]
+        next_row = rows[i + 1]
+        try:
+            hr = float(next_row.get('HR', 0) or 0)
+        except:
+            continue
+
+        # 对每个测试条件检查
+        for k, cond in TESTS.items():
+            if match_condition(row, cond):
+                results[k]['total'] += 1
+                results[k]['surge'] += 1 if hr > 0 else 0
+                results[k]['hrs'].append(hr)
 
     if (fi + 1) % 1000 == 0:
         print(f'  已处理 {fi+1}/{len(files)} 个文件...')

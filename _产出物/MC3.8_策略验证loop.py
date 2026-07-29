@@ -18,7 +18,7 @@ from datetime import datetime
 
 sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf-8', buffering=1)
 
-TEMP = r'd:\@VSwork\VS昭明计划VBA优化\____temp\谕组'
+TEMP = r'd:\@VSwork\VS昭明计划VBA优化\昭明算展\谕组周'
 OUTPUT = r'd:\@VSwork\VS昭明计划VBA优化\_主文档\MC3.2_策略验证报告.md'
 
 # ============================================================
@@ -37,8 +37,8 @@ def match_strategy(row):
         za = 0
     hr = float(row.get('HR', '0') or '0')
 
-    # 金系（宽匹配：不限WXAB，已验证限制甲乙己不影响概率，但为获取最大覆盖使用宽匹配）
-    if '金' in wxcd:
+    # 金系（与VBA神谕.bas完全一致：WXAB in {甲,乙,己}）
+    if '金' in wxcd and any(c in wxab for c in ['甲','乙','己']):
         if zhupai.startswith('升') and '尾反孕' not in zhupai:
             if '高' in yingtishi:
                 if '龙猪' in boxing or '龙管' in boxing:
@@ -71,7 +71,7 @@ def match_strategy(row):
 # ============================================================
 # 扫描全部谕组CSV
 # ============================================================
-files = sorted(glob.glob(os.path.join(TEMP, '谕组_*.csv')))
+files = sorted(glob.glob(os.path.join(TEMP, '谕组周_*.csv')))
 print(f'扫描文件: {len(files)}')
 
 # 按策略收集HR数据
@@ -82,23 +82,26 @@ strategy_all = defaultdict(list)  # {策略名: [hr值列表]}
 total_rows = 0
 for fi, fn in enumerate(files):
     with open(fn, 'r', encoding='gbk') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            try:
-                hr = float(row.get('HR', '0') or '0')
-            except:
-                continue
-            name, hr_val = match_strategy(row)
-            total_rows += 1
-            if not name:
-                continue
-            strategy_all[name].append(hr_val)
-            # 年份切片
-            try:
-                year = row['主期'][:4]
-            except:
-                year = '未知'
-            strategy_data[name][year].append(hr_val)
+        rows = list(csv.DictReader(f))
+
+    for i in range(len(rows) - 1):
+        row = rows[i]
+        next_row = rows[i + 1]
+        try:
+            hr = float(next_row.get('HR', '0') or '0')
+        except:
+            continue
+        name, hr_val = match_strategy(row)
+        total_rows += 1
+        if not name:
+            continue
+        strategy_all[name].append(hr)
+        # 年份切片
+        try:
+            year = row['主期'][:4]
+        except:
+            year = '未知'
+        strategy_data[name][year].append(hr)
 
     if (fi + 1) % 500 == 0:
         print(f'  已处理 {fi+1}/{len(files)} 个文件 ({total_rows}周)...')
