@@ -6,7 +6,7 @@
 
 对每个(DXEF, DXCD, DXAB)分支，统计：
   →ZE>0, →ZE>0+ZC>0, →ZE>0+ZC>0+ZA>0
-  下日DSHA>0, 下日DSHA>1, 下日DSHA>3
+  下日DSHA>0, 下日DSHA>1, 下日DSHA>2
 
 贝叶斯收缩：小样本(<100)分支向父级(DXEF×DXCD)借力
 '''
@@ -40,7 +40,7 @@ DXCD_ORDER = ['上', '中', '下', '忐', '忠', '忑']
 DXAB_ORDER = ['上', '中', '下', '忐', '忠', '忑']
 
 # 6个评分指标
-METRICS = ['ze>0', 'zc>0', 'za>0', 'dsha>0', 'dsha>1', 'dsha>3']
+METRICS = ['ze>0', 'zc>0', 'za>0', 'dsha>0', 'dsha>1', 'dsha>2']
 
 
 def parse_dxef(val):
@@ -128,13 +128,13 @@ def main():
     # 三级统计：(dxef, dxcd, dxab) → 计数
     stats = defaultdict(lambda: {
         'N': 0, 'N_ze>0': 0, 'N_zc>0': 0, 'N_za>0': 0,
-        'N_dsha>0': 0, 'N_dsha>1': 0, 'N_dsha>3': 0,
+        'N_dsha>0': 0, 'N_dsha>1': 0, 'N_dsha>2': 0,
         'hrs': []
     })
     # 二级统计：(dxef, dxcd) → 计数（用于贝叶斯父级）
     parent_stats = defaultdict(lambda: {
         'N': 0, 'N_ze>0': 0, 'N_zc>0': 0, 'N_za>0': 0,
-        'N_dsha>0': 0, 'N_dsha>1': 0, 'N_dsha>3': 0,
+        'N_dsha>0': 0, 'N_dsha>1': 0, 'N_dsha>2': 0,
         'hrs': []
     })
 
@@ -177,7 +177,7 @@ def main():
             ze_next = parse_float(nxt[COL_ZE])
             zc_next = parse_float(nxt[COL_ZC])
             za_next = parse_float(nxt[COL_ZA])
-            dsha_next = parse_float(nxt[COL_BSHA])
+            dsha_next = parse_float(nxt[COL_HR])    # 下一行高幅 = 下日简单冲高
             hr_next = parse_float(nxt[COL_HR])
 
             if ze_next is None:
@@ -201,8 +201,8 @@ def main():
                     s3['N_dsha>0'] += 1
                 if safe_ge(dsha_next, 1):
                     s3['N_dsha>1'] += 1
-                if safe_ge(dsha_next, 3):
-                    s3['N_dsha>3'] += 1
+                if safe_ge(dsha_next, 2):
+                    s3['N_dsha>2'] += 1
 
             if hr_next is not None:
                 s3['hrs'].append(hr_next)
@@ -222,8 +222,8 @@ def main():
                     s2['N_dsha>0'] += 1
                 if safe_ge(dsha_next, 1):
                     s2['N_dsha>1'] += 1
-                if safe_ge(dsha_next, 3):
-                    s2['N_dsha>3'] += 1
+                if safe_ge(dsha_next, 2):
+                    s2['N_dsha>2'] += 1
             if hr_next is not None:
                 s2['hrs'].append(hr_next)
 
@@ -235,7 +235,7 @@ def main():
         w.writerow([
             'DXEF', 'DXCD', 'DXAB',
             '样本', '→ZE>0', '→ZE>0+ZC>0', '→ZE>0+ZC>0+ZA>0',
-            '下日DSHA>0', '下日DSHA>1', '下日DSHA>3',
+            '下日DSHA>0', '下日DSHA>1', '下日DSHA>2',
             '均HR', '中位HR',
             '父级样本', '收缩标记'
         ])
@@ -280,7 +280,7 @@ def main():
                     p_za = calc_metric('za>0')
                     p_dsha0 = calc_metric('dsha>0')
                     p_dsha1 = calc_metric('dsha>1')
-                    p_dsha3 = calc_metric('dsha>3')
+                    p_dsha3 = calc_metric('dsha>2')
 
                     hrs = s3['hrs']
                     avg_hr = calc_avg(hrs) if not is_shrunk else ''

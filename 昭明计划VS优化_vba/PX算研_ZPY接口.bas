@@ -809,3 +809,46 @@ Private Function 日冲取数据(iEF As Long, iCD As Long, iAB As Long) As Varia
     End If
     日冲取数据 = ARRDATA(iEF, iCD, iAB)
 End Function
+
+'========================================================================================
+'查日冲H2分 — 从CSV查表获取下日DSHR>2（按市板）
+'文件路径：_产出物\_工具\vba日冲策分表_市板.csv
+'格式: DXEF,DXCD,DXAB,市板,样本,→ZE>0,...,下日DSHR>2,均HR,中位HR
+'兼容市板：Qim/Qit → Qimit
+'========================================================================================
+Public Function IQQQ跨码工具_查日冲H2分(ByVal sDXEF As String, ByVal sDXCD As String, ByVal sDXAB As String, ByVal s市板 As String) As Double
+    Static 概率典 As Object
+    Static 已加载 As Boolean
+    Dim 文件号 As Integer, 行内容 As String, 字段 As Variant
+    Dim 键 As String, 市板查 As String
+
+    If Not 已加载 Then
+        Set 概率典 = CreateObject("Scripting.Dictionary")
+        文件号 = FreeFile
+        Open ThisWorkbook.Path & "\_产出物\_工具\vba日冲策分表_市板.csv" For Input As #文件号
+            Line Input #文件号, 行内容  ' 跳过表头
+            Do While Not EOF(文件号)
+                Line Input #文件号, 行内容
+                字段 = Split(行内容, ",")
+                If UBound(字段) >= 12 Then
+                    键 = 字段(0) & "|" & 字段(1) & "|" & 字段(2) & "|" & 字段(3)
+                    概率典(键) = CDbl(字段(10))  ' 下日DSHR>2（第10列）
+                End If
+            Loop
+        Close #文件号
+        已加载 = True
+    End If
+
+    ' 兼容市板：Qim/Qit → Qimit
+    市板查 = s市板
+    If 市板查 = "Qim" Or 市板查 = "Qit" Then 市板查 = "Qimit"
+
+    键 = sDXEF & "|" & sDXCD & "|" & sDXAB & "|" & 市板查
+    If 概率典.Exists(键) Then
+        IQQQ跨码工具_查日冲H2分 = 概率典(键)
+    Else
+        ' 市板查不到则回退全量
+        键 = sDXEF & "|" & sDXCD & "|" & sDXAB & "|全量"
+        If 概率典.Exists(键) Then IQQQ跨码工具_查日冲H2分 = 概率典(键) Else IQQQ跨码工具_查日冲H2分 = 0
+    End If
+End Function

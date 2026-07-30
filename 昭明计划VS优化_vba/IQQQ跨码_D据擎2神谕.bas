@@ -468,7 +468,7 @@ Public Const 位谕of月基带日 = 位谕始of族策 + 6     'V4 月基带日: 
 '--- 日冲策略 ---
 Public Const 位谕of日层段 = 位谕始of族策 + 7       '相当于判断 →ZE>0+ZC>0+ZA>0
 Public Const 位谕of日冲策分 = 位谕始of族策 + 8     '日冲策分: →ZE>0+ZC>0+ZA>0 概率(保留1位小数)
-Public Const 位谕of日冲HA分 = 位谕始of族策 + 9     '日冲HA分: 下日DSHA>1 概率(保留1位小数)
+Public Const 位谕of日冲H2分 = 位谕始of族策 + 9     '日冲H2分: 评级(A/B/C/D)+下日DSHR>2分数2位，如"A39"，升序排序
 Public Const 位谕of日冲策略 = 位谕始of族策 + 10     '日冲策略: 主升/渡强/渡弱/空降 + 小样本后缀".微"(N<1000)/".小"(N<10000)
 Public Const 位谕of日层联动 = 位谕始of族策 + 11     '周日联动: 周看涨但日下跌捡漏, 输出周/日
 Public Const 位谕of日层漏提示 = 位谕始of族策 + 12     '日层漏提示: 精密捡漏信号
@@ -3545,12 +3545,24 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             '============================================================================
             '注20260726：日冲策略 = 主升/渡强/渡弱/空降 + 后缀.微(N<1000)/.小(N<10000)
             ' 日冲策分 = →ZE>0+ZC>0+ZA>0 概率取整(0~100)
-            ' 日冲HA分 = 下日DSHA>1 概率取整(0~100)
+            ' 日冲H2分 = 下日DSHR>2（按市板）概率取整(0~100)
+            ' 日冲策分 = 评级(A/B/C/D) + 分数(2位)，如"A39"可直接排序
             '============================================================================
-            Dim 日冲pZA As Double, 日冲pDSHA1 As Double, 日冲小样本 As String
+            Dim 日冲pZA As Double, 日冲pDSHA1 As Double, 日冲小样本 As String, 日冲H2分 As Double, 日冲评级 As String
             If IQQQ跨码工具_查日冲概率(日EF护级, 日CD护级, 日AB护级, 日冲pZA, 日冲pDSHA1, 日冲小样本) Then
                 谕组(X, 位谕of日冲策分) = Round(日冲pZA, 1)
-                谕组(X, 位谕of日冲HA分) = Round(日冲pDSHA1, 1)
+                日冲H2分 = IQQQ跨码工具_查日冲H2分(日EF护级, 日CD护级, 日AB护级, 周市板)
+                ' 日冲H2分 = 评级(A/B/C/D) + 分数(2位)，如"A39"可直接排序
+                If 日冲H2分 >= 35 Then
+                    日冲评级 = "A"
+                ElseIf 日冲H2分 >= 30 Then
+                    日冲评级 = "B"
+                ElseIf 日冲H2分 >= 25 Then
+                    日冲评级 = "C"
+                Else
+                    日冲评级 = "D"
+                End If
+                谕组(X, 位谕of日冲H2分) = 日冲评级 & Format(Int(日冲H2分), "00")
                 ' 日冲策略：龙(金银)/雀(唏)/虎(嘘)/武(屎尿) + 强(上忐忠)/弱(中下忑)
                 Dim 日冲分类 As String
                 Dim 日冲战场 As String, 日冲强弱 As String
@@ -3577,7 +3589,7 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             Else
                 谕组(X, 位谕of日冲策略) = "无数据"
                 谕组(X, 位谕of日冲策分) = 0
-                谕组(X, 位谕of日冲HA分) = 0
+                谕组(X, 位谕of日冲H2分) = "D00"
             End If
             '============================================================================
             '信号分类（概率提示，暂留空）
@@ -6674,7 +6686,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of日层机警) = "日机警"
         .Cells(1, 位谕of日冲策略) = "日冲策略"
         .Cells(1, 位谕of日冲策分) = "日冲策分"
-        .Cells(1, 位谕of日冲HA分) = "日冲HA分"
+        .Cells(1, 位谕of日冲H2分) = "日冲H2分"
         .Cells(1, 位谕of日层盈提示) = "盈提示"
         .Cells(1, 位谕of日层漏提示) = "漏提示（金+甲乙）"
     End With
@@ -6715,7 +6727,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层机警).ColumnWidth = 8
         .Columns(位谕of日冲策略).ColumnWidth = 5
         .Columns(位谕of日冲策分).ColumnWidth = 4
-        .Columns(位谕of日冲HA分).ColumnWidth = 4
+        .Columns(位谕of日冲H2分).ColumnWidth = 4
         .Columns(位谕of日层盈提示).ColumnWidth = 5
         .Columns(位谕of日层漏提示).ColumnWidth = 12
         .Columns(位谕of日层盈提示).HorizontalAlignment = xlRight
