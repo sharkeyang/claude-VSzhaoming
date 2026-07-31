@@ -131,9 +131,9 @@ Function IQQQ展擎筛程至A1册按全数据( _
     Dim 典周策_A金系1 As New Dictionary  'A1 金升非+盈高
     Dim 典周策_A金系2 As New Dictionary  'A2 金升非
     Dim 典周策_A金系3 As New Dictionary  'A3 金升
-    Dim 典周策_A金系4 As New Dictionary  'A4 金多
+    Dim 典周策_A金系4 As New Dictionary  'A4 金长
     Dim 典周策_B银盈 As New Dictionary   'B 银盈
-    Dim 典周策_C银龙 As New Dictionary   'C 银龙/龙猪+甲
+    Dim 典周策_C银猪 As New Dictionary   'C 银猪/龙猪+甲
     Dim 典周策_D银升排 As New Dictionary 'D 银升
     Dim 典周策_E银ZA As New Dictionary  'E1 银ZA
     Dim 典周策_E银己 As New Dictionary   'E2 银己
@@ -439,8 +439,8 @@ Else
                 典周策_A金系4.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "银盈" Then
                 典周策_B银盈.Add Item:=X, key:=CIDL
-            ElseIf 周冲策名 = "银龙" Or 周冲策名 = "银龙管甲" Then
-                典周策_C银龙.Add Item:=X, key:=CIDL
+            ElseIf 周冲策名 = "银猪" Or 周冲策名 = "银龙管甲" Then
+                典周策_C银猪.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "银升" Then
                 典周策_D银升排.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "银ZA" Then
@@ -972,8 +972,8 @@ Next
         '
         ' 【三级信号 ? 仅参考】
         '   A3 金升: 43.8% 波动±26.6pp — 金系辅助筛选，不单独操作
-        '   A4 金多: 50.7% 波动±25.8pp — 金系基础条件，不单独操作
-        '   C  银龙: 53.0% 波动±25.8pp — 银系趋势型，仅做参考
+        '   A4 金长: 50.7% 波动±25.8pp — 金系基础条件，不单独操作
+        '   C  银猪: 53.0% 波动±25.8pp — 银系趋势型，仅做参考
         '   D  银升: 70.2% 波动±22.7pp — 银系简单实用，仅做参考
         '   E  银ZA: 49.3% 波动±25.7pp,样本少(18,290周) — 仅做参考
         '   F  银己: 75.5% 波动±20.8pp,样本少(6,859周) — 仅做参考
@@ -1027,16 +1027,16 @@ Next
         '   用途：仅用于金系辅助筛选，不作为独立操作信号
         MSG = MSG & IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色二灰, 典码输出:=典周策_A金系3, 节签:="? ☆ A3【三级】<金升非>")
         '
-        ' ☆ A4 金多
+        ' ☆ A4 金长
         '   P(≥3%)=50.7% | 年际波动±25.8pp | 接近全量基准
         '   用途：金系基础条件，仅做背景参考
-        MSG = MSG & IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色四灰, 典码输出:=典周策_A金系4, 节签:="? ☆ A4【三级】<金多>")
+        MSG = MSG & IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色四灰, 典码输出:=典周策_A金系4, 节签:="? ☆ A4【三级】<金长>")
         '
-        ' ○ C 银龙
+        ' ○ C 银猪
         '   P(≥3%)=53.0% | 样本31,232周 | 年际波动±25.8pp
         '   缺点：胜率接近随机，年际差异大，不推荐作为独立策略
         '   用途：仅做银系趋势型参考
-        MSG = MSG & IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典周策_C银龙, 节签:="? ○ C【四级】<银龙>")
+        MSG = MSG & IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典周策_C银猪, 节签:="? ○ C【四级】<银猪>")
         '
         ' ○ D 银升
         '   P(≥3%)=70.2% | 样本150,051周 | 年际波动±22.7pp

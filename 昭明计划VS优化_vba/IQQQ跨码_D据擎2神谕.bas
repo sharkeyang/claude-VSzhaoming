@@ -3189,7 +3189,7 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
                 ElseIf Left$(周柱排, 1) = "升" Then
                     周策略 = "金升"
                 Else
-                    周策略 = "金多"
+                    周策略 = "金长"
                 End If
             ElseIf InStr(周局, "银") > 0 Then
                 If InStr(周盈提, "高") > 0 Or InStr(周盈提, "宽") > 0 Then
@@ -3199,7 +3199,7 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
                 ElseIf Left$(周柱排, 1) = "升" Then
                     周策略 = "银升"
                 ElseIf InStr(周波型, "龙猪") > 0 Then
-                    周策略 = "银龙"
+                    周策略 = "银猪"
                 ElseIf 周ZA > 5 And 周ZA <= 10 Then
                     周策略 = "银ZA"
                 End If
