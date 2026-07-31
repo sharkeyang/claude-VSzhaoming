@@ -42,28 +42,28 @@ def match_strategy(row):
         if zhupai.startswith('升') and '尾反孕' not in zhupai:
             if '高' in yingtishi:
                 if '龙猪' in boxing or '龙管' in boxing:
-                    return '金最优(全部)', hr
+                    return '金升非盈龙', hr
                 else:
-                    return '金+多长+升排+非孕+盈高', hr
+                    return '金升非盈', hr
             else:
-                return '金+多长+升排+非孕', hr
+                return '金升非', hr
         elif zhupai.startswith('升'):
-            return '金+多长+升排', hr
+            return '金升', hr
         else:
-            return '金+多长', hr
+            return '金长', hr
 
     # 银系
     elif '银' in wxcd:
         if '高' in yingtishi or '宽' in yingtishi:
-            return '银+盈提示有', hr
+            return '银盈', hr
         elif '己' in wxab:
-            return '银+WXAB=己', hr
+            return '银己', hr
         elif zhupai.startswith('升'):
-            return '银+柱排=升', hr
+            return '银升', hr
         elif '龙猪' in boxing:
-            return '银+龙猪', hr
+            return '银猪', hr
         elif 5 < za <= 10:
-            return '银+ZA5~10', hr
+            return '银ZA', hr
 
     return '', hr
 
@@ -159,9 +159,9 @@ def tail_risk(hrs):
 # 输出验证报告
 # ============================================================
 STRATEGY_ORDER = [
-    '金最优(全部)', '金+多长+升排+非孕+盈高', '金+多长+升排+非孕',
-    '金+多长+升排', '金+多长',
-    '银+盈提示有', '银+龙猪', '银+柱排=升', '银+ZA5~10', '银+WXAB=己',
+    '金升非盈龙', '金升非盈', '金升非',
+    '金升', '金长',
+    '银盈', '银猪', '银升', '银ZA', '银己',
 ]
 
 report_lines = []

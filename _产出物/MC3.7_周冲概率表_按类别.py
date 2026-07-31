@@ -57,21 +57,21 @@ TESTS['全量基准'] = {}
 
 # 金系（与VBA神谕.bas完全一致）
 # 注意：条件不互斥，每个条件独立匹配。概率表为VBA查表使用。
-TESTS['金最优(全部)'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True, 'yingtishi_high': True, 'boxing_set': {'龙猪','龙管'}}
-TESTS['金+多长+升排+非孕+盈高'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True, 'yingtishi_high': True}
-TESTS['金+多长+升排+非孕'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True}
-TESTS['金+多长+升排'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升'}
-TESTS['金+多长'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'not_zhupai': '升'}
+TESTS['金升非盈龙'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True, 'yingtishi_high': True, 'boxing_set': {'龙猪','龙管'}}
+TESTS['金升非盈'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True, 'yingtishi_high': True}
+TESTS['金升非'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True}
+TESTS['金升'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升'}
+TESTS['金长'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'not_zhupai': '升'}
 
 # 银系
 TESTS['银_不限WXAB'] = {'wxcd': '银'}
-TESTS['银+WXAB=己'] = {'wxcd': '银', 'wxab': '己'}
+TESTS['银己'] = {'wxcd': '银', 'wxab': '己'}
 TESTS['银+WXAB=甲'] = {'wxcd': '银', 'wxab': '甲'}
-TESTS['银+盈提示有'] = {'wxcd': '银', 'yingtishi_has': True}
-TESTS['银+柱排=升'] = {'wxcd': '银', 'zhupai': '升'}
-TESTS['银+龙猪'] = {'wxcd': '银', 'boxing_set': {'龙猪'}}
-TESTS['银+龙猪/管+WXAB=甲'] = {'wxcd': '银', 'boxing_set': {'龙猪','龙管'}, 'wxab': '甲'}
-TESTS['银+ZA5~10'] = {'wxcd': '银', 'za_min': 5, 'za_max': 10}
+TESTS['银盈'] = {'wxcd': '银', 'yingtishi_has': True}
+TESTS['银升'] = {'wxcd': '银', 'zhupai': '升'}
+TESTS['银猪'] = {'wxcd': '银', 'boxing_set': {'龙猪'}}
+TESTS['银猪/管+WXAB=甲'] = {'wxcd': '银', 'boxing_set': {'龙猪','龙管'}, 'wxab': '甲'}
+TESTS['银ZA'] = {'wxcd': '银', 'za_min': 5, 'za_max': 10}
 
 # WXAB=己系列
 TESTS['WXAB=己(不限WXCD)'] = {'wxab': '己'}
@@ -178,19 +178,19 @@ DISPLAY_CATS = ['全量', '指数', '基金ETF', '沪深300', '中证500', '中�
 # 条件显示名映射
 DISPLAY_NAMES = {
     '全量基准': '全量基准',
-    '金最优(全部)': '金最优(全部)',
-    '金+多长+升排+非孕+盈高': '金+多长+升排+非孕+盈高',
-    '金+多长+升排+非孕': '金+多长+升排+非孕',
-    '金+多长+升排': '金+多长+升排',
-    '金+多长': '金+多长',
+    '金升非盈龙': '金升非盈龙',
+    '金升非盈': '金升非盈',
+    '金升非': '金升非',
+    '金升': '金升',
+    '金长': '金长',
     '银_不限WXAB': '银(全量)',
-    '银+WXAB=己': '银+WXAB=己',
+    '银己': '银己',
     '银+WXAB=甲': '银+WXAB=甲',
-    '银+盈提示有': '银+盈提示有',
-    '银+柱排=升': '银+柱排=升',
-    '银+龙猪': '银+龙猪',
-    '银+龙猪/管+WXAB=甲': '银+龙猪/管+WXAB=甲',
-    '银+ZA5~10': '银+ZA5~10',
+    '银盈': '银盈',
+    '银升': '银升',
+    '银猪': '银猪',
+    '银猪/管+WXAB=甲': '银猪/管+WXAB=甲',
+    '银ZA': '银ZA',
     'WXAB=己(不限WXCD)': 'WXAB=己(不限)',
     'WXAB=甲(不限WXCD)': 'WXAB=甲(不限)',
     'WXAB=乙(不限WXCD)': 'WXAB=乙(不限)',

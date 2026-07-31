@@ -439,7 +439,7 @@ Else
                 典周策_A金系4.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "银盈" Then
                 典周策_B银盈.Add Item:=X, key:=CIDL
-            ElseIf 周冲策名 = "银猪" Or 周冲策名 = "银龙管甲" Then
+            ElseIf 周冲策名 = "银猪" Or 周冲策名 = "银猪管甲" Then
                 典周策_C银猪.Add Item:=X, key:=CIDL
             ElseIf 周冲策名 = "银升" Then
                 典周策_D银升排.Add Item:=X, key:=CIDL

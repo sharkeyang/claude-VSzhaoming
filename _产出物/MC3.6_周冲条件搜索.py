@@ -34,7 +34,7 @@ for za_range, za_min, za_max in [('ZA≤0', -999, 0), ('ZA1~3', 1, 3), ('ZA3~5',
 
 # ---- 2. 龙猪/龙管 波型系列 ----
 TESTS['金+甲乙己+龙猪/管'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'boxing_set': {'龙猪','龙管'}}
-TESTS['银+龙猪/管'] = {'wxcd': '银', 'boxing_set': {'龙猪','龙管'}}
+TESTS['银猪/管'] = {'wxcd': '银', 'boxing_set': {'龙猪','龙管'}}
 TESTS['不限WXCD+龙猪/管'] = {'boxing_set': {'龙猪','龙管'}}
 
 # 龙猪/龙管 + 柱排方向
@@ -48,9 +48,9 @@ for wxcd_val in ['金', '银', '']:
         TESTS[label] = {'wxcd': wxcd_val, 'wxab': wxab_val}
 
 # ---- 4. 组合条件（多维度叠加） ----
-# 银+龙猪/管+不同WXAB
+# 银猪/管+不同WXAB
 for wxab_val in ['甲','乙','己','丙','丁','戊']:
-    TESTS[f'银+龙猪/管+WXAB={wxab_val}'] = {'wxcd': '银', 'boxing_set': {'龙猪','龙管'}, 'wxab': wxab_val}
+    TESTS[f'银猪/管+WXAB={wxab_val}'] = {'wxcd': '银', 'boxing_set': {'龙猪','龙管'}, 'wxab': wxab_val}
 
 # 银+升排+不同WXAB
 for wxab_val in ['甲','乙','己','丙','丁','戊']:
@@ -61,7 +61,7 @@ for wxab_val in ['甲','乙','己','丙','丁','戊']:
     TESTS[f'金+WXAB={wxab_val}+龙猪/管'] = {'wxcd': '金', 'wxab': wxab_val, 'boxing_set': {'龙猪','龙管'}}
 
 # ---- 5. 盈提示组合 ----
-TESTS['银+盈提示有'] = {'wxcd': '银', 'yingtishi_has': True}
+TESTS['银盈'] = {'wxcd': '银', 'yingtishi_has': True}
 TESTS['金+甲乙己+盈提示有'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'yingtishi_has': True}
 TESTS['龙猪/管+盈提示有'] = {'boxing_set': {'龙猪','龙管'}, 'yingtishi_has': True}
 
