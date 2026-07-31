@@ -48,7 +48,10 @@
       "Bash(rm fix_c_doc.py)",
       "Skill(update-config)",
       "Skill(update-config:*)",
-      "Write(//c/Users/SharkWork/.claude/**)"
+      "Write(//c/Users/SharkWork/.claude/**)",
+      "WebSearch",
+      "WebFetch(domain:finance.sina.com.cn)",
+      "WebFetch(domain:quote.eastmoney.com)"
     ]
   }
 }

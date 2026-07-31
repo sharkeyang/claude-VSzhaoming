@@ -455,7 +455,7 @@ Public Const 位谕始of族策 = 位谕终of族月均 + 1
 '--- 策传 ---
 Public Const 位谕of策传 = 位谕始of族策 + 0      '策传综合信息，供Python读取
 '--- 周冲策略 ---
-Public Const 位谕of周冲策略 = 位谕始of族策 + 1     '周冲策略: 匹配的策略名(如"金+多长+升排+非孕")
+Public Const 位谕of周冲策略 = 位谕始of族策 + 1     '周冲策略: 匹配的策略名(如"金升非")
 Public Const 位谕of周冲策分 = 位谕始of族策 + 2    '周冲策分: 冲高概率(P>=3%)
 '--- 月基策略 三变量 ---
 '月基策略：月基持仓的底层分类，按周层四域映射为7类
@@ -3179,29 +3179,29 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
                 If Left$(周柱排, 1) = "升" And InStr(周柱排, "尾反孕") = 0 Then
                     If InStr(周盈提, "高") > 0 Then
                         If InStr(周波型, "龙猪") > 0 Or InStr(周波型, "龙管") > 0 Then
-                            周策略 = "金最优(全部)"
+                            周策略 = "金升非盈龙"
                         Else
-                            周策略 = "金+多长+升排+非孕+盈高"
+                            周策略 = "金升非盈"
                         End If
                     Else
-                        周策略 = "金+多长+升排+非孕"
+                        周策略 = "金升非"
                     End If
                 ElseIf Left$(周柱排, 1) = "升" Then
-                    周策略 = "金+多长+升排"
+                    周策略 = "金升"
                 Else
-                    周策略 = "金+多长"
+                    周策略 = "金多"
                 End If
             ElseIf InStr(周局, "银") > 0 Then
                 If InStr(周盈提, "高") > 0 Or InStr(周盈提, "宽") > 0 Then
-                    周策略 = "银+盈提示有"
+                    周策略 = "银盈"
                 ElseIf InStr(周护, "己") > 0 Then
-                    周策略 = "银+WXAB=己"
+                    周策略 = "银己"
                 ElseIf Left$(周柱排, 1) = "升" Then
-                    周策略 = "银+柱排=升"
+                    周策略 = "银升"
                 ElseIf InStr(周波型, "龙猪") > 0 Then
-                    周策略 = "银+龙猪"
+                    周策略 = "银龙"
                 ElseIf 周ZA > 5 And 周ZA <= 10 Then
-                    周策略 = "银+ZA5~10"
+                    周策略 = "银ZA"
                 End If
             End If
         
