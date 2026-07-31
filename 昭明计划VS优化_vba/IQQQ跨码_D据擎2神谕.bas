@@ -464,19 +464,20 @@ Public Const 位谕of周冲策分 = 位谕始of族策 + 2    '周冲策分: 冲�
 Public Const 位谕of月基策略 = 位谕始of族策 + 3     '月基策略: 多长(积极)/多长(消极)/多长(不定)/多被(金)/多被(银)/NA(空看)/NA(空长)
 Public Const 位谕of月基命分 = 位谕始of族策 + 4     'V1 月基命分: 股性分(0~100)，从CSV查表，恶庄天然过滤
 Public Const 位谕of月基策分 = 位谕始of族策 + 5     'V2 月基策分(5周): 当前周波型×柱排状态, 5周后是否仍在多长(续持率取整), 仅对多长评分
-Public Const 位谕of月基带日 = 位谕始of族策 + 6     'V4 月基带日: (DXAB)同上(DXCD)同上(DXEF) 日级别DXAB→DXCD→DXEF带动
+Public Const 位谕of月基带周 = 位谕始of族策 + 6     'V3 月基带周: (WXCD)▲/↘/↗/▽ WXCD→WXAB带动
+Public Const 位谕of月基带日 = 位谕始of族策 + 7     'V4 月基带日: (DXAB)同上(DXCD)同上(DXEF) 日级别DXAB→DXCD→DXEF带动
 '--- 日冲策略 ---
-Public Const 位谕of日层段 = 位谕始of族策 + 7       '相当于判断 →ZE>0+ZC>0+ZA>0
-Public Const 位谕of日冲策分 = 位谕始of族策 + 8     '日冲策分: →ZE>0+ZC>0+ZA>0 概率(保留1位小数)
-Public Const 位谕of日冲H2分 = 位谕始of族策 + 9     '日冲H2分: 评级(A/B/C/D)+下日DSHR>2分数2位，如"A39"，升序排序
-Public Const 位谕of日冲策略 = 位谕始of族策 + 10     '日冲策略: 主升/渡强/渡弱/空降 + 小样本后缀".微"(N<1000)/".小"(N<10000)
-Public Const 位谕of日层联动 = 位谕始of族策 + 11     '周日联动: 周看涨但日下跌捡漏, 输出周/日
-Public Const 位谕of日层漏提示 = 位谕始of族策 + 12     '日层漏提示: 精密捡漏信号
-Public Const 位谕of日层机警 = 位谕始of族策 + 13
-Public Const 位谕of日层盈提示 = 位谕始of族策 + 14     '日层盈提示: 止盈信号
+Public Const 位谕of日层段 = 位谕始of族策 + 8       '相当于判断 →ZE>0+ZC>0+ZA>0
+Public Const 位谕of日冲策分 = 位谕始of族策 + 9     '日冲策分: →ZE>0+ZC>0+ZA>0 概率(保留1位小数)
+Public Const 位谕of日冲H2分 = 位谕始of族策 + 10    '日冲H2分: 评级(A/B/C/D)+下日DSHR>2分数2位，如"A39"，升序排序
+Public Const 位谕of日冲策略 = 位谕始of族策 + 11     '日冲策略: 主升/渡强/渡弱/空降 + 小样本后缀".微"(N<1000)/".小"(N<10000)
+Public Const 位谕of日层联动 = 位谕始of族策 + 12     '周日联动: 周看涨但日下跌捡漏, 输出周/日
+Public Const 位谕of日层漏提示 = 位谕始of族策 + 13     '日层漏提示: 精密捡漏信号
+Public Const 位谕of日层机警 = 位谕始of族策 + 14
+Public Const 位谕of日层盈提示 = 位谕始of族策 + 15     '日层盈提示: 止盈信号
 '-----------
-Public Const 位谕of周层四域 = 位谕始of族策 + 15
-Public Const 位谕of日层四域 = 位谕始of族策 + 16
+Public Const 位谕of周层四域 = 位谕始of族策 + 16
+Public Const 位谕of日层四域 = 位谕始of族策 + 17
 Public Const 位谕终of族策 = 位谕of日层四域
 '----------------------------------------------------------------------------------------
 Public Const 位谕列终全部 = 位谕终of族策
@@ -3453,6 +3454,38 @@ For X = LBound(组结算, 1) To UBound(组结算, 1)
             谕组(X, 位谕of月基策略) = 月基分类
             谕组(X, 位谕of月基命分) = 月基命分
             谕组(X, 位谕of月基策分) = 月基策分
+            '============================================================================
+            'V3 月基带周（周级别WXCD→WXAB带动）
+            '设计思路：WXCD（大局）→WXAB（护型）双向带动
+            '  输出格式：信号符 + (WXCD方向)
+            '  信号：▲同上向好 / ↘反向风险 / ↗正向潜力 / ▽同下向差
+            '============================================================================
+            Dim V3周局 As String: V3周局 = 谕组(X, 位谕of周层大局)
+            Dim V3周护 As String: V3周护 = 谕组(X, 位谕of周层护型)
+            Dim V3CD金银 As Boolean: V3CD金银 = (InStr(V3周局, "金") > 0 Or InStr(V3周局, "银") > 0)
+            Dim V3AB护级 As String: V3AB护级 = ""
+            Dim 月基带周 As String: 月基带周 = ""
+            '提取WXAB护级（上/中/下/忐/忠/忑）
+            If InStr(V3周护, "上") > 0 Then V3AB护级 = "上"
+            If InStr(V3周护, "中") > 0 And V3AB护级 = "" Then V3AB护级 = "中"
+            If InStr(V3周护, "下") > 0 And V3AB护级 = "" Then V3AB护级 = "下"
+            If InStr(V3周护, "忐") > 0 And V3AB护级 = "" Then V3AB护级 = "忐"
+            If InStr(V3周护, "忠") > 0 And V3AB护级 = "" Then V3AB护级 = "忠"
+            If InStr(V3周护, "忑") > 0 And V3AB护级 = "" Then V3AB护级 = "忑"
+            If V3AB护级 = "" Then V3AB护级 = "?"
+            Dim V3AB强 As Boolean: V3AB强 = (V3AB护级 = "上" Or V3AB护级 = "忐")
+
+            If V3CD金银 And V3AB强 Then
+                月基带周 = "▲"       '同上向好：大局+护级双强
+            ElseIf V3CD金银 And Not V3AB强 Then
+                月基带周 = "↘"       '反向风险：大局好但护级弱
+            ElseIf Not V3CD金银 And V3AB强 Then
+                月基带周 = "↗"       '正向潜力：大局差但护级强
+            Else
+                月基带周 = "▽"       '同下向差：双弱
+            End If
+            月基带周 = "(" & Mid$(V3周局, 1, 1) & ")" & 月基带周 & "(" & V3AB护级 & ")"
+            谕组(X, 位谕of月基带周) = 月基带周
             '============================================================================
             'V4 月基带日（日级别三联动）— DXAB→DXCD→DXEF带动
             '设计思路：日级别三层护级串联带动效应：
@@ -6677,6 +6710,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of月基策略) = "月基策略"
         .Cells(1, 位谕of月基命分) = "月基命分"
         .Cells(1, 位谕of月基策分) = "月基策分" & vbCrLf & "(5周维持)"
+        .Cells(1, 位谕of月基带周) = "月基带周" & vbCrLf & "(CD→AB)"
         .Cells(1, 位谕of月基带日) = "月基带日(AB-CD-EF)"
         '四域列
         .Cells(1, 位谕of周层四域) = "四域周"
@@ -6712,6 +6746,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of月基策略).Interior.Color = 常色四43
         .Columns(位谕of月基命分).Interior.Color = 常色七碧
         .Columns(位谕of月基策分).Interior.Color = 常色六碧
+        .Columns(位谕of月基带周).Interior.Color = 常色五碧
         .Columns(位谕of月基带日).Interior.Color = 常色四碧
         .Columns(位谕of周冲策略).Interior.Color = 常色四靛
         .Columns(位谕of周冲策分).Interior.Color = 常色五靛
@@ -6735,6 +6770,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of月基策略).ColumnWidth = 9
         .Columns(位谕of月基命分).ColumnWidth = 4
         .Columns(位谕of月基策分).ColumnWidth = 4
+        .Columns(位谕of月基带周).ColumnWidth = 9
         .Columns(位谕of周冲策略).ColumnWidth = 10
         .Columns(位谕of周冲策分).ColumnWidth = 4
         .Columns(位谕of策传).ColumnWidth = 0.2
