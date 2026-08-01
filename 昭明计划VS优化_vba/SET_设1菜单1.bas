@@ -443,12 +443,6 @@ Public Sub UGSOP_MENU_生成()
         .Style = msoButtonIconAndCaptionBelow
         .TooltipText = "仓宝合"
     End With
-    With 菜栏.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ乾坤分布基程花天sSCC_仓宝周"
-        .FaceId = 102 '340
-        .Style = msoButtonIconAndCaptionBelow
-        .TooltipText = "仓宝周"
-    End With
 
 '    With 菜栏.Controls.Add(Type:=msoControlButton)
 '        .OnAction = "IQQQ乾坤分布调程花天sSCC_仓宝福"
@@ -800,7 +794,7 @@ Public Sub UGSOP_MENU_生成()
     '热加载
     With 菜项更新.Controls.Add(Type:=msoControlButton)
         .BeginGroup = True
-        .OnAction = "ZUTL_热加载"
+        .OnAction = "AUTL_热加载"
         .Caption = "热加载VBA"
         .FaceId = 243
     End With
@@ -814,11 +808,6 @@ Public Sub UGSOP_MENU_生成()
         .BeginGroup = True
         .OnAction = "STCALL花册管理_重制花天P3调程导入华宝"
         .Caption = "导入华宝持仓"
-        .FaceId = 263
-    End With
-    With 菜项池.Controls.Add(Type:=msoControlButton)
-        .OnAction = "STCALL花册管理_重制花天P3调程导入华宝周池"
-        .Caption = "导入华宝持仓 周池"
         .FaceId = 263
     End With
     With 菜项池.Controls.Add(Type:=msoControlButton)

@@ -6,14 +6,13 @@
       "Write(d:/@VSwork/**/*)",
       "Edit(d:/@VSwork/**/*)",
       "Glob(d:/@VSwork/**/*)",
-      "Grep(d:/@VSwork/**/*)"
+      "Grep(d:/@VSwork/**/*)",
+      "Bash(python -c ' *)",
+      "Bash(timeout 30 python -c ' *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ],
-    "defaultMode": "bypassPermissions",
-    "skipDangerousModePermissionPrompt": true,
-    "additionalDirectories": [
-      "C:\\Users\\SharkWork\\AppData\\Local\\Temp",
-      "c:\\Users\\SharkWork\\OneDrive\\@IWBR\\@计划\\@VSwork\\VS昭明计划VBA优化\\.claude"
-    ]
+    "defaultMode": "bypassPermissions"
   },
   "hooks": {
     "PostToolUse": [
@@ -28,5 +27,6 @@
       }
     ],
     "Stop": []
-  }
+  },
+  "skipDangerousModePermissionPrompt": true
 }

@@ -596,7 +596,6 @@ Public Const 位qt行益 = 20
 Public Const 位qt概念 = 21
 '----------------------------------------------
 Public Const 位qt仓主 = 22
-Public Const 位qt仓周 = 23
 Public Const 位qt今池 = 24
 Public Const 位qt在池 = 25
 Public Const 位qt盯盘类别 = 26

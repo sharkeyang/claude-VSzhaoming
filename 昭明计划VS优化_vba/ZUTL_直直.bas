@@ -28,17 +28,7 @@ Attribute VB_Name = "ZUTL_直直"
 '========================================================================================
 
 
-Public Sub UTL宏工具_强制重置状态()
-    UTL宏工具_DEPTH = 0
-    Application.ScreenUpdating = True
-    Application.DisplayAlerts = True
-    Application.Calculation = xlCalculationAutomatic
-    Application.Interactive = True
-    Application.EnableEvents = True
-    Debug.Print "已重置：ScreenUpdating/DisplayAlerts/Interactive/EnableEvents → True" & vbCrLf & _
-           "Calculation → Automatic" & vbCrLf & _
-           "Depth → 0", vbInformation, "状态重置完成"
-End Sub
+
 Public Sub UTL宏工具_显示工作簿()
     '强制显示当前工作簿窗口
     On Error Resume Next

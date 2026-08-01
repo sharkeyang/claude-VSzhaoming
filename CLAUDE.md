@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A quantitative trading/investment research system built in Excel VBA (57 standard modules). The VBA source lives in `昭明计划VS优化.xlsm`. Python scripts export/import VBA code so it can be edited with proper tooling. Use `/vba2VS` and `/vba2EXCEL` skills in Claude Code chat for daily workflow.
 
+## Response principle
+
+正式输出前，以第一性原理审视用户的输入内容，如果发现逻辑漏洞或认知偏差时，需要基于事实直接指出并给出可执行改进，不奉承、迎合或回避。
+
 ## VBA workflow
 
 ### 🔴 铁律：Claude 绝对禁止导入 .bas 到 **正式** xlsm

@@ -172,7 +172,6 @@ Function IQQQ跨码展擎_按列QT区域( _
         .Cells(1, 位qt今池) = "今池"
         .Cells(1, 位qt在池) = "在池"
         .Cells(1, 位qt仓主) = "仓主"
-        .Cells(1, 位qt仓周) = "仓周"
         .Cells(1, 位qt盯盘类别) = "盯盘"
         '--------------------------------------------------------------------------------
     End With
@@ -195,10 +194,10 @@ Function IQQQ跨码展擎_按列QT区域( _
         .Columns(位qt换手).NumberFormatLocal = 全设格式of零位
         .Columns(位qt今时).NumberFormatLocal = "hh:mm"
         .Columns(位qt今期).NumberFormatLocal = 全设格式of日期
-        .Columns(位qt行业).HorizontalAlignment = xlRight
-        .Columns(位qt行益).HorizontalAlignment = xlRight
-        .Columns(位qt概念).HorizontalAlignment = xlRight
-        .Columns(位qt盯盘类别).HorizontalAlignment = xlRight
+'        .Columns(位qt行业).HorizontalAlignment = xlRight
+'        .Columns(位qt行益).HorizontalAlignment = xlRight
+'        .Columns(位qt概念).HorizontalAlignment = xlRight
+'        .Columns(位qt盯盘类别).HorizontalAlignment = xlRight
         With .Columns(位qt盯盘类别).Validation
             .Delete
             .Add Type:=xlValidateList, AlertStyle:=xlValidAlertWarning, Operator:=xlBetween _
@@ -229,7 +228,6 @@ Function IQQQ跨码展擎_按列QT区域( _
         .Columns(位qt市板).ColumnWidth = 3
         .Columns(位qt今池).ColumnWidth = 2
         .Columns(位qt仓主).ColumnWidth = 3
-        .Columns(位qt仓周).ColumnWidth = 2
         .Columns(位qt在池).ColumnWidth = 2
         .Columns(位qt盯盘类别).ColumnWidth = 7
     End With
@@ -246,7 +244,6 @@ Function IQQQ跨码展擎_按列QT区域( _
         .Columns(位qt换手).Hidden = False
         .Columns(位qt市板).Hidden = False
         '.Columns(位qt行业).Hidden = False
-        .Columns(位qt仓周).Hidden = False
         If WS.Name = 常池名金 Then
             .Columns(位qt今收).Hidden = False
             .Columns(位qt仓主).Hidden = False
