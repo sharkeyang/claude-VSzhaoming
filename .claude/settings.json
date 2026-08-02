@@ -10,9 +10,13 @@
       "Bash(python -c ' *)",
       "Bash(timeout 30 python -c ' *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(cat > *)"
     ],
-    "defaultMode": "bypassPermissions"
+    "defaultMode": "bypassPermissions",
+    "additionalDirectories": [
+      "C:\\Users\\SharkWork\\OneDrive\\MyObsidian\\40-49 Tracking\\Shark日记"
+    ]
   },
   "hooks": {
     "PostToolUse": [

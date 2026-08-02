@@ -521,9 +521,9 @@ Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional ByR
     STCALL花册管理_重制花天P3正程导入华宝 = 计数导入
 End Function
 '========================================================================================
-' 测试_验证资金Name — 检查所有资金汇总 Name 是否存在并显示值
+' ROS据管_验证资金Name_测试 — 检查所有资金汇总 Name 是否存在并显示值
 '========================================================================================
-Public Sub 测试_验证资金Name()
+Public Sub ROS据管_验证资金Name_测试()
     Dim 账户列表 As Variant
     账户列表 = Array(常仓名宝福, 常仓名宝彦)
     Dim 名称列表 As Variant
@@ -1631,7 +1631,7 @@ End Function
 
 
 
-Private Sub 测试_STCALL花册工具_花天查询日基势局()
+Private Sub STCALL花册工具_花天查询日基势局_测试()
     Dim CIDL As String
     CIDL = "sh000002"
     Dim 值势局 As String

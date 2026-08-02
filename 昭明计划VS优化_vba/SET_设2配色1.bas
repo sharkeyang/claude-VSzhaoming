@@ -180,7 +180,7 @@ Public Const 常色指金 = 常色主靛
 Public Const 常色研究 = 常色灰绿
 '========================================================================================
 
-Private Sub 后台辅程颜色转换_RGB2OLE_测试2()
+Private Sub SET_颜色转换_RGB2OLE_测试2()
     Dim c As Long
     c = 后台辅程颜色转换_RGB2OLE(51, 153, 102)
     Debug.Print c
@@ -191,7 +191,7 @@ Private Sub 后台辅程颜色转换_RGB2OLE_测试2()
 End Sub
 
 
-Private Sub 后台辅程颜色转换_RGB2OLE_测试()
+Private Sub SET_颜色转换_RGB2OLE_测试()
     Debug.Print "========== 艺术色系 =========="
     Debug.Print "常色克莱因蓝  RGB(0,47,167)     = " & RGB(0, 47, 167)
     Debug.Print "常色蒂芙尼蓝  RGB(129,216,207)  = " & RGB(129, 216, 207)
@@ -386,7 +386,7 @@ End Sub
 
 
 
-Private Sub 后台辅程颜色测试()
+Private Sub SET_颜色测试_测试()
     Dim 色度 As Long
     色度 = 常色八绿
     Call 后台辅程颜色转换_OLE2RGB(常色八绿)

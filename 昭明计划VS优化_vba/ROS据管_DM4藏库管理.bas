@@ -69,7 +69,7 @@ End Sub
 
 
 
-Sub 测试sss()
+Sub ROS据管_测试sss_测试()
     Dim 典码称 As New Dictionary
     Call 后台族非票精分调程_WA_设置典核心行业(典码称)
     Dim ARRDATA As Variant
@@ -182,7 +182,7 @@ End Function
 
 
 
-Sub STBASE藏库引擎_更新数程_测试()
+Sub ROS据管_藏库引擎_更新数程_测试()
     Dim 典码称 As New Dictionary
     Call 后台族非票精分调程_WA_设置典核心行业(典码称)
     Dim ARRDATA As Variant

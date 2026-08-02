@@ -24,7 +24,7 @@ Public Const 位简式查组首行 = 0
 
 
 
-Private Sub 测试二()
+Private Sub WMR_测试二_测试()
     Dim MS As Worksheet
     Call PBASE格程工具_表操工表新增(MS, "混市")
     MS.Cells.Clear
@@ -276,7 +276,7 @@ End Function
 
 
 
-Private Sub 测试一()
+Private Sub WMR_测试一_测试()
     Dim 天组 As Variant
     Dim 天典 As New Dictionary
     Dim MSG As String

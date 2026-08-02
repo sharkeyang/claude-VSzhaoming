@@ -150,7 +150,7 @@ Function XL算展前调模板( _
         '--------------------------------------------------------------------------------
         被研代码 = 典被研代码.Keys(k - 1)
         被研代称 = 典被研代码.Items(k - 1)
-        Call XL算展引擎正程( _
+        Call XL算展前调引擎正程( _
                   被研代码:=被研代码 _
                 , 被研期类:=被研期类 _
                 , 被研算法:=被研算法 _
@@ -203,7 +203,7 @@ End Function
 '功能：算法展示 LLL/LD/LW/LM
 '========================================================================================
 '========================================================================================
-Function XL算展引擎正程( _
+Function XL算展前调引擎正程( _
           被研代码 As String _
         , Optional 被研期类 As String = 常期类为月 _
         , Optional 被研算法 As String = "" _
@@ -226,7 +226,7 @@ Function XL算展引擎正程( _
 '========================================================================================
 '运行
 '========================================================================================
-    计数明细 = XL算展引擎子程跨期(WB, 被研代码, 被研期类, 被研算法, 基色底:=基色底)
+    计数明细 = XL算展前调引擎子程跨期(WB, 被研代码, 被研期类, 被研算法, 基色底:=基色底)
 '========================================================================================
 '工区：外部存档
 '========================================================================================
@@ -244,7 +244,7 @@ Function XL算展引擎正程( _
 '========================================================================================
 '返回
 '========================================================================================
-    XL算展引擎正程 = 计数明细
+    XL算展前调引擎正程 = 计数明细
 End Function
 
 
@@ -256,7 +256,7 @@ End Function
 '功能：算法展示 针对跨期【周+日】
 '========================================================================================
 '========================================================================================
-Function XL算展引擎子程跨期( _
+Function XL算展前调引擎子程跨期( _
           WB As Workbook _
         , 被研代码 As String _
         , 被研期类 As String _
@@ -302,7 +302,7 @@ Function XL算展引擎子程跨期( _
     Erase ARRLLL
     Set WSLLL = Nothing
     '------------------------------------------------------------------------------------
-    XL算展引擎子程跨期 = 计数明细
+    XL算展前调引擎子程跨期 = 计数明细
 End Function
 
 
@@ -857,7 +857,7 @@ Sub XL算展格程跨期_通用显示( _
                     , , Array(位os算累持, 4), Array(位os算累赚, 7), Array(位os算今赚, 6), Array(位os算今手, 6) _
                     , , Array(位os结幅PR0, 6) _
                 )
-        列定位 = UG区域格程重组(重输始列数组, 重输指标数组, WS, 列定位)
+        列定位 = XL算展格程跨期_区域格程重组(重输始列数组, 重输指标数组, WS, 列定位)
         WS.Cells(1, 日类始).Resize(1, 列定位 - 日类始).EntireColumn.Interior.Color = 常色灰绿
         WS.Cells(1, 日类始).Resize(1, 列定位 - 日类始).Font.ColorIndex = 1
         WS.Cells(1, 日类始) = "日类"
@@ -874,7 +874,7 @@ Sub XL算展格程跨期_通用显示( _
                     , , Array(位os算累持, 4), Array(位os算累赚, 7), Array(位os算今赚, 6), Array(位os算今手, 6) _
                     , , Array(位os结幅PR0, 6) _
                 )
-        列定位 = UG区域格程重组(重输始列数组, 重输指标数组, WS, 列定位)
+        列定位 = XL算展格程跨期_区域格程重组(重输始列数组, 重输指标数组, WS, 列定位)
         WS.Cells(1, 周类始).Resize(1, 列定位 - 周类始).EntireColumn.Interior.Color = 常色灰蓝
         WS.Cells(1, 周类始).Resize(1, 列定位 - 周类始).Font.ColorIndex = 1
         WS.Cells(1, 周类始) = "周类"
@@ -989,7 +989,7 @@ Function XL算展格程单期( _
         , , Array(位os算法名, 10) _
         , , Array(位os算累持, 4), Array(位os算累赚, 7), Array(位os算今赚, 6), Array(位os算今手, 6), Array(位os算今仓, 3) _
         )
-    列定位 = UG区域格程重组(重输始列数组, 重输指标数组, WS, 列定位)
+    列定位 = XL算展格程跨期_区域格程重组(重输始列数组, 重输指标数组, WS, 列定位)
     Erase 重输指标数组
     Erase 重输始列数组
     '====================================================================================
@@ -1006,7 +1006,7 @@ Function XL算展格程单期( _
             重输指标数组 = Array( _
                          Array(位os结幅PR0, 6), Array(位os结收, 6) _
                     )
-            列定位 = UG区域格程重组(重输始列数组, 重输指标数组, WS, 列定位)
+            列定位 = XL算展格程跨期_区域格程重组(重输始列数组, 重输指标数组, WS, 列定位)
             Erase 重输指标数组
             Erase 重输始列数组
 '========================================================================================
@@ -1029,7 +1029,7 @@ End Function
 '格式化：重组
 '========================================================================================
 '========================================================================================
-Function UG区域格程重组( _
+Function XL算展格程跨期_区域格程重组( _
           重输始列数组 As Variant _
         , 重输指标数组 As Variant _
         , WS As Worksheet _
@@ -1112,7 +1112,7 @@ Function UG区域格程重组( _
 '========================================================================================
 '返回
 '========================================================================================
-    UG区域格程重组 = 基列 + 重组信息计数 * 重维
+    XL算展格程跨期_区域格程重组 = 基列 + 重组信息计数 * 重维
 '========================================================================================
 End Function
 
@@ -1670,17 +1670,17 @@ End Function
 
 '========================================================================================
 '========================================================================================
-'功能：单只 — 调用XL算展数程跨期一次，按模式输出谕组CSV
+'功能：单股 — 调用XL算展数程跨期一次，按模式输出谕组CSV
 '========================================================================================
 '========================================================================================
-'用法：Call XL算展取谕组("sz159919")           → 周+日
-'      Call XL算展取谕组("sz159919", , "周")    → 只周
-'      Call XL算展取谕组("sz159919", , "日")    → 只日
-'      Call XL算展取谕组("sz159919", "D:\p")    → 指定路径+周+日
+'用法：Call XL算展取样_谕组单股通用("sz159919")           → 周+日
+'      Call XL算展取样_谕组单股通用("sz159919", , "周")    → 只周
+'      Call XL算展取样_谕组单股通用("sz159919", , "日")    → 只日
+'      Call XL算展取样_谕组单股通用("sz159919", "D:\p")    → 指定路径+周+日
 '参数：输出路径 — 可选，空=默认目录
 '      模式 — "周"/"日"/""，默认周+日
 '========================================================================================
-Public Sub XL算展取谕组(被研代码 As String, Optional 输出路径 As String = "", Optional 模式 As String = "")
+Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional 输出路径 As String = "", Optional 模式 As String = "")
     Dim ARRLLL As Variant, 谕组 As Variant
     Dim 计数 As Integer
     计数 = XL算展数程跨期(ARRLLL, 被研代码, , , 谕组, "T@乾坤", "W")
@@ -1795,30 +1795,32 @@ End Sub
 '========================================================================================
 
 '========================================================================================
-'=== 向后兼容：旧函数名保持可用 ===
+'=== 向后兼容：单股快捷 ===
 '========================================================================================
-Public Sub XL算展取谕组周(被研代码 As String, Optional 输出路径 As String = "")
-    Call XL算展取谕组(被研代码, 输出路径, "周")
+Public Sub XL算展取样_谕组单股周(被研代码 As String, Optional 输出路径 As String = "")
+    Call XL算展取样_谕组单股通用(被研代码, 输出路径, "周")
 End Sub
-Public Sub XL算展取谕组日(被研代码 As String, Optional 输出路径 As String = "")
-    Call XL算展取谕组(被研代码, 输出路径, "日")
+Public Sub XL算展取样_谕组单股日(被研代码 As String, Optional 输出路径 As String = "")
+    Call XL算展取样_谕组单股通用(被研代码, 输出路径, "日")
 End Sub
 '========================================================================================
 '========================================================================================
 
 '========================================================================================
 '========================================================================================
-'功能：批量 — 遍历花册，一次遍历同时导出周+日谕组CSV（跳过已生成）
+'功能：批量通用 — 遍历花册导出谕组CSV（支持按市板抽样）
 '========================================================================================
 '========================================================================================
-'用法：Call XL算展取谕组批量                  → 花天(中股), 周+日
-'      Call XL算展取谕组批量 "日"             → 花天(中股), 只日
-'      Call XL算展取谕组批量 "日", "花港指"    → 港股指, 只日
-'      Call XL算展取谕组批量 , "花港通"        → 港股通, 周+日
+'用法：Call XL算展取样_谕组批量通用                  → 花天(中股), 周+日
+'      Call XL算展取样_谕组批量通用 "日"             → 花天(中股), 只日
+'      Call XL算展取样_谕组批量通用 "日", "花港指"    → 港股指, 只日
+'      Call XL算展取样_谕组批量通用 , "花港通"        → 港股通, 周+日
+'      Call XL算展取样_谕组批量通用 "日", , 100       → 花天, 每市板100只, 2010-2015上市
 '参数：模式 — "周"/"日"/""，默认周+日
 '      花册名 — 花册表名，默认常花中股(花天)
+'      抽样数 — 0=全量，>0=每市板抽N只(仅取2010-2015年上市)
 '========================================================================================
-Public Sub XL算展取谕组批量(Optional 模式 As String = "", Optional 花册名 As String = "")
+Public Sub XL算展取样_谕组批量通用(Optional 模式 As String = "", Optional 花册名 As String = "", Optional 抽样数 As Long = 0)
     If 模式 = "" Then 模式 = "周+日"
     If 花册名 = "" Then 花册名 = 常花中股
 
@@ -1866,42 +1868,102 @@ Public Sub XL算展取谕组批量(Optional 模式 As String = "", Optional 花�
     End If
 
     '--------------------------------------------------------------------------------------
-    '遍历花册，按需生成
+    '构建股票列表（全量或按市板抽样）
     '--------------------------------------------------------------------------------------
-    Dim 末行 As Long, i As Long, CIDL As String, TT As Single
-    Dim 计数 As Long: 计数 = 0
-    TT = Timer: 末行 = WS花天.Cells(65536, 1).End(xlUp).Row
-    For i = 2 To 末行
-        CIDL = Trim(WS花天.Cells(i, 位列花天CIDL).Value)
-        If UBCID是代码(CIDL) Then
-            '判断实际需要生成哪些模式
-            Dim 实际模式 As String
-            If 模式 = "周" Then
-                实际模式 = "周"
-            ElseIf 模式 = "日" Then
-                实际模式 = "日"
-            Else '周+日
-                Dim 缺周 As Boolean, 缺日 As Boolean
-                缺周 = Not 已有周.Exists("谕组周_" & CIDL)
-                缺日 = Not 已有日.Exists("谕组日_" & CIDL)
-                If 缺周 And 缺日 Then
-                    实际模式 = "周+日"
-                ElseIf 缺周 And Not 缺日 Then
-                    实际模式 = "周"
-                ElseIf Not 缺周 And 缺日 Then
-                    实际模式 = "日"
-                Else
-                    实际模式 = "" '都已有，跳过
+    Dim 股票列表 As Object: Set 股票列表 = CreateObject("Scripting.Dictionary")
+    Dim 末行 As Long, i As Long, CIDL As String, 市板 As String, 市日 As Variant
+    末行 = WS花天.Cells(65536, 1).End(xlUp).Row
+
+    If 抽样数 > 0 Then
+        ' === 按市板抽样模式 ===
+        Dim 市板列表 As Variant: 市板列表 = Array("Qd", "Qe", "Qif", "Qic", "Qim", "Qit", "Qin")
+        Dim 上市起始 As Date: 上市起始 = #1/1/2010#
+        Dim 上市截止 As Date: 上市截止 = #12/31/2015#
+        Dim 市板典 As Object: Set 市板典 = CreateObject("Scripting.Dictionary")
+        Dim j As Long, 板 As Variant
+
+        For i = 2 To 末行
+            CIDL = Trim(WS花天.Cells(i, 位列花天CIDL).Value)
+            If UBCID是代码(CIDL) Then
+                市板 = Trim(WS花天.Cells(i, 位列花天市板).Value)
+                ' 跳过非目标市板
+                Dim 匹配 As Boolean: 匹配 = False
+                For j = LBound(市板列表) To UBound(市板列表)
+                    If 市板 = 市板列表(j) Then 匹配 = True: Exit For
+                Next
+                If Not 匹配 Then GoTo 跳过抽样
+
+                市日 = WS花天.Cells(i, 位列花天市日).Value
+                ' 上市日期范围
+                If IsDate(市日) Then
+                    If 市日 >= 上市起始 And 市日 <= 上市截止 Then
+                        If Not 市板典.Exists(市板) Then Set 市板典(市板) = CreateObject("Scripting.Dictionary")
+                        If 市板典(市板).Count < 抽样数 Then 市板典(市板)(CIDL) = True
+                    End If
                 End If
             End If
+跳过抽样:
+        Next i
 
-            If 实际模式 <> "" Then
-                Call XL算展取谕组(CIDL, , 实际模式)
-                计数 = 计数 + 1
-                If 计数 Mod 500 = 0 Then
-                    Debug.Print "已完成: " & 计数 & " 只, 耗时: " & CLng(Timer - TT) & "秒"
-                    DoEvents
-                End If
+        ' 整理到股票列表
+        For Each 板 In 市板典.Keys
+            For Each CIDL In 市板典(板).Keys
+                股票列表(CIDL) = True
+            Next
+        Next
+    Else
+        ' === 全量模式 ===
+        For i = 2 To 末行
+            CIDL = Trim(WS花天.Cells(i, 位列花天CIDL).Value)
+            If UBCID是代码(CIDL) Then
+                股票列表(CIDL) = True
+            End If
+        Next
+    End If
+
+    '--------------------------------------------------------------------------------------
+    '遍历股票列表，按需生成
+    '--------------------------------------------------------------------------------------
+    Dim 计数 As Long: 计数 = 0
+    Dim TT As Single: TT = Timer
+    Dim 总股数 As Long: 总股数 = 股票列表.Count
+    If 总股数 = 0 Then MsgBox "无符合条件的股票": Exit Sub
+
+    ' 抽样模式时显示确认
+    If 抽样数 > 0 Then
+        Dim 确认 As VbMsgBoxResult
+        确认 = MsgBox("抽样结果：" & vbCrLf & 总股数 & " 只" & vbCrLf & vbCrLf & "确认开始导出？", vbOKCancel + vbInformation, "XL算展取样_谕组批量通用")
+        If 确认 <> vbOK Then Exit Sub
+    End If
+
+    For Each CIDL In 股票列表.Keys
+        '判断实际需要生成哪些模式
+        Dim 实际模式 As String
+        If 模式 = "周" Then
+            实际模式 = "周"
+        ElseIf 模式 = "日" Then
+            实际模式 = "日"
+        Else '周+日
+            Dim 缺周 As Boolean, 缺日 As Boolean
+            缺周 = Not 已有周.Exists("谕组周_" & CIDL)
+            缺日 = Not 已有日.Exists("谕组日_" & CIDL)
+            If 缺周 And 缺日 Then
+                实际模式 = "周+日"
+            ElseIf 缺周 And Not 缺日 Then
+                实际模式 = "周"
+            ElseIf Not 缺周 And 缺日 Then
+                实际模式 = "日"
+            Else
+                实际模式 = "" '都已有，跳过
+            End If
+        End If
+
+        If 实际模式 <> "" Then
+            Call XL算展取样_谕组单股通用(CIDL, , 实际模式)
+            计数 = 计数 + 1
+            If 计数 Mod 500 = 0 Then
+                Debug.Print "已完成: " & 计数 & " 只, 耗时: " & CLng(Timer - TT) & "秒"
+                DoEvents
             End If
         End If
     Next
@@ -1911,26 +1973,28 @@ End Sub
 '========================================================================================
 
 '========================================================================================
-'=== 向后兼容：旧批量函数名保持可用 ===
+'=== 向后兼容：批量快捷 ===
 '========================================================================================
-Public Sub XL算展取谕组周批量()
-    Call XL算展取谕组批量("周")
+Public Sub XL算展取样_谕组批量周()
+    Call XL算展取样_谕组批量通用("周")
 End Sub
-Public Sub XL算展取谕组日批量()
-    Call XL算展取谕组批量("日")
+Public Sub XL算展取样_谕组批量日()
+    Call XL算展取样_谕组批量通用("日")
 End Sub
-'========================================================================================
 '========================================================================================
 '########################################################################################
 '########################################################################################
-'##################################    算展统算展     #####################################
+'###########################   算展导出（xlsx）   ########################################
 '########################################################################################
 '########################################################################################
 
-
-' === XL算展取单股: 批量生成算展(单代码), 2026-07-09 ===
-' excel.Application.Run("XL算展取单股", "sz159864")
-Public Sub XL算展取单股(ByVal 被研代码 As String)
+'========================================================================================
+' XL算展取样_算展单股 — 单只股票生成算展xlsx
+'========================================================================================
+' 调用：Call XL算展取样_算展单股("sz159864")
+' 输出：昭明算展\算展.{代码}.xlsx
+'========================================================================================
+Public Sub XL算展取样_算展单股(ByVal 被研代码 As String)
     Dim ARRLLL As Variant, 谕组 As Variant
     Dim 计数 As Integer
     计数 = XL算展数程跨期(ARRLLL, 被研代码, , , 谕组, "T@乾坤", "W")
@@ -1949,5 +2013,123 @@ Public Sub XL算展取单股(ByVal 被研代码 As String)
         Application.DisplayAlerts = True
     End If
     WB.Close False
+End Sub
+
+'========================================================================================
+' XL算展取样_算展批量 — 批量生成算展xlsx（按市板抽样）
+'========================================================================================
+' 功能：读取 stocks.txt → 按市板分组 → 每市板确保100只 → 缺失的生成xlsx
+' 调用：Alt+F8 → XL算展取样_算展批量 → 运行
+' 输出：昭明算展\算展0724\算展.{代码}.xlsx
+'========================================================================================
+Public Sub XL算展取样_算展批量()
+    Dim 输出目录 As String
+    输出目录 = ThisWorkbook.Path & "\昭明算展\算展0724\"
+
+    Dim FSO As Object
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    If Not FSO.FolderExists(输出目录) Then FSO.CreateFolder 输出目录
+
+    ' 读取stocks.txt到字典
+    Dim 路径 As String: 路径 = 输出目录 & "stocks.txt"
+    If Not FSO.FileExists(路径) Then MsgBox "找不到: " & 路径, vbCritical: Exit Sub
+
+    Dim 全部股票 As Object: Set 全部股票 = CreateObject("Scripting.Dictionary")
+    Dim 文件号 As Integer, 行内容 As String, 字段 As Variant
+    Dim 代码 As String, 名称 As String, 市板 As Variant, key As Variant
+
+    文件号 = FreeFile
+    Open 路径 For Input As #文件号
+    Do While Not EOF(文件号)
+        Line Input #文件号, 行内容: 行内容 = Trim(行内容)
+        If Len(行内容) = 0 Then GoTo 下一行
+        If Left$(行内容, 1) = "#" Or Left$(行内容, 1) = "[" Then GoTo 下一行
+        字段 = Split(行内容, ",")
+        If UBound(字段) < 1 Then GoTo 下一行
+        代码 = Trim(字段(1))
+        If UBound(字段) >= 2 Then 名称 = Trim(字段(2))
+        市板 = Trim(字段(0))
+        全部股票(代码) = 市板 & "|" & 名称
+下一行:
+    Loop
+    Close #文件号
+    Debug.Print "读取股票: " & 全部股票.Count & "只"
+
+    ' 统计各市板已有的xlsx
+    Dim 市板集 As Object: Set 市板集 = CreateObject("Scripting.Dictionary")
+    Dim 各市板已有 As Object: Set 各市板已有 = CreateObject("Scripting.Dictionary")
+    Dim 各市板待生成 As Object: Set 各市板待生成 = CreateObject("Scripting.Dictionary")
+    Dim 各市板列表 As Object: Set 各市板列表 = CreateObject("Scripting.Dictionary")
+
+    ' 遍历全部股票，按市板分组
+    For Each key In 全部股票.Keys
+        市板 = Split(全部股票(key), "|")(0)
+        If Not 各市板列表.Exists(市板) Then Set 各市板列表(市板) = CreateObject("Scripting.Dictionary")
+        各市板列表(市板)(key) = 全部股票(key)
+    Next
+
+    ' 统计各市板已有文件
+    Dim 已有文件 As Object: Set 已有文件 = CreateObject("Scripting.Dictionary")
+    Dim f As Object
+    For Each f In FSO.GetFolder(输出目录).Files
+        If LCase(FSO.GetExtensionName(f.Name)) = "xlsx" Then
+            Dim 文件码 As String: 文件码 = Replace(f.Name, "算展.", "")
+            文件码 = Replace(文件码, ".xlsx", "")
+            已有文件(文件码) = True
+        End If
+    Next
+
+    ' 输出各市板状态
+    Dim 总生成 As Long: 总生成 = 0
+    Dim 总跳过 As Long: 总跳过 = 0
+    Dim 总失败 As Long: 总失败 = 0
+
+    For Each 市板 In 各市板列表.Keys
+        Dim 已有数 As Long: 已有数 = 0
+        Dim 待生 As Object: Set 待生 = CreateObject("Scripting.Dictionary")
+        For Each key In 各市板列表(市板).Keys
+            If 已有文件.Exists(key) Then
+                已有数 = 已有数 + 1
+            Else
+                待生(key) = 全部股票(key)
+            End If
+        Next
+
+        ' 需要生成的数量 = 100 - 已有数
+        Dim 需生成 As Long: 需生成 = 100 - 已有数
+        If 需生成 < 0 Then 需生成 = 0
+
+        ' 输出该市板状态
+        Application.StatusBar = "市板 " & 市板 & " : 已有" & 已有数 & "只, 需生成" & 需生成 & "只"
+
+        ' 生成缺失的
+        Dim 计数 As Long: 计数 = 0
+        For Each key In 待生.Keys
+            If 计数 >= 需生成 Then Exit For
+            代码 = key
+            名称 = Split(待生(key), "|")(1)
+            Application.StatusBar = "正在生成 [" & 市板 & "] " & 代码 & " " & 名称 & " (" & (计数 + 1) & "/" & 需生成 & ")"
+
+            On Error Resume Next
+            Call XL算展取样_算展单股(代码)
+            Dim 源路径 As String: 源路径 = ThisWorkbook.Path & "\昭明算展\算展." & 代码 & ".xlsx"
+            If Err.Number = 0 And FSO.FileExists(源路径) Then
+                ' 生成成功，移动文件到输出目录
+                Dim 目标路径 As String: 目标路径 = 输出目录 & "算展." & 代码 & ".xlsx"
+                If FSO.FileExists(目标路径) Then FSO.DeleteFile 目标路径
+                On Error Resume Next: FSO.MoveFile 源路径, 目标路径: On Error GoTo 0
+                总生成 = 总生成 + 1: 计数 = 计数 + 1
+            Else
+                If Err.Number <> 0 Then Err.Clear
+                总失败 = 总失败 + 1
+            End If
+            On Error GoTo 0
+        Next
+        总跳过 = 总跳过 + (已有数 + 待生.Count - 需生成)
+    Next
+
+    Application.StatusBar = False
+    Application.StatusBar = "批量算展完成! 生成:" & 总生成 & " 跳过:" & 总跳过 & " 失败:" & 总失败
+    Debug.Print "批量算展完成! 生成:" & 总生成 & " 跳过:" & 总跳过 & " 失败:" & 总失败
 End Sub
 

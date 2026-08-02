@@ -89,7 +89,7 @@ Public Const 位序腾实H每首股数 = 60
 
 
 
-Private Sub 测试_UBHTTP通用_查程测试()
+Private Sub UTL_UBHTTP通用_查程_测试()
 '     Debug.Print GetHttp("http://hq.sinajs.cn/list=sh000001")
 '     Debug.Print UBHTTP通用_查程回全通用("http://quotes.money.163.com/trade/lsjysj_601318.html?year=2022&season=2")
 '    Debug.Print UBHTTP通用_查程回全通用("http://quote.eastmoney.com/concept/sh603777.html?from=classic")
@@ -99,7 +99,7 @@ Private Sub 测试_UBHTTP通用_查程测试()
 '     Debug.Print UBHTTP通用_查程回全通用("http://qt.gtimg.cn/q=r_hk00700")
 End Sub
 
-Private Sub 测试_UBHTTP腾实_对比批量vs逐只()
+Private Sub UTL_UBHTTP腾实_对比批量_测试()
     Dim 测试码 As Variant, 码 As Variant, i As Long, j As Long
     Dim aRESP As Variant, nRESP As Integer
     Dim 查回典 As Dictionary, 段组 As Variant
@@ -177,7 +177,7 @@ Private Sub 测试_UBHTTP腾实_对比批量vs逐只()
     If 差异数 = 0 Then Debug.Print ">>> 批量查询与逐只查询结果完全一致 <<<"
 End Sub
 
-Private Sub 测试_UBHTTP腾实_压测批量百码()
+Private Sub UTL_UBHTTP腾实_压测批量_测试()
     Dim 代码串 As String, 码数组 As Variant, i As Long
     Dim 查回典 As Dictionary
 
@@ -365,7 +365,7 @@ End Function
 
 
 
-Private Sub 测试_UBHTTP_RESPONSETEXT()
+Private Sub UTL_UBHTTP_RESPONSETEXT_测试()
     Dim sURL As String
     Dim sSEP As String
     sURL = "http://finance.sina.com.cn/realstock/company/hotstock_daily_a.js"
@@ -386,7 +386,7 @@ End Sub
 
 
 
-Private Sub 测试_对比批量vs逐只_at花天全码()
+Private Sub UTL_对比批量vs逐只_测试()
     Const 测试码数上限 As Integer = 5000
 
     Dim WS花天 As Worksheet

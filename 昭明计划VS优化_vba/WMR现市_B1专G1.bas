@@ -469,7 +469,7 @@ End Function
 
 
 
-Sub 测试国债期货日期()
+Sub WMR_测试国债期货日期_测试()
     Dim 初始日期 As Date
     初始日期 = "2020/6/13"
 
