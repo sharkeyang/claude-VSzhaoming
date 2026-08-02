@@ -473,11 +473,13 @@ Public Const 位谕of日冲H2分 = 位谕始of族策 + 12    '日冲H2分: 评�
 Public Const 位谕of日冲策略 = 位谕始of族策 + 13     '日冲策略: 主升/渡强/渡弱/空降 + 小样本后缀".微"(N<1000)/".小"(N<10000)
 Public Const 位谕of日层联动 = 位谕始of族策 + 14     '周日联动: 周看涨但日下跌捡漏, 输出周/日
 Public Const 位谕of日层漏提示 = 位谕始of族策 + 15     '日层漏提示: 精密捡漏信号
-Public Const 位谕of日层机警 = 位谕始of族策 + 16
-Public Const 位谕of日层盈提示 = 位谕始of族策 + 17     '日层盈提示: 止盈信号
+'--- 日冲22态 ---
+Public Const 位谕of日冲22态 = 位谕始of族策 + 16     '日冲22态: H1-H6/I1-I6/S1-S6/T1-T4
+Public Const 位谕of日层机警 = 位谕始of族策 + 17     '原+16，后移
+Public Const 位谕of日层盈提示 = 位谕始of族策 + 18     '日层盈提示: 止盈信号
 '-----------
-Public Const 位谕of周层四域 = 位谕始of族策 + 18
-Public Const 位谕of日层四域 = 位谕始of族策 + 19
+Public Const 位谕of周层四域 = 位谕始of族策 + 19
+Public Const 位谕of日层四域 = 位谕始of族策 + 20
 Public Const 位谕终of族策 = 位谕of日层四域
 '----------------------------------------------------------------------------------------
 Public Const 位谕列终全部 = 位谕终of族策
@@ -3450,9 +3452,143 @@ If UBCID是代码(CIDL) = True Then
                 谕组(X, 位谕of日冲H2分) = "D00"
             End If
             '============================================================================
-            '信号分类（概率提示，暂留空）
+            '日冲22态检测
+            '============================================================================
+            Dim 冲22态 As String
+            Dim 冲22日ZA As Long, 冲22前日ZA As Long, 冲22涨幅 As Double
+            Dim 冲22护型 As String, 冲22柱排 As String, 冲22中符串 As String
+            Dim 冲22i As Long, 冲22j As Long, 冲22k As Long
+            Dim 冲22连阳 As Long, 冲22连阴 As Long
+            Dim 冲22前5ZA(1 To 5) As Long, 冲22前3柱排(1 To 3) As String
+            Dim 冲22ZA均 As Double, 冲22ZA最大 As Long, 冲22ZA最小 As Long
+            Dim 冲22峰后最小 As Long, 冲22峰索引 As Long
+            Dim 冲22谷后最大 As Long, 冲22谷索引 As Long
+            Dim 冲22前三非跌 As Boolean
+
+            冲22日ZA = 组结算(X, 基位日类 + 位osBTZA)
+            冲22涨幅 = 组结算(X, 基位日类 + 位os结幅PR0)
+            冲22护型 = 谕组(X, 位谕of日层护型)
+            冲22柱排 = 谕组(X, 位谕of日层柱排)
+            冲22中符串 = 谕组(X, 位谕of日管中符串)
+
+            For 冲22i = 1 To 5
+                If X - 冲22i >= LBound(组结算, 1) Then 冲22前5ZA(冲22i) = 组结算(X - 冲22i, 基位日类 + 位osBTZA) Else 冲22前5ZA(冲22i) = 0
+            Next 冲22i
+            For 冲22i = 1 To 3
+                If X - 冲22i >= LBound(组结算, 1) Then 冲22前3柱排(冲22i) = 谕组(X - 冲22i, 位谕of日层柱排) Else 冲22前3柱排(冲22i) = ""
+            Next 冲22i
+
+            冲22ZA最大 = 冲22前5ZA(1): 冲22ZA最小 = 冲22前5ZA(1): 冲22ZA均 = 冲22前5ZA(1)
+            For 冲22i = 2 To 5
+                If 冲22前5ZA(冲22i) > 冲22ZA最大 Then 冲22ZA最大 = 冲22前5ZA(冲22i)
+                If 冲22前5ZA(冲22i) < 冲22ZA最小 Then 冲22ZA最小 = 冲22前5ZA(冲22i)
+                冲22ZA均 = 冲22ZA均 + 冲22前5ZA(冲22i)
+            Next 冲22i
+            冲22ZA均 = 冲22ZA均 / 5
+
+            冲22连阳 = 0: 冲22连阴 = 0
+            For 冲22i = X - 1 To X - 10 Step -1
+                If 冲22i < LBound(组结算, 1) Then Exit For
+                If 组结算(冲22i, 基位日类 + 位os结幅PR0) > 0 Then 冲22连阳 = 冲22连阳 + 1 Else Exit For
+            Next 冲22i
+            For 冲22i = X - 1 To X - 10 Step -1
+                If 冲22i < LBound(组结算, 1) Then Exit For
+                If 组结算(冲22i, 基位日类 + 位os结幅PR0) < 0 Then 冲22连阴 = 冲22连阴 + 1 Else Exit For
+            Next 冲22i
+
+            If 冲22日ZA > 0 Then
+                If Left$(冲22柱排, 1) = "升" And Right$(冲22中符串, 1) = "C" Then 冲22态 = "H1_升_日中符C"
+                If 冲22态 = "" And Left$(冲22柱排, 1) = "升" And InStr("甲乙己", Mid$(冲22护型, 2, 1)) > 0 And Right$(冲22中符串, 1) <> "C" Then 冲22态 = "H2_升_护型强"
+                If 冲22态 = "" And Left$(冲22柱排, 1) = "升" And InStr("丙丁戊", Mid$(冲22护型, 2, 1)) > 0 And Right$(冲22中符串, 1) <> "C" Then 冲22态 = "H3_升_护型弱"
+                If 冲22态 = "" And Left$(冲22柱排, 1) = "跌" Then 冲22态 = "H6_跌_跌排"
+                If 冲22态 = "" And 冲22日ZA <= 3 Then 冲22态 = "H4_人_ZA3内"
+                If 冲22态 = "" Then 冲22态 = "H5_人_ZA3外"
+            ElseIf 冲22日ZA < 0 Then
+                If Left$(冲22柱排, 1) = "升" And InStr("丙丁戊", Mid$(冲22护型, 2, 1)) > 0 Then 冲22态 = "T1_升_护型弱"
+                If 冲22态 = "" And Left$(冲22柱排, 1) = "跌" Then 冲22态 = "T2_跌_跌排"
+                If 冲22态 = "" And 冲22日ZA >= -3 Then 冲22态 = "T3_人_ZA3内"
+                If 冲22态 = "" Then 冲22态 = "T4_人_ZA3外"
+            ElseIf X > LBound(组结算, 1) Then
+                冲22前日ZA = 组结算(X - 1, 基位日类 + 位osBTZA)
+                If 冲22前日ZA < 0 And 冲22日ZA >= 0 Then
+                    If 冲22日ZA - 冲22前日ZA >= 3 And 冲22涨幅 >= 2 Then 冲22态 = "I1_暴涨_大柱上破"
+                    If 冲22态 = "" And 冲22ZA均 <= -3 Then
+                        For 冲22j = X + 1 To X + 15
+                            If 冲22j > UBound(组结算, 1) Then Exit For
+                            If 组结算(冲22j, 基位日类 + 位osBTZA) = -1 Then
+                                For 冲22k = 冲22j + 1 To 冲22j + 10
+                                    If 冲22k > UBound(组结算, 1) Then Exit For
+                                    If 组结算(冲22k, 基位日类 + 位osBTZA) >= 0 Then
+                                        If 冲22k - 冲22j <= 5 Then 冲22态 = "I4_双穿_M底加仓": Exit For
+                                    End If
+                                Next 冲22k
+                                Exit For
+                            End If
+                        Next 冲22j
+                    End If
+                    If 冲22态 = "" And 冲22ZA最大 >= -3 Then
+                        冲22峰索引 = 1
+                        For 冲22i = 2 To 5: If 冲22前5ZA(冲22i) > 冲22前5ZA(冲22峰索引) Then 冲22峰索引 = 冲22i: End If: Next 冲22i
+                        冲22峰后最小 = 9999
+                        For 冲22i = 冲22峰索引 To 5: If 冲22前5ZA(冲22i) < 冲22峰后最小 Then 冲22峰后最小 = 冲22前5ZA(冲22i): End If: Next 冲22i
+                        If 冲22峰索引 < 5 And 冲22前5ZA(冲22峰索引) - 冲22峰后最小 >= 2 Then 冲22态 = "I2_归JA_回落确认"
+                    End If
+                    If 冲22态 = "" And 冲22ZA最大 >= -3 Then 冲22态 = "I3_归JA_直上DJA"
+                    If 冲22态 = "" And 冲22连阳 >= 3 And 冲22涨幅 < 2 And 冲22ZA最小 <= -2 Then 冲22态 = "I5_碎步_缓步上升"
+                    If 冲22态 = "" Then 冲22态 = "I6_其他_其他上破"
+                ElseIf 冲22前日ZA > 0 And 冲22日ZA <= 0 Then
+                    冲22前三非跌 = True
+                    For 冲22i = 1 To 3
+                        If Left$(冲22前3柱排(冲22i), 1) = "跌" Then 冲22前三非跌 = False: Exit For
+                    Next 冲22i
+                    If 冲22日ZA - 冲22前日ZA <= -3 And 冲22涨幅 <= -2 And 冲22前三非跌 Then 冲22态 = "S1_暴跌_大柱下破"
+                    If 冲22态 = "" And 冲22ZA最小 >= 3 Then
+                        For 冲22j = X + 1 To X + 15
+                            If 冲22j > UBound(组结算, 1) Then Exit For
+                            If 组结算(冲22j, 基位日类 + 位osBTZA) = 1 Then
+                                For 冲22k = 冲22j + 1 To 冲22j + 10
+                                    If 冲22k > UBound(组结算, 1) Then Exit For
+                                    If 组结算(冲22k, 基位日类 + 位osBTZA) <= 0 Then
+                                        If 冲22k - 冲22j <= 5 Then 冲22态 = "S4_双穿_M头逃命": Exit For
+                                    End If
+                                Next 冲22k
+                                Exit For
+                            End If
+                        Next 冲22j
+                    End If
+                    If 冲22态 = "" And 冲22ZA最小 <= 3 Then
+                        冲22谷索引 = 1
+                        For 冲22i = 2 To 5: If 冲22前5ZA(冲22i) < 冲22前5ZA(冲22谷索引) Then 冲22谷索引 = 冲22i: End If: Next 冲22i
+                        冲22谷后最大 = -9999
+                        For 冲22i = 冲22谷索引 To 5: If 冲22前5ZA(冲22i) > 冲22谷后最大 Then 冲22谷后最大 = 冲22前5ZA(冲22i): End If: Next 冲22i
+                        If 冲22谷索引 < 5 And 冲22谷后最大 - 冲22前5ZA(冲22谷索引) >= 2 Then 冲22态 = "S2_归JA_反弹失败"
+                    End If
+                    If 冲22态 = "" And 冲22ZA最小 <= 3 Then 冲22态 = "S3_归JA_直破DJA"
+                    If 冲22态 = "" And 冲22连阴 >= 3 And 冲22涨幅 > -2 And 冲22ZA最大 >= 2 Then 冲22态 = "S5_碎步_缓步阴跌"
+                    If 冲22态 = "" Then 冲22态 = "S6_其他_其他跌破"
+                Else
+                    冲22态 = "ZA0边界"
+                End If
+            Else
+                冲22态 = "ZA0边界"
+            End If
+            谕组(X, 位谕of日冲22态) = 冲22态
+            '============================================================================
+            '信号分类（机警提示）
             '============================================================================
             谕组(X, 位谕of日层机警) = ""
+            If 冲22态 = "H1_升_日中符C" Or 冲22态 = "H2_升_护型强" Or 冲22态 = "H3_升_护型弱" Then 谕组(X, 位谕of日层机警) = "优选80%仓"
+            If 冲22态 = "H4_人_ZA3内" Or 冲22态 = "H5_人_ZA3外" Then 谕组(X, 位谕of日层机警) = "中性50%仓"
+            If 冲22态 = "H6_跌_跌排" Then 谕组(X, 位谕of日层机警) = "空仓观望"
+            If 冲22态 = "I1_暴涨_大柱上破" Then 谕组(X, 位谕of日层机警) = "加仓80%仓"
+            If 冲22态 = "I2_归JA_回落确认" Then 谕组(X, 位谕of日层机警) = "半仓跟进"
+            If 冲22态 = "I4_双穿_M底加仓" Then 谕组(X, 位谕of日层机警) = "轻仓30%仓"
+            If 冲22态 = "I3_归JA_直上DJA" Or 冲22态 = "I5_碎步_缓步上升" Or 冲22态 = "I6_其他_其他上破" Then 谕组(X, 位谕of日层机警) = "轻仓试多"
+            If 冲22态 = "S1_暴跌_大柱下破" Then 谕组(X, 位谕of日层机警) = "减仓冲高卖"
+            If 冲22态 = "S2_归JA_反弹失败" Or 冲22态 = "S4_双穿_M头逃命" Then 谕组(X, 位谕of日层机警) = "减仓预警"
+            If 冲22态 = "S3_归JA_直破DJA" Then 谕组(X, 位谕of日层机警) = "!!预警明高72%"
+            If 冲22态 = "T1_升_护型弱" Or 冲22态 = "T3_人_ZA3内" Then 谕组(X, 位谕of日层机警) = "轻仓20%仓"
+            If 冲22态 = "T2_跌_跌排" Or 冲22态 = "T4_人_ZA3外" Then 谕组(X, 位谕of日层机警) = "空仓观望"
             '============================================================================
 '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 '策传
@@ -6375,6 +6511,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of日冲策略) = "日冲策略"
         .Cells(1, 位谕of日冲策分) = "日冲策分"
         .Cells(1, 位谕of日冲H2分) = "日冲H2分"
+        .Cells(1, 位谕of日冲22态) = "日冲22态"
         .Cells(1, 位谕of日层盈提示) = "盈提示"
         .Cells(1, 位谕of日层漏提示) = "漏提示（金+甲乙）"
     End With
@@ -6413,10 +6550,11 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层四域).ColumnWidth = 4
         .Columns(位谕of日层联动).ColumnWidth = 8
         .Columns(位谕of日层段).ColumnWidth = 4
-        .Columns(位谕of日层机警).ColumnWidth = 8
+        .Columns(位谕of日层机警).ColumnWidth = 15
         .Columns(位谕of日冲策略).ColumnWidth = 5
         .Columns(位谕of日冲策分).ColumnWidth = 4
         .Columns(位谕of日冲H2分).ColumnWidth = 4
+        .Columns(位谕of日冲22态).ColumnWidth = 15
         .Columns(位谕of日层盈提示).ColumnWidth = 5
         .Columns(位谕of日层漏提示).ColumnWidth = 12
         .Columns(位谕of日层盈提示).HorizontalAlignment = xlRight

@@ -1747,7 +1747,7 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
         Dim 日文件 As String
         日文件 = 日路径 & "谕组日_" & 被研代码 & ".csv"
         Open 日文件 For Output As #1
-        Print #1, "日期,收,开,高,低,涨幅,高幅,DXEF,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅"
+        Print #1, "日期,收,开,高,低,涨幅,高幅,DXEF,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,管释,撤哼JC,类合,BSLA,宽哈JC,BT鼎,BTZA,BT连阳"
 
         For X = LBound(谕组, 1) To UBound(谕组, 1)
             Dim 日高幅 As Double
@@ -1785,7 +1785,23 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
             行尾 = 谕组(X, 位谕of日层偏顶JC) & "," & _
                 谕组(X, 位谕of日波上身) & "," & _
                 谕组(X, 位谕of日波叠幅) & "," & _
-                次日高幅
+                次日高幅 & "," & _
+                Replace(谕组(X, 位谕of日层柱型), ",", ";") & "," & _
+                Replace(谕组(X, 位谕of日层界), ",", ";") & "," & _
+                谕组(X, 位谕of日管上符范) & "," & _
+                Replace(谕组(X, 位谕of日管上符串), ",", ";") & "," & _
+                Replace(谕组(X, 位谕of日管宽符串), ",", ";") & "," & _
+                谕组(X, 位谕of日管中符范) & "," & _
+                Replace(谕组(X, 位谕of日管中符串), ",", ";") & "," & _
+                Replace(谕组(X, 位谕of日管并符串), ",", ";") & "," & _
+                Replace(谕组(X, 位谕of日管释), ",", ";") & "," & _
+                谕组(X, 位谕of日层撤哼JC) & "," & _
+                Replace(谕组(X, 位谕of日层类合), ",", ";") & "," & _
+                谕组(X, 位谕of日层BSLA) & "," & _
+                谕组(X, 位谕of日层宽哈JC) & "," & _
+                谕组(X, 位谕of日层BT鼎) & "," & _
+                谕组(X, 位谕of日层BTZA) & "," & _
+                谕组(X, 位谕of日层BT连阳)
             Print #1, 行头 & 行尾
         Next X
         Close #1
