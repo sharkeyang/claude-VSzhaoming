@@ -32,7 +32,8 @@ def main():
             with open(dst_path, 'w', encoding=sys_enc) as fh:
                 fh.write(text)
         except:
-            return 1
+            print(f"跳过: {f} - 读取失败", file=sys.stderr)
+            continue
 
     return 0
 
