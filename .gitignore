@@ -26,8 +26,8 @@ command_log.txt
 # CLAUDE
 .claude/
 
-# VBA source directory (track individual files, not the dir)
-昭明计划VS优化_vba/
+# VBA source directory (tracked via git add -f)
+#昭明计划VS优化_vba/
 ____temp/谕组日/
 ____temp/谕组日/
 昭明算展/

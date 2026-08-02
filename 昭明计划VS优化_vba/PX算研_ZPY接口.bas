@@ -235,3 +235,38 @@ Private Function XL算研_展探窗取_标准差(Buf() As Double, 指针 As Inte
     方差 = 方差 / (win - 1): XL算研_展探窗取_标准差 = Sqr(方差)
 End Function
 
+'========================================================================================
+' 测试_日冲22态 — 验证位谕of日冲22态是否正确赋值
+'========================================================================================
+Public Sub 测试_日冲22态()
+    Dim TT As Single: TT = Timer
+    Dim 谕组 As Variant
+    Dim 计数 As Long
+    Dim X As Long
+    Dim 状态 As String
+    Dim 分布 As Object
+    Set 分布 = CreateObject("Scripting.Dictionary")
+    Dim 总行 As Long, 打印行 As Long
+
+    Debug.Print "===== 日冲22态验证 ====="
+    计数 = IQQQ跨码据擎_数程生成全息(谕组, 常花中股, 实结类型:="sSCC")
+    If 计数 = 0 Then Debug.Print "生成失败": Exit Sub
+
+    总行 = UBound(谕组, 1) - LBound(谕组, 1) + 1
+    Debug.Print "总行数: " & 总行
+    If 总行 > 30 Then 打印行 = 30 Else 打印行 = 总行
+
+    For X = LBound(谕组, 1) To LBound(谕组, 1) + 打印行 - 1
+        状态 = 谕组(X, 位谕of日冲22态)
+        If 状态 = "" Then 状态 = "(空)"
+        If 分布.Exists(状态) Then 分布(状态) = 分布(状态) + 1 Else 分布.Add 状态, 1
+        Debug.Print "  X=" & X & " 22态=" & 状态
+    Next X
+
+    Debug.Print ""
+    Debug.Print "===== 分布汇总 ====="
+    Dim 键 As Variant
+    For Each 键 In 分布.Keys: Debug.Print 键 & ": " & 分布(键): Next
+    Debug.Print "===== 耗时: " & CLng(Timer - TT) & "秒 ====="
+End Sub
+

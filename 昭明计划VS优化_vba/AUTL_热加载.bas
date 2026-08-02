@@ -18,11 +18,19 @@ Attribute VB_Name = "AUTL_热加载"
 '   4. 依赖 Python 环境（_产出物/_工具/热加载_转GBK.py）
 '========================================================================================
 Public Sub AUTL_热加载()
+    On Error Resume Next
+    Dim testComp As Object
+    Set testComp = Application.VBE.ActiveVBProject.VBComponents
+    If Err.Number <> 0 Then
+        Err.Clear
+        On Error GoTo 0
+        MsgBox "热加载失败：当前处于中断模式" & vbCrLf & _
+               "请按 F5 继续运行后重试，或按 Ctrl+Break 后点击" & vbCrLf & _
+               "「重置」按钮再试", vbExclamation, "热加载VBA"
+        Exit Sub
+    End If
+    On Error GoTo 0
     Call 热加载_执行("D:\@VSwork\VS昭明计划VBA优化\昭明计划VS优化_vba\", True)
-    
-    
-    
-    
 End Sub
 
 
@@ -96,14 +104,24 @@ Private Sub 热加载_执行(ByVal 目录 As String, Optional 是否弹窗 As Bo
     Next
 
     ' ⑤ 从 GBK 临时目录导入（先删同名模块，避免二义性）
+    Dim 文件计数 As Long: 文件计数 = 0
+    Dim 跳过计数 As Long: 跳过计数 = 0
     For Each file In FSO.GetFolder(临时GBK目录).Files
         If LCase(FSO.GetExtensionName(file.Name)) = "bas" And file.Name <> "AUTL_热加载.bas" Then
+            文件计数 = 文件计数 + 1
             ' 用 Open 语句读取第一行提取模块名（比ADODB.Stream更稳定）
             Dim 文件号 As Integer
             文件号 = FreeFile
+            On Error Resume Next
             Open file.Path For Input As #文件号
             Line Input #文件号, 首行
             Close #文件号
+            If Err.Number <> 0 Then
+                Debug.Print "  [跳过] " & file.Name & " - 空文件或读失败"
+                跳过计数 = 跳过计数 + 1
+                Err.Clear: On Error GoTo 0: GoTo 跳过文件
+            End If
+            On Error GoTo 0
             引号1 = InStr(首行, """")
             If 引号1 > 0 Then
                 引号2 = InStr(引号1 + 1, 首行, """")
@@ -121,13 +139,16 @@ Private Sub 热加载_执行(ByVal 目录 As String, Optional 是否弹窗 As Bo
             vbproj.VBComponents.Import file.Path
             If Err.Number = 0 Then
                 导入计数 = 导入计数 + 1
+                Debug.Print "  [OK] " & file.Name
             Else
-                Debug.Print "导入失败: " & file.Name & " - " & Err.Description
+                Debug.Print "  [!!] " & file.Name & " - " & Err.Description
                 Err.Clear
             End If
             On Error GoTo 0
         End If
+跳过文件:
     Next
+    Debug.Print "【热加载统计】临时目录共 " & 文件计数 & " 个 .bas 文件，跳过 " & 跳过计数 & " 个，导入 " & 导入计数 & " 个"
     Set 流 = Nothing
 
     ' ⑥ 清理临时目录

@@ -3528,9 +3528,13 @@ If UBCID是代码(CIDL) = True Then
                     End If
                     If 冲22态 = "" And 冲22ZA最大 >= -3 Then
                         冲22峰索引 = 1
-                        For 冲22i = 2 To 5: If 冲22前5ZA(冲22i) > 冲22前5ZA(冲22峰索引) Then 冲22峰索引 = 冲22i: End If: Next 冲22i
+                        For 冲22i = 2 To 5
+                            If 冲22前5ZA(冲22i) > 冲22前5ZA(冲22峰索引) Then 冲22峰索引 = 冲22i
+                        Next 冲22i
                         冲22峰后最小 = 9999
-                        For 冲22i = 冲22峰索引 To 5: If 冲22前5ZA(冲22i) < 冲22峰后最小 Then 冲22峰后最小 = 冲22前5ZA(冲22i): End If: Next 冲22i
+                        For 冲22i = 冲22峰索引 To 5
+                            If 冲22前5ZA(冲22i) < 冲22峰后最小 Then 冲22峰后最小 = 冲22前5ZA(冲22i)
+                        Next 冲22i
                         If 冲22峰索引 < 5 And 冲22前5ZA(冲22峰索引) - 冲22峰后最小 >= 2 Then 冲22态 = "I2_归JA_回落确认"
                     End If
                     If 冲22态 = "" And 冲22ZA最大 >= -3 Then 冲22态 = "I3_归JA_直上DJA"
@@ -3558,9 +3562,13 @@ If UBCID是代码(CIDL) = True Then
                     End If
                     If 冲22态 = "" And 冲22ZA最小 <= 3 Then
                         冲22谷索引 = 1
-                        For 冲22i = 2 To 5: If 冲22前5ZA(冲22i) < 冲22前5ZA(冲22谷索引) Then 冲22谷索引 = 冲22i: End If: Next 冲22i
+                        For 冲22i = 2 To 5
+                            If 冲22前5ZA(冲22i) < 冲22前5ZA(冲22谷索引) Then 冲22谷索引 = 冲22i
+                        Next 冲22i
                         冲22谷后最大 = -9999
-                        For 冲22i = 冲22谷索引 To 5: If 冲22前5ZA(冲22i) > 冲22谷后最大 Then 冲22谷后最大 = 冲22前5ZA(冲22i): End If: Next 冲22i
+                        For 冲22i = 冲22谷索引 To 5
+                            If 冲22前5ZA(冲22i) > 冲22谷后最大 Then 冲22谷后最大 = 冲22前5ZA(冲22i)
+                        Next 冲22i
                         If 冲22谷索引 < 5 And 冲22谷后最大 - 冲22前5ZA(冲22谷索引) >= 2 Then 冲22态 = "S2_归JA_反弹失败"
                     End If
                     If 冲22态 = "" And 冲22ZA最小 <= 3 Then 冲22态 = "S3_归JA_直破DJA"
@@ -6554,7 +6562,9 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日冲策略).ColumnWidth = 5
         .Columns(位谕of日冲策分).ColumnWidth = 4
         .Columns(位谕of日冲H2分).ColumnWidth = 4
+        .Columns(位谕of日冲H2分).HorizontalAlignment = xlLeft
         .Columns(位谕of日冲22态).ColumnWidth = 15
+        .Columns(位谕of日冲22态).HorizontalAlignment = xlLeft
         .Columns(位谕of日层盈提示).ColumnWidth = 5
         .Columns(位谕of日层漏提示).ColumnWidth = 12
         .Columns(位谕of日层盈提示).HorizontalAlignment = xlRight
@@ -7014,7 +7024,7 @@ Public Function IQQQ跨码工具_查日冲H2分(ByVal sDXEF As String, ByVal sDX
                 字段 = Split(行内容, ",")
                 If UBound(字段) >= 12 Then
                     键 = 字段(0) & "|" & 字段(1) & "|" & 字段(2) & "|" & 字段(3)
-                    概率典(键) = 字段(12)  ' 下日DSHR>2
+                    概率典(键) = 字段(10)  ' 下日DSHR>2
                 End If
             Loop
         Close #文件号
