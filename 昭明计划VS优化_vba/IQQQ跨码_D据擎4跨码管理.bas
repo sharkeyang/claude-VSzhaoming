@@ -259,6 +259,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     Dim 轮动 As String
     '--- 策略统计 ---
     Dim 策略典集 As New Dictionary
+    Dim 策略典集额 As New Dictionary
     Dim 总命分 As Double: 总命分 = 0
     Dim 总策分 As Double: 总策分 = 0
     Dim 命分票数 As Integer: 命分票数 = 0
@@ -271,9 +272,13 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     Dim 单票超限 As String
     '--- 仓位分布 ---
     Dim 仓低数 As Integer: 仓低数 = 0
+    Dim 仓低额 As Double: 仓低额 = 0
     Dim 仓中数 As Integer: 仓中数 = 0
+    Dim 仓中额 As Double: 仓中额 = 0
     Dim 仓满数 As Integer: 仓满数 = 0
+    Dim 仓满额 As Double: 仓满额 = 0
     Dim 仓超数 As Integer: 仓超数 = 0
+    Dim 仓超额 As Double: 仓超额 = 0
     Dim 仓值 As Variant
     '--- 资金账户 ---
     Dim 福现金 As Double: 福现金 = 0
@@ -523,8 +528,19 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             If 月基策略 <> "" Then
                 If 策略典集.Exists(月基策略) Then
                     策略典集(月基策略) = 策略典集(月基策略) + 1
+                    策略典集额(月基策略) = 策略典集额(月基策略) + 单票额
                 Else
                     策略典集(月基策略) = 1
+                    策略典集额(月基策略) = 单票额
+                End If
+            Else
+                '空月基策略归入非策略
+                If 策略典集.Exists("非策略") Then
+                    策略典集("非策略") = 策略典集("非策略") + 1
+                    策略典集额("非策略") = 策略典集额("非策略") + 单票额
+                Else
+                    策略典集("非策略") = 1
+                    策略典集额("非策略") = 单票额
                 End If
             End If
             If VBA.IsNumeric(谕组(X, 位谕of月基命分)) Then
@@ -540,14 +556,22 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             If VBA.IsNumeric(仓值) Then
                 If 仓值 > 1 Then
                     仓超数 = 仓超数 + 1
+                    仓超额 = 仓超额 + 单票额
                     单票超限 = 单票超限 & "[仓位]" & 谕组(X, 位qt代称) & "(" & 仓值 & "倍)" & vbCrLf
                 ElseIf 仓值 >= 0.75 Then
                     仓满数 = 仓满数 + 1
+                    仓满额 = 仓满额 + 单票额
                 ElseIf 仓值 >= 0.25 Then
                     仓中数 = 仓中数 + 1
+                    仓中额 = 仓中额 + 单票额
                 Else
                     仓低数 = 仓低数 + 1
+                    仓低额 = 仓低额 + 单票额
                 End If
+            Else
+                '非数值仓位比（如"仓限禁旨""仓限为0""2倍"）归入低仓
+                仓低数 = 仓低数 + 1
+                仓低额 = 仓低额 + 单票额
             End If
             '--- 前N重仓 ---
             For j = 1 To 10
@@ -805,7 +829,6 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 3).Value = Format(总上限, "0%")
     WSTO.Cells(末行, 5).Value = Format(总上限, "0%")
     WSTO.Cells(末行, 7).Value = Format(总上限, "0%")
-    末行 = 末行 + 1
     '福账户
     Dim 福上限 As Double: 福上限 = 福总资 * 总上限
     Dim 福月基目标 As Double: 福月基目标 = 福上限 * 0.2
@@ -1045,16 +1068,27 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     末行 = 末行 + 1
     WSTO.Cells(末行, 1).Value = "月基策略"
     WSTO.Cells(末行, 2).Value = "票数"
-    WSTO.Cells(末行, 3).Value = "占比"
+    WSTO.Cells(末行, 3).Value = "票额"
+    WSTO.Cells(末行, 4).Value = "票额占比"
     With WSTO.Rows(末行).Font: .Bold = True: End With
     With WSTO.Rows(末行).Interior: .Color = 常色九灰: End With
     末行 = 末行 + 1
-    For Each 月基策略 In 策略典集.Keys
-        WSTO.Cells(末行, 1).Value = 月基策略
-        WSTO.Cells(末行, 2).Value = 策略典集(月基策略)
+    Dim 策表 As Variant: 策表 = Array("多长(积极)", "多长(消极)", "多长(不定)", "多被(金)", "多被(银)", "多被(唏)", "NA(空看)", "NA(空长)", "非策略")
+    Dim 策 As Variant, 策数 As Integer, 策额 As Double
+    For Each 策 In 策表
+        If 策略典集.Exists(策) Then
+            策数 = 策略典集(策): 策额 = 策略典集额(策)
+        Else
+            策数 = 0: 策额 = 0
+        End If
+        WSTO.Cells(末行, 1).Value = 策
+        WSTO.Cells(末行, 2).Value = 策数
         WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
-        WSTO.Cells(末行, 3).Value = Format(策略典集(月基策略) / IIf(持票数 > 0, 持票数, 1), "0%")
+        WSTO.Cells(末行, 3).Value = Round(策额, 1)
+        WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
         WSTO.Cells(末行, 3).HorizontalAlignment = xlRight
+        WSTO.Cells(末行, 4).Value = Format(策额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
+        WSTO.Cells(末行, 4).HorizontalAlignment = xlRight
         末行 = 末行 + 1
     Next
     '--- 平均评分 ---
@@ -1078,30 +1112,47 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     末行 = 末行 + 1
     WSTO.Cells(末行, 1).Value = "仓位"
     WSTO.Cells(末行, 2).Value = "票数"
-    WSTO.Cells(末行, 3).Value = "占比"
+    WSTO.Cells(末行, 3).Value = "票额"
+    WSTO.Cells(末行, 4).Value = "票额占比"
     With WSTO.Rows(末行).Font: .Bold = True: End With
     With WSTO.Rows(末行).Interior: .Color = 常色九灰: End With
     末行 = 末行 + 1
     WSTO.Cells(末行, 1).Value = "低仓(<25%)"
     WSTO.Cells(末行, 2).Value = 仓低数
     WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
-    WSTO.Cells(末行, 3).Value = Format(仓低数 / IIf(持票数 > 0, 持票数, 1), "0%")
+    WSTO.Cells(末行, 3).Value = Round(仓低额, 1)
+    WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
+    WSTO.Cells(末行, 3).HorizontalAlignment = xlRight
+    WSTO.Cells(末行, 4).Value = Format(仓低额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
+    WSTO.Cells(末行, 4).HorizontalAlignment = xlRight
     末行 = 末行 + 1
     WSTO.Cells(末行, 1).Value = "中仓(25%~75%)"
     WSTO.Cells(末行, 2).Value = 仓中数
     WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
-    WSTO.Cells(末行, 3).Value = Format(仓中数 / IIf(持票数 > 0, 持票数, 1), "0%")
+    WSTO.Cells(末行, 3).Value = Round(仓中额, 1)
+    WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
+    WSTO.Cells(末行, 3).HorizontalAlignment = xlRight
+    WSTO.Cells(末行, 4).Value = Format(仓中额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
+    WSTO.Cells(末行, 4).HorizontalAlignment = xlRight
     末行 = 末行 + 1
     WSTO.Cells(末行, 1).Value = "满仓(75%~100%)"
     WSTO.Cells(末行, 2).Value = 仓满数
     WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
-    WSTO.Cells(末行, 3).Value = Format(仓满数 / IIf(持票数 > 0, 持票数, 1), "0%")
+    WSTO.Cells(末行, 3).Value = Round(仓满额, 1)
+    WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
+    WSTO.Cells(末行, 3).HorizontalAlignment = xlRight
+    WSTO.Cells(末行, 4).Value = Format(仓满额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
+    WSTO.Cells(末行, 4).HorizontalAlignment = xlRight
     末行 = 末行 + 1
     WSTO.Cells(末行, 1).Value = "超限(>100%)"
     WSTO.Cells(末行, 1).Font.Color = IIf(仓超数 > 0, 常色主红, 常色主黑)
     WSTO.Cells(末行, 2).Value = 仓超数
     WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
-    WSTO.Cells(末行, 3).Value = Format(仓超数 / IIf(持票数 > 0, 持票数, 1), "0%")
+    WSTO.Cells(末行, 3).Value = Round(仓超额, 1)
+    WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
+    WSTO.Cells(末行, 3).HorizontalAlignment = xlRight
+    WSTO.Cells(末行, 4).Value = Format(仓超额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
+    WSTO.Cells(末行, 4).HorizontalAlignment = xlRight
 '========================================================================================
 '输出：五、集中度
 '========================================================================================
@@ -1153,7 +1204,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
 '========================================================================================
 '输出：六、风控检查
 '========================================================================================
-    末行 = 末行 + 1
+    末行 = 末行 + 2
     WSTO.Cells(末行, 1).Value = "六、风控检查"
     WSTO.Cells(末行, 1).Font.Bold = True
     WSTO.Cells(末行, 1).Font.Size = 14
@@ -1210,9 +1261,23 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
         WSTO.Cells(末行, 1).Font.Color = 常色主红
         Dim 违规行 As Variant
         违规行 = Split(策略违规, vbCrLf)
+        末行 = 末行 + 1
+        WSTO.Cells(末行, 1).Value = "类别"
+        WSTO.Cells(末行, 2).Value = "名称"
+        WSTO.Cells(末行, 3).Value = "具体原因"
+        With WSTO.Rows(末行).Font: .Bold = True: End With
+        With WSTO.Rows(末行).Interior: .Color = 常色九灰: End With
         For i = 0 To UBound(违规行)
             If 违规行(i) <> "" Then
-                WSTO.Cells(末行 + 1 + i, 2).Value = 违规行(i)
+                Dim 类 As String, 名 As String, 因 As String
+                Dim 等号 As Integer
+                类 = Left$(违规行(i), InStr(违规行(i), "]"))
+                名 = Mid$(违规行(i), InStr(违规行(i), "]") + 1, InStr(违规行(i), "=") - InStr(违规行(i), "]") - 1)
+                等号 = InStr(违规行(i), "=")
+                If 等号 > 0 Then 因 = Mid$(违规行(i), 等号 + 1) Else 因 = ""
+                WSTO.Cells(末行 + 1 + i, 1).Value = 类
+                WSTO.Cells(末行 + 1 + i, 2).Value = 名
+                WSTO.Cells(末行 + 1 + i, 3).Value = 因
             End If
         Next
         末行 = 末行 + UBound(违规行) + 1
@@ -1228,9 +1293,23 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
         WSTO.Cells(末行, 1).Font.Color = 常色主红
         Dim 仓周行 As Variant
         仓周行 = Split(仓周违规, vbCrLf)
+        末行 = 末行 + 1
+        WSTO.Cells(末行, 1).Value = "类别"
+        WSTO.Cells(末行, 2).Value = "名称"
+        WSTO.Cells(末行, 3).Value = "具体原因"
+        With WSTO.Rows(末行).Font: .Bold = True: End With
+        With WSTO.Rows(末行).Interior: .Color = 常色九灰: End With
         For i = 0 To UBound(仓周行)
             If 仓周行(i) <> "" Then
-                WSTO.Cells(末行 + 1 + i, 2).Value = 仓周行(i)
+                Dim 仓类 As String, 仓名 As String, 仓因 As String
+                Dim 仓等号 As Integer
+                仓类 = Left$(仓周行(i), InStr(仓周行(i), "]"))
+                仓名 = Mid$(仓周行(i), InStr(仓周行(i), "]") + 1, InStr(仓周行(i), "=") - InStr(仓周行(i), "]") - 1)
+                仓等号 = InStr(仓周行(i), "=")
+                If 仓等号 > 0 Then 仓因 = Mid$(仓周行(i), 仓等号 + 1) Else 仓因 = ""
+                WSTO.Cells(末行 + 1 + i, 1).Value = 仓类
+                WSTO.Cells(末行 + 1 + i, 2).Value = 仓名
+                WSTO.Cells(末行 + 1 + i, 3).Value = 仓因
             End If
         Next
         末行 = 末行 + UBound(仓周行) + 1
@@ -1241,12 +1320,16 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
         末行 = 末行 + 1
     End If
 '========================================================================================
-'输出：六、福仓持仓明细
+'输出：七、持仓明细（福仓）
 '========================================================================================
     末行 = 末行 + 2
-    WSTO.Cells(末行, 1).Value = "七、福仓持仓明细"
+    WSTO.Cells(末行, 1).Value = "七、持仓明细"
     WSTO.Cells(末行, 1).Font.Bold = True
     WSTO.Cells(末行, 1).Font.Size = 14
+    末行 = 末行 + 1
+    WSTO.Cells(末行, 1).Value = "福仓持仓明细"
+    WSTO.Cells(末行, 1).Font.Bold = True
+    WSTO.Cells(末行, 1).Font.Color = 常色主靛
     末行 = 末行 + 1
     WSTO.Cells(末行, 1).Value = "代码"
     WSTO.Cells(末行, 2).Value = "名称"
@@ -1316,12 +1399,12 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             End If
     Next
 '========================================================================================
-'输出：七、彦仓持仓明细
+'输出：七、持仓明细（彦仓）
 '========================================================================================
     末行 = 明细行 + 1
-    WSTO.Cells(末行, 1).Value = "八、彦仓持仓明细"
+    WSTO.Cells(末行, 1).Value = "彦仓持仓明细"
     WSTO.Cells(末行, 1).Font.Bold = True
-    WSTO.Cells(末行, 1).Font.Size = 14
+    WSTO.Cells(末行, 1).Font.Color = 常色主靛
     末行 = 末行 + 1
     WSTO.Cells(末行, 1).Value = "代码"
     WSTO.Cells(末行, 2).Value = "名称"
@@ -1391,10 +1474,10 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             End If
     Next
 '========================================================================================
-'输出：组合调整建议
+'输出：八、组合调整建议
 '========================================================================================
     末行 = 明细行 + 2
-    WSTO.Cells(末行, 1).Value = "组合调整建议（最小修改方案）"
+    WSTO.Cells(末行, 1).Value = "八、组合调整建议（最小修改方案）"
     WSTO.Cells(末行, 1).Font.Bold = True
     WSTO.Cells(末行, 1).Font.Size = 14
     末行 = 末行 + 1
