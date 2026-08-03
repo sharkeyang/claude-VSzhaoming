@@ -623,15 +623,6 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 1).Font.Size = 10
     WSTO.Cells(末行, 1).Font.Color = 常色三灰
     WSTO.Rows(末行).RowHeight = 10
-    '--- 通用列宽 ---
-    WSTO.Columns("A:Z").ColumnWidth = 12
-    WSTO.Columns(1).ColumnWidth = 20
-    WSTO.Columns(2).ColumnWidth = 10  '宝福(数)
-    WSTO.Columns(3).ColumnWidth = 14  '宝福(额)
-    WSTO.Columns(4).ColumnWidth = 10  '彦仓(数)
-    WSTO.Columns(5).ColumnWidth = 14  '彦仓(额)
-    WSTO.Columns(6).ColumnWidth = 10  '合计(数)
-    WSTO.Columns(7).ColumnWidth = 14  '合计(额)
 '========================================================================================
 '输出：一、持仓概览
 '========================================================================================
@@ -660,8 +651,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
         .Weight = xlMedium
         .Color = 常色五靛
     End With
-    Dim 概览始 As Integer: 概览始 = 末行 + 1
-    末行 = 末行 + 1
+    末行 = 5
     WSTO.Cells(末行, 1).Value = "总资产(千元)"
     WSTO.Cells(末行, 3).Value = Round(福总资, 1)
     WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
@@ -670,7 +660,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 7).Value = Round(福总资 + 彦总资, 1)
     WSTO.Cells(末行, 7).NumberFormatLocal = "#,##0.0"
     WSTO.Rows(末行).Font.Bold = True
-    末行 = 末行 + 1
+    末行 = 6
     WSTO.Cells(末行, 1).Value = "现金余额(千元)"
     WSTO.Cells(末行, 3).Value = Round(福现金, 1)
     WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
@@ -679,7 +669,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 7).Value = Round(福现金 + 彦现金, 1)
     WSTO.Cells(末行, 7).NumberFormatLocal = "#,##0.0"
     WSTO.Rows(末行).Font.Bold = True
-    末行 = 末行 + 1
+    末行 = 7
     WSTO.Cells(末行, 1).Value = "持仓"
     WSTO.Cells(末行, 2).Value = 福票数
     WSTO.Cells(末行, 3).Value = Round(福仓额, 1)
@@ -692,70 +682,69 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 7).NumberFormatLocal = "#,##0.0"
     WSTO.Rows(末行).Font.Bold = True
     '--- 持仓构成（直接展开在持仓之下） ---
-    末行 = 末行 + 1
+    末行 = 8
     WSTO.Cells(末行, 1).Value = "  ├─ETF"
     WSTO.Cells(末行, 2).Value = 福ETF数: WSTO.Cells(末行, 3).Value = Round(福ETF额, 1): WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 4).Value = 彦ETF数: WSTO.Cells(末行, 5).Value = Round(彦ETF额, 1): WSTO.Cells(末行, 5).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 6).Value = ETF数: WSTO.Cells(末行, 7).Value = Round(ETF额, 1): WSTO.Cells(末行, 7).NumberFormatLocal = "#,##0.0"
-    WSTO.Rows(末行).Font.Bold = True
-    末行 = 末行 + 1
+    末行 = 9
     WSTO.Cells(末行, 1).Value = "  └─股票"
     WSTO.Cells(末行, 2).Value = 福股数: WSTO.Cells(末行, 3).Value = Round(福股额, 1): WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 4).Value = 彦股数: WSTO.Cells(末行, 5).Value = Round(彦股额, 1): WSTO.Cells(末行, 5).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 6).Value = 持票数 - ETF数: WSTO.Cells(末行, 7).Value = Round(总持仓额 - ETF额, 1): WSTO.Cells(末行, 7).NumberFormatLocal = "#,##0.0"
-    WSTO.Rows(末行).Font.Bold = True
     '交易所细分
-    末行 = 末行 + 1
+    末行 = 10
     WSTO.Cells(末行, 1).Value = "   ├─上证"
     WSTO.Cells(末行, 2).Value = 福上证数: WSTO.Cells(末行, 3).Value = Round(福上证额, 1): WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 4).Value = 彦上证数: WSTO.Cells(末行, 5).Value = Round(彦上证额, 1): WSTO.Cells(末行, 5).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 6).Value = 上证股数: WSTO.Cells(末行, 7).Value = Round(上证股额, 1): WSTO.Cells(末行, 7).NumberFormatLocal = "#,##0.0"
-    末行 = 末行 + 1
+    末行 = 11
     WSTO.Cells(末行, 1).Value = "   ├─科创"
     WSTO.Cells(末行, 2).Value = 福科创数: WSTO.Cells(末行, 3).Value = Round(福科创额, 1): WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 4).Value = 彦科创数: WSTO.Cells(末行, 5).Value = Round(彦科创额, 1): WSTO.Cells(末行, 5).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 6).Value = 科创股数: WSTO.Cells(末行, 7).Value = Round(科创股额, 1): WSTO.Cells(末行, 7).NumberFormatLocal = "#,##0.0"
-    末行 = 末行 + 1
+    末行 = 12
     WSTO.Cells(末行, 1).Value = "   ├─深证"
     WSTO.Cells(末行, 2).Value = 福深证数: WSTO.Cells(末行, 3).Value = Round(福深证额, 1): WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 4).Value = 彦深证数: WSTO.Cells(末行, 5).Value = Round(彦深证额, 1): WSTO.Cells(末行, 5).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 6).Value = 深证股数: WSTO.Cells(末行, 7).Value = Round(深证股额, 1): WSTO.Cells(末行, 7).NumberFormatLocal = "#,##0.0"
-    末行 = 末行 + 1
+    末行 = 13
     WSTO.Cells(末行, 1).Value = "   ├─创业"
     WSTO.Cells(末行, 2).Value = 福创业数: WSTO.Cells(末行, 3).Value = Round(福创业额, 1): WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 4).Value = 彦创业数: WSTO.Cells(末行, 5).Value = Round(彦创业额, 1): WSTO.Cells(末行, 5).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 6).Value = 创业股数: WSTO.Cells(末行, 7).Value = Round(创业股额, 1): WSTO.Cells(末行, 7).NumberFormatLocal = "#,##0.0"
-    末行 = 末行 + 1
+    末行 = 14
     WSTO.Cells(末行, 1).Value = "   ├─北交"
     WSTO.Cells(末行, 2).Value = 福北交数: WSTO.Cells(末行, 3).Value = Round(福北交额, 1): WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 4).Value = 彦北交数: WSTO.Cells(末行, 5).Value = Round(彦北交额, 1): WSTO.Cells(末行, 5).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 6).Value = 北交股数: WSTO.Cells(末行, 7).Value = Round(北交股额, 1): WSTO.Cells(末行, 7).NumberFormatLocal = "#,##0.0"
-    末行 = 末行 + 1
+    末行 = 15
     WSTO.Cells(末行, 1).Value = "   └─港股"
     WSTO.Cells(末行, 2).Value = 福港股数: WSTO.Cells(末行, 3).Value = Round(福港股额, 1): WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 4).Value = 彦港股数: WSTO.Cells(末行, 5).Value = Round(彦港股额, 1): WSTO.Cells(末行, 5).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 6).Value = 港股数: WSTO.Cells(末行, 7).Value = Round(港股额, 1): WSTO.Cells(末行, 7).NumberFormatLocal = "#,##0.0"
     '--- 现金/资产/仓位 ---
-    末行 = 末行 + 1
+    末行 = 16
     WSTO.Cells(末行, 1).Value = "满仓率"
     If 福总资 > 0 Then WSTO.Cells(末行, 3).Value = Format(福仓额 / 福总资, "0%")
     If 彦总资 > 0 Then WSTO.Cells(末行, 5).Value = Format(彦仓额 / 彦总资, "0%")
     If 福总资 + 彦总资 > 0 Then WSTO.Cells(末行, 7).Value = Format(总持仓额 / (福总资 + 彦总资), "0%")
 
     '--- 持仓构成数据行(6-13)浅灰间隔 ---
-    For X = 概览始 + 1 To 末行 - 1
+    For X = 8 To 15
         With WSTO.Range(WSTO.Cells(X, 1), WSTO.Cells(X, 7)).Interior
             .Color = RGB(245, 245, 245)
         End With
     Next
     '--- 概览/持仓构成数字格式 ---
-    For X = 概览始 To 末行
+    For X = 5 To 16
         WSTO.Rows(X).HorizontalAlignment = xlRight
         WSTO.Cells(X, 1).HorizontalAlignment = xlLeft
     Next
 '========================================================================================
 '输出：大盘仓位限制
 '========================================================================================
+    Dim 大盘行 As Integer
     Dim 指正分 As Integer, 指负分 As Integer
     Dim 指CIDL As Variant, 指月基 As String, 促动 As String
     指正分 = 0: 指负分 = 0
@@ -806,100 +795,107 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     Dim 大盘评分明细 As String
     大盘评分明细 = "促动" & 促动1 & "/" & 促动2 & "/" & 促动3 & " 日冲" & 冲分1 & "/" & 冲分2 & "/" & 冲分3
     大盘评分明细 = 大盘评分明细 & " => 总分" & 总分2 & " " & 大盘判断 & " 上限" & Format(总上限, "0%")
-    Dim 大盘始 As Integer: 大盘始 = 末行 + 1
-    WSTO.Cells(大盘始, 8).Value = 大盘评分明细
-    WSTO.Cells(大盘始, 8).Font.Size = 9
-    WSTO.Cells(大盘始, 8).Font.Color = 常色三灰
-    WSTO.Range(WSTO.Cells(大盘始, 8), WSTO.Cells(大盘始, 14)).Merge
+    WSTO.Cells(17, 8).Value = 大盘评分明细
+    WSTO.Cells(17, 8).Font.Size = 9
+    WSTO.Cells(17, 8).Font.Color = 常色三灰
+    WSTO.Range(WSTO.Cells(17, 8), WSTO.Cells(17, 14)).Merge
     '--- 更新概览行18：大盘仓位限制 ---
-    WSTO.Cells(大盘始, 1).Value = "大盘仓位限制"
-    WSTO.Cells(大盘始, 3).Value = Format(总上限, "0%")
-    WSTO.Cells(大盘始, 5).Value = Format(总上限, "0%")
-    WSTO.Cells(大盘始, 7).Value = Format(总上限, "0%")
-    末行 = 末行 + 1
+    WSTO.Cells(17, 1).Value = "大盘仓位限制"
+    WSTO.Cells(17, 3).Value = Format(总上限, "0%")
+    WSTO.Cells(17, 5).Value = Format(总上限, "0%")
+    WSTO.Cells(17, 7).Value = Format(总上限, "0%")
+    大盘行 = 18
     '福账户
     Dim 福上限 As Double: 福上限 = 福总资 * 总上限
     Dim 福月基目标 As Double: 福月基目标 = 福上限 * 0.2
     Dim 福周冲目标 As Double: 福周冲目标 = 福上限 * 0.4
     Dim 福日冲目标 As Double: 福日冲目标 = 福上限 * 0.4
-    Dim 福月基比 As Double: 福月基比 = IIf(福上限 > 0, 福月基额 / 福上限, 0)
-    Dim 福周冲比 As Double: 福周冲比 = IIf(福上限 > 0, 福周冲额 / 福上限, 0)
-    Dim 福日冲比 As Double: 福日冲比 = IIf(福上限 > 0, 福日冲额 / 福上限, 0)
+    Dim 福月基比 As Double
+    If 福上限 > 0 Then 福月基比 = 福月基额 / 福上限 Else 福月基比 = 0
+    Dim 福周冲比 As Double
+    If 福上限 > 0 Then 福周冲比 = 福周冲额 / 福上限 Else 福周冲比 = 0
+    Dim 福日冲比 As Double
+    If 福上限 > 0 Then 福日冲比 = 福日冲额 / 福上限 Else 福日冲比 = 0
     Dim 福非策额 As Double: 福非策额 = 福仓额 - 福月基额 - 福周冲额 - 福日冲额
-    Dim 福非策比 As Double: 福非策比 = IIf(福上限 > 0, 福非策额 / 福上限, 0)
-    末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "福账户限额"
-    WSTO.Cells(末行, 2).Value = Format(总上限, "0%")
-    WSTO.Cells(末行, 3).Value = Round(福上限, 1) & "(" & IIf(福仓额 <= 福上限, "达标", "超额") & ")"
-    WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
-    WSTO.Cells(末行, 7).Value = IIf(福仓额 <= 福上限, "达标", "超额")
-    WSTO.Cells(末行, 7).Font.Color = IIf(福仓额 <= 福上限, 常色主黑, 常色主红)
-    WSTO.Rows(末行).Font.Bold = True
-    末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "  ├─月基(>=20%)"
-    WSTO.Cells(末行, 2).Value = Format(总上限 * 0.2, "0%")
-    WSTO.Cells(末行, 3).Value = Round(福月基额, 1) & "(" & IIf(福月基额 >= 福月基目标, "达标", "缺额") & ")"
-    WSTO.Cells(末行, 7).Value = IIf(福月基额 >= 福月基目标, "达标", "缺额")
-    WSTO.Cells(末行, 7).Font.Color = IIf(福月基额 >= 福月基目标, 常色主黑, 常色主蓝)
-    末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "  ├─周冲(<=40%)"
-    WSTO.Cells(末行, 2).Value = Format(总上限 * 0.4, "0%")
-    WSTO.Cells(末行, 3).Value = Round(福周冲额, 1) & "(" & IIf(福周冲额 <= 福周冲目标, "达标", "超额") & ")"
-    WSTO.Cells(末行, 7).Value = IIf(福周冲额 <= 福周冲目标, "达标", "超额")
-    WSTO.Cells(末行, 7).Font.Color = IIf(福周冲额 <= 福周冲目标, 常色主黑, 常色主红)
-    末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "  ├─日冲(<=40%)"
-    WSTO.Cells(末行, 2).Value = Format(总上限 * 0.4, "0%")
-    WSTO.Cells(末行, 3).Value = Round(福日冲额, 1) & "(" & IIf(福日冲额 <= 福日冲目标, "达标", "超额") & ")"
-    WSTO.Cells(末行, 7).Value = IIf(福日冲额 <= 福日冲目标, "达标", "超额")
-    WSTO.Cells(末行, 7).Font.Color = IIf(福日冲额 <= 福日冲目标, 常色主黑, 常色主红)
-    末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "  └─非策略(=0%)"
-    WSTO.Cells(末行, 3).Value = Round(福非策额, 1) & "(" & IIf(福非策额 > 0, "超额", "无目标") & ")"
-    WSTO.Cells(末行, 7).Value = IIf(福非策额 > 0, "超额", "无目标")
-    WSTO.Cells(末行, 7).Font.Color = IIf(福非策额 > 0, 常色主红, 常色主黑)
+    Dim 福非策比 As Double
+    If 福上限 > 0 Then 福非策比 = 福非策额 / 福上限 Else 福非策比 = 0
+    大盘行 = 18
+    WSTO.Cells(大盘行, 1).Value = "福账户限额"
+    WSTO.Cells(大盘行, 2).Value = Format(总上限, "0%")
+    WSTO.Cells(大盘行, 3).Value = Round(福上限, 1) & "(" & IIf(福仓额 <= 福上限, "达标", "超额") & ")"
+    WSTO.Cells(大盘行, 3).NumberFormatLocal = "#,##0.0"
+    WSTO.Cells(大盘行, 7).Value = IIf(福仓额 <= 福上限, "达标", "超额")
+    WSTO.Cells(大盘行, 7).Font.Color = IIf(福仓额 <= 福上限, 常色主黑, 常色主红)
+    WSTO.Rows(大盘行).Font.Bold = True
+    大盘行 = 19
+    WSTO.Cells(大盘行, 1).Value = "  ├─月基(>=20%)"
+    WSTO.Cells(大盘行, 2).Value = Format(总上限 * 0.2, "0%")
+    WSTO.Cells(大盘行, 3).Value = Round(福月基额, 1) & "(" & IIf(福月基额 >= 福月基目标, "达标", "缺额") & ")"
+    WSTO.Cells(大盘行, 7).Value = IIf(福月基额 >= 福月基目标, "达标", "缺额")
+    WSTO.Cells(大盘行, 7).Font.Color = IIf(福月基额 >= 福月基目标, 常色主黑, 常色主蓝)
+    大盘行 = 20
+    WSTO.Cells(大盘行, 1).Value = "  ├─周冲(<=40%)"
+    WSTO.Cells(大盘行, 2).Value = Format(总上限 * 0.4, "0%")
+    WSTO.Cells(大盘行, 3).Value = Round(福周冲额, 1) & "(" & IIf(福周冲额 <= 福周冲目标, "达标", "超额") & ")"
+    WSTO.Cells(大盘行, 7).Value = IIf(福周冲额 <= 福周冲目标, "达标", "超额")
+    WSTO.Cells(大盘行, 7).Font.Color = IIf(福周冲额 <= 福周冲目标, 常色主黑, 常色主红)
+    大盘行 = 21
+    WSTO.Cells(大盘行, 1).Value = "  ├─日冲(<=40%)"
+    WSTO.Cells(大盘行, 2).Value = Format(总上限 * 0.4, "0%")
+    WSTO.Cells(大盘行, 3).Value = Round(福日冲额, 1) & "(" & IIf(福日冲额 <= 福日冲目标, "达标", "超额") & ")"
+    WSTO.Cells(大盘行, 7).Value = IIf(福日冲额 <= 福日冲目标, "达标", "超额")
+    WSTO.Cells(大盘行, 7).Font.Color = IIf(福日冲额 <= 福日冲目标, 常色主黑, 常色主红)
+    大盘行 = 22
+    WSTO.Cells(大盘行, 1).Value = "  └─非策略(=0%)"
+    WSTO.Cells(大盘行, 3).Value = Round(福非策额, 1) & "(" & IIf(福非策额 > 0, "超额", "无目标") & ")"
+    WSTO.Cells(大盘行, 7).Value = IIf(福非策额 > 0, "超额", "无目标")
+    WSTO.Cells(大盘行, 7).Font.Color = IIf(福非策额 > 0, 常色主红, 常色主黑)
     Dim 彦上限 As Double: 彦上限 = 彦总资 * 总上限
     Dim 彦月基目标 As Double: 彦月基目标 = 彦上限 * 0.5
     Dim 彦周冲目标 As Double: 彦周冲目标 = 彦上限 * 0.5
     Dim 彦日冲目标 As Double: 彦日冲目标 = 彦上限 * 0.2
-    Dim 彦月基比 As Double: 彦月基比 = IIf(彦上限 > 0, 彦月基额 / 彦上限, 0)
-    Dim 彦周冲比 As Double: 彦周冲比 = IIf(彦上限 > 0, 彦周冲额 / 彦上限, 0)
-    Dim 彦日冲比 As Double: 彦日冲比 = IIf(彦上限 > 0, 彦日冲额 / 彦上限, 0)
+    Dim 彦月基比 As Double
+    If 彦上限 > 0 Then 彦月基比 = 彦月基额 / 彦上限 Else 彦月基比 = 0
+    Dim 彦周冲比 As Double
+    If 彦上限 > 0 Then 彦周冲比 = 彦周冲额 / 彦上限 Else 彦周冲比 = 0
+    Dim 彦日冲比 As Double
+    If 彦上限 > 0 Then 彦日冲比 = 彦日冲额 / 彦上限 Else 彦日冲比 = 0
     Dim 彦非策额 As Double: 彦非策额 = 彦仓额 - 彦月基额 - 彦周冲额 - 彦日冲额
-    Dim 彦非策比 As Double: 彦非策比 = IIf(彦上限 > 0, 彦非策额 / 彦上限, 0)
-    末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "彦账户限额"
-    WSTO.Cells(末行, 4).Value = Format(总上限, "0%")
-    WSTO.Cells(末行, 5).Value = Round(彦上限, 1) & "(" & IIf(彦仓额 <= 彦上限, "达标", "超额") & ")"
-    WSTO.Cells(末行, 5).NumberFormatLocal = "#,##0.0"
-    WSTO.Cells(末行, 7).Value = IIf(彦仓额 <= 彦上限, "达标", "超额")
-    WSTO.Cells(末行, 7).Font.Color = IIf(彦仓额 <= 彦上限, 常色主黑, 常色主红)
-    WSTO.Rows(末行).Font.Bold = True
-    末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "  ├─月基(>=50%)"
-    WSTO.Cells(末行, 4).Value = Format(总上限 * 0.5, "0%")
-    WSTO.Cells(末行, 5).Value = Round(彦月基额, 1) & "(" & IIf(彦月基额 >= 彦月基目标, "达标", "缺额") & ")"
-    WSTO.Cells(末行, 7).Value = IIf(彦月基额 >= 彦月基目标, "达标", "缺额")
-    WSTO.Cells(末行, 7).Font.Color = IIf(彦月基额 >= 彦月基目标, 常色主黑, 常色主蓝)
-    末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "  ├─周冲(<=50%)"
-    WSTO.Cells(末行, 4).Value = Format(总上限 * 0.5, "0%")
-    WSTO.Cells(末行, 5).Value = Round(彦周冲额, 1) & "(" & IIf(彦周冲额 <= 彦周冲目标, "达标", "超额") & ")"
-    WSTO.Cells(末行, 7).Value = IIf(彦周冲额 <= 彦周冲目标, "达标", "超额")
-    WSTO.Cells(末行, 7).Font.Color = IIf(彦周冲额 <= 彦周冲目标, 常色主黑, 常色主红)
-    末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "  ├─日冲(<=20%)"
-    WSTO.Cells(末行, 5).Value = Round(彦日冲额, 1) & "(" & IIf(彦日冲额 <= 彦日冲目标, "达标", "超额") & ")"
-    WSTO.Cells(末行, 7).Value = IIf(彦日冲额 <= 彦日冲目标, "达标", "超额")
-    WSTO.Cells(末行, 7).Font.Color = IIf(彦日冲额 <= 彦日冲目标, 常色主黑, 常色主红)
-    末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "  └─非策略(=0%)"
-    WSTO.Cells(末行, 5).Value = Round(彦非策额, 1) & "(" & IIf(彦非策额 > 0, "超额", "无目标") & ")"
-    WSTO.Cells(末行, 7).Value = IIf(彦非策额 > 0, "超额", "无目标")
-    WSTO.Cells(末行, 7).Font.Color = IIf(彦非策额 > 0, 常色主红, 常色主黑)
+    Dim 彦非策比 As Double
+    If 彦上限 > 0 Then 彦非策比 = 彦非策额 / 彦上限 Else 彦非策比 = 0
+    大盘行 = 23
+    WSTO.Cells(大盘行, 1).Value = "彦账户限额"
+    WSTO.Cells(大盘行, 4).Value = Format(总上限, "0%")
+    WSTO.Cells(大盘行, 5).Value = Round(彦上限, 1) & "(" & IIf(彦仓额 <= 彦上限, "达标", "超额") & ")"
+    WSTO.Cells(大盘行, 5).NumberFormatLocal = "#,##0.0"
+    WSTO.Cells(大盘行, 7).Value = IIf(彦仓额 <= 彦上限, "达标", "超额")
+    WSTO.Cells(大盘行, 7).Font.Color = IIf(彦仓额 <= 彦上限, 常色主黑, 常色主红)
+    WSTO.Rows(大盘行).Font.Bold = True
+    大盘行 = 24
+    WSTO.Cells(大盘行, 1).Value = "  ├─月基(>=50%)"
+    WSTO.Cells(大盘行, 4).Value = Format(总上限 * 0.5, "0%")
+    WSTO.Cells(大盘行, 5).Value = Round(彦月基额, 1) & "(" & IIf(彦月基额 >= 彦月基目标, "达标", "缺额") & ")"
+    WSTO.Cells(大盘行, 7).Value = IIf(彦月基额 >= 彦月基目标, "达标", "缺额")
+    WSTO.Cells(大盘行, 7).Font.Color = IIf(彦月基额 >= 彦月基目标, 常色主黑, 常色主蓝)
+    大盘行 = 25
+    WSTO.Cells(大盘行, 1).Value = "  ├─周冲(<=50%)"
+    WSTO.Cells(大盘行, 4).Value = Format(总上限 * 0.5, "0%")
+    WSTO.Cells(大盘行, 5).Value = Round(彦周冲额, 1) & "(" & IIf(彦周冲额 <= 彦周冲目标, "达标", "超额") & ")"
+    WSTO.Cells(大盘行, 7).Value = IIf(彦周冲额 <= 彦周冲目标, "达标", "超额")
+    WSTO.Cells(大盘行, 7).Font.Color = IIf(彦周冲额 <= 彦周冲目标, 常色主黑, 常色主红)
+    大盘行 = 26
+    WSTO.Cells(大盘行, 1).Value = "  ├─日冲(<=20%)"
+    WSTO.Cells(大盘行, 5).Value = Round(彦日冲额, 1) & "(" & IIf(彦日冲额 <= 彦日冲目标, "达标", "超额") & ")"
+    WSTO.Cells(大盘行, 7).Value = IIf(彦日冲额 <= 彦日冲目标, "达标", "超额")
+    WSTO.Cells(大盘行, 7).Font.Color = IIf(彦日冲额 <= 彦日冲目标, 常色主黑, 常色主红)
+    大盘行 = 27
+    WSTO.Cells(大盘行, 1).Value = "  └─非策略(=0%)"
+    WSTO.Cells(大盘行, 5).Value = Round(彦非策额, 1) & "(" & IIf(彦非策额 > 0, "超额", "无目标") & ")"
+    WSTO.Cells(大盘行, 7).Value = IIf(彦非策额 > 0, "超额", "无目标")
+    WSTO.Cells(大盘行, 7).Font.Color = IIf(彦非策额 > 0, 常色主红, 常色主黑)
     '--- 右对齐 ---
     With WSTO
-        For X = 大盘始 To 末行
+        For X = 17 To 27
             .Rows(X).HorizontalAlignment = xlRight
             .Cells(X, 1).HorizontalAlignment = xlLeft
         Next
@@ -907,8 +903,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
 '========================================================================================
 '输出：二、行业分布
 '========================================================================================
-    Dim 行业始 As Integer: 行业始 = 末行 + 2
-    末行 = 行业始
+    末行 = 31
     WSTO.Cells(末行, 1).Value = "二、行业分布"
     WSTO.Cells(末行, 1).Font.Bold = True
     WSTO.Cells(末行, 1).Font.Size = 14
@@ -919,7 +914,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
         .Weight = xlMedium
         .Color = 常色五靛
     End With
-    末行 = 末行 + 1
+    末行 = 32
     WSTO.Cells(末行, 1).Value = "行业"
     WSTO.Cells(末行, 2).Value = "持额(千元)"
     WSTO.Cells(末行, 3).Value = "持额占比"
@@ -940,7 +935,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     With WSTO.Range(WSTO.Cells(末行, 1), WSTO.Cells(末行, 18)).Interior
         .Color = 常色八灰
     End With
-    末行 = 末行 + 1
+    末行 = 33
     For Each 行业 In 行业典集.Keys
         行业额 = 行业典集(行业)
         WSTO.Cells(末行, 1).Value = 行业
@@ -1010,7 +1005,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     '--- 行业分布数据行浅灰间隔 ---
     Dim 末行整 As Integer
     末行整 = WSTO.UsedRange.Rows.Count
-    For X = 行业始 To 末行整
+    For X = 31 To 末行整
         If X Mod 2 = 0 Then
             With WSTO.Range(WSTO.Cells(X, 1), WSTO.Cells(X, 14)).Interior
                 .Color = RGB(242, 248, 255)
@@ -1034,18 +1029,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
         WSTO.Cells(末行, 1).Font.Color = 常色三灰
         末行 = 末行 + 1
     End If
-    '--- 行业列宽 ---
-    WSTO.Columns(1).ColumnWidth = 16
-    WSTO.Columns(2).ColumnWidth = 14
-    WSTO.Columns(3).ColumnWidth = 10
-    WSTO.Columns(4).ColumnWidth = 10
-    WSTO.Columns(5).ColumnWidth = 14
-    WSTO.Columns(6).ColumnWidth = 14
-    WSTO.Columns(7).ColumnWidth = 10  '月基策略
-    WSTO.Columns(8).ColumnWidth = 10  '月基命分
-    WSTO.Columns(9).ColumnWidth = 15  '月基策分
-    WSTO.Columns(10).ColumnWidth = 40 '仓操作
-    WSTO.Rows(行业始).RowHeight = 20  '行业表头行高
+    WSTO.Rows(31).RowHeight = 20  '行业表头行高
 '========================================================================================
 '输出：三、策略分布
 '========================================================================================
@@ -1402,20 +1386,6 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             End If
     Next
 '========================================================================================
-'列宽调整
-'========================================================================================
-    WSTO.Columns("A").ColumnWidth = 16
-    WSTO.Columns("B").ColumnWidth = 10
-    WSTO.Columns("C").ColumnWidth = 10
-    WSTO.Columns("D").ColumnWidth = 12
-    WSTO.Columns("E").ColumnWidth = 12
-    WSTO.Columns("F").ColumnWidth = 12
-    WSTO.Columns("G").ColumnWidth = 10
-    WSTO.Columns("H").ColumnWidth = 10
-    WSTO.Columns("I").ColumnWidth = 15
-    WSTO.Columns("J").ColumnWidth = 10
-    WSTO.Columns("K").ColumnWidth = 10
-'========================================================================================
 '输出：组合调整建议
 '========================================================================================
     末行 = 明细行 + 2
@@ -1528,6 +1498,12 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
         .Weight = xlThin
         .ColorIndex = 15  '灰
     End With
+'========================================================================================
+'列宽调整
+'========================================================================================
+    WSTO.Columns("A:Z").ColumnWidth = 12
+    WSTO.Columns("A").ColumnWidth = 18
+    WSTO.Columns("I").ColumnWidth = 15
 '========================================================================================
 '返回
 '========================================================================================
