@@ -155,6 +155,17 @@ def cmd_export(args):
             continue
 
         name_no_ext = vba_filename.rsplit(".", 1)[0] if vba_filename.endswith((".bas", ".cls", ".frm")) else vba_filename
+        # 自动去掉模块名末尾的 "1" 后缀（仅限末尾的 1 或 1 组合，中间的不动）
+        stripped = name_no_ext.rstrip('1')
+        if stripped != name_no_ext:
+            name_no_ext = stripped
+            vba_code = re.sub(
+                r'^(Attribute VB_Name\s*=\s*")([^"]+?)1+("\s*)$',
+                r'\1\2\3',
+                vba_code,
+                count=1,
+                flags=re.MULTILINE
+            )
         safe = sanitize_filename(name_no_ext)
         key = safe + ext
         outpath = outdir / key
