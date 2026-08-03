@@ -848,7 +848,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 7).Font.Color = IIf(福日冲额 <= 福日冲目标, 常色主黑, 常色主红)
     末行 = 末行 + 1
     WSTO.Cells(末行, 1).Value = "  └─非策略(=0%)"
-    WSTO.Cells(末行, 2).Value = "=0%,0"
+    WSTO.Cells(末行, 2).Value = "'=0%,0"
     WSTO.Cells(末行, 3).Value = Round(福非策额, 1) & "(" & IIf(福非策额 > 0, "超额", "无目标") & ")"
     WSTO.Cells(末行, 7).Value = IIf(福非策额 > 0, "超额", "无目标")
     WSTO.Cells(末行, 7).Font.Color = IIf(福非策额 > 0, 常色主红, 常色主黑)
@@ -893,7 +893,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 7).Font.Color = IIf(彦日冲额 <= 彦日冲目标, 常色主黑, 常色主红)
     末行 = 末行 + 1
     WSTO.Cells(末行, 1).Value = "  └─非策略(=0%)"
-    WSTO.Cells(末行, 4).Value = "=0%,0"
+    WSTO.Cells(末行, 4).Value = "'=0%,0"
     WSTO.Cells(末行, 5).Value = Round(彦非策额, 1) & "(" & IIf(彦非策额 > 0, "超额", "无目标") & ")"
     WSTO.Cells(末行, 7).Value = IIf(彦非策额 > 0, "超额", "无目标")
     WSTO.Cells(末行, 7).Font.Color = IIf(彦非策额 > 0, 常色主红, 常色主黑)
