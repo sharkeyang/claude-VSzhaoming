@@ -3434,7 +3434,7 @@ If UBCID是代码(CIDL) = True Then
                 ElseIf 日EF护级 = "嘘" Then
                     日冲战场 = "嘘"
                 Else
-                    日冲战场 = "屁"
+                    日冲战场 = "尸"
                 End If
                 If 日CD护级 = "上" Or 日CD护级 = "中" Or 日CD护级 = "忐" Then
                     日冲强弱 = "强"
