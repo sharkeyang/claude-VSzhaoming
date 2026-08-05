@@ -1280,19 +1280,19 @@ End If
                     If 是否AB好 Then
                         .Interior.Color = 常色八绿  'B级: 中绿(可持仓)
                     Else
-                        .Interior.Color = 常色八灰  'C级: 中灰(仅观察)
+                        .Interior.Color = 常色九灰  'C级: 浅灰(仅观察)
                     End If
                 ElseIf 是否CD好 Then
                     'CD好, EF不好
                     If 是否AB好 Then
                         .Interior.Color = 常色六绿  'D级: 深绿(可持仓)
                     Else
-                        .Interior.Color = 常色六灰  'E级: 深灰(仅观察)
+                        .Interior.Color = 常色八灰  'E级: 中灰(仅观察)
                     End If
                 Else
                     'EF和CD都不好
                     If 是否AB好 Then
-                        .Interior.Color = 常色四灰  'F级: 最深灰(仅观察)
+                        .Interior.Color = 常色七灰  'F级: 深灰(仅观察)
                     Else
                         .Interior.Color = 常色五红  '禁止级: 深红(坚决禁止)
                     End If
