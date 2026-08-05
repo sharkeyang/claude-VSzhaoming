@@ -3442,10 +3442,38 @@ If UBCID是代码(CIDL) = True Then
                     日冲强弱 = "弱"
                 End If
                 日冲分类 = 日冲战场 & 日冲强弱
-                ' 弱且AB好(甲乙己)时加"甲"后缀
-                If 日冲强弱 = "弱" Then
-                    If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
-                        日冲分类 = 日冲分类 & "甲"
+                ' 按四级分类加后缀(持/观/禁)
+                If 日EF护级 = "金" Or 日EF护级 = "银" Or 日EF护级 = "唏" Then
+                    'EF好
+                    If 日冲强弱 = "强" Then
+                        If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
+                            'S级: 无后缀 (龙强/唏强)
+                        Else
+                            日冲分类 = 日冲分类 & "持"  'A级: 龙强持/唏强持
+                        End If
+                    Else
+                        '弱
+                        If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
+                            日冲分类 = 日冲分类 & "持"  'B级: 龙弱持/唏弱持
+                        Else
+                            日冲分类 = 日冲分类 & "观"  'C级: 龙弱观/唏弱观
+                        End If
+                    End If
+                Else
+                    'EF差(嘘/屎/尿)
+                    If 日冲强弱 = "强" Then
+                        If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
+                            日冲分类 = 日冲分类 & "持"  'D级: 嘘强持/尸强持
+                        Else
+                            日冲分类 = 日冲分类 & "观"  'E级: 嘘强观/尸强观
+                        End If
+                    Else
+                        '弱
+                        If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
+                            日冲分类 = 日冲分类 & "观"  'F级: 嘘弱观/尸弱观
+                        Else
+                            日冲分类 = 日冲分类 & "禁"  '禁止级: 嘘弱禁/尸弱禁
+                        End If
                     End If
                 End If
                 ' 小样本追加后缀
