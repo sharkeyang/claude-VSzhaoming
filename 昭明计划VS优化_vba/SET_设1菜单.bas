@@ -216,30 +216,30 @@ Public Sub UGSOP_MENU_生成()
                 .TooltipText = "对任意页进行更新"
             End With
     '---------------------------------------------
-    With 菜栏.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ展擎瓜页前调更新排否sSSC"
-        .Caption = "sSSC数"
-        .FaceId = 136
-        .Style = msoButtonIconAndCaptionBelow
-    End With
-    With 菜栏.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ展擎瓜页前调更新排周sSSC"
-        .Caption = "sSSC周"
-        .FaceId = 136
-        .Style = msoButtonIconAndCaptionBelow
-    End With
-    With 菜栏.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ展擎瓜页前调更新排日sSSC"
-        .Caption = "sSSC日"
-        .FaceId = 136
-        .Style = msoButtonIconAndCaptionBelow
-    End With
-    With 菜栏.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ展擎瓜页前调更新排仓sSSC"
-        .Caption = "sSSC仓"
-        .FaceId = 136
-        .Style = msoButtonIconAndCaptionBelow
-    End With
+'    With 菜栏.Controls.Add(Type:=msoControlButton)
+'        .OnAction = "IQQQ展擎瓜页前调更新排否sSSC"
+'        .Caption = "sSSC数"
+'        .FaceId = 136
+'        .Style = msoButtonIconAndCaptionBelow
+'    End With
+'    With 菜栏.Controls.Add(Type:=msoControlButton)
+'        .OnAction = "IQQQ展擎瓜页前调更新排周sSSC"
+'        .Caption = "sSSC周"
+'        .FaceId = 136
+'        .Style = msoButtonIconAndCaptionBelow
+'    End With
+'    With 菜栏.Controls.Add(Type:=msoControlButton)
+'        .OnAction = "IQQQ展擎瓜页前调更新排日sSSC"
+'        .Caption = "sSSC日"
+'        .FaceId = 136
+'        .Style = msoButtonIconAndCaptionBelow
+'    End With
+'    With 菜栏.Controls.Add(Type:=msoControlButton)
+'        .OnAction = "IQQQ展擎瓜页前调更新排仓sSSC"
+'        .Caption = "sSSC仓"
+'        .FaceId = 136
+'        .Style = msoButtonIconAndCaptionBelow
+'    End With
     '---------------------------------------------
             With 菜栏.Controls.Add(Type:=msoControlButton)
                 .OnAction = "UGSOP定时引擎开始"
@@ -323,75 +323,56 @@ Public Sub UGSOP_MENU_生成()
         .Style = msoButtonIconAndCaptionBelow
     End With
     '---------------------------------------------
-    With 菜栏.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ展擎瓜页前调决策按B日仓日综"
-        .Caption = "日仓日综"
-        .FaceId = 450 '340
-        .Style = msoButtonIconAndCaptionBelow
-    End With
-    With 菜栏.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ展擎瓜页前调决策按B日仓日层"
-        .Caption = "日仓日层"
-        .FaceId = 450 '340
-        .Style = msoButtonIconAndCaptionBelow
-    End With
-    '---------------------------------------------
+'    With 菜栏.Controls.Add(Type:=msoControlButton)
+'        .OnAction = "IQQQ展擎瓜页前调决策按B日仓日综"
+'        .Caption = "日仓日综"
+'        .FaceId = 450 '340
+'        .Style = msoButtonIconAndCaptionBelow
+'    End With
 '    With 菜栏.Controls.Add(Type:=msoControlButton)
 '        .OnAction = "IQQQ展擎瓜页前调决策按B日仓日层"
 '        .Caption = "日仓日层"
 '        .FaceId = 450 '340
 '        .Style = msoButtonIconAndCaptionBelow
 '    End With
+'    '---------------------------------------------
 '    With 菜栏.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎瓜页前调决策按B日仓日层滤"
-'        .Caption = "日仓日层滤"
+'        .OnAction = "IQQQ展擎瓜页前调决策按D混周层"
+'        .Caption = "混周层"
 '        .FaceId = 450 '340
 '        .Style = msoButtonIconAndCaptionBelow
 '    End With
 '    With 菜栏.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎瓜页前调决策按B日仓日机"
-'        .Caption = "日仓日机"
+'        .OnAction = "IQQQ展擎瓜页前调决策按D混日层"
+'        .Caption = "混日层"
 '        .FaceId = 450 '340
 '        .Style = msoButtonIconAndCaptionBelow
 '    End With
-    '---------------------------------------------
-    With 菜栏.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ展擎瓜页前调决策按D混周层"
-        .Caption = "混周层"
-        .FaceId = 450 '340
-        .Style = msoButtonIconAndCaptionBelow
-    End With
-    With 菜栏.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ展擎瓜页前调决策按D混日层"
-        .Caption = "混日层"
-        .FaceId = 450 '340
-        .Style = msoButtonIconAndCaptionBelow
-    End With
-    With 菜栏.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ展擎瓜页前调决策按B混日综"
-        .Caption = "混日综"
-        .FaceId = 450 '340
-        .Style = msoButtonIconAndCaptionBelow
-    End With
 '    With 菜栏.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎瓜页前调决策按D混日机"
-'        .Caption = "混日机"
+'        .OnAction = "IQQQ展擎瓜页前调决策按B混日综"
+'        .Caption = "混日综"
 '        .FaceId = 450 '340
 '        .Style = msoButtonIconAndCaptionBelow
 '    End With
-    '---------------------------------------------
-    With 菜栏.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ展擎瓜页前调决策按H活"
-        .Caption = "活"
-        .FaceId = 450 '340
-        .Style = msoButtonIconAndCaptionBelow
-    End With
-    With 菜栏.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ展擎瓜页前调决策按E池"
-        .Caption = "池"
-        .FaceId = 450 '340
-        .Style = msoButtonIconAndCaptionBelow
-    End With
+''    With 菜栏.Controls.Add(Type:=msoControlButton)
+''        .OnAction = "IQQQ展擎瓜页前调决策按D混日机"
+''        .Caption = "混日机"
+''        .FaceId = 450 '340
+''        .Style = msoButtonIconAndCaptionBelow
+''    End With
+'    '---------------------------------------------
+'    With 菜栏.Controls.Add(Type:=msoControlButton)
+'        .OnAction = "IQQQ展擎瓜页前调决策按H活"
+'        .Caption = "活"
+'        .FaceId = 450 '340
+'        .Style = msoButtonIconAndCaptionBelow
+'    End With
+'    With 菜栏.Controls.Add(Type:=msoControlButton)
+'        .OnAction = "IQQQ展擎瓜页前调决策按E池"
+'        .Caption = "池"
+'        .FaceId = 450 '340
+'        .Style = msoButtonIconAndCaptionBelow
+'    End With
     '---------------------------------------------
     With 菜栏.Controls.Add(Type:=msoControlButton)
         .OnAction = "PSOP排序单块调程_按这列降序"
@@ -1373,6 +1354,30 @@ Public Sub UGSOP_MENU_生成()
         .OnAction = "XL算展前调_日_默认"
         .Caption = "展日"
         .FaceId = 772 '588 '7
+    End With
+    '------------------------------------------------------------------------------------
+    '模块：取样导出
+    '------------------------------------------------------------------------------------
+    With 菜项算展.Controls.Add(Type:=msoControlButton)
+        .BeginGroup = True
+        .Caption = "取样导出"
+        .Enabled = False
+    End With
+
+    With 菜项算展.Controls.Add(Type:=msoControlButton)
+        .OnAction = "XL算展取样_谕组批量默认"
+        .Caption = "全样"
+        .FaceId = 772
+    End With
+    With 菜项算展.Controls.Add(Type:=msoControlButton)
+        .OnAction = "XL算展取样_谕组批量日"
+        .Caption = "只日"
+        .FaceId = 772
+    End With
+    With 菜项算展.Controls.Add(Type:=msoControlButton)
+        .OnAction = "XL算展取样_谕组批量周"
+        .Caption = "只周"
+        .FaceId = 772
     End With
     '------------------------------------------------------------------------------------
     '模块：切换周期

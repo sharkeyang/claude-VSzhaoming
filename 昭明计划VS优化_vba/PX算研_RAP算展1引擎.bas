@@ -1747,7 +1747,7 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
         Dim 日文件 As String
         日文件 = 日路径 & "谕组日_" & 被研代码 & ".csv"
         Open 日文件 For Output As #1
-        Print #1, "日期,收,开,高,低,涨幅,高幅,DXEF,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,管释,撤哼JC,类合,BSLA,宽哈JC,BT鼎,BTZA,BT连阳"
+        Print #1, "日期,收,开,高,低,涨幅,高幅,DXEF,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,管释,撤哼JC,类合,BSLA,宽哈JC,BT鼎,BTZA,BT连阳,顶型"
 
         For X = LBound(谕组, 1) To UBound(谕组, 1)
             Dim 日高幅 As Double
@@ -1801,7 +1801,8 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
                 谕组(X, 位谕of日层宽哈JC) & "," & _
                 谕组(X, 位谕of日层BT鼎) & "," & _
                 谕组(X, 位谕of日层BTZA) & "," & _
-                谕组(X, 位谕of日层BT连阳)
+                谕组(X, 位谕of日层BT连阳) & "," & _
+                Replace(ARRLLL(X, 基位日类 + 位os基顶型), ",", ";")
             Print #1, 行头 & 行尾
         Next X
         Close #1
@@ -1887,7 +1888,7 @@ Public Sub XL算展取样_谕组批量通用(Optional 模式 As String = "", Opt
     '构建股票列表（全量或按市板抽样）
     '--------------------------------------------------------------------------------------
     Dim 股票列表 As Object: Set 股票列表 = CreateObject("Scripting.Dictionary")
-    Dim 末行 As Long, i As Long, CIDL As String, 市板 As String, 市日 As Variant
+    Dim 末行 As Long, i As Long, CIDL As Variant, 市板 As String, 市日 As Variant
     末行 = WS花天.Cells(65536, 1).End(xlUp).Row
 
     If 抽样数 > 0 Then
@@ -1922,10 +1923,14 @@ Public Sub XL算展取样_谕组批量通用(Optional 模式 As String = "", Opt
         Next i
 
         ' 整理到股票列表
+        Dim 板内典 As Object
+        Dim 板内码 As Variant
         For Each 板 In 市板典.Keys
-            For Each CIDL In 市板典(板).Keys
-                股票列表(CIDL) = True
+            Set 板内典 = 市板典(板)
+            For Each 板内码 In 板内典.Keys
+                股票列表(CStr(板内码)) = True
             Next
+            Set 板内典 = Nothing
         Next
     Else
         ' === 全量模式 ===
@@ -1975,7 +1980,7 @@ Public Sub XL算展取样_谕组批量通用(Optional 模式 As String = "", Opt
         End If
 
         If 实际模式 <> "" Then
-            Call XL算展取样_谕组单股通用(CIDL, , 实际模式)
+            Call XL算展取样_谕组单股通用(CStr(CIDL), , 实际模式)
             计数 = 计数 + 1
             If 计数 Mod 500 = 0 Then
                 Debug.Print "已完成: " & 计数 & " 只, 耗时: " & CLng(Timer - TT) & "秒"
@@ -1996,6 +2001,9 @@ Public Sub XL算展取样_谕组批量周()
 End Sub
 Public Sub XL算展取样_谕组批量日()
     Call XL算展取样_谕组批量通用("日")
+End Sub
+Public Sub XL算展取样_谕组批量默认()
+    Call XL算展取样_谕组批量通用()
 End Sub
 '========================================================================================
 '########################################################################################
