@@ -463,14 +463,15 @@ Public Const 位谕of月基命分 = 位谕始of族策 + 4     'V1 月基命分: 
 Public Const 位谕of月基策分 = 位谕始of族策 + 5     'V2 月基策分(5周): 当前周波型×柱排状态, 5周后是否仍在多长(续持率取整), 仅对多长评分
 Public Const 位谕of月基带周 = 位谕始of族策 + 6     'V3 月基带周: (WXCD)▲/↘/↗/▽ WXCD→WXAB带动
 Public Const 位谕of月基带日 = 位谕始of族策 + 7     'V4 月基带日: (DXAB)同上(DXCD)同上(DXEF) 日级别DXAB→DXCD→DXEF带动
+'--- 日冲策略（紧接月基带日后） ---
+Public Const 位谕of日冲策略 = 位谕始of族策 + 8     '日冲策略: 龙/唏/嘘/屁 + 强/弱 + 甲后缀
 '--- 仓周/仓日分类（由神谕生成，跨码管理读取） ---
-Public Const 位谕of仓周类 = 位谕始of族策 + 8    '由神谕生成（基于WXCD护型+周层护型，第2772行），跨码管理读取
-Public Const 位谕of仓日类 = 位谕始of族策 + 9    '由神谕生成（基于日线层护级CD+层护段AB，第2785行），跨码管理读取
+Public Const 位谕of仓周类 = 位谕始of族策 + 9    '由神谕生成（基于WXCD护型+周层护型，第2772行），跨码管理读取
+Public Const 位谕of仓日类 = 位谕始of族策 + 10    '由神谕生成（基于日线层护级CD+层护段AB，第2785行），跨码管理读取
 '--- 日冲策略 ---
-Public Const 位谕of日层段 = 位谕始of族策 + 10       '相当于判断 →ZE>0+ZC>0+ZA>0
-Public Const 位谕of日冲策分 = 位谕始of族策 + 11     '日冲策分: →ZE>0+ZC>0+ZA>0 概率(保留1位小数)
-Public Const 位谕of日冲H2分 = 位谕始of族策 + 12    '日冲H2分: 评级(A/B/C/D)+下日DSHR>2分数2位，如"A39"，升序排序
-Public Const 位谕of日冲策略 = 位谕始of族策 + 13     '日冲策略: 主升/渡强/渡弱/空降 + 小样本后缀".微"(N<1000)/".小"(N<10000)
+Public Const 位谕of日层段 = 位谕始of族策 + 11       '相当于判断 →ZE>0+ZC>0+ZA>0
+Public Const 位谕of日冲策分 = 位谕始of族策 + 12     '日冲策分: →ZE>0+ZC>0+ZA>0 概率(保留1位小数)
+Public Const 位谕of日冲H2分 = 位谕始of族策 + 13    '日冲H2分: 评级(A/B/C/D)+下日DSHR>2分数2位，如"A39"，升序排序
 Public Const 位谕of日层联动 = 位谕始of族策 + 14     '周日联动: 周看涨但日下跌捡漏, 输出周/日
 Public Const 位谕of日层漏提示 = 位谕始of族策 + 15     '日层漏提示: 精密捡漏信号
 '--- 日冲22态 ---
