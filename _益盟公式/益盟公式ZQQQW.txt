@@ -173,6 +173,7 @@ IFS(周期条件DT8 and 日EF护级='屎', '勿_屎',
 '')
 )))),DRAWNULL,COLORBROWN;
 
+日CD护级 :=
 IFS(周期条件DT8 and 均线条件JC上JD and not(均线条件JZ上JD), '下',
 IFS(周期条件DT8 and 均线条件JC上JD and not(均线条件JZ上JC), '中',
 IFS(周期条件DT8 and 均线条件JC上JD, '上',
@@ -180,8 +181,10 @@ IFS(周期条件DT8 and 均线条件JZ上JD, '忐',
 IFS(周期条件DT8 and 均线条件JZ上JC, '忠',
 IFS(周期条件DT8 and 均线条件JZ上JE, '忑',
 IFS(周期条件DT8 , '勿',
-''))))))),DRAWNULL,COLORwhite;
+'')))))));
+日CD护级,DRAWNULL,COLORwhite;
 
+日AB护级 :=
 IFS(周期条件DT8 and 均线条件JA上JB and not(均线条件JZ上JB), '丙',
 IFS(周期条件DT8 and 均线条件JA上JB and not(均线条件JZ上JA), '乙',
 IFS(周期条件DT8 and 均线条件JA上JB, '甲',
@@ -189,24 +192,25 @@ IFS(周期条件DT8 and 均线条件JZ上JB, '己',
 IFS(周期条件DT8 and 均线条件JZ上JA, '戊',
 IFS(周期条件DT8 and 均线条件JZ上JE, '丁',
 IFS(周期条件DT8 , '勿',
-''))))))),DRAWNULL,COLOR008800;
+'')))))));
+日AB护级,DRAWNULL,COLOR008800;
 {===================================================================================}
 {=================================  四级分类  =========================================}
-{--- 四级分类：EF好/CD好/AB好 组合 ---}
-EF好 := 日EF护级='金' or 日EF护级='银' or 日EF护级='唏';
-CD好 := 日CD护级='上' or 日CD护级='中' or 日CD护级='忐';
-AB好 := 日AB护级='甲' or 日AB护级='乙' or 日AB护级='己';
+{--- 四级分类：EF好/CD好/AB好 组合（IFS返回1/0，益盟不支持布尔变量）---}
+EF好 := IFS(日EF护级='金', 1, 日EF护级='银', 1, 日EF护级='唏', 1, 0);
+CD好 := IFS(日CD护级='上', 1, 日CD护级='中', 1, 日CD护级='忐', 1, 0);
+AB好 := IFS(日AB护级='甲', 1, 日AB护级='乙', 1, 日AB护级='己', 1, 0);
 
 {--- 四级分类输出 ---}
 四级分类:=
-IFS(周期条件DT8 and EF好 and CD好 and AB好, 'S_牢牢抓住',
-IFS(周期条件DT8 and EF好 and CD好 and not(AB好), 'A_可持仓',
-IFS(周期条件DT8 and EF好 and not(CD好) and AB好, 'B_可持仓',
-IFS(周期条件DT8 and not(EF好) and CD好 and AB好, 'D_可持仓',
-IFS(周期条件DT8 and EF好 and not(CD好) and not(AB好), 'C_仅观察',
-IFS(周期条件DT8 and not(EF好) and CD好 and not(AB好), 'E_仅观察',
-IFS(周期条件DT8 and not(EF好) and not(CD好) and AB好, 'F_仅观察',
-IFS(周期条件DT8 and not(EF好) and not(CD好) and not(AB好), 'X_坚决禁止',
+IFS(周期条件DT8 and EF好=1 and CD好=1 and AB好=1, 'S_牢牢抓住',
+IFS(周期条件DT8 and EF好=1 and CD好=1 and AB好=0, 'A_可持仓',
+IFS(周期条件DT8 and EF好=1 and CD好=0 and AB好=1, 'B_可持仓',
+IFS(周期条件DT8 and EF好=0 and CD好=1 and AB好=1, 'D_可持仓',
+IFS(周期条件DT8 and EF好=1 and CD好=0 and AB好=0, 'C_仅观察',
+IFS(周期条件DT8 and EF好=0 and CD好=1 and AB好=0, 'E_仅观察',
+IFS(周期条件DT8 and EF好=0 and CD好=0 and AB好=1, 'F_仅观察',
+IFS(周期条件DT8 and EF好=0 and CD好=0 and AB好=0, 'X_坚决禁止',
 ''
 )))))))),DRAWNULL,COLORwhite;
 
