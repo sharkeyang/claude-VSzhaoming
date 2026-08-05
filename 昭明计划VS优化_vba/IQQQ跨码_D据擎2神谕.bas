@@ -475,7 +475,7 @@ Public Const 位谕of日冲H2分 = 位谕始of族策 + 13    '日冲H2分: 评�
 Public Const 位谕of日层联动 = 位谕始of族策 + 14     '周日联动: 周看涨但日下跌捡漏, 输出周/日
 Public Const 位谕of日层漏提示 = 位谕始of族策 + 15     '日层漏提示: 精密捡漏信号
 '--- 日冲22态 ---
-Public Const 位谕of日冲22态 = 位谕始of族策 + 16     '日冲22态: H1-H6/I1-I6/S1-S6/T1-T4
+Public Const 位谕of日冲22态 = 位谕始of族策 + 16     '日冲22态: H1-H6/I1-I6/O1-O6/V1-V4
 Public Const 位谕of日层机警 = 位谕始of族策 + 17     '原+16，后移
 Public Const 位谕of日层盈提示 = 位谕始of族策 + 18     '日层盈提示: 止盈信号
 '-----------
@@ -3547,10 +3547,10 @@ If UBCID是代码(CIDL) = True Then
                 If 冲22态 = "" And 冲22日ZA <= 3 Then 冲22态 = "H4_人_ZA3内"
                 If 冲22态 = "" Then 冲22态 = "H5_人_ZA3外"
             ElseIf 冲22日ZA < 0 Then
-                If Left$(冲22柱排, 1) = "升" And InStr("丙丁戊", Mid$(冲22护型, 2, 1)) > 0 Then 冲22态 = "T1_升_护型弱"
-                If 冲22态 = "" And Left$(冲22柱排, 1) = "跌" Then 冲22态 = "T2_跌_跌排"
-                If 冲22态 = "" And 冲22日ZA >= -3 Then 冲22态 = "T3_人_ZA3内"
-                If 冲22态 = "" Then 冲22态 = "T4_人_ZA3外"
+                If Left$(冲22柱排, 1) = "升" And InStr("丙丁戊", Mid$(冲22护型, 2, 1)) > 0 Then 冲22态 = "V1_升_护型弱"
+                If 冲22态 = "" And Left$(冲22柱排, 1) = "跌" Then 冲22态 = "V2_跌_跌排"
+                If 冲22态 = "" And 冲22日ZA >= -3 Then 冲22态 = "V3_人_ZA3内"
+                If 冲22态 = "" Then 冲22态 = "V4_人_ZA3外"
             ElseIf X > LBound(组结算, 1) Then
                 冲22前日ZA = 组结算(X - 1, 基位日类 + 位osBTZA)
                 If 冲22前日ZA < 0 And 冲22日ZA >= 0 Then
@@ -3588,7 +3588,7 @@ If UBCID是代码(CIDL) = True Then
                     For 冲22i = 1 To 3
                         If Left$(冲22前3柱排(冲22i), 1) = "跌" Then 冲22前三非跌 = False: Exit For
                     Next 冲22i
-                    If 冲22日ZA - 冲22前日ZA <= -3 And 冲22涨幅 <= -2 And 冲22前三非跌 Then 冲22态 = "S1_暴跌_大柱下破"
+                    If 冲22日ZA - 冲22前日ZA <= -3 And 冲22涨幅 <= -2 And 冲22前三非跌 Then 冲22态 = "O1_暴跌_大柱下破"
                     If 冲22态 = "" And 冲22ZA最小 >= 3 Then
                         For 冲22j = X + 1 To X + 15
                             If 冲22j > UBound(组结算, 1) Then Exit For
@@ -3596,7 +3596,7 @@ If UBCID是代码(CIDL) = True Then
                                 For 冲22k = 冲22j + 1 To 冲22j + 10
                                     If 冲22k > UBound(组结算, 1) Then Exit For
                                     If 组结算(冲22k, 基位日类 + 位osBTZA) <= 0 Then
-                                        If 冲22k - 冲22j <= 5 Then 冲22态 = "S4_双穿_M头逃命": Exit For
+                                        If 冲22k - 冲22j <= 5 Then 冲22态 = "O4_双穿_M头逃命": Exit For
                                     End If
                                 Next 冲22k
                                 Exit For
@@ -3612,11 +3612,11 @@ If UBCID是代码(CIDL) = True Then
                         For 冲22i = 冲22谷索引 To 5
                             If 冲22前5ZA(冲22i) > 冲22谷后最大 Then 冲22谷后最大 = 冲22前5ZA(冲22i)
                         Next 冲22i
-                        If 冲22谷索引 < 5 And 冲22谷后最大 - 冲22前5ZA(冲22谷索引) >= 2 Then 冲22态 = "S2_归JA_反弹失败"
+                        If 冲22谷索引 < 5 And 冲22谷后最大 - 冲22前5ZA(冲22谷索引) >= 2 Then 冲22态 = "O2_归JA_反弹失败"
                     End If
-                    If 冲22态 = "" And 冲22ZA最小 <= 3 Then 冲22态 = "S3_归JA_直破DJA"
-                    If 冲22态 = "" And 冲22连阴 >= 3 And 冲22涨幅 > -2 And 冲22ZA最大 >= 2 Then 冲22态 = "S5_碎步_缓步阴跌"
-                    If 冲22态 = "" Then 冲22态 = "S6_其他_其他跌破"
+                    If 冲22态 = "" And 冲22ZA最小 <= 3 Then 冲22态 = "O3_归JA_直破DJA"
+                    If 冲22态 = "" And 冲22连阴 >= 3 And 冲22涨幅 > -2 And 冲22ZA最大 >= 2 Then 冲22态 = "O5_碎步_缓步阴跌"
+                    If 冲22态 = "" Then 冲22态 = "O6_其他_其他跌破"
                 Else
                     冲22态 = "ZA0边界"
                 End If
@@ -3635,11 +3635,11 @@ If UBCID是代码(CIDL) = True Then
             If 冲22态 = "I2_归JA_回落确认" Then 谕组(X, 位谕of日层机警) = "半仓跟进"
             If 冲22态 = "I4_双穿_M底加仓" Then 谕组(X, 位谕of日层机警) = "轻仓30%仓"
             If 冲22态 = "I3_归JA_直上DJA" Or 冲22态 = "I5_碎步_缓步上升" Or 冲22态 = "I6_其他_其他上破" Then 谕组(X, 位谕of日层机警) = "轻仓试多"
-            If 冲22态 = "S1_暴跌_大柱下破" Then 谕组(X, 位谕of日层机警) = "减仓冲高卖"
-            If 冲22态 = "S2_归JA_反弹失败" Or 冲22态 = "S4_双穿_M头逃命" Then 谕组(X, 位谕of日层机警) = "减仓预警"
-            If 冲22态 = "S3_归JA_直破DJA" Then 谕组(X, 位谕of日层机警) = "!!预警明高72%"
-            If 冲22态 = "T1_升_护型弱" Or 冲22态 = "T3_人_ZA3内" Then 谕组(X, 位谕of日层机警) = "轻仓20%仓"
-            If 冲22态 = "T2_跌_跌排" Or 冲22态 = "T4_人_ZA3外" Then 谕组(X, 位谕of日层机警) = "空仓观望"
+            If 冲22态 = "O1_暴跌_大柱下破" Then 谕组(X, 位谕of日层机警) = "减仓冲高卖"
+            If 冲22态 = "O2_归JA_反弹失败" Or 冲22态 = "O4_双穿_M头逃命" Then 谕组(X, 位谕of日层机警) = "减仓预警"
+            If 冲22态 = "O3_归JA_直破DJA" Then 谕组(X, 位谕of日层机警) = "!!预警明高72%"
+            If 冲22态 = "V1_升_护型弱" Or 冲22态 = "V3_人_ZA3内" Then 谕组(X, 位谕of日层机警) = "轻仓20%仓"
+            If 冲22态 = "V2_跌_跌排" Or 冲22态 = "V4_人_ZA3外" Then 谕组(X, 位谕of日层机警) = "空仓观望"
             '============================================================================
 '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 '策传
@@ -6579,7 +6579,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周层四域).Interior.TintAndShade = -0.1
         .Columns(位谕of日层四域).Interior.TintAndShade = -0.2
         .Columns(位谕of日层漏提示).Interior.TintAndShade = -0.2
-        .Columns(位谕of日冲策略).Interior.TintAndShade = -0.1
+        .Columns(位谕of日冲策略).Interior.TintAndShade = -0.3
         .Columns(位谕of日层联动).Interior.TintAndShade = 0.1
         .Columns(位谕of日层段).Interior.TintAndShade = -0.4
         .Columns(位谕of日层机警).Interior.TintAndShade = -0.5
@@ -6589,7 +6589,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of月基命分).Interior.Color = 常色七碧
         .Columns(位谕of月基策分).Interior.Color = 常色六碧
         .Columns(位谕of月基带周).Interior.Color = 常色五碧
-.Columns(位谕of月基带日).Interior.Color = 常色四碧
+        .Columns(位谕of月基带日).Interior.Color = 常色四碧
         .Columns(位谕of周冲策略).Interior.Color = 常色四靛
         .Columns(位谕of周冲策分).Interior.Color = 常色五靛
     End With
@@ -6621,10 +6621,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周冲策略).ColumnWidth = 10
         .Columns(位谕of周冲策分).ColumnWidth = 4
         .Columns(位谕of策传).ColumnWidth = 0.2
-    End With
-    With WS.Columns(基列).Columns(位谕of仓日类).Validation
-        .Delete
-        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertWarning, Operator:=xlBetween, Formula1:="A,L,o,X"
     End With
     '------------------------------------------------------------------------------------
     '列：显示
