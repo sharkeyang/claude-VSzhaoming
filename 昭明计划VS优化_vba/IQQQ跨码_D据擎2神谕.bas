@@ -3429,11 +3429,11 @@ If UBCID是代码(CIDL) = True Then
                 If 日EF护级 = "金" Or 日EF护级 = "银" Then
                     日冲战场 = "龙"
                 ElseIf 日EF护级 = "唏" Then
-                    日冲战场 = "雀"
+                    日冲战场 = "唏"
                 ElseIf 日EF护级 = "嘘" Then
-                    日冲战场 = "虎"
+                    日冲战场 = "嘘"
                 Else
-                    日冲战场 = "武"
+                    日冲战场 = "屁"
                 End If
                 If 日CD护级 = "上" Or 日CD护级 = "中" Or 日CD护级 = "忐" Then
                     日冲强弱 = "强"
