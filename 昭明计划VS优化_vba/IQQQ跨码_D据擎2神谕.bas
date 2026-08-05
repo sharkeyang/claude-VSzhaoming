@@ -6546,7 +6546,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of月基命分).Interior.Color = 常色七碧
         .Columns(位谕of月基策分).Interior.Color = 常色六碧
         .Columns(位谕of月基带周).Interior.Color = 常色五碧
-        .Columns(位谕of月基带日).Interior.Color = 常色四碧
+.Columns(位谕of月基带日).Interior.Color = 常色四碧
         .Columns(位谕of周冲策略).Interior.Color = 常色四靛
         .Columns(位谕of周冲策分).Interior.Color = 常色五靛
     End With

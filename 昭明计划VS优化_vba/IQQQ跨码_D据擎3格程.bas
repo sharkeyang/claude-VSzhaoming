@@ -1251,6 +1251,55 @@ End If
 '        End With
 '        End If
         '================================================================================
+        '月基带日：按8格分类设底色
+        '================================================================================
+        With WS.Cells(行号遍历, 基列).Cells(1, 位谕of月基带日)
+            .Font.Color = 常色主黑  '统一黑字
+            Dim 月基带日 As String
+            月基带日 = .Value
+            If Len(月基带日) >= 5 Then
+                Dim DXEF As String, DXCD As String, DXAB As String
+                DXEF = Mid$(月基带日, 2, 1)
+                DXCD = Mid$(月基带日, InStr(3, 月基带日, "(") + 1, 1)
+                DXAB = Mid$(月基带日, InStr(InStr(3, 月基带日, "(") + 1, 月基带日, "(") + 1, 1)
+
+                Dim 是否EF好 As Boolean, 是否CD好 As Boolean, 是否AB好 As Boolean
+                是否EF好 = (DXEF = "金" Or DXEF = "银" Or DXEF = "唏")
+                是否CD好 = (DXCD = "上" Or DXCD = "中" Or DXCD = "忐")
+                是否AB好 = (DXAB = "上" Or DXAB = "中" Or DXAB = "忐")
+
+                If 是否EF好 And 是否CD好 Then
+                    '--- 必须参与(绿系) ---
+                    If 是否AB好 Then
+                        .Interior.Color = 常色八绿  'S级: 浅绿
+                    Else
+                        .Interior.Color = 常色六绿  'A级: 中绿
+                    End If
+                ElseIf 是否EF好 Then
+                    'EF好, CD不好
+                    If 是否AB好 Then
+                        .Interior.Color = 常色四绿  'B级: 深绿
+                    Else
+                        .Interior.Color = 常色十蓝  'C级: 最浅蓝(观察)
+                    End If
+                ElseIf 是否CD好 Then
+                    'CD好, EF不好
+                    If 是否AB好 Then
+                        .Interior.Color = 常色八蓝  'D级: 浅蓝(观察)
+                    Else
+                        .Interior.Color = 常色六蓝  'E级: 中蓝(观察)
+                    End If
+                Else
+                    'EF和CD都不好
+                    If 是否AB好 Then
+                        .Interior.Color = 常色四蓝  'F级: 深蓝(观察)
+                    Else
+                        .Interior.Color = 常色四红  '禁止级: 深红(禁止)
+                    End If
+                End If
+            End If
+        End With
+        '================================================================================
     End If
     Next
 '========================================================================================
