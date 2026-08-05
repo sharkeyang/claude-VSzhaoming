@@ -1384,13 +1384,13 @@ Public Sub UGSOP_MENU_生成()
     '------------------------------------------------------------------------------------
     With 菜项算展.Controls.Add(Type:=msoControlButton)
         .BeginGroup = True
-        .Caption = "取样导出"
+        .Caption = "取样导出CSV"
         .Enabled = False
     End With
 
     With 菜项算展.Controls.Add(Type:=msoControlButton)
         .OnAction = "XL算展取样_谕组批量默认"
-        .Caption = "全样"
+        .Caption = "周+日"
         .FaceId = 772
     End With
     With 菜项算展.Controls.Add(Type:=msoControlButton)
