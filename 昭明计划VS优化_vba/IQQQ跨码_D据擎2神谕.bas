@@ -3441,6 +3441,12 @@ If UBCID是代码(CIDL) = True Then
                     日冲强弱 = "弱"
                 End If
                 日冲分类 = 日冲战场 & 日冲强弱
+                ' 弱且AB好(甲乙己)时加"甲"后缀
+                If 日冲强弱 = "弱" Then
+                    If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
+                        日冲分类 = 日冲分类 & "甲"
+                    End If
+                End If
                 ' 小样本追加后缀
                 If 日冲小样本 <> "" Then
                     日冲分类 = 日冲分类 & 日冲小样本
