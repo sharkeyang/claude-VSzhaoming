@@ -493,51 +493,47 @@ Else
             '============================================================================
             '【日冲筛选】当前站上DJC即可入选（4强分类均满足BTZC>0）
             '============================================================================
-            '日冲策略（18个典码，按后缀分组，有BTZC门槛）
+            '日冲策略（16个典码，按后缀分组，无BTZC门槛）
             '============================================================================
-            If 谕组(X, 位谕of日类BTZC) > 0 Then
-                Dim 日冲策名 As String: 日冲策名 = 谕组(X, 位谕of日冲策略)
-                '--- 主组(牢牢抓住) ---
-                If InStr(日冲策名, "龙强好主") > 0 Then
-                    典日策_龙强主.Add Item:=X, key:=CIDL
-                ElseIf InStr(日冲策名, "唏强好主") > 0 Then
-                    典日策_唏强主.Add Item:=X, key:=CIDL
-                '--- 持组(可持仓) ---
-                ElseIf InStr(日冲策名, "龙强好持") > 0 Then
-                    典日策_龙强好持.Add Item:=X, key:=CIDL
-                ElseIf InStr(日冲策名, "唏强好持") > 0 Then
-                    典日策_唏强好持.Add Item:=X, key:=CIDL
-                ElseIf InStr(日冲策名, "嘘强好持") > 0 Then
-                    典日策_嘘强好持.Add Item:=X, key:=CIDL
-                ElseIf InStr(日冲策名, "尸强好持") > 0 Then
-                    典日策_尸强好持.Add Item:=X, key:=CIDL
-                '--- 观组(仅观察) ---
-                ElseIf InStr(日冲策名, "嘘强坏观") > 0 Then
-                    典日策_嘘强坏观.Add Item:=X, key:=CIDL
-                ElseIf InStr(日冲策名, "尸强坏观") > 0 Then
-                    典日策_尸强坏观.Add Item:=X, key:=CIDL
-                End If
+            Dim 日冲策名 As String: 日冲策名 = 谕组(X, 位谕of日冲策略)
+            '--- 主组(牢牢抓住) ---
+            If InStr(日冲策名, "龙强好主") > 0 Then
+                典日策_龙强主.Add Item:=X, key:=CIDL
+            ElseIf InStr(日冲策名, "唏强好主") > 0 Then
+                典日策_唏强主.Add Item:=X, key:=CIDL
+            '--- 持组(可持仓) ---
+            ElseIf InStr(日冲策名, "龙强好持") > 0 Then
+                典日策_龙强好持.Add Item:=X, key:=CIDL
+            ElseIf InStr(日冲策名, "唏强好持") > 0 Then
+                典日策_唏强好持.Add Item:=X, key:=CIDL
+            ElseIf InStr(日冲策名, "嘘强好持") > 0 Then
+                典日策_嘘强好持.Add Item:=X, key:=CIDL
+            ElseIf InStr(日冲策名, "尸强好持") > 0 Then
+                典日策_尸强好持.Add Item:=X, key:=CIDL
+            '--- 观组(仅观察) ---
+            ElseIf InStr(日冲策名, "嘘强坏观") > 0 Then
+                典日策_嘘强坏观.Add Item:=X, key:=CIDL
+            ElseIf InStr(日冲策名, "尸强坏观") > 0 Then
+                典日策_尸强坏观.Add Item:=X, key:=CIDL
             End If
-            '日冲弱类（无BTZC门槛）
-            Dim 日冲策名2 As String: 日冲策名2 = 谕组(X, 位谕of日冲策略)
             '--- 持组(可持仓) - 好排前 ---
-            If InStr(日冲策名2, "龙弱好持") > 0 Then
+            If InStr(日冲策名, "龙弱好持") > 0 Then
                 典日策_龙弱好持.Add Item:=X, key:=CIDL
-            ElseIf InStr(日冲策名2, "唏弱好持") > 0 Then
+            ElseIf InStr(日冲策名, "唏弱好持") > 0 Then
                 典日策_唏弱好持.Add Item:=X, key:=CIDL
             '--- 观组(仅观察) - 好排前 ---
-            ElseIf InStr(日冲策名2, "嘘弱好观") > 0 Then
+            ElseIf InStr(日冲策名, "嘘弱好观") > 0 Then
                 典日策_嘘弱好观.Add Item:=X, key:=CIDL
-            ElseIf InStr(日冲策名2, "尸弱好观") > 0 Then
+            ElseIf InStr(日冲策名, "尸弱好观") > 0 Then
                 典日策_尸弱好观.Add Item:=X, key:=CIDL
-            ElseIf InStr(日冲策名2, "龙弱坏观") > 0 Then
+            ElseIf InStr(日冲策名, "龙弱坏观") > 0 Then
                 典日策_龙弱坏观.Add Item:=X, key:=CIDL
-            ElseIf InStr(日冲策名2, "唏弱坏观") > 0 Then
+            ElseIf InStr(日冲策名, "唏弱坏观") > 0 Then
                 典日策_唏弱坏观.Add Item:=X, key:=CIDL
             '--- 禁组(坚决禁止) ---
-            ElseIf InStr(日冲策名2, "嘘弱坏禁") > 0 Then
+            ElseIf InStr(日冲策名, "嘘弱坏禁") > 0 Then
                 典日策_嘘弱坏禁.Add Item:=X, key:=CIDL
-            ElseIf InStr(日冲策名2, "尸弱坏禁") > 0 Then
+            ElseIf InStr(日冲策名, "尸弱坏禁") > 0 Then
                 典日策_尸弱坏禁.Add Item:=X, key:=CIDL
             End If
             '============================================================================
