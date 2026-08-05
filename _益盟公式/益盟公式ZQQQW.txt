@@ -164,24 +164,52 @@ IFS(周期条件DT8 and 均线条件JZ上JE, '仅观_唏',
 IFS(周期条件DT8 , '勿_屎',
 '')))))),DRAWNULL,COLORBROWN;
 
-IFS(周期条件DT8 and 均线条件JZ上JE and 均线条件JC上JD and not(均线条件JZ上JD), '下',
-IFS(周期条件DT8 and 均线条件JZ上JE and 均线条件JC上JD and not(均线条件JZ上JC), '中',
-IFS(周期条件DT8 and 均线条件JZ上JE and 均线条件JC上JD, '上',
-IFS(周期条件DT8 and 均线条件JZ上JE and 均线条件JZ上JD, '忐',
-IFS(周期条件DT8 and 均线条件JZ上JE and 均线条件JZ上JC, '忠',
-IFS(周期条件DT8 and 均线条件JZ上JE , '忑',
+IFS(周期条件DT8 and 均线条件JC上JD and not(均线条件JZ上JD), '下',
+IFS(周期条件DT8 and 均线条件JC上JD and not(均线条件JZ上JC), '中',
+IFS(周期条件DT8 and 均线条件JC上JD, '上',
+IFS(周期条件DT8 and 均线条件JZ上JD, '忐',
+IFS(周期条件DT8 and 均线条件JZ上JC, '忠',
+IFS(周期条件DT8 and 均线条件JZ上JE, '忑',
 IFS(周期条件DT8 , '勿',
 ''))))))),DRAWNULL,COLORwhite;
 
-IFS(周期条件DT8 and 均线条件JZ上JE and 均线条件JA上JB and not(均线条件JZ上JB), '丙',
-IFS(周期条件DT8 and 均线条件JZ上JE and 均线条件JA上JB and not(均线条件JZ上JA), '乙',
-IFS(周期条件DT8 and 均线条件JZ上JE and 均线条件JA上JB , '甲',
-IFS(周期条件DT8 and 均线条件JZ上JE and 均线条件JZ上JB, '己',
-IFS(周期条件DT8 and 均线条件JZ上JE and 均线条件JZ上JA, '戊',
-IFS(周期条件DT8 and 均线条件JZ上JE , '丁',
+IFS(周期条件DT8 and 均线条件JA上JB and not(均线条件JZ上JB), '丙',
+IFS(周期条件DT8 and 均线条件JA上JB and not(均线条件JZ上JA), '乙',
+IFS(周期条件DT8 and 均线条件JA上JB, '甲',
+IFS(周期条件DT8 and 均线条件JZ上JB, '己',
+IFS(周期条件DT8 and 均线条件JZ上JA, '戊',
+IFS(周期条件DT8 and 均线条件JZ上JE, '丁',
 IFS(周期条件DT8 , '勿',
 ''))))))),DRAWNULL,COLOR008800;
 {===================================================================================}
+{=================================  四级分类  =========================================}
+{--- 预计算：日EF护级 ---}
+日EF护级:=
+IFS(周期条件DT8 and 均线条件JE上JF and 均线条件JZ上JE, '金',
+IFS(周期条件DT8 and not(均线条件JE上JF) and 均线条件JZ上JF, '银',
+IFS(周期条件DT8 and 均线条件JE上JF and not(均线条件JZ上JF), '尿',
+IFS(周期条件DT8 and 均线条件JE上JF and not(均线条件JZ上JE), '嘘',
+IFS(周期条件DT8 and not(均线条件JE上JF) and 均线条件JZ上JE, '唏',
+IFS(周期条件DT8 , '屎',
+'')))))),DRAWNULL,COLORwhite;
+
+{--- 四级分类：EF好/CD好/AB好 组合 ---}
+EF好 := 日EF护级='金' or 日EF护级='银' or 日EF护级='唏';
+CD好 := 日CD护级='上' or 日CD护级='中' or 日CD护级='忐';
+AB好 := 日AB护级='甲' or 日AB护级='乙' or 日AB护级='己';
+
+{--- 四级分类输出 ---}
+四级分类:=
+IFS(周期条件DT8 and EF好 and CD好 and AB好, 'S_牢牢抓住',
+IFS(周期条件DT8 and EF好 and CD好 and not(AB好), 'A_可持仓',
+IFS(周期条件DT8 and EF好 and not(CD好) and AB好, 'B_可持仓',
+IFS(周期条件DT8 and not(EF好) and CD好 and AB好, 'D_可持仓',
+IFS(周期条件DT8 and EF好 and not(CD好) and not(AB好), 'C_仅观察',
+IFS(周期条件DT8 and not(EF好) and CD好 and not(AB好), 'E_仅观察',
+IFS(周期条件DT8 and not(EF好) and not(CD好) and AB好, 'F_仅观察',
+IFS(周期条件DT8 and not(EF好) and not(CD好) and not(AB好), 'X_坚决禁止',
+''
+)))))))),DRAWNULL,COLORwhite;
 
 
 
@@ -486,6 +514,8 @@ DRAWTEXT(周期条件DT8 and 信号分类='机漏周', JC, '机周'),COLOR00AA00
 {================================  勿入提示  =======================================}
 DRAWTEXT(周期条件DT8 and not(均线条件JZ上JE), L*0.99, 'x'),COLORgray,LAYER1;
 DRAWTEXT(周期条件DT9 and not(均线条件JZ上JC), L*0.99, 'x'),COLORgray,LAYER1;
+{--- 四级分类：坚决禁止提示（红色X，比灰色x更醒目）---}
+DRAWTEXT(周期条件DT8 and 四级分类='X_坚决禁止', L*0.97, 'X'),COLORRED,LAYER1;
 {===================================================================================}
 FILLRGN( JE ,JF ,周期条件DT8, RGB(111,0,33) ),LAYER6;
 {===================================================================================}
