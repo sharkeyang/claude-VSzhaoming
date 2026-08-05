@@ -171,7 +171,7 @@ IFS(周期条件DT8 and 日EF护级='嘘', '仅观_嘘',
 IFS(周期条件DT8 and 日EF护级='唏', '仅观_唏',
 IFS(周期条件DT8 and 日EF护级='屎', '勿_屎',
 '')
-)))),DRAWNULL,COLORBROWN;
+))),DRAWNULL,COLORBROWN;
 
 日CD护级 :=
 IFS(周期条件DT8 and 均线条件JC上JD and not(均线条件JZ上JD), '下',
