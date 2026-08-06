@@ -3442,40 +3442,45 @@ If UBCID是代码(CIDL) = True Then
                     日冲强弱 = "弱"
                 End If
                 日冲分类 = ""
-                ' 按四级分类输出A-H(主/被/试/禁)
+                ' 格式: A-H(等级) + 强弱 + 好/坏(AB) + 主/被/试/禁(层级)
                 ' 忠特殊处理: 嘘尿屎+忠+全部AB → G级
+                Dim 日冲AB As String, 日冲后缀 As String
+                If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
+                    日冲AB = "好"
+                Else
+                    日冲AB = "坏"
+                End If
                 If 日EF护级 = "金" Or 日EF护级 = "银" Or 日EF护级 = "唏" Then
                     'EF好(金银唏)
                     If 日冲强弱 = "强" Then
-                        If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
-                            日冲分类 = "A"  '主(主动持仓)
+                        If 日冲AB = "好" Then
+                            日冲分类 = "A" & 日冲强弱 & "好主"  'A级: 主(主动持仓)
                         Else
-                            日冲分类 = "B"  '被(被动持有)
+                            日冲分类 = "B" & 日冲强弱 & "好被"  'B级: 被(被动持有)
                         End If
                     Else
-                        '弱
-                        If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
-                            日冲分类 = "C"  '试(试仓)
+                        If 日冲AB = "好" Then
+                            日冲分类 = "C" & 日冲强弱 & "好被"  'C级: 被(被动持有)
                         Else
-                            日冲分类 = "D"  '禁(禁止)
+                            日冲分类 = "D" & 日冲强弱 & "坏试"  'D级: 禁(禁止)
                         End If
                     End If
                 Else
                     'EF差(嘘/屎/尿)
                     If 日CD护级 = "忠" Then
-                        日冲分类 = "G"  '忠特殊处理: 全部AB归G级(试)
+                        日冲分类 = "G" & 日冲强弱 & 日冲AB & "试"  '忠特殊: 全部AB归G级(试)
                     ElseIf 日冲强弱 = "强" Then
-                        If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
-                            日冲分类 = "E"  '主(主动持仓)
+                        If 日冲AB = "好" Then
+                            日冲分类 = "E" & 日冲强弱 & "好被"  'E级: 主(主动持仓)
                         Else
-                            日冲分类 = "F"  '被(被动持有)
+                            日冲分类 = "F" & 日冲强弱 & "坏试"  'F级: 被(被动持有)
                         End If
                     Else
                         '弱(下/忑)
-                        If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
-                            日冲分类 = "G"  '试(试仓)
+                        If 日冲AB = "好" Then
+                            日冲分类 = "G" & 日冲强弱 & "好试"  'G级: 试(试仓)
                         Else
-                            日冲分类 = "H"  '禁(禁止)
+                            日冲分类 = "H" & 日冲强弱 & "坏禁"  'H级: 禁(禁止)
                         End If
                     End If
                 End If
