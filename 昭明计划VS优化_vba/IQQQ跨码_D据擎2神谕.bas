@@ -3441,46 +3441,41 @@ If UBCID是代码(CIDL) = True Then
                 Else
                     日冲强弱 = "弱"
                 End If
-                日冲分类 = 日冲战场 & 日冲强弱
-                ' 按四级分类加AB好/坏 + 后缀(主/被/试/禁)
-                ' 格式: 战场(1)+强弱(1)+AB好/坏(1)+后缀(1) = 4字
-                ' 后缀: 主=主动持仓, 被=被动持有, 试=试仓, 禁=禁止
-                Dim 日冲AB As String
-                If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
-                    日冲AB = "好"
-                Else
-                    日冲AB = "坏"
-                End If
+                日冲分类 = ""
+                ' 按四级分类输出A-H(主/被/试/禁)
+                ' 忠特殊处理: 嘘尿屎+忠+全部AB → G级
                 If 日EF护级 = "金" Or 日EF护级 = "银" Or 日EF护级 = "唏" Then
                     'EF好(金银唏)
                     If 日冲强弱 = "强" Then
-                        If 日冲AB = "好" Then
-                            日冲分类 = 日冲分类 & "好主"  'A级: 龙强好主/唏强好主(主)
+                        If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
+                            日冲分类 = "A"  '主(主动持仓)
                         Else
-                            日冲分类 = 日冲分类 & "好被"  'B级: 龙强好被/唏强好被(被)
+                            日冲分类 = "B"  '被(被动持有)
                         End If
                     Else
                         '弱
-                        If 日冲AB = "好" Then
-                            日冲分类 = 日冲分类 & "好被"  'C级: 龙弱好被/唏弱好被(被)
+                        If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
+                            日冲分类 = "C"  '试(试仓)
                         Else
-                            日冲分类 = 日冲分类 & "坏试"  'D级: 龙弱坏试/唏弱坏试(禁)
+                            日冲分类 = "D"  '禁(禁止)
                         End If
                     End If
                 Else
                     'EF差(嘘/屎/尿)
-                    If 日冲强弱 = "强" Then
-                        If 日冲AB = "好" Then
-                            日冲分类 = 日冲分类 & "好被"  'E级: 嘘强好被/尸强好被(主)
+                    If 日CD护级 = "忠" Then
+                        日冲分类 = "G"  '忠特殊处理: 全部AB归G级(试)
+                    ElseIf 日冲强弱 = "强" Then
+                        If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
+                            日冲分类 = "E"  '主(主动持仓)
                         Else
-                            日冲分类 = 日冲分类 & "坏试"  'F级: 嘘强坏试/尸强坏试(被)
+                            日冲分类 = "F"  '被(被动持有)
                         End If
                     Else
-                        '弱
-                        If 日冲AB = "好" Then
-                            日冲分类 = 日冲分类 & "好试"  'G级: 嘘弱好试/尸弱好试(试)
+                        '弱(下/忑)
+                        If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
+                            日冲分类 = "G"  '试(试仓)
                         Else
-                            日冲分类 = 日冲分类 & "坏禁"  'H级: 嘘弱坏禁/尸弱坏禁(禁)
+                            日冲分类 = "H"  '禁(禁止)
                         End If
                     End If
                 End If
@@ -6602,7 +6597,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层联动).ColumnWidth = 8
         .Columns(位谕of日层段).ColumnWidth = 4
         .Columns(位谕of日层机警).ColumnWidth = 15
-        .Columns(位谕of日冲策略).ColumnWidth = 8
+        .Columns(位谕of日冲策略).ColumnWidth = 3
         .Columns(位谕of日冲策分).ColumnWidth = 4
         .Columns(位谕of日冲H2分).ColumnWidth = 4
         .Columns(位谕of日冲H2分).HorizontalAlignment = xlLeft
