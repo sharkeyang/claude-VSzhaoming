@@ -6602,7 +6602,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层联动).ColumnWidth = 8
         .Columns(位谕of日层段).ColumnWidth = 4
         .Columns(位谕of日层机警).ColumnWidth = 15
-        .Columns(位谕of日冲策略).ColumnWidth = 5
+        .Columns(位谕of日冲策略).ColumnWidth = 8
         .Columns(位谕of日冲策分).ColumnWidth = 4
         .Columns(位谕of日冲H2分).ColumnWidth = 4
         .Columns(位谕of日冲H2分).HorizontalAlignment = xlLeft
