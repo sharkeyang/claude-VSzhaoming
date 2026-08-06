@@ -130,8 +130,10 @@ Public Const 位谕of日层柱排 = 位谕始of族日层 + 4
 ' 等7: DTZA≤-2, 日中符EF     → 远离DJA弱势
 ' 等8: DTZA<-4, 日中符ABCD   → 回归DJA（极少）
 Public Const 位谕of日层等 = 位谕始of族日层 + 5
+'等高线机会与警示（在神谕中计算，筛选直接读取）
+Public Const 位谕of日层等机警 = 位谕始of族日层 + 6
 '--------------------------
-Public Const 位谕终of族日层 = 位谕始of族日层 + 5
+Public Const 位谕终of族日层 = 位谕始of族日层 + 6
 '----------------------------------------------------
 '指标群：族日管
 Public Const 位谕始of族日管 = 位谕终of族日层 + 1
@@ -3669,6 +3671,22 @@ If UBCID是代码(CIDL) = True Then
                 End If
             End If
             谕组(X, 位谕of日层等) = 等值
+            ' 等高线机警（供筛选直接读取，避免组结算引用）
+            Dim 等机警 As String: 等机警 = ""
+            Dim 等顶型 As String: 等顶型 = ARRLLL(X, 基位日类 + 位os基顶型)
+            Dim 等上符 As String: 等上符 = 谕组(X, 位谕of日管上符串)
+            If 等值 = "等3" And 日类BTZC > 0 Then
+                If InStr(等顶型, "龙") > 0 And Right$(等上符, 1) = "A" Then
+                    等机警 = "等3龙头"
+                Else
+                    等机警 = "等3"
+                End If
+            ElseIf 等值 = "等4" And 日类BTZC > 0 And 日类BTCD > 0 Then
+                等机警 = "等4"
+            ElseIf 日类BTZC > 0 And 日类BTCD > 0 Then
+                等机警 = "开门"
+            End If
+            谕组(X, 位谕of日层等机警) = 等机警
             '============================================================================
             '信号分类（机警提示）
             '============================================================================
@@ -5682,6 +5700,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of日层界) = "层界"
         .Cells(1, 位谕of日层柱排) = "柱排"
         .Cells(1, 位谕of日层等) = "等高线"
+        .Cells(1, 位谕of日层等机警) = "等机警"
             End With
     With WS.Columns(基列)
         With .Columns(位谕始of族日层).Borders(xlEdgeLeft)
