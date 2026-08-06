@@ -1269,32 +1269,32 @@ End If
                 是否AB好 = (DXAB = "上" Or DXAB = "中" Or DXAB = "忐")
 
                 If 是否EF好 And 是否CD好 Then
-                    '--- 牢牢抓住(靛系) ---
+                    '--- 主(靛系) ---
                     If 是否AB好 Then
-                        .Interior.Color = 常色十靛  'S级: 亮靛(牢牢抓住)
+                        .Interior.Color = 常色十靛  'A级: 亮靛(主)
                     Else
-                        .Interior.Color = 常色十绿  'A级: 亮绿(可持仓)
+                        .Interior.Color = 常色十绿  'B级: 亮绿(被)
                     End If
                 ElseIf 是否EF好 Then
                     'EF好, CD不好
                     If 是否AB好 Then
-                        .Interior.Color = 常色八绿  'B级: 中绿(可持仓)
+                        .Interior.Color = 常色八绿  'C级: 中绿(试)
                     Else
-                        .Interior.Color = 常色九灰  'C级: 浅灰(仅观察)
+                        .Interior.Color = 常色九灰  'D级: 浅灰(禁)
                     End If
                 ElseIf 是否CD好 Then
                     'CD好, EF不好
                     If 是否AB好 Then
-                        .Interior.Color = 常色六绿  'D级: 深绿(可持仓)
+                        .Interior.Color = 常色六绿  'E级: 深绿(主)
                     Else
-                        .Interior.Color = 常色八灰  'E级: 中灰(仅观察)
+                        .Interior.Color = 常色八灰  'F级: 中灰(被)
                     End If
                 Else
                     'EF和CD都不好
                     If 是否AB好 Then
-                        .Interior.Color = 常色七灰  'F级: 深灰(仅观察)
+                        .Interior.Color = 常色七灰  'G级: 深灰(试)
                     Else
-                        .Interior.Color = 常色五红  '禁止级: 深红(坚决禁止)
+                        .Interior.Color = 常色五红  'H级: 深红(禁)
                     End If
                 End If
             End If
