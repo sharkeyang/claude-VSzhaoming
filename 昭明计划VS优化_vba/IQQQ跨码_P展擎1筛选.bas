@@ -177,6 +177,18 @@ Function IQQQ展擎筛程至A1册按全数据( _
     Dim 典集市板Q8 As New Dictionary
     Dim 典集市板Qb As New Dictionary
     '------------------------------------------------------------------------------------
+    '【日仓等高线】
+    '------------------------------------------------------------------------------------
+    Dim 典仓日上_常余宽小8 As New Dictionary
+    Dim 典仓日上_常余 As New Dictionary
+    Dim 典仓日上_入口再 As New Dictionary
+    Dim 典仓日上_入口初 As New Dictionary
+    Dim 典仓日上_cyz As New Dictionary
+    Dim 典仓日上_等3龙头 As New Dictionary
+    Dim 典仓日上_等3 As New Dictionary
+    Dim 典仓日上_等4 As New Dictionary
+    Dim 典仓日上_等开门 As New Dictionary
+    '------------------------------------------------------------------------------------
     '【日机】
     '------------------------------------------------------------------------------------
     Dim 典筛日外仓月屎例外 As New Dictionary
