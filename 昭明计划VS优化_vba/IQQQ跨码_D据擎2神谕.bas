@@ -120,8 +120,18 @@ Public Const 位谕of日层柱型 = 位谕始of族日层 + 2
 Public Const 位谕of日层界 = 位谕始of族日层 + 3
 '卖提示包含：/触顶否/高幅（偏幅）/管宽（哼JC）/陡（均线拉开距离）/叠（连续波幅）/连阳数
 Public Const 位谕of日层柱排 = 位谕始of族日层 + 4
+'等高线分类：等1~等8，基于DTZA(日ZA)+日中符(中符串)判断当前位置
+' 等1: DTZA=1, 日中符任意     → DJA边缘刚站上
+' 等2: DTZA=2~4, 日中符CDEF  → 近DJA软弱
+' 等3: DTZA≥2, 日中符AB      → 远离DJA强势主升
+' 等4: DTZA>4, 日中符CDEF    → 回归DJA
+' 等5: DTZA=-1, 日中符任意    → DJA边缘下方
+' 等6: DTZA=-4~-2, 日中符ABCD → 近DJA下方偏强
+' 等7: DTZA≤-2, 日中符EF     → 远离DJA弱势
+' 等8: DTZA<-4, 日中符ABCD   → 回归DJA（极少）
+Public Const 位谕of日层等 = 位谕始of族日层 + 5
 '--------------------------
-Public Const 位谕终of族日层 = 位谕始of族日层 + 4
+Public Const 位谕终of族日层 = 位谕始of族日层 + 5
 '----------------------------------------------------
 '指标群：族日管
 Public Const 位谕始of族日管 = 位谕终of族日层 + 1
@@ -3625,6 +3635,41 @@ If UBCID是代码(CIDL) = True Then
             End If
             谕组(X, 位谕of日冲22态) = 冲22态
             '============================================================================
+            '等高线分类：等1~等8（基于DTZA+日中符，无条件，不受ZE/ZC限制）
+            '============================================================================
+            Dim 等日ZA As Double: 等日ZA = 组结算(X, 基位日类 + 位osBTZA)
+            Dim 等日中符 As String: 等日中符 = 谕组(X, 位谕of日管中符串)
+            Dim 等值 As String: 等值 = ""
+            If 等日ZA = 1 Then
+                等值 = "等1"  'DJA边缘刚站上
+            ElseIf 等日ZA > 0 Then
+                '上侧：DTZA≥2时，根据日中符区分AB(强)和CDEF(弱)
+                Dim 等有AB As Boolean: 等有AB = (InStr(等日中符, "A") > 0 And InStr(等日中符, "B") > 0)
+                Dim 等有CDEF As Boolean: 等有CDEF = (InStr(等日中符, "C") > 0 Or InStr(等日中符, "D") > 0 Or InStr(等日中符, "E") > 0 Or InStr(等日中符, "F") > 0)
+                If 等日ZA > 4 And 等有CDEF Then
+                    等值 = "等4"  '远离后回归DJA
+                ElseIf 等日ZA >= 2 And 等有CDEF Then
+                    等值 = "等2"  '近DJA软弱
+                ElseIf 等日ZA >= 2 And 等有AB Then
+                    等值 = "等3"  '远离DJA强势主升
+                End If
+            ElseIf 等日ZA = -1 Then
+                等值 = "等5"  'DJA边缘下方
+            ElseIf 等日ZA < 0 Then
+                '下侧：镜面映射 A<>F, B<>E, C<>D
+                '上侧AB(强)→下侧EF(弱), 上侧CDEF(含鼎)→下侧ABCD(含反鼎)
+                Dim 等有ABCD As Boolean: 等有ABCD = (InStr(等日中符, "A") > 0 Or InStr(等日中符, "B") > 0 Or InStr(等日中符, "C") > 0 Or InStr(等日中符, "D") > 0)
+                Dim 等有EF As Boolean: 等有EF = (InStr(等日中符, "E") > 0 Or InStr(等日中符, "F") > 0)
+                If 等日ZA < -4 And 等有ABCD Then
+                    等值 = "等8"  '回归DJA（极少）
+                ElseIf 等日ZA >= -4 And 等有ABCD Then
+                    等值 = "等6"  '近DJA下方偏强
+                ElseIf 等日ZA <= -2 And 等有EF Then
+                    等值 = "等7"  '远离DJA弱势
+                End If
+            End If
+            谕组(X, 位谕of日层等) = 等值
+            '============================================================================
             '信号分类（机警提示）
             '============================================================================
             谕组(X, 位谕of日层机警) = ""
@@ -5636,6 +5681,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of日层柱型) = "柱型DJA"
         .Cells(1, 位谕of日层界) = "层界"
         .Cells(1, 位谕of日层柱排) = "柱排"
+        .Cells(1, 位谕of日层等) = "等高线"
             End With
     With WS.Columns(基列)
         With .Columns(位谕始of族日层).Borders(xlEdgeLeft)

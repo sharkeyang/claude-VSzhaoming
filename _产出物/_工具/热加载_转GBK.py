@@ -29,7 +29,7 @@ def main():
             with open(src_path, 'r', encoding='utf-8') as fh:
                 text = fh.read()
             dst_path = os.path.join(tmp_dir, f)
-            with open(dst_path, 'w', encoding=sys_enc) as fh:
+            with open(dst_path, 'w', encoding=sys_enc, errors='replace') as fh:
                 fh.write(text)
         except:
             print(f"跳过: {f} - 读取失败", file=sys.stderr)
