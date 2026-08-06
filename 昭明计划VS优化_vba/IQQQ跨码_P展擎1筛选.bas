@@ -2463,17 +2463,17 @@ Function IQQQ展擎筛程至D3节按日综( _
                             '等高线分类筛选（无条件叠加）
                             Dim 等类 As String: 等类 = 谕组(X, 位谕of日层等)
                             Dim 等ZC As Double: 等ZC = 组结算(X, 基位日类 + 位osBTZC)
-                            Dim 等顶型 As String: 等顶型 = ARRLLL(X, 基位日类 + 位os基顶型)
+                            Dim 等顶型 As String: 等顶型 = 组结算(X, 基位日类 + 位os基顶型)
                             Dim 等上符 As String: 等上符 = 谕组(X, 位谕of日管上符串)
                             If 等类 = "等3" And 等ZC > 0 Then
                                 If InStr(等顶型, "龙") > 0 And Right$(等上符, 1) = "A" Then
                                     典仓日上_等3龙头.Add Item:=X, Key:=CIDL
                                 End If
                                 典仓日上_等3.Add Item:=X, Key:=CIDL
-                            ElseIf 等类 = "等4" And 等ZC > 0 And ARRLLL(X, 位os层护级CD) = "上" Then
+                            ElseIf 等类 = "等4" And 等ZC > 0 And 组结算(X, 基位日类 + 位os层护级CD) = "上" Then
                                 典仓日上_等4.Add Item:=X, Key:=CIDL
                             End If
-                            If 等ZC > 0 And ARRLLL(X, 位os层护级CD) = "上" Then
+                            If 等ZC > 0 And 组结算(X, 基位日类 + 位os层护级CD) = "上" Then
                                 典仓日上_等开门.Add Item:=X, Key:=CIDL
                             End If
                     ElseIf Mid$(谕组(X, 位谕of仓日类), 1, 1) = "忐" Then
