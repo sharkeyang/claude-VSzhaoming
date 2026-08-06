@@ -5739,6 +5739,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层柱型).ColumnWidth = 6
         .Columns(位谕of日层界).ColumnWidth = 6
         .Columns(位谕of日层柱排).ColumnWidth = 12
+        .Columns(位谕of日层等机警).ColumnWidth = 8
     End With
     With WS.Columns(基列)
         .Columns(位谕of日层柱排).Hidden = True
