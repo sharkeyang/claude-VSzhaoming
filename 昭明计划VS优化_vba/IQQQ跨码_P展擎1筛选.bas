@@ -406,7 +406,9 @@ Else
                     '根据"日层段"分类，分别筛选（警：丁戊 DXAB负交）（被：丙 下破DJB）
                     '注20260727：改用日层护型第二字判断（甲/乙/丙/丁/戊/己）
                     '--------------------------------------------------------------------
-                    Dim DXAB护段 As String: DXAB护段 = Mid$(谕组(X, 位谕of日层护型), 2, 1)
+                    Dim 日层护型 As String: 日层护型 = 谕组(X, 位谕of日层护型)
+                    Dim DXAB护段 As String
+                    If Len(日层护型) >= 2 Then DXAB护段 = Mid$(日层护型, 2, 1)
                     If DXAB护段 = "丁" Or DXAB护段 = "戊" Then            '日层段：丁戊
                             典统周复_周金活日警被.Add Item:=X, key:=CIDL
                     ElseIf DXAB护段 = "丙" Then        '日层段：丙
