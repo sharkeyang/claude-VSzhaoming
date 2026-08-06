@@ -1280,7 +1280,7 @@ End If
                     If 是否AB好 Then
                         .Interior.Color = 常色八灰  'C级: 中灰(试,EF好)
                     Else
-                        .Interior.Color = 常色四红  'D级: 深红(禁,EF好)
+                        .Interior.Color = 常色五红  'D级: 中红(禁,EF好)
                     End If
                 ElseIf 是否CD好 Then
                     'CD好, EF不好
@@ -1294,7 +1294,7 @@ End If
                     If 是否AB好 Then
                         .Interior.Color = 常色四灰  'G级: 深灰(试,EF差)
                     Else
-                        .Interior.Color = 常色五红  'H级: 中红(禁,EF差)
+                        .Interior.Color = 常色三红  'H级: 深红(禁,EF差)
                     End If
                 End If
             End If
