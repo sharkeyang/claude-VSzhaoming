@@ -3641,32 +3641,28 @@ If UBCID是代码(CIDL) = True Then
             '============================================================================
             Dim 等日ZA As Double: 等日ZA = 组结算(X, 基位日类 + 位osBTZA)
             Dim 等日中符 As String: 等日中符 = 谕组(X, 位谕of日管中符串)
+            Dim 等日末符 As String: 等日末符 = Right$(等日中符, 1)  '仅看最后一位(当前柱)
             Dim 等值 As String: 等值 = ""
             If 等日ZA = 1 Then
                 等值 = "等1"  'DJA边缘刚站上
             ElseIf 等日ZA > 0 Then
-                '上侧：DTZA≥2时，根据日中符区分AB(强)和CDEF(弱)
-                Dim 等有AB As Boolean: 等有AB = (InStr(等日中符, "A") > 0 And InStr(等日中符, "B") > 0)
-                Dim 等有CDEF As Boolean: 等有CDEF = (InStr(等日中符, "C") > 0 Or InStr(等日中符, "D") > 0 Or InStr(等日中符, "E") > 0 Or InStr(等日中符, "F") > 0)
-                If 等日ZA > 4 And 等有CDEF Then
+                '上侧：DTZA≥2时，根据日中符末位区分AB(强)和CDEF(弱)
+                If 等日ZA > 4 And InStr("CDEF", 等日末符) > 0 Then
                     等值 = "等4"  '远离后回归DJA
-                ElseIf 等日ZA >= 2 And 等有CDEF Then
+                ElseIf 等日ZA >= 2 And InStr("CDEF", 等日末符) > 0 Then
                     等值 = "等2"  '近DJA软弱
-                ElseIf 等日ZA >= 2 And 等有AB Then
+                ElseIf 等日ZA >= 2 And InStr("AB", 等日末符) > 0 Then
                     等值 = "等3"  '远离DJA强势主升
                 End If
             ElseIf 等日ZA = -1 Then
                 等值 = "等5"  'DJA边缘下方
             ElseIf 等日ZA < 0 Then
                 '下侧：镜面映射 A<>F, B<>E, C<>D
-                '上侧AB(强)→下侧EF(弱), 上侧CDEF(含鼎)→下侧ABCD(含反鼎)
-                Dim 等有ABCD As Boolean: 等有ABCD = (InStr(等日中符, "A") > 0 Or InStr(等日中符, "B") > 0 Or InStr(等日中符, "C") > 0 Or InStr(等日中符, "D") > 0)
-                Dim 等有EF As Boolean: 等有EF = (InStr(等日中符, "E") > 0 Or InStr(等日中符, "F") > 0)
-                If 等日ZA < -4 And 等有ABCD Then
+                If 等日ZA < -4 And InStr("ABCD", 等日末符) > 0 Then
                     等值 = "等8"  '回归DJA（极少）
-                ElseIf 等日ZA >= -4 And 等有ABCD Then
+                ElseIf 等日ZA >= -4 And InStr("ABCD", 等日末符) > 0 Then
                     等值 = "等6"  '近DJA下方偏强
-                ElseIf 等日ZA <= -2 And 等有EF Then
+                ElseIf 等日ZA <= -2 And InStr("EF", 等日末符) > 0 Then
                     等值 = "等7"  '远离DJA弱势
                 End If
             End If
