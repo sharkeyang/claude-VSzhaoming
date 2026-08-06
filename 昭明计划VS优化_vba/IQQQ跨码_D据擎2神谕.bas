@@ -3673,7 +3673,7 @@ If UBCID是代码(CIDL) = True Then
             谕组(X, 位谕of日层等) = 等值
             ' 等高线机警（供筛选直接读取，避免组结算引用）
             Dim 等机警 As String: 等机警 = ""
-            Dim 等顶型 As String: 等顶型 = ARRLLL(X, 基位日类 + 位os基顶型)
+            Dim 等顶型 As String: 等顶型 = 组结算(X, 基位日类 + 位os基顶型)
             Dim 等上符 As String: 等上符 = 谕组(X, 位谕of日管上符串)
             If 等值 = "等3" And 日类BTZC > 0 Then
                 If InStr(等顶型, "龙") > 0 And Right$(等上符, 1) = "A" Then
