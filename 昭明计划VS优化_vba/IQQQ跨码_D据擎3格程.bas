@@ -1271,30 +1271,30 @@ End If
                 If 是否EF好 And 是否CD好 Then
                     '--- 主(靛系) ---
                     If 是否AB好 Then
-                        .Interior.Color = 常色十靛  'A级: 亮靛(主)
+                        .Interior.Color = 常色十靛  'A级: 亮靛(主,EF好)
                     Else
-                        .Interior.Color = 常色十绿  'B级: 亮绿(被)
+                        .Interior.Color = 常色四靛  'B级: 深靛(被,EF好)
                     End If
                 ElseIf 是否EF好 Then
                     'EF好, CD不好
                     If 是否AB好 Then
-                        .Interior.Color = 常色八绿  'C级: 中绿(试)
+                        .Interior.Color = 常色八灰  'C级: 中灰(试,EF好)
                     Else
-                        .Interior.Color = 常色九灰  'D级: 浅灰(禁)
+                        .Interior.Color = 常色四红  'D级: 深红(禁,EF好)
                     End If
                 ElseIf 是否CD好 Then
                     'CD好, EF不好
                     If 是否AB好 Then
-                        .Interior.Color = 常色六绿  'E级: 深绿(主)
+                        .Interior.Color = 常色八靛  'E级: 中靛(主,EF差)
                     Else
-                        .Interior.Color = 常色八灰  'F级: 中灰(被)
+                        .Interior.Color = 常色六绿  'F级: 深绿(被,EF差)
                     End If
                 Else
                     'EF和CD都不好
                     If 是否AB好 Then
-                        .Interior.Color = 常色七灰  'G级: 深灰(试)
+                        .Interior.Color = 常色四灰  'G级: 深灰(试,EF差)
                     Else
-                        .Interior.Color = 常色五红  'H级: 深红(禁)
+                        .Interior.Color = 常色五红  'H级: 中红(禁,EF差)
                     End If
                 End If
             End If
