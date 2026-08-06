@@ -342,4 +342,55 @@ Public Sub 测试_日冲22态()
     For Each 键 In 分布.Keys: Debug.Print 键 & ": " & 分布(键): Next
     Debug.Print "===== 耗时: " & CLng(Timer - TT) & "秒 ====="
 End Sub
+'========================================================================================
+' 测试_日冲策略vs日周联动 — 对比日冲策略(A-H)与日周联动(周向)的对应关系
+' 输出：各等级在 升/待/降 三种周向中的分布比例
+' 预期：A/B/C级(日级别好)→周向=升比例高，D/H级(日级别差)→周向=降比例高
+'========================================================================================
+Public Sub 测试_日冲策略vs日周联动()
+    Dim TT As Single: TT = Timer
+    Dim 谕组 As Variant
+    Dim 计数 As Long
+    Dim X As Long
+
+    Debug.Print "===== 日冲策略 vs 日周联动(周向) 对比 ====="
+    计数 = IQQQ跨码据擎_数程生成全息(谕组, 常花中股, 实结类型:="sSCC")
+    If 计数 = 0 Then Debug.Print "生成失败": Exit Sub
+
+    ' 统计各组合
+    Dim 统计 As Object
+    Set 统计 = CreateObject("Scripting.Dictionary")
+    Dim 总行 As Long
+    For X = LBound(谕组, 1) To UBound(谕组, 1)
+        Dim 日冲 As String: 日冲 = 谕组(X, 位谕of日冲策略)
+        Dim 日联 As String: 日联 = 谕组(X, 位谕of日层联动)
+        If 日冲 <> "" And 日联 <> "" Then
+            Dim 周向 As String: 周向 = Left$(日联, 1)
+            If InStr("升降待", 周向) > 0 Then
+                Dim Key As String: Key = 日冲 & "|" & 周向
+                统计(Key) = 统计(Key) + 1
+                总行 = 总行 + 1
+            End If
+        End If
+    Next
+
+    ' 输出结果
+    Debug.Print ""
+    Debug.Print "总样本: " & 总行
+    Debug.Print ""
+    Debug.Print "等级" & vbTab & "升" & vbTab & "待" & vbTab & "降"
+    Debug.Print "----" & vbTab & "--" & vbTab & "--" & vbTab & "--"
+    Dim 等级 As Variant
+    For Each 等级 In Array("A", "B", "C", "D", "E", "F", "G", "H")
+        Dim 升 As Long: 升 = 统计(等级 & "|升")
+        Dim 待 As Long: 待 = 统计(等级 & "|待")
+        Dim 降 As Long: 降 = 统计(等级 & "|降")
+        Dim 总 As Long: 总 = 升 + 待 + 降
+        If 总 > 0 Then
+            Debug.Print 等级 & "级" & vbTab & 升 & "(" & Format$(升 / 总 * 100, "0") & "%)" & vbTab & 待 & "(" & Format$(待 / 总 * 100, "0") & "%)" & vbTab & 降 & "(" & Format$(降 / 总 * 100, "0") & "%)"
+        End If
+    Next
+    Debug.Print ""
+    Debug.Print "===== 耗时: " & CLng(Timer - TT) & "秒 ====="
+End Sub
 
