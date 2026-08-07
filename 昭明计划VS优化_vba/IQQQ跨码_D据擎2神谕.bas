@@ -3438,25 +3438,16 @@ If UBCID是代码(CIDL) = True Then
                 谕组(X, 位谕of日冲H2分) = 日冲评级 & Format(Int(日冲H2分), "00")
                 ' 日冲策略：龙(金银)/雀(唏)/虎(嘘)/武(屎尿) + 强(上中忐)/弱(下忠忑)
                 Dim 日冲分类 As String
-                Dim 日冲战场 As String, 日冲强弱 As String
-                If 日EF护级 = "金" Or 日EF护级 = "银" Then
-                    日冲战场 = "龙"
-                ElseIf 日EF护级 = "唏" Then
-                    日冲战场 = "唏"
-                ElseIf 日EF护级 = "嘘" Then
-                    日冲战场 = "嘘"
-                Else
-                    日冲战场 = "尸"
-                End If
+                Dim 日冲强弱 As String
                 If 日CD护级 = "上" Or 日CD护级 = "中" Or 日CD护级 = "忐" Then
                     日冲强弱 = "强"
                 Else
                     日冲强弱 = "弱"
                 End If
                 日冲分类 = ""
-                ' 格式: A-H(等级) + 强弱 + 好/坏(AB) + 主/被/试/禁(层级)
+                ' 格式: A-H(等级) + 强弱 + 好/坏(AB) + 主/被/傻/禁(层级)
                 ' 忠特殊处理: 嘘尿屎+忠+全部AB → G级
-                Dim 日冲AB As String, 日冲后缀 As String
+                Dim 日冲AB As String
                 If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
                     日冲AB = "好"
                 Else
