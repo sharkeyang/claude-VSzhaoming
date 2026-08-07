@@ -3480,7 +3480,7 @@ If UBCID是代码(CIDL) = True Then
                 Else
                     'EF差(嘘/屎/尿)
                     If 日CD护级 = "忠" Then
-                        日冲分类 = "G" & 日冲强弱 & 日冲AB & "屎"  '忠特殊: 全部AB归G级(屎)
+                        日冲分类 = "G" & 日冲强弱 & 日冲AB & "傻"  '忠特殊: 全部AB归G级(傻)
                     ElseIf 日冲强弱 = "强" Then
                         If 日冲AB = "好" Then
                             日冲分类 = "E" & 日冲强弱 & "好主"  'E级: 主(主动持仓)
@@ -3490,7 +3490,7 @@ If UBCID是代码(CIDL) = True Then
                     Else
                         '弱(下/忑)
                         If 日冲AB = "好" Then
-                            日冲分类 = "G" & 日冲强弱 & "好屎"  'G级: 屎(屎中捡豆)
+                            日冲分类 = "G" & 日冲强弱 & "好傻"  'G级: 傻(傻吃屎豆)
                         Else
                             日冲分类 = "H" & 日冲强弱 & "坏禁"  'H级: 禁(禁止)
                         End If
@@ -6669,7 +6669,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层联动).ColumnWidth = 8
         .Columns(位谕of日层段).ColumnWidth = 4
         .Columns(位谕of日层机警).ColumnWidth = 15
-        .Columns(位谕of日冲策略).ColumnWidth = 3
+        .Columns(位谕of日冲策略).ColumnWidth = 7
         .Columns(位谕of日冲策分).ColumnWidth = 4
         .Columns(位谕of日冲H2分).ColumnWidth = 4
         .Columns(位谕of日冲H2分).HorizontalAlignment = xlLeft
