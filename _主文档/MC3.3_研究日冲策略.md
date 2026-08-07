@@ -1262,7 +1262,10 @@ DSHR>1 大于等于 30%:  DXAB=强(上忐忠) (DXCD任意)         → 70个分�
 | **空看** | 仅WXZB>0可观察 | 🟪 **屎** | G级 | 傻吃屎豆（极小仓） |
 | **空长** | 完全禁止 | 🟥 **禁** | H级 | 禁止 |
 
-### 为什么G级需要单独处理为"傻吃屎豆"
+<table border="1" cellpadding="10" cellspacing="0" style="border-collapse:collapse;border:3px solid #8B4513;background:#FFF8F0;margin:12px 0">
+<tr><td style="font-size:14px;line-height:1.8">
+
+### ⚠️ 为什么G级需要单独处理为"傻吃屎豆"
 
 G级（EF差+CD差+AB好）对应月基的**空看**（WXZC≤0但WXAB>0），月基允许"可观察/试仓"。但G级有一个致命陷阱：
 
@@ -1277,6 +1280,8 @@ G级（EF差+CD差+AB好）对应月基的**空看**（WXZC≤0但WXAB>0），�
 - 重则陷入主跌浪（EF差+CD差，下无支撑）
 
 **取名"傻吃屎豆"的原因：** 屎中确实有豆（AB好的确偶尔能反弹），但为了一颗豆去翻屎，大概率弄一身臭。极小仓可以，重仓就是找死。
+
+</td></tr></table>
 
 ---
 
