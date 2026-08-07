@@ -1747,7 +1747,9 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
         Dim 日文件 As String
         日文件 = 日路径 & "谕组日_" & 被研代码 & ".csv"
         Open 日文件 For Output As #1
-        Print #1, "日期,收,开,高,低,涨幅,高幅,DXEF,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,管释,撤哼JC,类合,BSLA,宽哈JC,BT鼎,BTZA,BT连阳,顶型"
+        '等高线分类：等1=边,等2=近弱,等3=远强,等4=回归,等5=下边,等6=下近,等7=下远,等8=下回
+        '详见 IQQQ跨码_D据擎2神谕.bas 中 位谕of日层等 的注释
+        Print #1, "日期,收,开,高,低,涨幅,高幅,DXEF,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,管释,撤哼JC,类合,BSLA,宽哈JC,BT鼎,BTZA,BT连阳,顶型,等高线"
 
         For X = LBound(谕组, 1) To UBound(谕组, 1)
             Dim 日高幅 As Double
@@ -1802,7 +1804,8 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
                 谕组(X, 位谕of日层BT鼎) & "," & _
                 谕组(X, 位谕of日层BTZA) & "," & _
                 谕组(X, 位谕of日层BT连阳) & "," & _
-                Replace(ARRLLL(X, 基位日类 + 位os基顶型), ",", ";")
+                Replace(ARRLLL(X, 基位日类 + 位os基顶型), ",", ";") & "," & _
+                谕组(X, 位谕of日层等)
             Print #1, 行头 & 行尾
         Next X
         Close #1
@@ -2003,7 +2006,7 @@ Public Sub XL算展取样_谕组批量日()
     Call XL算展取样_谕组批量通用("日")
 End Sub
 Public Sub XL算展取样_谕组批量默认()
-    Call XL算展取样_谕组批量通用()
+    Call XL算展取样_谕组批量通用
 End Sub
 '========================================================================================
 '########################################################################################
@@ -2060,7 +2063,7 @@ Public Sub XL算展取样_算展批量()
 
     Dim 全部股票 As Object: Set 全部股票 = CreateObject("Scripting.Dictionary")
     Dim 文件号 As Integer, 行内容 As String, 字段 As Variant
-    Dim 代码 As String, 名称 As String, 市板 As Variant, key As Variant
+    Dim 代码 As String, 名称 As String, 市板 As Variant, Key As Variant
 
     文件号 = FreeFile
     Open 路径 For Input As #文件号
@@ -2086,10 +2089,10 @@ Public Sub XL算展取样_算展批量()
     Dim 各市板列表 As Object: Set 各市板列表 = CreateObject("Scripting.Dictionary")
 
     ' 遍历全部股票，按市板分组
-    For Each key In 全部股票.Keys
-        市板 = Split(全部股票(key), "|")(0)
+    For Each Key In 全部股票.Keys
+        市板 = Split(全部股票(Key), "|")(0)
         If Not 各市板列表.Exists(市板) Then Set 各市板列表(市板) = CreateObject("Scripting.Dictionary")
-        各市板列表(市板)(key) = 全部股票(key)
+        各市板列表(市板)(Key) = 全部股票(Key)
     Next
 
     ' 统计各市板已有文件
@@ -2111,11 +2114,11 @@ Public Sub XL算展取样_算展批量()
     For Each 市板 In 各市板列表.Keys
         Dim 已有数 As Long: 已有数 = 0
         Dim 待生 As Object: Set 待生 = CreateObject("Scripting.Dictionary")
-        For Each key In 各市板列表(市板).Keys
-            If 已有文件.Exists(key) Then
+        For Each Key In 各市板列表(市板).Keys
+            If 已有文件.Exists(Key) Then
                 已有数 = 已有数 + 1
             Else
-                待生(key) = 全部股票(key)
+                待生(Key) = 全部股票(Key)
             End If
         Next
 
@@ -2128,10 +2131,10 @@ Public Sub XL算展取样_算展批量()
 
         ' 生成缺失的
         Dim 计数 As Long: 计数 = 0
-        For Each key In 待生.Keys
+        For Each Key In 待生.Keys
             If 计数 >= 需生成 Then Exit For
-            代码 = key
-            名称 = Split(待生(key), "|")(1)
+            代码 = Key
+            名称 = Split(待生(Key), "|")(1)
             Application.StatusBar = "正在生成 [" & 市板 & "] " & 代码 & " " & 名称 & " (" & (计数 + 1) & "/" & 需生成 & ")"
 
             On Error Resume Next
@@ -2157,3 +2160,8 @@ Public Sub XL算展取样_算展批量()
     Debug.Print "批量算展完成! 生成:" & 总生成 & " 跳过:" & 总跳过 & " 失败:" & 总失败
 End Sub
 
+'########################################################################################
+'########################################################################################
+'###########################   算展导出（xlsx）   ########################################
+'########################################################################################
+'########################################################################################

@@ -1404,29 +1404,6 @@ Public Sub UGSOP_MENU_生成()
         .FaceId = 772
     End With
     '------------------------------------------------------------------------------------
-    '------------------------------------------------------------------------------------
-    With 菜项算展.Controls.Add(Type:=msoControlButton)
-        .BeginGroup = True
-        .Caption = "切换周期"
-        .Enabled = False
-    End With
-
-    With 菜项算展.Controls.Add(Type:=msoControlButton)
-        .OnAction = "XL算展格程跨期_切换类日"
-        .Caption = "切日"
-        .FaceId = 485
-    End With
-    With 菜项算展.Controls.Add(Type:=msoControlButton)
-        .OnAction = "XL算展格程跨期_切换类周"
-        .Caption = "切周"
-        .FaceId = 485
-    End With
-    With 菜项算展.Controls.Add(Type:=msoControlButton)
-        .OnAction = "XL算展格程跨期_切换类月"
-        .Caption = "切月"
-        .FaceId = 485
-    End With
-    '------------------------------------------------------------------------------------
     '模块：清理
     '------------------------------------------------------------------------------------
     With 菜项算展.Controls.Add(Type:=msoControlButton)

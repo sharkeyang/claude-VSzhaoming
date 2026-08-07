@@ -236,7 +236,7 @@ Function STBASE藏库引擎_更新数程( _
     For i = LBound(ARRSTOCK, 1) To UBound(ARRSTOCK, 1)
         当期 = ARRSTOCK(i, 位列TS结期)
         值索横期 = 时程工具衍生期索(当期, 指定期类)
-        典期序本源.Add Item:=当期, key:=值索横期
+        典期序本源.Add Item:=当期, Key:=值索横期
     Next
     Dim 更期最始本源 As Date
     更期最始本源 = 典期序本源.Items(0)
@@ -272,16 +272,16 @@ Function STBASE藏库引擎_更新数程( _
                 '------------------------------------------------------------------------
                 If 指定据源 = 常据源AK Then      '【是否更新全量】仅对AK生效
                     If 是否更新全量 = True Then                 '全量模式：删除所有能更新的日期
-                        If 当期 < 更期最始本源 Then 典横索序.Add Item:=Y, key:=值索横期
+                        If 当期 < 更期最始本源 Then 典横索序.Add Item:=Y, Key:=值索横期
                     ElseIf 当期 <= 更期最终本源 Then
                         If 典期序本源.Exists(值索横期) = False Then
-                            典横索序.Add Item:=Y, key:=值索横期
+                            典横索序.Add Item:=Y, Key:=值索横期
                         ElseIf 当期 = 典期序本源(值索横期) Then
-                            典横索序.Add Item:=Y, key:=值索横期
+                            典横索序.Add Item:=Y, Key:=值索横期
                         End If
                     End If
                 ElseIf 指定据源 = 常据源TR Then
-                        If 当期 <= 更期最终本源 Then 典横索序.Add Item:=Y, key:=值索横期
+                        If 当期 <= 更期最终本源 Then 典横索序.Add Item:=Y, Key:=值索横期
                 End If
                 '------------------------------------------------------------------------
             End If
@@ -294,13 +294,13 @@ Function STBASE藏库引擎_更新数程( _
     Dim X As Integer
     For X = LBound(ARR前, 1) To UBound(ARR前, 1)
         If UBCID是中股(ARR前(X, 位列TT代码)) = True Then
-            典码行库.Add key:=ARR前(X, 位列TT代码), Item:=X
+            典码行库.Add Key:=ARR前(X, 位列TT代码), Item:=X
         End If
     Next
     Dim 典期列库 As New Dictionary
     For Y = LBound(ARR前, 2) To UBound(ARR前, 2)
         If VBA.IsDate(ARR前(位行TT交日, Y)) = True Then
-            典期列库.Add key:=ARR前(位行TT交日, Y), Item:=Y
+            典期列库.Add Key:=ARR前(位行TT交日, Y), Item:=Y
         End If
     Next
     '------------------------------------------------------------------------------------
@@ -356,7 +356,7 @@ Function STBASE藏库引擎_更新数程( _
         当期 = 典期序本源.Items(i - 1)
         值索横期 = 典期序本源.Keys(i - 1)
         If 当期 > 更期最终前次 Then
-            If 典横索序.Exists(值索横期) = False Then 典期序新增.Add Item:=当期, key:=值索横期
+            If 典横索序.Exists(值索横期) = False Then 典期序新增.Add Item:=当期, Key:=值索横期
         End If
     Next
     Set 典期序本源 = Nothing
@@ -408,7 +408,7 @@ Function STBASE藏库引擎_更新数程( _
     典横索序.RemoveAll
     For Y = 位列TT头部 + 1 To UBound(ARRDATA, 2)
         值索横期 = ARRDATA(位行TT交索, Y)
-        典横索序.Add key:=值索横期, Item:=Y
+        典横索序.Add Key:=值索横期, Item:=Y
     Next
     '------------------------------------------------------------------------------------
     '读取数组：

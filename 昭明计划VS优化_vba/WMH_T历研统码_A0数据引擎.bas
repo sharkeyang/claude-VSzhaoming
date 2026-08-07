@@ -165,7 +165,7 @@ Function 历研数据引擎_基础数据准备( _
         值当期 = ARRDATA(位行TT交日, Y)
         值索横期 = 时程工具衍生期索(值当期, 指定期类)
         If 指定结期下限 < 值当期 And 值当期 <= 日期上限实 Then
-            典期序.Add Item:=值当期, key:=值索横期
+            典期序.Add Item:=值当期, Key:=值索横期
         End If
     Next
     '------------------------------------------------------------------------------------
@@ -176,7 +176,7 @@ Function 历研数据引擎_基础数据准备( _
     For X = 位行TT头部 + 1 To UBound(ARRDATA, 1)
         CIDL = ARRDATA(X, 位列TT代码)
         If UBCID是中股(CIDL) = True Then
-            典码行.Add key:=CIDL, Item:=X
+            典码行.Add Key:=CIDL, Item:=X
         End If
     Next
     '------------------------------------------------------------------------------------
@@ -214,7 +214,7 @@ Function 历研数据引擎_基础数据准备( _
     'P2：预建典索期（日期key → 3D数组列号m），替代per-code字典中转
     Dim 典索期 As New Dictionary
     For M = 1 To 典期序.Count
-        典索期.Add key:=典期序.Keys(M - 1), Item:=M
+        典索期.Add Key:=典期序.Keys(M - 1), Item:=M
     Next
     '====================================================================
     'P1：预建典码列索 — 每个代码→该行有数据的列索引数组，一次扫描替代重复全量扫描
@@ -233,7 +233,7 @@ Function 历研数据引擎_基础数据准备( _
     Dim vKey As Variant
     Dim 当期 As Date
     For Each vKey In 典码称.Keys
-        典码列索.Add key:=vKey, Item:=Array()
+        典码列索.Add Key:=vKey, Item:=Array()
     Next
     Dim 索行 As Integer
     For 索行 = 位行TT头部 + 1 To UBound(ARRDATA, 1)
@@ -395,8 +395,8 @@ If 是否神谕指标 = True Then
                     For M = LBound(ARRLLL, 1) To UBound(ARRLLL, 1)        '从现在向最早
                         值当期 = ARRLLL(M, 位os结期)
                         值索横期 = 时程工具衍生期索(值当期, 指定期类)
-                        典期位谕of仓日类.Add key:=值索横期, Item:=谕组(M, 位谕of仓日类)
-                        典期位谕of仓周类.Add key:=值索横期, Item:=谕组(M, 位谕of仓周类)
+                        典期位谕of仓日类.Add Key:=值索横期, Item:=谕组(M, 位谕of仓日类)
+                        典期位谕of仓周类.Add Key:=值索横期, Item:=谕组(M, 位谕of仓周类)
                     Next
 '                    '--- DEBUG: 诊断典期位谕of仓日类与典期序不匹配 ---
 '                    Dim 期钥 As Variant, 期钥Max As String

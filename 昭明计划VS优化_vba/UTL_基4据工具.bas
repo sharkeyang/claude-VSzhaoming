@@ -261,7 +261,7 @@ Function UTL数据转换_集组码2典码位( _
     For X = LBound(组码, 1) To UBound(组码, 1)
         CIDL = 组码(X, 1)
         If UBCID是代码(CIDL) = True And 典码位组码.Exists(CIDL) = False Then
-            典码位组码.Add Item:=X, key:=CIDL
+            典码位组码.Add Item:=X, Key:=CIDL
         End If
     Next
     Set 典码位 = 典码位组码
@@ -287,7 +287,7 @@ Function UTL数据转换_集典码2典码位( _
         CIDL = 组码(X, 位qt代码)
         If UBCID是代码(CIDL) = True Then
         If 典码.Exists(CIDL) = True Then
-            典码位.Add key:=CIDL, Item:=X
+            典码位.Add Key:=CIDL, Item:=X
         End If
         End If
     Next
@@ -472,7 +472,7 @@ Function STBASE罗盘数程_OS按日墨汁数程基程( _
     For Y = LBound(ARRLB, 1) To UBound(ARRLB, 1)
         'sdate = Format$(ARRLB(Y, 位os结期), 全设格式of日期)
         sdate = Format$(ARRLB(Y, 位os临期), 全设格式of日期)
-        集合记录.Add Item:=Y, key:=sdate
+        集合记录.Add Item:=Y, Key:=sdate
     Next Y
 '========================================================================================
 '遍历合并
@@ -599,7 +599,7 @@ Function STBASE罗盘数程_OS按码墨汁数程基程( _
     Dim X As Integer
     For X = LBound(ARRHX, 1) To UBound(ARRHX, 1)
         CIDL = ARRHX(X, 位os代码)
-        集合记录.Add Item:=X, key:=CIDL
+        集合记录.Add Item:=X, Key:=CIDL
     Next X
 '========================================================================================
 '遍历合并

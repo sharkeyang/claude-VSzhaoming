@@ -60,7 +60,10 @@ Sub STBASE结算管理_全新结算调程花天()
     MSG = MSG & "【总计耗时】" & CLng(Timer - TTT) & vbCrLf
     Debug.Print MSG
     ThisWorkbook.Activate
-    MsgBox MSG, vbOKOnly, "结算中枢 全新结算"
+    '后台结算（Python 跑）时不弹 MsgBox，避免卡住隐藏进程
+    If Not ROS据管_DM3外簿引擎.后台运行 Then
+        MsgBox MSG, vbOKOnly, "结算中枢 全新结算"
+    End If
     '------------------------------------------------------------------------------------
 End Sub
 
@@ -859,8 +862,8 @@ Function STBASE结算引擎_历统时正程( _
         CIDL = 组花册(X, 位列花天CIDL)
         代称 = 组花册(X, 位列花天代称)
         If UBCID是中股(CIDL) = True Then
-            典码称.Add key:=CIDL, Item:=代称
-            典码行.Add key:=CIDL, Item:=X
+            典码称.Add Key:=CIDL, Item:=代称
+            典码行.Add Key:=CIDL, Item:=X
         End If
         'If 典码称.Count > 50 Then Exit For
     Next

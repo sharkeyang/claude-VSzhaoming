@@ -159,31 +159,31 @@ Function 现市基程_中股异常( _
                 '------------------------------------------------------------------------
                 计码票 = 计码票 + 1
                 If Len(值停牌) > 0 Or 值今开 = 0 Then
-                            集典停牌.Add Item:=X, key:=CIDL
+                            集典停牌.Add Item:=X, Key:=CIDL
                 '------------------------------------------------------------------------
                 ElseIf 值今收 > 0 Then
                     '---------------------------------------------------------------------
                     If 值今高 = 值涨停 Then
                         If 值外盘 = 0 Then
-                            集典涨停无量.Add Item:=X, key:=CIDL
+                            集典涨停无量.Add Item:=X, Key:=CIDL
                         ElseIf 值今收 = 值涨停 Then
-                            集典涨停封板.Add Item:=X, key:=CIDL
+                            集典涨停封板.Add Item:=X, Key:=CIDL
                         Else
-                            集典涨停开板.Add Item:=X, key:=CIDL
+                            集典涨停开板.Add Item:=X, Key:=CIDL
                         End If
                     ElseIf 值今低 = 值跌停 Then
                         If 值今收 = 值跌停 Then
-                            集典跌停封板.Add Item:=X, key:=CIDL
+                            集典跌停封板.Add Item:=X, Key:=CIDL
                         Else
-                            集典跌停开板.Add Item:=X, key:=CIDL
+                            集典跌停开板.Add Item:=X, Key:=CIDL
                         End If
                     Else
                         If 值涨幅 >= 全设阈值of大涨 Then
-                            集典异常大涨.Add Item:=X, key:=CIDL
+                            集典异常大涨.Add Item:=X, Key:=CIDL
                         ElseIf 值涨幅 <= 全设阈值of大跌 Then
-                            集典异常大跌.Add Item:=X, key:=CIDL
+                            集典异常大跌.Add Item:=X, Key:=CIDL
                         Else
-                            集典正常交易.Add Item:=X, key:=CIDL
+                            集典正常交易.Add Item:=X, Key:=CIDL
                         End If
                     End If
                     '---------------------------------------------------------------------
@@ -193,50 +193,50 @@ Function 现市基程_中股异常( _
                     '---------------------------------------------------------------------
                     If 值振幅 > 全设阈值of振幅 Then
                         If 值涨幅 >= 0 Then
-                            集典异常振幅涨.Add Item:=X, key:=CIDL
+                            集典异常振幅涨.Add Item:=X, Key:=CIDL
                         Else
-                            集典异常振幅跌.Add Item:=X, key:=CIDL
+                            集典异常振幅跌.Add Item:=X, Key:=CIDL
                         End If
                     End If
                     '---------------------------------------------------------------------
                     If 值量比 > 全设阈值of量比 Then
                         If 值涨幅 >= 0 Then
-                            集典异常量比涨.Add Item:=X, key:=CIDL
+                            集典异常量比涨.Add Item:=X, Key:=CIDL
                         Else
-                            集典异常量比跌.Add Item:=X, key:=CIDL
+                            集典异常量比跌.Add Item:=X, Key:=CIDL
                         End If
                     ElseIf 值换手 > 全设阈值of换手高 Then
                         If 值涨幅 >= 0 Then
-                            集典异常换高涨.Add Item:=X, key:=CIDL
+                            集典异常换高涨.Add Item:=X, Key:=CIDL
                         Else
-                            集典异常换高跌.Add Item:=X, key:=CIDL
+                            集典异常换高跌.Add Item:=X, Key:=CIDL
                         End If
                     ElseIf 值换手 < 全设阈值of换手低 Then
-                            集典异常换低.Add Item:=X, key:=CIDL
+                            集典异常换低.Add Item:=X, Key:=CIDL
                     End If
                     '---------------------------------------------------------------------
                     If 值今收 > 全设阈值of价高 Then
-                        集典异常价高.Add Item:=X, key:=CIDL
+                        集典异常价高.Add Item:=X, Key:=CIDL
                     ElseIf 值今收 < 全设阈值of价低 Then
-                        集典异常价低.Add Item:=X, key:=CIDL
+                        集典异常价低.Add Item:=X, Key:=CIDL
                     End If
                     '---------------------------------------------------------------------
                     If 值市净 > 全设阈值of净高 Then
-                        集典异常净高.Add Item:=X, key:=CIDL
+                        集典异常净高.Add Item:=X, Key:=CIDL
                     ElseIf 值市净 < 全设阈值of净低 And 值市净 > 0 Then
-                        集典异常净低.Add Item:=X, key:=CIDL
+                        集典异常净低.Add Item:=X, Key:=CIDL
                     End If
                     '---------------------------------------------------------------------
                     If 值市盈 > 全设阈值of盈高 Then
-                        集典异常盈高.Add Item:=X, key:=CIDL
+                        集典异常盈高.Add Item:=X, Key:=CIDL
                     ElseIf 值市盈 < 全设阈值of盈低 And 值市盈 > 0 Then
-                        集典异常盈低.Add Item:=X, key:=CIDL
+                        集典异常盈低.Add Item:=X, Key:=CIDL
                     End If
                     '---------------------------------------------------------------------
                     If 值交额 > 全设阈值of额高 Then
-                        集典异常额高.Add Item:=X, key:=CIDL
+                        集典异常额高.Add Item:=X, Key:=CIDL
                     ElseIf 值交额 < 全设阈值of额低 Then
-                        集典异常额低.Add Item:=X, key:=CIDL
+                        集典异常额低.Add Item:=X, Key:=CIDL
                     End If
                     '---------------------------------------------------------------------
                     

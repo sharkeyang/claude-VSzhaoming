@@ -877,7 +877,7 @@ Function 市调预程引擎初始(天组 As Variant, 天典 As Dictionary) As St
             CIDL = 组花册(X, 位列花天CIDL)
             If UBCID是代码(CIDL) = True Then
                 计数 = 计数 + 1
-                天典.Add Item:=计数, key:=CIDL
+                天典.Add Item:=计数, Key:=CIDL
             End If
     Next
     '====================================================================================

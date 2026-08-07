@@ -661,9 +661,9 @@ Sub XL算比引擎特程统算展精比()
             算法 = WSAS.Cells(行号遍历, 位统算展算法名称).Value
             '针对代码
             If UBCID是代码(代码) = True Then
-                集选定代码.Add Item:=代码, key:=代码
-                集选定期类.Add Item:=期类, key:=期类
-                集选定算法.Add Item:=算法, key:=算法
+                集选定代码.Add Item:=代码, Key:=代码
+                集选定期类.Add Item:=期类, Key:=期类
+                集选定算法.Add Item:=算法, Key:=算法
             End If
         End If
     Next

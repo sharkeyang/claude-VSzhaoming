@@ -47,37 +47,37 @@ Function IQQQ展擎频谱输出分程( _
     '设置字典：市板
     '------------------------------------------------------------------------------------
     Dim 集典市板 As New Dictionary
-    集典市板.Add Item:=常市板票Qif, key:=常市板票Qif
-    集典市板.Add Item:=常市板票Qic, key:=常市板票Qic
-    集典市板.Add Item:=常市板票Qim, key:=常市板票Qim
-    集典市板.Add Item:=常市板票Qit, key:=常市板票Qit
-    集典市板.Add Item:=常市板票Qin, key:=常市板票Qin
-    集典市板.Add Item:=常市板票Qst, key:=常市板票Qst
-    集典市板.Add Item:=常市板基, key:=常市板基
+    集典市板.Add Item:=常市板票Qif, Key:=常市板票Qif
+    集典市板.Add Item:=常市板票Qic, Key:=常市板票Qic
+    集典市板.Add Item:=常市板票Qim, Key:=常市板票Qim
+    集典市板.Add Item:=常市板票Qit, Key:=常市板票Qit
+    集典市板.Add Item:=常市板票Qin, Key:=常市板票Qin
+    集典市板.Add Item:=常市板票Qst, Key:=常市板票Qst
+    集典市板.Add Item:=常市板基, Key:=常市板基
     '------------------------------------------------------------------------------------
     '设置字典：仓周类 全部
     '------------------------------------------------------------------------------------
     Dim 集典仓周类全 As New Dictionary
-    集典仓周类全.Add Item:="唏", key:="唏[abcryz]"
-    集典仓周类全.Add Item:="银", key:="银[abcryz]"
-    集典仓周类全.Add Item:="金B", key:="金[abr]"
-    集典仓周类全.Add Item:="金X", key:="金[cyz]"
-    集典仓周类全.Add Item:="嘘", key:="嘘[abcryz]"
-    集典仓周类全.Add Item:="尿", key:="尿[abcryz]"
-    集典仓周类全.Add Item:="屎", key:="屎[abcryz]"
+    集典仓周类全.Add Item:="唏", Key:="唏[abcryz]"
+    集典仓周类全.Add Item:="银", Key:="银[abcryz]"
+    集典仓周类全.Add Item:="金B", Key:="金[abr]"
+    集典仓周类全.Add Item:="金X", Key:="金[cyz]"
+    集典仓周类全.Add Item:="嘘", Key:="嘘[abcryz]"
+    集典仓周类全.Add Item:="尿", Key:="尿[abcryz]"
+    集典仓周类全.Add Item:="屎", Key:="屎[abcryz]"
     '------------------------------------------------------------------------------------
     '设置字典：仓日类 全部
     '------------------------------------------------------------------------------------
     Dim 集典仓日类全 As New Dictionary
-    集典仓日类全.Add Item:="无", key:="无"
-    集典仓日类全.Add Item:="忑", key:="忑[abcryz]"
-    集典仓日类全.Add Item:="忠", key:="忠[abcryz]"
-    集典仓日类全.Add Item:="忐", key:="忐[abcryz]"
-    集典仓日类全.Add Item:="上B", key:="上[abr]"
-    集典仓日类全.Add Item:="上X", key:="上[cyz]"
-    集典仓日类全.Add Item:="中B", key:="中[abr]"
-    集典仓日类全.Add Item:="中X", key:="中[cyz]"
-    集典仓日类全.Add Item:="下", key:="下[abcryz]"
+    集典仓日类全.Add Item:="无", Key:="无"
+    集典仓日类全.Add Item:="忑", Key:="忑[abcryz]"
+    集典仓日类全.Add Item:="忠", Key:="忠[abcryz]"
+    集典仓日类全.Add Item:="忐", Key:="忐[abcryz]"
+    集典仓日类全.Add Item:="上B", Key:="上[abr]"
+    集典仓日类全.Add Item:="上X", Key:="上[cyz]"
+    集典仓日类全.Add Item:="中B", Key:="中[abr]"
+    集典仓日类全.Add Item:="中X", Key:="中[cyz]"
+    集典仓日类全.Add Item:="下", Key:="下[abcryz]"
 '========================================================================================
 '分布：概念益盟 * 集典仓日类全
 '========================================================================================
@@ -160,7 +160,7 @@ Function IQQQ展擎频谱输出基程( _
         For Y = LBound(组标类(X), 1) + 1 To UBound(组标类(X), 1)
             严选标类 = 组标类(X)(Y)
             If Left$(严选标组, 1) <> "略" Then
-                典集标类.Add Item:=严选标组, key:=严选标类
+                典集标类.Add Item:=严选标组, Key:=严选标类
             End If
         Next
     Next
@@ -184,8 +184,8 @@ If 严选标类定位 = 位qt概念 Then
     Dim R As Integer
     For R = LBound(ARRYM, 1) + 1 To UBound(ARRYM, 1)
         CIDL = ARRYM(R, 位列花天CIDL)
-        典集行业益盟.Add key:=CIDL, Item:=ARRYM(R, 位列花天行业益盟)
-        典集概念益盟.Add key:=CIDL, Item:=ARRYM(R, 位列花天概念益盟)
+        典集行业益盟.Add Key:=CIDL, Item:=ARRYM(R, 位列花天行业益盟)
+        典集概念益盟.Add Key:=CIDL, Item:=ARRYM(R, 位列花天概念益盟)
     Next R
     Erase ARRYM
     '------------------------------------------------------------------------------------
@@ -716,7 +716,7 @@ Function IQQQ展擎严选数程( _
         And 谕组(遍历序号, 严选再类定位) Like 严选再类 _
         Then
             值代码 = 谕组(遍历序号, 位qt代码)
-            严选码典.Add key:=值代码, Item:=遍历序号
+            严选码典.Add Key:=值代码, Item:=遍历序号
         End If
         '--------------------------------------------------------------------------------
 '        If InStr(谕组(遍历序号, 严选标类定位), 严选标类) > 0 Then

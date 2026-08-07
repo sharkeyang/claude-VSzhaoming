@@ -682,7 +682,7 @@ Function UGSOP拣选引擎圈选(典被研代码 As Dictionary) As Integer
                 名称 = WSAS.Cells(行号遍历, 位qt代称).Value
                 '针对代码
                 If UBCID是中股票(CIDL) = True Or UBCID是中股基(CIDL) = True Or UBCID是中股指(CIDL) = True Then
-                    If 典被研代码.Exists(CIDL) = False Then 典被研代码.Add Item:=名称, key:=CIDL
+                    If 典被研代码.Exists(CIDL) = False Then 典被研代码.Add Item:=名称, Key:=CIDL
                 End If
             End If
         Next
@@ -695,7 +695,7 @@ Function UGSOP拣选引擎圈选(典被研代码 As Dictionary) As Integer
             CIDL = Selection.Cells(1, 常频块目列宽数)
             名称 = Selection.Cells(1, 1)
             If UBCID是代码(CIDL) = True And 典被研代码.Exists(CIDL) = False Then
-                典被研代码.Add Item:=名称, key:=CIDL
+                典被研代码.Add Item:=名称, Key:=CIDL
             End If
         End If
 '========================================================================================
@@ -897,7 +897,7 @@ Function UGSOP拣选质程_归集代码从首列(集合归集代码 As Dictionar
             Or (Not Intersect(WSIN.Rows(行号遍历), Selection) Is Nothing) _
             Then
                 If 集合归集代码.Exists(CIDL) = False Then
-                    集合归集代码.Add Item:=CIDL, key:=CIDL
+                    集合归集代码.Add Item:=CIDL, Key:=CIDL
                 End If
                 .Resize(1, 2).Font.ColorIndex = 4
             End If
@@ -929,7 +929,7 @@ Function UGSOP拣选质程_归集代码从市况(集合归集代码 As Dictionar
             CIDL = CL.Offset(0, -1 * 左偏列数)
             If CIDL Like 常通配全码代码 Then
                 If 集合归集代码.Exists(CIDL) = False Then
-                    集合归集代码.Add Item:=CIDL, key:=CIDL
+                    集合归集代码.Add Item:=CIDL, Key:=CIDL
                 End If
                 CL.Font.ColorIndex = 1
             End If
@@ -960,7 +960,7 @@ Function UGSOP拣选质程_归集代码从代称(集合归集代码 As Dictionar
         CIDL = WS花天.Cells(i, 位qt代码)
         值代称 = WS花天.Cells(i, 位qt代称)
         If 典代称.Exists(值代称) = False And Len(CIDL) > 0 Then
-            典代称.Add Item:=CIDL, key:=值代称
+            典代称.Add Item:=CIDL, Key:=值代称
         End If
     Next i
     '------------------------------------------------------------------------------------
@@ -975,7 +975,7 @@ Function UGSOP拣选质程_归集代码从代称(集合归集代码 As Dictionar
     For Each CL In WSIN.UsedRange
         If CL.Font.ColorIndex <> 1 And Len(CL.Value) > 0 Then
             If 集合归集代称.Exists(CL.Value) = False Then
-                集合归集代称.Add Item:=CL.Value, key:=CL.Value
+                集合归集代称.Add Item:=CL.Value, Key:=CL.Value
             End If
             CL.Font.ColorIndex = 1
         End If
@@ -987,7 +987,7 @@ Function UGSOP拣选质程_归集代码从代称(集合归集代码 As Dictionar
         值代称 = 集合归集代称.Keys(i - 1)
         If 典代称.Exists(值代称) = True Then
             CIDL = 典代称(值代称)
-            集合归集代码.Add Item:=CIDL, key:=CIDL
+            集合归集代码.Add Item:=CIDL, Key:=CIDL
         End If
     Next i
     

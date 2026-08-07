@@ -195,66 +195,66 @@ Function STBASE池管理_设置必选股票(典集钻石股票 As Dictionary)
     With 典集钻石股票
         '---------------------------------------
         '@20230201
-        .Add key:="sz000040", Item:=8      '东旭蓝天
-        .Add key:="sz000779", Item:=3      '甘咨询
-        .Add key:="sz000892", Item:=10      '欢瑞世纪
-        .Add key:="sh600149", Item:=5      '廊坊发展
-        .Add key:="sz001965", Item:=8      '招商公路
+        .Add Key:="sz000040", Item:=8      '东旭蓝天
+        .Add Key:="sz000779", Item:=3      '甘咨询
+        .Add Key:="sz000892", Item:=10      '欢瑞世纪
+        .Add Key:="sh600149", Item:=5      '廊坊发展
+        .Add Key:="sz001965", Item:=8      '招商公路
         '---------------------------------------
         '@20230101
-        .Add key:="sz000548", Item:=5      '湖南投资
-        .Add key:="sz000554", Item:=5      '泰山石油
-        .Add key:="sz000017", Item:=10      '深中华A
-        .Add key:="sz002172", Item:=10      '澳洋健康
-        .Add key:="sz002659", Item:=10      '凯文教育
-        .Add key:="sz002188", Item:=10      '中天服务
-        .Add key:="sh600977", Item:=3      '中国电影
+        .Add Key:="sz000548", Item:=5      '湖南投资
+        .Add Key:="sz000554", Item:=5      '泰山石油
+        .Add Key:="sz000017", Item:=10      '深中华A
+        .Add Key:="sz002172", Item:=10      '澳洋健康
+        .Add Key:="sz002659", Item:=10      '凯文教育
+        .Add Key:="sz002188", Item:=10      '中天服务
+        .Add Key:="sh600977", Item:=3      '中国电影
         '---------------------------------------
         '@20221218
-        .Add key:="sh600272", Item:=4      '开开实业  中药
-        .Add key:="sz000068", Item:=11     '华控赛格  环境保护
-        .Add key:="sz000705", Item:=5      '浙江震元  医药流通
-        .Add key:="sz000978", Item:=5      '桂林旅游  景点
-        .Add key:="sh600156", Item:=9      '华升股份  纺织
-        .Add key:="sz000428", Item:=8      '华天酒店  酒店餐饮
-        .Add key:="sz002566", Item:=5      '益盛药业  中药
-        .Add key:="sz002696", Item:=7      '百洋股份  饲料加工
-        .Add key:="sz002633", Item:=5      '申科股份  通用设备
-        .Add key:="sz002790", Item:=5      '瑞尔特  建材
-        .Add key:="sz002380", Item:=3      '科远智慧  电气智能化设备
-        .Add key:="sz002175", Item:=13     '东方智造  仪器仪表
-        .Add key:="sh601008", Item:=11     '连云港  港口
-        .Add key:="sz002209", Item:=5      '达 意 隆  轻工机械
-        .Add key:="sz002629", Item:=12     '仁智股份  采掘服务业
-        .Add key:="sh600962", Item:=3      '国投中鲁  饮料制造
-        .Add key:="sz002314", Item:=11     '南山控股  房地产
-        .Add key:="sh600302", Item:=8      '标准股份  轻工机械
-        .Add key:="sz000524", Item:=3      '岭南控股  旅游综合
-        .Add key:="sh600791", Item:=9      '京能置业  房地产
-        .Add key:="sh600561", Item:=8      '江西长运  公共交通
-        .Add key:="sh603199", Item:=1      '九华旅游  景点
-        .Add key:="sh600749", Item:=3      '西藏旅游  景点
-        .Add key:="sz000430", Item:=6      '张家界  景点
-        .Add key:="sh600713", Item:=8      '南京医药  医药流通
-        .Add key:="sh601007", Item:=4      '金陵饭店  酒店餐饮
-        .Add key:="sz000417", Item:=9      '合肥百货  零售业
-        .Add key:="sh600750", Item:=3      '江中药业  中药
-        .Add key:="sh600029", Item:=6      '南方航空  航空运输
-        .Add key:="sh601111", Item:=4      '中国国航  航空运输
-        .Add key:="sh600971", Item:=6      '恒源煤电  煤炭开采
-        .Add key:="sh600582", Item:=9      '天地科技  专用设备
-        .Add key:="sh600775", Item:=4      '南京熊猫  通信设备
-        .Add key:="sh601958", Item:=4      '金钼股份  有色金属
-        .Add key:="sh601811", Item:=5      '新华文轩  文化传媒
-        .Add key:="sz002155", Item:=3      '湖南黄金  黄金
-        .Add key:="sz002519", Item:=10     '银河电子  家电
-        .Add key:="sz300025", Item:=10     '华星创业  通信服务
-        .Add key:="sh600560", Item:=4      '金自天正  仪器仪表
-        .Add key:="sh603766", Item:=9      '隆鑫通用  其他交运设备
-        .Add key:="sz002363", Item:=7      '隆基机械  汽车零部件
+        .Add Key:="sh600272", Item:=4      '开开实业  中药
+        .Add Key:="sz000068", Item:=11     '华控赛格  环境保护
+        .Add Key:="sz000705", Item:=5      '浙江震元  医药流通
+        .Add Key:="sz000978", Item:=5      '桂林旅游  景点
+        .Add Key:="sh600156", Item:=9      '华升股份  纺织
+        .Add Key:="sz000428", Item:=8      '华天酒店  酒店餐饮
+        .Add Key:="sz002566", Item:=5      '益盛药业  中药
+        .Add Key:="sz002696", Item:=7      '百洋股份  饲料加工
+        .Add Key:="sz002633", Item:=5      '申科股份  通用设备
+        .Add Key:="sz002790", Item:=5      '瑞尔特  建材
+        .Add Key:="sz002380", Item:=3      '科远智慧  电气智能化设备
+        .Add Key:="sz002175", Item:=13     '东方智造  仪器仪表
+        .Add Key:="sh601008", Item:=11     '连云港  港口
+        .Add Key:="sz002209", Item:=5      '达 意 隆  轻工机械
+        .Add Key:="sz002629", Item:=12     '仁智股份  采掘服务业
+        .Add Key:="sh600962", Item:=3      '国投中鲁  饮料制造
+        .Add Key:="sz002314", Item:=11     '南山控股  房地产
+        .Add Key:="sh600302", Item:=8      '标准股份  轻工机械
+        .Add Key:="sz000524", Item:=3      '岭南控股  旅游综合
+        .Add Key:="sh600791", Item:=9      '京能置业  房地产
+        .Add Key:="sh600561", Item:=8      '江西长运  公共交通
+        .Add Key:="sh603199", Item:=1      '九华旅游  景点
+        .Add Key:="sh600749", Item:=3      '西藏旅游  景点
+        .Add Key:="sz000430", Item:=6      '张家界  景点
+        .Add Key:="sh600713", Item:=8      '南京医药  医药流通
+        .Add Key:="sh601007", Item:=4      '金陵饭店  酒店餐饮
+        .Add Key:="sz000417", Item:=9      '合肥百货  零售业
+        .Add Key:="sh600750", Item:=3      '江中药业  中药
+        .Add Key:="sh600029", Item:=6      '南方航空  航空运输
+        .Add Key:="sh601111", Item:=4      '中国国航  航空运输
+        .Add Key:="sh600971", Item:=6      '恒源煤电  煤炭开采
+        .Add Key:="sh600582", Item:=9      '天地科技  专用设备
+        .Add Key:="sh600775", Item:=4      '南京熊猫  通信设备
+        .Add Key:="sh601958", Item:=4      '金钼股份  有色金属
+        .Add Key:="sh601811", Item:=5      '新华文轩  文化传媒
+        .Add Key:="sz002155", Item:=3      '湖南黄金  黄金
+        .Add Key:="sz002519", Item:=10     '银河电子  家电
+        .Add Key:="sz300025", Item:=10     '华星创业  通信服务
+        .Add Key:="sh600560", Item:=4      '金自天正  仪器仪表
+        .Add Key:="sh603766", Item:=9      '隆鑫通用  其他交运设备
+        .Add Key:="sz002363", Item:=7      '隆基机械  汽车零部件
 
-        .Add key:="sh601808", Item:=4       '中海油服
-        .Add key:="sh600028", Item:=10       '中国石化
+        .Add Key:="sh601808", Item:=4       '中海油服
+        .Add Key:="sh600028", Item:=10       '中国石化
         '---------------------------------------
 '        .Add Key:="sh601088", Item:=2       '中国神华
 '        .Add Key:="sh601226", Item:=10      '华电重工
@@ -359,26 +359,26 @@ Function 现市特程_CN_沪深盘面大盘( _
 Dim 码典沪深指数 As New Dictionary
 With 码典沪深指数
     '---------------------------------------
-    .Add Item:="sh000001", key:="上证指数"
-    .Add Item:="sz399673", key:="创业板50"
-    .Add Item:="sh000688", key:="科创50"
+    .Add Item:="sh000001", Key:="上证指数"
+    .Add Item:="sz399673", Key:="创业板50"
+    .Add Item:="sh000688", Key:="科创50"
 '    .Add Item:="sz399006", Key:="创业板指"
 '    .Add Item:="sz399001", Key:="深证成指"
-    .Add Item:="sz399678", key:="深次新股"
+    .Add Item:="sz399678", Key:="深次新股"
 '    .Add Item:="sh000159", Key:="沪股通"
-    .Add Item:="sh000003", key:="B股指数"
+    .Add Item:="sh000003", Key:="B股指数"
     '---------------------------------------
 '    .Add Item:="", Key:="市场指数"
 '    .Add Item:="sh000002", Key:="A股指数"
 '    .Add Item:="sh000003", Key:="B股指数"
 '    .Add Item:="hkHSI", Key:="恒生指数"
     '---------------------------------------
-    .Add Item:="", key:="宽基指数"
-    .Add Item:="sh000016", key:="上证50"
-    .Add Item:="sh000300", key:="沪深300"
-    .Add Item:="sh000905", key:="中证500"
-    .Add Item:="sh000852", key:="中证1000"
-    .Add Item:="sz159531", key:="中证2000"
+    .Add Item:="", Key:="宽基指数"
+    .Add Item:="sh000016", Key:="上证50"
+    .Add Item:="sh000300", Key:="沪深300"
+    .Add Item:="sh000905", Key:="中证500"
+    .Add Item:="sh000852", Key:="中证1000"
+    .Add Item:="sz159531", Key:="中证2000"
     '---------------------------------------
 End With
 '========================================================================================
@@ -424,10 +424,10 @@ Dim 码典沪深行业金融类 As New Dictionary
 With 码典沪深行业金融类
     '---------------------------------------
     '.Add Item:="", Key:="金融"
-    .Add Item:="sz399437", key:="国证证券"
-    .Add Item:="sz399809", key:="保险主题"
-    .Add Item:="sz399986", key:="中证银行"
-    .Add Item:="sz399393", key:="国证地产"
+    .Add Item:="sz399437", Key:="国证证券"
+    .Add Item:="sz399809", Key:="保险主题"
+    .Add Item:="sz399986", Key:="中证银行"
+    .Add Item:="sz399393", Key:="国证地产"
 '    .Add Item:="sz399983", Key:="地产等权"
     '---------------------------------------
 End With
@@ -437,12 +437,12 @@ End With
 Dim 码典沪深行业周期类 As New Dictionary
 With 码典沪深行业周期类
     '---------------------------------------
-    .Add Item:="sz399395", key:="国证有色"
-    .Add Item:="sz399440", key:="国证钢铁"
-    .Add Item:="sz399436", key:="国证煤炭"
-    .Add Item:="sz399990", key:="煤炭等权"
-    .Add Item:="sz399438", key:="国证电力"
-    .Add Item:="sz399439", key:="国证油气"
+    .Add Item:="sz399395", Key:="国证有色"
+    .Add Item:="sz399440", Key:="国证钢铁"
+    .Add Item:="sz399436", Key:="国证煤炭"
+    .Add Item:="sz399990", Key:="煤炭等权"
+    .Add Item:="sz399438", Key:="国证电力"
+    .Add Item:="sz399439", Key:="国证油气"
     '---------------------------------------
 End With
 '========================================================================================
@@ -452,23 +452,23 @@ Dim 码典沪深行业制造类 As New Dictionary
 With 码典沪深行业制造类
     '---------------------------------------
 '    .Add Item:="", Key:="主题汽车"
-    .Add Item:="sz399432", key:="国证汽车"
-    .Add Item:="sz399976", key:="CS新能车"
-    .Add Item:="sz399412", key:="国证新能"
+    .Add Item:="sz399432", Key:="国证汽车"
+    .Add Item:="sz399976", Key:="CS新能车"
+    .Add Item:="sz399412", Key:="国证新能"
 '    .Add Item:="sz399808", Key:="中证新能"
     '---------------------------------------
     '.Add Item:="", Key:="高端制造"
-    .Add Item:="sh000097", key:="高端装备"
-    .Add Item:="sz399803", key:="工业4.0"
+    .Add Item:="sh000097", Key:="高端装备"
+    .Add Item:="sz399803", Key:="工业4.0"
 '    .Add Item:="", Key:="主题高铁"
 '    .Add Item:="sz399419", Key:="国证高铁"
-    .Add Item:="sz399807", key:="高铁产业"
+    .Add Item:="sz399807", Key:="高铁产业"
     '---------------------------------------
 '    .Add Item:="", Key:="主题军工"
-    .Add Item:="sz399973", key:="中证国防"
-    .Add Item:="sz399967", key:="中证军工"
+    .Add Item:="sz399973", Key:="中证国防"
+    .Add Item:="sz399967", Key:="中证军工"
 '    .Add Item:="sz399368", Key:="国证军工"
-    .Add Item:="sz399813", key:="中证国安"
+    .Add Item:="sz399813", Key:="中证国安"
     '.Add Item:="sz399418", Key:="国证国安"
     '---------------------------------------
 End With
@@ -479,13 +479,13 @@ Dim 码典沪深行业消费类 As New Dictionary
 With 码典沪深行业消费类
     '---------------------------------------
     '.Add Item:="", Key:="主题医药"
-    .Add Item:="sh000933", key:="中证医药"
-    .Add Item:="sz399989", key:="中证医疗"
-    .Add Item:="sz399441", key:="生物医药"
+    .Add Item:="sh000933", Key:="中证医药"
+    .Add Item:="sz399989", Key:="中证医疗"
+    .Add Item:="sz399441", Key:="生物医药"
     '---------------------------------------
-    .Add Item:="", key:="主题食品"
-    .Add Item:="sz399997", key:="中证白酒"
-    .Add Item:="sz399396", key:="国证食品"
+    .Add Item:="", Key:="主题食品"
+    .Add Item:="sz399997", Key:="中证白酒"
+    .Add Item:="sz399396", Key:="国证食品"
     '---------------------------------------
     '.Add Item:="", Key:="主题农业"
     '.Add Item:="sz399814", Key:="大农业"
@@ -496,8 +496,8 @@ With 码典沪深行业消费类
     '.Add Item:="sz399320", Key:="国证服务"
     ''---------------------------------------
     '.Add Item:="", Key:="主题物流"
-    .Add Item:="sz399433", key:="国证交运"
-    .Add Item:="sz399353", key:="国证物流"
+    .Add Item:="sz399433", Key:="国证交运"
+    .Add Item:="sz399353", Key:="国证物流"
     '---------------------------------------
 End With
 '========================================================================================
@@ -508,24 +508,24 @@ With 码典沪深行业科技类
     '---------------------------------------
 '    .Add Item:="", Key:="主题通信"
 '    .Add Item:="sh000936", Key:="中证电信"
-    .Add Item:="sz399389", key:="国证通信"
+    .Add Item:="sz399389", Key:="国证通信"
     '---------------------------------------
     '.Add Item:="", Key:="主题科技指数"
-    .Add Item:="sz399652", key:="中创高新"
-    .Add Item:="sh000998", key:="中证TMT"
+    .Add Item:="sz399652", Key:="中创高新"
+    .Add Item:="sh000998", Key:="中证TMT"
     '---------------------------------------
-    .Add Item:="", key:="主题传媒"
-    .Add Item:="sh000935", key:="中证信息"
-    .Add Item:="sz399971", key:="中证传媒"
-    .Add Item:="sz399804", key:="中证体育"
+    .Add Item:="", Key:="主题传媒"
+    .Add Item:="sh000935", Key:="中证信息"
+    .Add Item:="sz399971", Key:="中证传媒"
+    .Add Item:="sz399804", Key:="中证体育"
     '---------------------------------------
-    .Add Item:="", key:="主题硬件"
-    .Add Item:="sz399363", key:="计算机"
-    .Add Item:="sz399360", key:="新硬件"
+    .Add Item:="", Key:="主题硬件"
+    .Add Item:="sz399363", Key:="计算机"
+    .Add Item:="sz399360", Key:="新硬件"
     '---------------------------------------
-    .Add Item:="", key:="主题互联网"
-    .Add Item:="sz399970", key:="移动互联"
-    .Add Item:="sz399994", key:="信息安全"
+    .Add Item:="", Key:="主题互联网"
+    .Add Item:="sz399970", Key:="移动互联"
+    .Add Item:="sz399994", Key:="信息安全"
     '.Add Item:="sz399805", Key:="互联金融"
     '---------------------------------------
 End With
@@ -535,11 +535,11 @@ End With
 Dim 码典国内股指ETF As New Dictionary
 With 码典国内股指ETF
     '---------------------------------------
-    .Add Item:="sh510050", key:="上证50"
-    .Add Item:="sh510300", key:="沪深300"
-    .Add Item:="sz159901", key:="深100"
-    .Add Item:="sz159915", key:="创业板"
-    .Add Item:="sz159922", key:="中证500"
+    .Add Item:="sh510050", Key:="上证50"
+    .Add Item:="sh510300", Key:="沪深300"
+    .Add Item:="sz159901", Key:="深100"
+    .Add Item:="sz159915", Key:="创业板"
+    .Add Item:="sz159922", Key:="中证500"
     '---------------------------------------
     '.Add Item:="", Key:="深证主题"
     '.Add Item:="sz399670", Key:="深周期50"
@@ -549,13 +549,13 @@ With 码典国内股指ETF
     '.Add Item:="sz399608", Key:="科技100"
     '.Add Item:="sz399610", Key:="TMT50"
     '---------------------------------------
-    .Add Item:="", key:="主题国外基金"
-    .Add Item:="sh513100", key:="纳斯达克100"
-    .Add Item:="sz159920", key:="恒生ETF"
-    .Add Item:="sh510900", key:="恒H股ETF"
-    .Add Item:="sh513900", key:="港股通100"
-    .Add Item:="sh513060", key:="恒生医疗"
-    .Add Item:="sh513330", key:="恒生互联"
+    .Add Item:="", Key:="主题国外基金"
+    .Add Item:="sh513100", Key:="纳斯达克100"
+    .Add Item:="sz159920", Key:="恒生ETF"
+    .Add Item:="sh510900", Key:="恒H股ETF"
+    .Add Item:="sh513900", Key:="港股通100"
+    .Add Item:="sh513060", Key:="恒生医疗"
+    .Add Item:="sh513330", Key:="恒生互联"
     '---------------------------------------
 End With
 '========================================================================================

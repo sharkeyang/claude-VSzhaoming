@@ -165,7 +165,7 @@ Private Sub 时程结期判断by字典装载(期类 As String)
                 If VBA.IsDate(.Cells(i, 所在列号)) = True Then
                     currentDate = .Cells(i, 所在列号)
                     值索横期 = 时程工具衍生期索(currentDate, 常期类为日)
-                    典全局交期.Add Item:=currentDate, key:=值索横期
+                    典全局交期.Add Item:=currentDate, Key:=值索横期
                 End If
             Next
         End With
@@ -300,7 +300,7 @@ Private Sub 时程后台加工_生成交易日工表()
         tradeDate串 = tradeDatesFile.ReadLine
         If tradeDate串 Like "########" Then
             tradeDate = DateSerial(Left$(tradeDate串, 4), Mid$(tradeDate串, 5, 2), Mid$(tradeDate串, 7, 2))
-            典交易日.Add Item:=tradeDate, key:=tradeDate串
+            典交易日.Add Item:=tradeDate, Key:=tradeDate串
         End If
     Loop
     tradeDatesFile.Close

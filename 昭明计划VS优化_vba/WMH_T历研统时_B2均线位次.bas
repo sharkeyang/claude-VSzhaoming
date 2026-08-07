@@ -765,10 +765,10 @@ Function XLSOP统时全码_线重格程( _
 '========================================================================================
     With WSJC
         .Sort.SortFields.Clear
-        .Sort.SortFields.Add key:=.Columns(位阶码矩列代码) _
+        .Sort.SortFields.Add Key:=.Columns(位阶码矩列代码) _
             , SortOn:=xlSortOnValues, Order:=xlAscending _
             , DataOption:=xlSortNormal
-        .Sort.SortFields.Add key:=.Columns(位阶码矩列期类) _
+        .Sort.SortFields.Add Key:=.Columns(位阶码矩列期类) _
             , SortOn:=xlSortOnValues, Order:=xlAscending, CustomOrder:="M,W,D" _
             , DataOption:=xlSortNormal
     End With
@@ -832,7 +832,7 @@ Function XLSOP统时全码基程_设置典均线(典均线 As Dictionary, 期类
     For X = LBound(组均线) To UBound(组均线)
         序数典集 = 序数典集 + 1
         元素典集 = 组均线(X)
-        典均线.Add Item:=元素典集, key:=序数典集
+        典均线.Add Item:=元素典集, Key:=序数典集
     Next
     '------------------------------------------------------------------------------------
     Erase 组均线
