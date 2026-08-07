@@ -1292,7 +1292,7 @@ End If
                 Else
                     'EF和CD都不好
                     If 是否AB好 Then
-                        .Interior.Color = 常色凡戴克棕  'G级: 粑粑棕(屎,EF差)
+                        .Interior.Color = 常色深粪棕  'G级: 深粪棕(屎)
                     Else
                         .Interior.Color = 常色三红  'H级: 深红(禁,EF差)
                     End If
