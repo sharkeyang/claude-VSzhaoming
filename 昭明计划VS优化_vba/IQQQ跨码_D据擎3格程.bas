@@ -1278,21 +1278,21 @@ End If
                 ElseIf 是否EF好 Then
                     'EF好, CD不好
                     If 是否AB好 Then
-                        .Interior.Color = 常色八灰  'C级: 中灰(试,EF好)
+                        .Interior.Color = 常色八绿  'C级: 中绿(被,EF好)
                     Else
-                        .Interior.Color = 常色五红  'D级: 中红(禁,EF好)
+                        .Interior.Color = 常色六绿  'D级: 深绿(被,EF好)
                     End If
                 ElseIf 是否CD好 Then
                     'CD好, EF不好
                     If 是否AB好 Then
-                        .Interior.Color = 常色八靛  'E级: 中靛(主,EF差)
+                        .Interior.Color = 常色十靛  'E级: 亮靛(主,EF差)
                     Else
-                        .Interior.Color = 常色六绿  'F级: 深绿(被,EF差)
+                        .Interior.Color = 常色四绿  'F级: 最深绿(被,EF差)
                     End If
                 Else
                     'EF和CD都不好
                     If 是否AB好 Then
-                        .Interior.Color = 常色四灰  'G级: 深灰(试,EF差)
+                        .Interior.Color = 常色凡戴克棕  'G级: 粑粑棕(屎,EF差)
                     Else
                         .Interior.Color = 常色三红  'H级: 深红(禁,EF差)
                     End If
@@ -1456,43 +1456,43 @@ Function IQQQ跨码展擎_校验持仓区域( _
         '--------------------------------------------------------------------------------
         Dim 典值池数 As New Dictionary
         With 典值池数
-            .Add key:="池全", Item:=0
-            .Add key:="池金", Item:=0
-            .Add key:="池白", Item:=0
-            .Add key:="池基", Item:=0
-            .Add key:="池外", Item:=0
+            .Add Key:="池全", Item:=0
+            .Add Key:="池金", Item:=0
+            .Add Key:="池白", Item:=0
+            .Add Key:="池基", Item:=0
+            .Add Key:="池外", Item:=0
         End With
         Dim 典值池额 As New Dictionary
         With 典值池额
-            .Add key:="池全", Item:=0
-            .Add key:="池金", Item:=0
-            .Add key:="池白", Item:=0
-            .Add key:="池基", Item:=0
-            .Add key:="池外", Item:=0
+            .Add Key:="池全", Item:=0
+            .Add Key:="池金", Item:=0
+            .Add Key:="池白", Item:=0
+            .Add Key:="池基", Item:=0
+            .Add Key:="池外", Item:=0
         End With
         Dim 典值池赚收 As New Dictionary
         With 典值池赚收
-            .Add key:="池全", Item:=0
-            .Add key:="池金", Item:=0
-            .Add key:="池白", Item:=0
-            .Add key:="池基", Item:=0
-            .Add key:="池外", Item:=0
+            .Add Key:="池全", Item:=0
+            .Add Key:="池金", Item:=0
+            .Add Key:="池白", Item:=0
+            .Add Key:="池基", Item:=0
+            .Add Key:="池外", Item:=0
         End With
         Dim 典值池赚高 As New Dictionary
         With 典值池赚高
-            .Add key:="池全", Item:=0
-            .Add key:="池金", Item:=0
-            .Add key:="池白", Item:=0
-            .Add key:="池基", Item:=0
-            .Add key:="池外", Item:=0
+            .Add Key:="池全", Item:=0
+            .Add Key:="池金", Item:=0
+            .Add Key:="池白", Item:=0
+            .Add Key:="池基", Item:=0
+            .Add Key:="池外", Item:=0
         End With
         Dim 典值池赚低 As New Dictionary
         With 典值池赚低
-            .Add key:="池全", Item:=0
-            .Add key:="池金", Item:=0
-            .Add key:="池白", Item:=0
-            .Add key:="池基", Item:=0
-            .Add key:="池外", Item:=0
+            .Add Key:="池全", Item:=0
+            .Add Key:="池金", Item:=0
+            .Add Key:="池白", Item:=0
+            .Add Key:="池基", Item:=0
+            .Add Key:="池外", Item:=0
         End With
 '========================================================================================
 '确定范围
