@@ -1949,7 +1949,7 @@ Public Sub XL算展取样_谕组批量通用(Optional 模式 As String = "", Opt
     '遍历股票列表，按需生成
     '--------------------------------------------------------------------------------------
     Dim 计数 As Long: 计数 = 0
-    Dim TT As Single: TT = Timer
+    Dim TT As Double: TT = Timer
     Dim 总股数 As Long: 总股数 = 股票列表.Count
     If 总股数 = 0 Then MsgBox "无符合条件的股票": Exit Sub
 
@@ -1986,12 +1986,12 @@ Public Sub XL算展取样_谕组批量通用(Optional 模式 As String = "", Opt
             Call XL算展取样_谕组单股通用(CStr(CIDL), , 实际模式)
             计数 = 计数 + 1
             If 计数 Mod 500 = 0 Then
-                Debug.Print "已完成: " & 计数 & " 只, 耗时: " & CLng(Timer - TT) & "秒"
+                Debug.Print "[" & Format(Now, "hh:mm:ss") & "] 已完成: " & 计数 & " 只, 耗时: " & CLng(IIf(Timer < TT, Timer - TT + 86400, Timer - TT)) & "秒"
                 DoEvents
             End If
         End If
     Next
-    MsgBox "谕组生成完成！" & vbCrLf & "新增: " & 计数 & " 只" & vbCrLf & "总耗时: " & CLng(Timer - TT) & " 秒", vbInformation
+    MsgBox "谕组生成完成！" & vbCrLf & "新增: " & 计数 & " 只" & vbCrLf & "总耗时: " & CLng(IIf(Timer < TT, Timer - TT + 86400, Timer - TT)) & " 秒", vbInformation
 End Sub
 '========================================================================================
 '========================================================================================
