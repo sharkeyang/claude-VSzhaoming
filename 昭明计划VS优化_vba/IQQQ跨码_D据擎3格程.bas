@@ -852,7 +852,7 @@ End If
                 '-------------------------------------------------------------------------
                 '日层系 买提示指标
                 '-------------------------------------------------------------------------
-                        With .Cells(1, 位谕of日层段)
+                        With .Cells(1, 位谕of日冲策略)
                                 If InStr(.Value, "NA") > 0 Then
                                     .Font.Color = .Interior.Color
                                     .Font.TintAndShade = -0.1
@@ -861,7 +861,7 @@ End If
                                 End If
                         End With
                         '------------------------------------------------------------
-                        With .Cells(1, 位谕of日冲策略)
+                        With .Cells(1, 位谕of月基策日)
                                 If InStr(.Value, "弱") > 0 Then
                                     .Font.Color = .Interior.Color
                                     .Font.TintAndShade = -0.2
@@ -1085,19 +1085,19 @@ End If
         '================================================================================
         With WS.Cells(行号遍历, 基列)
                 '------------------------------------------------------------------------
-                With .Cells(1, 位谕of月基策略)
+                With .Cells(1, 位谕of月基策周)
                     If InStr(.Value, "NA") > 0 Then
                         .Font.Color = 常色三红
                     End If
                 End With
                 '------------------------------------------------------------------------
-                With .Cells(1, 位谕of月基命分)
+                With .Cells(1, 位谕of月基分命)
                     If .Value = 0 Then
                         .Font.Color = .Interior.Color
                         .Font.TintAndShade = -0.2
                     End If
                 End With
-                With .Cells(1, 位谕of月基策分)
+                With .Cells(1, 位谕of月基分周)
                     If .Value = 0 Then
                         .Font.Color = .Interior.Color
                         .Font.TintAndShade = -0.2

@@ -976,6 +976,11 @@ Public Sub UGSOP_MENU_生成()
         .Caption = "全新结算基据"
         .FaceId = 372 '157 '967 '308
     End With
+    With 菜项结算.Controls.Add(Type:=msoControlButton)
+        .OnAction = "STBASE结算检查_完备检测"
+        .Caption = "结算完备检查"
+        .FaceId = 372 '157 '967 '308
+    End With
     '-------------------------------------------------
     With 菜项结算.Controls.Add(Type:=msoControlButton)
         .OnAction = "STCALL花册管理_重制花天P9调程设置信息"

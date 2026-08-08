@@ -39,7 +39,7 @@ def main(stock_list=None):
             wxcd = g(row, 87)
             dxab = g(row, 89)
             rizhou = g(row, 88)
-            richong = g(row, 96)  # 日冲策略: 主升/渡强/渡弱/空降
+            yuejiricao = g(row, 96)  # 月基日操: 主升/渡强/渡弱/空降
             zhupai_r = g(row, 95)
             zhuxing_dja = g(row, 93)
             zhuxing_wja = g(row, 80)
@@ -70,7 +70,7 @@ def main(stock_list=None):
 
             # 开仓自问
             r1 = '✅' if ('金' in wxcd or '银' in wxcd) else ('❌' if any(x in wxcd for x in ['屎','尿','唏嘘']) else '🟡')
-            r2 = '✅' if richong.startswith('主升') else '🟡' if '渡强' in richong else '❌'
+            r2 = '✅' if yuejiricao.startswith('主升') else '🟡' if '渡强' in yuejiricao else '❌'
             r3 = '✅' if dxze_ok else '❌'
             r5 = '✅'
             r7 = '⏳'
@@ -87,7 +87,7 @@ def main(stock_list=None):
             lines.append(f'| ⑧ | 单向二戒 | {r8} |')
 
             if '金' in wxcd or '银' in wxcd:
-                if '主升' in richong:
+                if '主升' in yuejiricao:
                     if dxze_ok:
                         lines.append(f'\n> 🟢 全程绿灯，推荐操作')
                     elif '升' in zhupai_r:
@@ -106,7 +106,7 @@ def main(stock_list=None):
             lines.append(f'|:-----|:----|')
             lines.append(f'| WXCD | `{wxcd}` |')
             lines.append(f'| DXAB | `{dxab}` |')
-            lines.append(f'| 日冲策略 | `{richong}` |')
+            lines.append(f'| 月基日操 | `{yuejiricao}` |')
             lines.append(f'| 柱排日 | `{zhupai_r}` |')
             lines.append(f'| 柱型DJA | `{zhuxing_dja}` |')
             lines.append(f'| 柱型WJA | `{zhuxing_wja}` |')

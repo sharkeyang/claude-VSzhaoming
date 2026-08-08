@@ -120,15 +120,6 @@ Public Const 位谕of日层柱型 = 位谕始of族日层 + 2
 Public Const 位谕of日层界 = 位谕始of族日层 + 3
 '卖提示包含：/触顶否/高幅（偏幅）/管宽（哼JC）/陡（均线拉开距离）/叠（连续波幅）/连阳数
 Public Const 位谕of日层柱排 = 位谕始of族日层 + 4
-'等高线分类：等1~等8，基于DTZA(日ZA)+日中符(中符串)判断当前位置
-' 等1: DTZA=1, 日中符任意     → DJA边缘刚站上
-' 等2: DTZA=2~4, 日中符CDEF  → 近DJA软弱
-' 等3: DTZA≥2, 日中符AB      → 远离DJA强势主升
-' 等4: DTZA>4, 日中符CDEF    → 回归DJA
-' 等5: DTZA=-1, 日中符任意    → DJA边缘下方
-' 等6: DTZA=-4~-2, 日中符ABCD → 近DJA下方偏强
-' 等7: DTZA≤-2, 日中符EF     → 远离DJA弱势
-' 等8: DTZA<-4, 日中符ABCD   → 回归DJA（极少）
 Public Const 位谕of日层等 = 位谕始of族日层 + 5
 '等高线机会与警示（在神谕中计算，筛选直接读取）
 Public Const 位谕of日层等机警 = 位谕始of族日层 + 6
@@ -466,24 +457,25 @@ Public Const 位谕of策传 = 位谕始of族策 + 0      '策传综合信息，�
 '--- 周冲策略 ---
 Public Const 位谕of周冲策略 = 位谕始of族策 + 1     '周冲策略: 匹配的策略名(如"金升非")
 Public Const 位谕of周冲策分 = 位谕始of族策 + 2    '周冲策分: 冲高概率(P>=3%)
-'--- 月基策略 三变量 ---
-'月基策略：月基持仓的底层分类，按周层四域映射为7类
-'  V1 月基命分 = 股性分（历史基因），衡量该股历史上沿长期均线操作是否容易赚钱
-'  V2 月基策分 = 存续分（走势维持），仅对多长三分类评分，预示后续1~5周是否维持月基状态
-Public Const 位谕of月基策略 = 位谕始of族策 + 3     '月基策略: 多长(积极)/多长(消极)/多长(不定)/多被(金)/多被(银)/多被(唏)/NA(空看)/NA(空长)
-Public Const 位谕of月基命分 = 位谕始of族策 + 4     'V1 月基命分: 股性分(0~100)，从CSV查表，恶庄天然过滤
-Public Const 位谕of月基策分 = 位谕始of族策 + 5     'V2 月基策分(5周): 当前周波型×柱排状态, 5周后是否仍在多长(续持率取整), 仅对多长评分
+'--- 月基策周 三变量 ---
+'月基策周：月基持仓的底层分类，按周层四域映射为7类
+'  V1 月基分命 = 股性分（历史基因），衡量该股历史上沿长期均线操作是否容易赚钱
+'  V2 月基分周 = 存续分（走势维持），仅对多长三分类评分，预示后续1~5周是否维持月基状态
+Public Const 位谕of月基策周 = 位谕始of族策 + 3     '月基策周: 多长(积极)/多长(消极)/多长(不定)/多被(金)/多被(银)/多被(唏)/NA(空看)/NA(空长)
+Public Const 位谕of月基分命 = 位谕始of族策 + 4     'V1 月基分命: 股性分(0~100)，从CSV查表，恶庄天然过滤
+Public Const 位谕of月基分周 = 位谕始of族策 + 5     'V2 月基分周(5周): 当前周波型×柱排状态, 5周后是否仍在多长(续持率取整), 仅对多长评分
 Public Const 位谕of月基带周 = 位谕始of族策 + 6     'V3 月基带周: (WXCD)▲/↘/↗/▽ WXCD→WXAB带动
 Public Const 位谕of月基带日 = 位谕始of族策 + 7     'V4 月基带日: (DXAB)同上(DXCD)同上(DXEF) 日级别DXAB→DXCD→DXEF带动
-'--- 日冲策略（紧接月基带日后） ---
-Public Const 位谕of日冲策略 = 位谕始of族策 + 8     '日冲策略: 龙/唏/嘘/屁 + 强/弱 + 甲后缀
+'--- 月基策日（紧接月基带日后） ---
+Public Const 位谕of月基策日 = 位谕始of族策 + 8     '月基策日: 龙/唏/嘘/屁 + 强/弱 + 甲后缀
+'--- 月基日H2（紧接月基策日后） ---
+Public Const 位谕of月基日H2 = 位谕始of族策 + 9     '月基日H2: 评级(A/B/C/D)+下日DSHR>2分数2位，如"A39"，升序排序
 '--- 仓周/仓日分类（由神谕生成，跨码管理读取） ---
-Public Const 位谕of仓周类 = 位谕始of族策 + 9    '由神谕生成（基于WXCD护型+周层护型，第2772行），跨码管理读取
-Public Const 位谕of仓日类 = 位谕始of族策 + 10    '由神谕生成（基于日线层护级CD+层护段AB，第2785行），跨码管理读取
+Public Const 位谕of仓周类 = 位谕始of族策 + 10    '由神谕生成（基于WXCD护型+周层护型，第2772行），跨码管理读取
+Public Const 位谕of仓日类 = 位谕始of族策 + 11    '由神谕生成（基于日线层护级CD+层护段AB，第2785行），跨码管理读取
 '--- 日冲策略 ---
-Public Const 位谕of日层段 = 位谕始of族策 + 11       '相当于判断 →ZE>0+ZC>0+ZA>0
-Public Const 位谕of日冲策分 = 位谕始of族策 + 12     '日冲策分: →ZE>0+ZC>0+ZA>0 概率(保留1位小数)
-Public Const 位谕of日冲H2分 = 位谕始of族策 + 13    '日冲H2分: 评级(A/B/C/D)+下日DSHR>2分数2位，如"A39"，升序排序
+Public Const 位谕of日冲策略 = 位谕始of族策 + 12       '日冲策略: 三级策略名称(如"等4A")，周门过滤+等高线匹配
+Public Const 位谕of日冲策分 = 位谕始of族策 + 13     '日冲策分: 下日高≥2%概率(0~100)，赛马全量数据
 Public Const 位谕of日层联动 = 位谕始of族策 + 14     '周日联动: 周看涨但日下跌捡漏, 输出周/日
 Public Const 位谕of日层漏提示 = 位谕始of族策 + 15     '日层漏提示: 精密捡漏信号
 '--- 日冲22态 ---
@@ -493,7 +485,8 @@ Public Const 位谕of日层盈提示 = 位谕始of族策 + 18     '日层盈提�
 '-----------
 Public Const 位谕of周层四域 = 位谕始of族策 + 19
 Public Const 位谕of日层四域 = 位谕始of族策 + 20
-Public Const 位谕终of族策 = 位谕of日层四域
+Public Const 位谕of日层段 = 位谕始of族策 + 21     '日层段: 仓位状态(NA/卖浮/持主/持被)
+Public Const 位谕终of族策 = 位谕of日层段
 '----------------------------------------------------------------------------------------
 Public Const 位谕列终全部 = 位谕终of族策
 '----------------------------------------------------------------------------------------
@@ -502,25 +495,25 @@ Public Const 位谕列终全部 = 位谕终of族策
 
 
 
-'V1 月基命分查表（几何均值）
+'V1 月基分命查表（几何均值）
 '设计思路：命分衡量"金升介入→持有→WXZC<0退出"平均每次能赚多少。
-'  几何均值自然惩罚波动，过滤假信号。命分低的股票天然不参与月基策略。
-'数据源：_产出物\_工具\vba月基命分表.csv（全量7463只回测生成）
+'  几何均值自然惩罚波动，过滤假信号。命分低的股票天然不参与月基策周。
+'数据源：_产出物\_工具\vba月基分命表.csv（全量7463只回测生成）
 '评分公式：几何均值 = (∏(1+每次收益))^(1/交易次数) - 1
-Private 命分表 As Object 'Dictionary (代码→月基命分)
+Private 命分表 As Object 'Dictionary (代码→月基分命)
 Private 命分表已加载 As Boolean
 
 '----------------------------------------------------------------------------------------
-'加载月基命分CSV，按代码查表赋值
-'CSV路径：_产出物\_工具\vba月基命分表.csv，与xlsm同目录
+'加载月基分命CSV，按代码查表赋值
+'CSV路径：_产出物\_工具\vba月基分命表.csv，与xlsm同目录
 'CSV列：代码,命分,算术均值,最大收益,胜率,交易次数,备注
 '----------------------------------------------------------------------------------------
-Private Sub IQQQ跨码工具_加载月基命分表()
+Private Sub IQQQ跨码工具_加载月基分命表()
     If 命分表已加载 Then Exit Sub
     Set 命分表 = CreateObject("Scripting.Dictionary")
 
     Dim CSV路径 As String
-    CSV路径 = ThisWorkbook.Path & "\_产出物\_工具\vba月基命分表.csv"
+    CSV路径 = ThisWorkbook.Path & "\_产出物\_工具\vba月基分命表.csv"
 
     Dim FSO As Object: Set FSO = CreateObject("Scripting.FileSystemObject")
     If Not FSO.FileExists(CSV路径) Then
@@ -3052,27 +3045,27 @@ If UBCID是代码(CIDL) = True Then
             End If
             '============================================================================
 '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-'月基策略
+'月基策周
 '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
             '============================================================================
             '月基三变量：策略分类 + 命分(V1) + 策分(V2) + 带向(V3)
             '============================================================================
             '【设计思路】
-            ' 月基策略的核心问题：一只股票，是否值得长期持有（月基）？
+            ' 月基策周的核心问题：一只股票，是否值得长期持有（月基）？
             ' 三个变量从不同维度回答这个问题：
             '
-            ' V1 月基命分（股性分）——历史基因
+            ' V1 月基分命（股性分）——历史基因
             '   └─ 衡量该股历史上沿长期均线操作是否容易赚钱
             '   └─ 好股票：突破有效、上升稳定、回踩不破线 → 高分
             '   └─ 恶庄：突破反复贯穿、暴力回踩破线、长阴破多线 → 低分
             '   └─ 自然过滤恶庄，避免在"好股率低"的股票上浪费仓位
             '   └─ 数据来源：离线全量历史回测，CSV查表赋值
             '
-            ' V2 月基策分（存续分）——走势维持（仅对多长三分类评分）
+            ' V2 月基分周（存续分）——走势维持（仅对多长三分类评分）
             '   └─ 当前走势预示后续1~5周是否继续维持月基状态
             '   └─ 与"周冲策略"的区别：
             '        周冲策略 = 子集，只关心下周是否冲高（P≥3%）
-            '        月基策分 = 是否维持整体月基仓位（更宽，含横盘/缓涨等）
+            '        月基分周 = 是否维持整体月基仓位（更宽，含横盘/缓涨等）
             '   └─ 高分信号：龙猪延续、升柱排延续、ZA稳定上升
             '   └─ 低分信号：触顶、跌吞、ZA下降、HR<0、ZC≤0、震正
             '
@@ -3088,15 +3081,15 @@ If UBCID是代码(CIDL) = True Then
             '   命分高 + 策分低 + 带向正潜 → 关注但准备减仓
             '   命分低 + 任何情况 → 天然不参与（恶庄过滤）
             '============================================================================
-            '四域体系（月基策略分类的底层框架）：
+            '四域体系（月基策周分类的底层框架）：
             '  多长 = ZC>0+CD>0+ZB>0  → 内部三分类：积极/消极/不定
             '  多被 = ZC>0但CD≤0或ZB≤0 → 子分类：多被(金)=WXCD含金, 多被(银)=WXCD含银, 多被(唏)=WXCD不含金银
             '  NA(空看) = ZC≤0但CD/ZB有正
             '  NA(空长) = 三空全
             '============================================================================
             Dim 月基分类 As String: 月基分类 = ""
-            Dim 月基命分 As Double: 月基命分 = 0
-            Dim 月基策分 As Double: 月基策分 = 0
+            Dim 月基分命 As Double: 月基分命 = 0
+            Dim 月基分周 As Double: 月基分周 = 0
         
             '取四域值
             Dim 四域 As String: 四域 = 谕组(X, 位谕of周层四域)
@@ -3164,19 +3157,19 @@ If UBCID是代码(CIDL) = True Then
                 月基分类 = "NA(空看)"  '兜底
             End Select
         
-            'V1 月基命分（几何均值）— 从CSV查表
-            'CSV路径：_产出物\_工具\vba月基命分表.csv，按代码(CIDL)匹配
+            'V1 月基分命（几何均值）— 从CSV查表
+            'CSV路径：_产出物\_工具\vba月基分命表.csv，按代码(CIDL)匹配
             '评分公式：几何均值 = (∏(1+每次收益))^(1/交易次数) - 1
             '评级：仁慈>=20分 / 正常10~20分 / 震荡0~10分
             '逻辑：命分低=恶庄→天然不参与，命分高=好股→优先考虑月基持有
-            IQQQ跨码工具_加载月基命分表
+            IQQQ跨码工具_加载月基分命表
             If 命分表.Exists(CIDL) Then
-                月基命分 = 命分表(CIDL)
+                月基分命 = 命分表(CIDL)
             Else
-                月基命分 = 0
+                月基分命 = 0
             End If
             '============================================================================
-            'V2 月基策分（存续分）— 仅对多长评分，查表赋值
+            'V2 月基分周（存续分）— 仅对多长评分，查表赋值
             '设计原理：基于波型×柱排二维表，查续持率作为基础分
             '  50分为敏感阈值：≥50倾向于持有，<50倾向于退出
             '查表数据来源：全量7463只验证（2026-07-19）
@@ -3211,55 +3204,55 @@ If UBCID是代码(CIDL) = True Then
                 Select Case V2波型
                 Case "龙猪"
                     Select Case V2柱排
-                    Case "升排": 月基策分 = 75
-                    Case "人排": 月基策分 = 61
-                    Case "跌排": 月基策分 = 58
-                    Case Else:   月基策分 = 65
+                    Case "升排": 月基分周 = 75
+                    Case "人排": 月基分周 = 61
+                    Case "跌排": 月基分周 = 58
+                    Case Else:   月基分周 = 65
                     End Select
                 Case "龙管"
                     Select Case V2柱排
-                    Case "升排": 月基策分 = 70
-                    Case "人排": 月基策分 = 58
-                    Case "跌排": 月基策分 = 56
-                    Case Else:   月基策分 = 61
+                    Case "升排": 月基分周 = 70
+                    Case "人排": 月基分周 = 58
+                    Case "跌排": 月基分周 = 56
+                    Case Else:   月基分周 = 61
                     End Select
                 Case "头正"
                     Select Case V2柱排
-                    Case "升排": 月基策分 = 63
-                    Case "人排": 月基策分 = 58
-                    Case "跌排": 月基策分 = 51
-                    Case Else:   月基策分 = 57
+                    Case "升排": 月基分周 = 63
+                    Case "人排": 月基分周 = 58
+                    Case "跌排": 月基分周 = 51
+                    Case Else:   月基分周 = 57
                     End Select
                 Case "震正"
                     Select Case V2柱排
-                    Case "升排": 月基策分 = 65
-                    Case "人排": 月基策分 = 56
-                    Case "跌排": 月基策分 = 51
-                    Case Else:   月基策分 = 57
+                    Case "升排": 月基分周 = 65
+                    Case "人排": 月基分周 = 56
+                    Case "跌排": 月基分周 = 51
+                    Case Else:   月基分周 = 57
                     End Select
                 Case "震负"
                     Select Case V2柱排
-                    Case "升排": 月基策分 = 62
-                    Case "人排": 月基策分 = 58
-                    Case "跌排": 月基策分 = 50
-                    Case Else:   月基策分 = 57
+                    Case "升排": 月基分周 = 62
+                    Case "人排": 月基分周 = 58
+                    Case "跌排": 月基分周 = 50
+                    Case Else:   月基分周 = 57
                     End Select
                 Case Else
                     Select Case V2柱排
-                    Case "升排": 月基策分 = 65
-                    Case "人排": 月基策分 = 57
-                    Case "跌排": 月基策分 = 52
-                    Case Else:   月基策分 = 58
+                    Case "升排": 月基分周 = 65
+                    Case "人排": 月基分周 = 57
+                    Case "跌排": 月基分周 = 52
+                    Case Else:   月基分周 = 58
                     End Select
                 End Select
         
                 'WXAB调节：甲+3, 乙-3, 己-5
                 If InStr(周护, "甲") > 0 Then
-                    月基策分 = 月基策分 + 3
+                    月基分周 = 月基分周 + 3
                 ElseIf InStr(周护, "己") > 0 Then
-                    月基策分 = 月基策分 - 5
+                    月基分周 = 月基分周 - 5
                 ElseIf InStr(周护, "乙") > 0 Then
-                    月基策分 = 月基策分 - 3
+                    月基分周 = 月基分周 - 3
                 End If
         
                 '盈提示调节：盈高+4, 盈高+宽+8（盈宽单独不加分）
@@ -3267,9 +3260,9 @@ If UBCID是代码(CIDL) = True Then
                 '  盈高+宽: 放量突破主升浪, 趋势最强 +8
                 '  盈宽: 仅累计涨幅大但本周无冲高, 无效不加分
                 If InStr(周盈提, "高") > 0 And InStr(周盈提, "宽") > 0 Then
-                    月基策分 = 月基策分 + 8
+                    月基分周 = 月基分周 + 8
                 ElseIf InStr(周盈提, "高") > 0 Then
-                    月基策分 = 月基策分 + 4
+                    月基分周 = 月基分周 + 4
                 End If
         
                 '分类调节：按市板
@@ -3278,22 +3271,22 @@ If UBCID是代码(CIDL) = True Then
                 '  常市板票Qit"Qit"=中证2000(小盘) -3
                 '  常市板票Qin"Qin"=非成分(小盘) -3
                 If 周市板 = "Qe" Or 周市板 = "Qd" Then
-                    月基策分 = 月基策分 + 7
+                    月基分周 = 月基分周 + 7
                 ElseIf 周市板 = "Qit" Or 周市板 = "Qin" Then
-                    月基策分 = 月基策分 - 3
+                    月基分周 = 月基分周 - 3
                 End If
         
                 '限幅
-                If 月基策分 < 0 Then 月基策分 = 0
-                If 月基策分 > 100 Then 月基策分 = 100
+                If 月基分周 < 0 Then 月基分周 = 0
+                If 月基分周 > 100 Then 月基分周 = 100
             Else
                 '非多长区域不评分
-                月基策分 = 0
+                月基分周 = 0
             End If
         
-            谕组(X, 位谕of月基策略) = 月基分类
-            谕组(X, 位谕of月基命分) = 月基命分
-            谕组(X, 位谕of月基策分) = 月基策分
+            谕组(X, 位谕of月基策周) = 月基分类
+            谕组(X, 位谕of月基分命) = 月基分命
+            谕组(X, 位谕of月基分周) = 月基分周
             '============================================================================
             'V3 月基带周（周级别WXCD→WXAB带动）
             '设计思路：WXCD（大局）→WXAB（护型）双向带动
@@ -3400,31 +3393,17 @@ If UBCID是代码(CIDL) = True Then
             '--------------------------------------------------------------------
             谕组(X, 位谕of月基带日) = "(" & 日EF护级 & ")" & 日CD促EF & "(" & 日CD护级 & ")" & 日AB促CD & "(" & 日AB护级 & ")"
             '============================================================================
-            '基本分类（DJEDC之上仓位状态）
-            '注20260725：就是判断现有状态是否满足（DXZE＞0，DXZC＞0，DXZA＞0）。然后参考《位谕of日冲策分》，判断下日满足（DXZE＞0，DXZC＞0，DXZA＞0）的概率。
+            '注20260726：V5 月基策日（三指标）— 查216分支概率表
             '============================================================================
-            谕组(X, 位谕of日层段) = "NA"
-            If 日类BTZE > 0 Then
-                If 日类BTZC <= 0 Then
-                    谕组(X, 位谕of日层段) = "卖浮"
-                ElseIf 日类BTZA > 0 Then
-                    谕组(X, 位谕of日层段) = "持主"
-                Else
-                    谕组(X, 位谕of日层段) = "持被"
-                End If
-            End If
-            '============================================================================
-            '注20260726：V5 日冲策略（三指标）— 查216分支概率表
-            '============================================================================
-            '注20260726：日冲策略 = 主升/渡强/渡弱/空降 + 后缀.微(N<1000)/.小(N<10000)
-            ' 日冲策分 = →ZE>0+ZC>0+ZA>0 概率取整(0~100)
+            '注20260726：月基策日 = 主升/渡强/渡弱/空降 + 后缀.微(N<1000)/.小(N<10000)
+            ' 月基分日 = →ZE>0+ZC>0+ZA>0 概率取整(0~100)
             ' 日冲H2分 = 下日DSHR>2（按市板）概率取整(0~100)
-            ' 日冲策分 = 评级(A/B/C/D) + 分数(2位)，如"A39"可直接排序
+            ' 月基分日 = 评级(A/B/C/D) + 分数(2位)，如"A39"可直接排序
             '============================================================================
             Dim 日冲pZA As Double, 日冲pDSHA1 As Double, 日冲小样本 As String, 日冲H2分 As Double, 日冲评级 As String
-            If IQQQ跨码工具_查日冲概率(日EF护级, 日CD护级, 日AB护级, 日冲pZA, 日冲pDSHA1, 日冲小样本) Then
-                谕组(X, 位谕of日冲策分) = Round(日冲pZA, 1)
-                日冲H2分 = IQQQ跨码工具_查日冲H2分(日EF护级, 日CD护级, 日AB护级, 周市板)
+            If IQQQ跨码工具_查月基分日基程(日EF护级, 日CD护级, 日AB护级, 日冲pZA, 日冲pDSHA1, 日冲小样本) Then
+                '日冲H2分由等高线后策略映射赋值，此处不再覆盖
+                日冲H2分 = IQQQ跨码工具_查月基日H2(日EF护级, 日CD护级, 日AB护级, 周市板)
                 ' 日冲H2分 = 评级(A/B/C/D) + 分数(2位)，如"A39"可直接排序
                 If 日冲H2分 >= 35 Then
                     日冲评级 = "A"
@@ -3435,67 +3414,67 @@ If UBCID是代码(CIDL) = True Then
                 Else
                     日冲评级 = "D"
                 End If
-                谕组(X, 位谕of日冲H2分) = 日冲评级 & Format(Int(日冲H2分), "00")
-                ' 日冲策略：龙(金银)/雀(唏)/虎(嘘)/武(屎尿) + 强(上中忐)/弱(下忠忑)
-                Dim 日冲分类 As String
-                Dim 日冲强弱 As String
+                谕组(X, 位谕of月基日H2) = 日冲评级 & Format(Int(日冲H2分), "00")
+                ' 月基策日：龙(金银)/雀(唏)/虎(嘘)/武(屎尿) + 强(上中忐)/弱(下忠忑)
+                Dim 月基策日分类 As String
+                Dim 月基策日强弱 As String
                 If 日CD护级 = "上" Or 日CD护级 = "中" Or 日CD护级 = "忐" Then
-                    日冲强弱 = "强"
+                    月基策日强弱 = "强"
                 Else
-                    日冲强弱 = "弱"
+                    月基策日强弱 = "弱"
                 End If
-                日冲分类 = ""
+                月基策日分类 = ""
                 ' 格式: A-H(等级) + 强弱 + 好/坏(AB) + 主/被/傻/禁(层级)
                 ' 忠特殊处理: 嘘尿屎+忠+全部AB → G级
-                Dim 日冲AB As String
+                Dim 月基策日AB As String
                 If 日AB护级 = "上" Or 日AB护级 = "中" Or 日AB护级 = "忐" Then
-                    日冲AB = "好"
+                    月基策日AB = "好"
                 Else
-                    日冲AB = "坏"
+                    月基策日AB = "坏"
                 End If
                 If 日EF护级 = "金" Or 日EF护级 = "银" Or 日EF护级 = "唏" Then
                     'EF好(金银唏)
-                    If 日冲强弱 = "强" Then
-                        If 日冲AB = "好" Then
-                            日冲分类 = "A" & 日冲强弱 & "好主"  'A级: 主(主动持仓)
+                    If 月基策日强弱 = "强" Then
+                        If 月基策日AB = "好" Then
+                            月基策日分类 = "A" & 月基策日强弱 & "好主"  'A级: 主(主动持仓)
                         Else
-                            日冲分类 = "B" & 日冲强弱 & "好被"  'B级: 被(被动持有)
+                            月基策日分类 = "B" & 月基策日强弱 & "好被"  'B级: 被(被动持有)
                         End If
                     Else
-                        If 日冲AB = "好" Then
-                            日冲分类 = "C" & 日冲强弱 & "好被"  'C级: 被(被动持有)
+                        If 月基策日AB = "好" Then
+                            月基策日分类 = "C" & 月基策日强弱 & "好被"  'C级: 被(被动持有)
                         Else
-                            日冲分类 = "D" & 日冲强弱 & "坏被"  'D级: 被(被动持有)
+                            月基策日分类 = "D" & 月基策日强弱 & "坏被"  'D级: 被(被动持有)
                         End If
                     End If
                 Else
                     'EF差(嘘/屎/尿)
                     If 日CD护级 = "忠" Then
-                        日冲分类 = "G" & 日冲强弱 & 日冲AB & "傻"  '忠特殊: 全部AB归G级(傻)
-                    ElseIf 日冲强弱 = "强" Then
-                        If 日冲AB = "好" Then
-                            日冲分类 = "E" & 日冲强弱 & "好主"  'E级: 主(主动持仓)
+                        月基策日分类 = "G" & 月基策日强弱 & 月基策日AB & "傻"  '忠特殊: 全部AB归G级(傻)
+                    ElseIf 月基策日强弱 = "强" Then
+                        If 月基策日AB = "好" Then
+                            月基策日分类 = "E" & 月基策日强弱 & "好主"  'E级: 主(主动持仓)
                         Else
-                            日冲分类 = "F" & 日冲强弱 & "坏被"  'F级: 被(被动持有)
+                            月基策日分类 = "F" & 月基策日强弱 & "坏被"  'F级: 被(被动持有)
                         End If
                     Else
                         '弱(下/忑)
-                        If 日冲AB = "好" Then
-                            日冲分类 = "G" & 日冲强弱 & "好傻"  'G级: 傻(傻吃屎豆)
+                        If 月基策日AB = "好" Then
+                            月基策日分类 = "G" & 月基策日强弱 & "好傻"  'G级: 傻(傻吃屎豆)
                         Else
-                            日冲分类 = "H" & 日冲强弱 & "坏禁"  'H级: 禁(禁止)
+                            月基策日分类 = "H" & 月基策日强弱 & "坏禁"  'H级: 禁(禁止)
                         End If
                     End If
                 End If
                 ' 小样本追加后缀
                 If 日冲小样本 <> "" Then
-                    日冲分类 = 日冲分类 & 日冲小样本
+                    月基策日分类 = 月基策日分类 & 日冲小样本
                 End If
-                谕组(X, 位谕of日冲策略) = 日冲分类
+                谕组(X, 位谕of月基策日) = 月基策日分类
             Else
-                谕组(X, 位谕of日冲策略) = "无数据"
-                谕组(X, 位谕of日冲策分) = 0
-                谕组(X, 位谕of日冲H2分) = "D00"
+                谕组(X, 位谕of月基策日) = "无数据"
+                '日冲策分由等高线后策略映射赋值，此处不覆盖
+                谕组(X, 位谕of月基日H2) = "D00"
             End If
             '============================================================================
             '日冲22态检测
@@ -3628,7 +3607,16 @@ If UBCID是代码(CIDL) = True Then
             End If
             谕组(X, 位谕of日冲22态) = 冲22态
             '============================================================================
-            '等高线分类：等1~等8（基于DTZA+日中符，无条件，不受ZE/ZC限制）
+            '等高线分类：等1~等8，基于DTZA(日ZA)+日中符(中符串)末位，阈值3(与柱型对齐)
+            ' 等1: DTZA=1, 任意末位     → DJA边缘刚站上
+            ' 等2: DTZA=2~3, 末位CDEF  → 近DJA软弱
+            ' 等3: DTZA≥2, 末位AB      → 远离DJA强势主升
+            ' 等4: DTZA>3, 末位CDEF    → 回归DJA
+            ' 等5: DTZA=-1, 任意末位    → DJA边缘下方
+            ' 等6: DTZA=-3~-2, 末位ABCD → 近DJA下方偏强
+            ' 等7: DTZA≤-2, 末位EF     → 远离DJA弱势
+            ' 等8: DTZA<-3, 末位ABCD   → 回归DJA（极少）
+            '注：末位=Right$(中符串,1)，仅看当前柱。VBA末位逻辑，阈值|3|与柱型对齐。
             '============================================================================
             Dim 等日ZA As Double: 等日ZA = 组结算(X, 基位日类 + 位osBTZA)
             Dim 等日中符 As String: 等日中符 = 谕组(X, 位谕of日管中符串)
@@ -3638,7 +3626,7 @@ If UBCID是代码(CIDL) = True Then
                 等值 = "等1"  'DJA边缘刚站上
             ElseIf 等日ZA > 0 Then
                 '上侧：DTZA≥2时，根据日中符末位区分AB(强)和CDEF(弱)
-                If 等日ZA > 4 And InStr("CDEF", 等日末符) > 0 Then
+                If 等日ZA > 3 And InStr("CDEF", 等日末符) > 0 Then
                     等值 = "等4"  '远离后回归DJA
                 ElseIf 等日ZA >= 2 And InStr("CDEF", 等日末符) > 0 Then
                     等值 = "等2"  '近DJA软弱
@@ -3649,15 +3637,74 @@ If UBCID是代码(CIDL) = True Then
                 等值 = "等5"  'DJA边缘下方
             ElseIf 等日ZA < 0 Then
                 '下侧：镜面映射 A<>F, B<>E, C<>D
-                If 等日ZA < -4 And InStr("ABCD", 等日末符) > 0 Then
+                If 等日ZA < -3 And InStr("ABCD", 等日末符) > 0 Then
                     等值 = "等8"  '回归DJA（极少）
-                ElseIf 等日ZA >= -4 And InStr("ABCD", 等日末符) > 0 Then
+                ElseIf 等日ZA >= -3 And InStr("ABCD", 等日末符) > 0 Then
                     等值 = "等6"  '近DJA下方偏强
                 ElseIf 等日ZA <= -2 And InStr("EF", 等日末符) > 0 Then
                     等值 = "等7"  '远离DJA弱势
                 End If
             End If
             谕组(X, 位谕of日层等) = 等值
+            '============================================================================
+            '日冲策略（三级策略名称 + H2概率）
+            ' 周门过滤 + 等高线 + 条件组合 → 映射到等XA和H2分
+            ' 全量赛马数据，H2=下日高≥2%概率
+            '============================================================================
+            谕组(X, 位谕of日冲策略) = ""
+            If 日类BTZC > 0 And 日类BTCD > 0 Then  '周门
+                Dim 等BSHA As Double: 等BSHA = Val(谕组(X, 位谕of日层BSHA))
+                Dim 等连阳 As Long: 等连阳 = Val(谕组(X, 位谕of日层BT连阳))
+                Dim 等层主 As String: 等层主 = 谕组(X, 位谕of日层界)
+                Dim 等柱排 As String: 等柱排 = 谕组(X, 位谕of日层柱排)
+                Dim 等BSHA5 As Boolean: 等BSHA5 = (等BSHA > 5)
+                Dim 等连阳2 As Boolean: 等连阳2 = (等连阳 > 0)
+                Dim 等层主2 As Boolean: 等层主2 = (Left$(等层主, 1) = "主")
+                Dim 等升排2 As Boolean: 等升排2 = (Left$(等柱排, 1) = "升")
+                '策略映射
+                If 等值 = "等4" Then
+                    If 等BSHA5 And 等连阳2 Then
+                        谕组(X, 位谕of日冲策略) = "等4A": 谕组(X, 位谕of日冲策分) = 59.6
+                    ElseIf 等BSHA5 Then
+                        谕组(X, 位谕of日冲策略) = "等4B": 谕组(X, 位谕of日冲策分) = 58.8
+                    ElseIf 等层主2 And 等升排2 Then
+                        谕组(X, 位谕of日冲策略) = "等4C": 谕组(X, 位谕of日冲策分) = 41.5
+                    ElseIf 等升排2 Then
+                        谕组(X, 位谕of日冲策略) = "等4D": 谕组(X, 位谕of日冲策分) = 38.2
+                    End If
+                ElseIf 等值 = "等3" Then
+                    If 等BSHA5 And 等连阳2 Then
+                        谕组(X, 位谕of日冲策略) = "等3A": 谕组(X, 位谕of日冲策分) = 56.9
+                    ElseIf 等BSHA5 Then
+                        谕组(X, 位谕of日冲策略) = "等3B": 谕组(X, 位谕of日冲策分) = 53.3
+                    ElseIf 等连阳2 Then
+                        谕组(X, 位谕of日冲策略) = "等3C": 谕组(X, 位谕of日冲策分) = 44.9
+                    ElseIf 等层主2 Then
+                        谕组(X, 位谕of日冲策略) = "等3D": 谕组(X, 位谕of日冲策分) = 37.1
+                    End If
+                ElseIf 等值 = "等1" And 等层主2 Then
+                    谕组(X, 位谕of日冲策略) = "等1D": 谕组(X, 位谕of日冲策分) = 39.1
+                ElseIf 等值 = "等2" And 等BSHA5 Then
+                    谕组(X, 位谕of日冲策略) = "等2B": 谕组(X, 位谕of日冲策分) = 54.1
+                ElseIf 等值 = "等5" And 等BSHA5 Then
+                    谕组(X, 位谕of日冲策略) = "等5A": 谕组(X, 位谕of日冲策分) = 59.5
+                ElseIf 等值 = "等8" And 等BSHA5 Then
+                    谕组(X, 位谕of日冲策略) = "等8B": 谕组(X, 位谕of日冲策分) = 51.6
+                End If
+            End If
+            '============================================================================
+            '日层段（仓位状态）
+            '============================================================================
+            谕组(X, 位谕of日层段) = "NA"
+            If 日类BTZE > 0 Then
+                If 日类BTZC <= 0 Then
+                    谕组(X, 位谕of日层段) = "卖浮"
+                ElseIf 日类BTZA > 0 Then
+                    谕组(X, 位谕of日层段) = "持主"
+                Else
+                    谕组(X, 位谕of日层段) = "持被"
+                End If
+            End If
             '============================================================================
             '等高线机警（供筛选直接读取，避免组结算引用）
             '============================================================================
@@ -3715,7 +3762,7 @@ If UBCID是代码(CIDL) = True Then
 
             '积木②：日级别（仓日类+日层段+信号+漏提示）
             程策传_日级 = "仓日=" & 谕组(X, 位谕of仓日类)
-            程策传_日级 = 程策传_日级 & " 日段=" & 谕组(X, 位谕of日层段)
+            程策传_日级 = 程策传_日级 & " 策略=" & 谕组(X, 位谕of日冲策略)
             程策传_日级 = 程策传_日级 & " 日信号=" & 谕组(X, 位谕of日层机警)
             程策传_日级 = 程策传_日级 & " 漏=" & 谕组(X, 位谕of日层漏提示)
 
@@ -6603,9 +6650,9 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of策传) = "策传"
         .Cells(1, 位谕of周冲策略) = "周冲策略"
         .Cells(1, 位谕of周冲策分) = "周冲策分"
-        .Cells(1, 位谕of月基策略) = "月基策略"
-        .Cells(1, 位谕of月基命分) = "月基命分"
-        .Cells(1, 位谕of月基策分) = "月基策分" & vbCrLf & "(5周维持)"
+        .Cells(1, 位谕of月基策周) = "月基策周"
+        .Cells(1, 位谕of月基分命) = "月基分命"
+        .Cells(1, 位谕of月基分周) = "月基分周" & vbCrLf & "(5周维持)"
         .Cells(1, 位谕of月基带周) = "月基带周" & vbCrLf & "(CD→AB)"
         .Cells(1, 位谕of月基带日) = "月基带日(AB-CD-EF)"
         '仓周/仓日分类
@@ -6615,11 +6662,12 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of周层四域) = "四域周"
         .Cells(1, 位谕of日层四域) = "四域日"
         .Cells(1, 位谕of日层联动) = "日周联动"
+        .Cells(1, 位谕of日冲策略) = "日冲策略"
         .Cells(1, 位谕of日层段) = "日层段"
         .Cells(1, 位谕of日层机警) = "日机警"
-        .Cells(1, 位谕of日冲策略) = "日冲策略"
+        .Cells(1, 位谕of月基策日) = "月基策日"
         .Cells(1, 位谕of日冲策分) = "日冲策分"
-        .Cells(1, 位谕of日冲H2分) = "日冲H2分"
+        .Cells(1, 位谕of月基日H2) = "月基日H2"
         .Cells(1, 位谕of日冲22态) = "日冲22态"
         .Cells(1, 位谕of日层盈提示) = "盈提示"
         .Cells(1, 位谕of日层漏提示) = "漏提示（金+甲乙）"
@@ -6637,15 +6685,15 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周层四域).Interior.TintAndShade = -0.1
         .Columns(位谕of日层四域).Interior.TintAndShade = -0.2
         .Columns(位谕of日层漏提示).Interior.TintAndShade = -0.2
-        .Columns(位谕of日冲策略).Interior.TintAndShade = -0.3
+        .Columns(位谕of月基策日).Interior.TintAndShade = -0.3
         .Columns(位谕of日层联动).Interior.TintAndShade = 0.1
-        .Columns(位谕of日层段).Interior.TintAndShade = -0.4
+        .Columns(位谕of日冲策略).Interior.TintAndShade = -0.4
         .Columns(位谕of日层机警).Interior.TintAndShade = -0.5
         .Columns(位谕of策传).Interior.Color = 常色四灰
         
-        .Columns(位谕of月基策略).Interior.Color = 常色四43
-        .Columns(位谕of月基命分).Interior.Color = 常色七碧
-        .Columns(位谕of月基策分).Interior.Color = 常色六碧
+        .Columns(位谕of月基策周).Interior.Color = 常色四43
+        .Columns(位谕of月基分命).Interior.Color = 常色七碧
+        .Columns(位谕of月基分周).Interior.Color = 常色六碧
         .Columns(位谕of月基带周).Interior.Color = 常色五碧
         .Columns(位谕of月基带日).Interior.Color = 常色四碧
         .Columns(位谕of周冲策略).Interior.Color = 常色四靛
@@ -6658,12 +6706,13 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周层四域).ColumnWidth = 4
         .Columns(位谕of日层四域).ColumnWidth = 4
         .Columns(位谕of日层联动).ColumnWidth = 8
+        .Columns(位谕of日冲策略).ColumnWidth = 10
         .Columns(位谕of日层段).ColumnWidth = 4
         .Columns(位谕of日层机警).ColumnWidth = 15
-        .Columns(位谕of日冲策略).ColumnWidth = 7
-        .Columns(位谕of日冲策分).ColumnWidth = 4
-        .Columns(位谕of日冲H2分).ColumnWidth = 4
-        .Columns(位谕of日冲H2分).HorizontalAlignment = xlLeft
+        .Columns(位谕of月基策日).ColumnWidth = 7
+        .Columns(位谕of日冲策分).ColumnWidth = 6
+        .Columns(位谕of月基日H2).ColumnWidth = 4
+        .Columns(位谕of月基日H2).HorizontalAlignment = xlLeft
         .Columns(位谕of日冲22态).ColumnWidth = 15
         .Columns(位谕of日冲22态).HorizontalAlignment = xlLeft
         .Columns(位谕of日层盈提示).ColumnWidth = 5
@@ -6672,9 +6721,9 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of月基带日).ColumnWidth = 14
         .Columns(位谕of仓周类).ColumnWidth = 3
         .Columns(位谕of仓日类).ColumnWidth = 3
-        .Columns(位谕of月基策略).ColumnWidth = 9
-        .Columns(位谕of月基命分).ColumnWidth = 4
-        .Columns(位谕of月基策分).ColumnWidth = 4
+        .Columns(位谕of月基策周).ColumnWidth = 9
+        .Columns(位谕of月基分命).ColumnWidth = 4
+        .Columns(位谕of月基分周).ColumnWidth = 4
         .Columns(位谕of月基带周).ColumnWidth = 9
         .Columns(位谕of周冲策略).ColumnWidth = 10
         .Columns(位谕of周冲策分).ColumnWidth = 4
@@ -6807,14 +6856,14 @@ End Function
 '========================================================================================
 
 '======================================================================================== (迁自ZPY接口)
-' IQQQ跨码工具_查日冲概率 — 查日冲216分支概率（硬编码数据）
+' IQQQ跨码工具_查月基分日基程 — 查日冲216分支概率（硬编码数据）
 '========================================================================================
 ' 功能：根据DXEF/DXCD/DXAB查询日冲216分支的→ZE>0+ZC>0+ZA>0和DSHA>1概率
 ' 返回：Boolean（是否查到）
 ' 输出参数：pZA=→ZE>0+ZC>0+ZA>0概率, pDSHA1=下日DSHA>1概率, 小样本标记
 ' 小样本分级：N<1000→.微, N<10000→.小, 其他→""
 '========================================================================================
-Public Function IQQQ跨码工具_查日冲概率(ByVal sDXEF As String, ByVal sDXCD As String, ByVal sDXAB As String, _
+Public Function IQQQ跨码工具_查月基分日基程(ByVal sDXEF As String, ByVal sDXCD As String, ByVal sDXAB As String, _
     ByRef pZA As Double, ByRef pDSHA1 As Double, ByRef 小样本标记 As String) As Boolean
 
     Dim iEF As Long, iCD As Long, iAB As Long
@@ -6828,7 +6877,7 @@ Public Function IQQQ跨码工具_查日冲概率(ByVal sDXEF As String, ByVal sD
         Case "唏": iEF = 3
         Case "屎": iEF = 4
         Case "尿": iEF = 5
-        Case Else: IQQQ跨码工具_查日冲概率 = False: Exit Function
+        Case Else: IQQQ跨码工具_查月基分日基程 = False: Exit Function
     End Select
     '映射DXCD
     Select Case sDXCD
@@ -6838,7 +6887,7 @@ Public Function IQQQ跨码工具_查日冲概率(ByVal sDXEF As String, ByVal sD
         Case "忐": iCD = 3
         Case "忠": iCD = 4
         Case "忑": iCD = 5
-        Case Else: IQQQ跨码工具_查日冲概率 = False: Exit Function
+        Case Else: IQQQ跨码工具_查月基分日基程 = False: Exit Function
     End Select
     '映射DXAB
     Select Case sDXAB
@@ -6848,13 +6897,13 @@ Public Function IQQQ跨码工具_查日冲概率(ByVal sDXEF As String, ByVal sD
         Case "忐": iAB = 3
         Case "忠": iAB = 4
         Case "忑": iAB = 5
-        Case Else: IQQQ跨码工具_查日冲概率 = False: Exit Function
+        Case Else: IQQQ跨码工具_查月基分日基程 = False: Exit Function
     End Select
 
     '216分支概率数据（6战场×6DXCD×6DXAB）
     '格式：Array(N, →ZE>0, →ZE+ZC, →ZE+ZC+ZA, DSHA>1, 小样本标记)
-    rowData = IQQQ跨码工具_取日冲分支数据(iEF, iCD, iAB)
-    If IsEmpty(rowData) Then IQQQ跨码工具_查日冲概率 = False: Exit Function
+    rowData = IQQQ跨码工具_查月基分日分支(iEF, iCD, iAB)
+    If IsEmpty(rowData) Then IQQQ跨码工具_查月基分日基程 = False: Exit Function
 
     pZA = rowData(3)       '→ZE>0+ZC>0+ZA>0
     pDSHA1 = rowData(4)    '下日DSHA>1
@@ -6867,14 +6916,14 @@ Public Function IQQQ跨码工具_查日冲概率(ByVal sDXEF As String, ByVal sD
     Else
         小样本标记 = ""
     End If
-    IQQQ跨码工具_查日冲概率 = (样本N > 0)
+    IQQQ跨码工具_查月基分日基程 = (样本N > 0)
 End Function
 
 '========================================================================================
-'IQQQ跨码工具_取日冲分支数据 — 返回指定战场的6×6概率数组
+'IQQQ跨码工具_查月基分日分支 — 返回指定战场的6×6概率数组
 '========================================================================================
 ' ===== 日冲概率数据初始化（216分支）=====
-Private Function IQQQ跨码工具_取日冲分支数据(iEF As Long, iCD As Long, iAB As Long) As Variant
+Private Function IQQQ跨码工具_查月基分日分支(iEF As Long, iCD As Long, iAB As Long) As Variant
     Static ARRDATA(0 To 5, 0 To 5, 0 To 5) As Variant
     Static 已初始化 As Boolean
     If Not 已初始化 Then
@@ -7096,16 +7145,16 @@ Private Function IQQQ跨码工具_取日冲分支数据(iEF As Long, iCD As Long
         ARRDATA(5, 5, 4) = Array(234528, 0.8, 0.5, 0.5, 79.6, 0)
         ARRDATA(5, 5, 5) = Array(921600, 0.2, 0.1, 0.1, 27.5, 0)
     End If
-    IQQQ跨码工具_取日冲分支数据 = ARRDATA(iEF, iCD, iAB)
+    IQQQ跨码工具_查月基分日分支 = ARRDATA(iEF, iCD, iAB)
 End Function
 
 '========================================================================================
-'查日冲H2分 — 从CSV查表获取下日DSHR>2（按市板）
-'文件路径：_产出物\_工具\vba日冲策分表_市板.csv
+'查月基日H2 — 从CSV查表获取下日DSHR>2（按市板）
+'文件路径：_产出物\_工具\vba月基分日表_市板.csv
 '格式: DXEF,DXCD,DXAB,市板,样本,→ZE>0,...,下日DSHR>2,均HR,中位HR
 '兼容市板：Qim/Qit → Qimit
 '========================================================================================
-Public Function IQQQ跨码工具_查日冲H2分(ByVal sDXEF As String, ByVal sDXCD As String, ByVal sDXAB As String, ByVal s市板 As String) As Double
+Public Function IQQQ跨码工具_查月基日H2(ByVal sDXEF As String, ByVal sDXCD As String, ByVal sDXAB As String, ByVal s市板 As String) As Double
     Static 概率典 As Object
     Static 已加载 As Boolean
     Dim 文件号 As Integer, 行内容 As String, 字段 As Variant
@@ -7114,7 +7163,7 @@ Public Function IQQQ跨码工具_查日冲H2分(ByVal sDXEF As String, ByVal sDX
     If Not 已加载 Then
         Set 概率典 = CreateObject("Scripting.Dictionary")
         文件号 = FreeFile
-        Open ThisWorkbook.Path & "\_产出物\_工具\vba日冲策分表_市板.csv" For Input As #文件号
+        Open ThisWorkbook.Path & "\_产出物\_工具\vba月基分日表_市板.csv" For Input As #文件号
             Line Input #文件号, 行内容  ' 跳过表头
             Do While Not EOF(文件号)
                 Line Input #文件号, 行内容
@@ -7134,14 +7183,14 @@ Public Function IQQQ跨码工具_查日冲H2分(ByVal sDXEF As String, ByVal sDX
 
     键 = sDXEF & "|" & sDXCD & "|" & sDXAB & "|" & 市板查
     If 概率典.Exists(键) Then
-        IQQQ跨码工具_查日冲H2分 = CDbl(概率典(键))
+        IQQQ跨码工具_查月基日H2 = CDbl(概率典(键))
     Else
         ' 市板回退：先查Qimit，再查全量
         键 = sDXEF & "|" & sDXCD & "|" & sDXAB & "|Qimit"
         If 概率典.Exists(键) Then
-            IQQQ跨码工具_查日冲H2分 = CDbl(概率典(键))
+            IQQQ跨码工具_查月基日H2 = CDbl(概率典(键))
         Else
-            IQQQ跨码工具_查日冲H2分 = 0
+            IQQQ跨码工具_查月基日H2 = 0
         End If
     End If
 End Function

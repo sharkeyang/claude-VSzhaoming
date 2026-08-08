@@ -249,7 +249,7 @@ Public Sub XL算研_测试日冲数据()
         Dim CIDL As String: CIDL = 谕组(X, 位qt代码)
         If CIDL = "" Then GoTo 跳过
         If Not (Left$(CIDL, 2) = "sh" Or Left$(CIDL, 2) = "sz") Then GoTo 跳过
-        Dim h2 As Variant: h2 = 谕组(X, 位谕of日冲H2分)
+        Dim h2 As Variant: h2 = 谕组(X, 位谕of月基日H2)
         If VarType(h2) = vbString And Len(h2) >= 3 Then
             Dim 评级 As String: 评级 = Left$(h2, 1)
             Dim 分数 As Integer: 分数 = Val(Mid$(h2, 2))
@@ -264,7 +264,7 @@ Public Sub XL算研_测试日冲数据()
         End If
 跳过:
     Next
-    Debug.Print "=== 日冲H2分分布 ==="
+    Debug.Print "=== 月基日H2分布 ==="
     Debug.Print "总样本: " & 总 & " 评级: A=" & 评级分布(0) & " B=" & 评级分布(1) & " C=" & 评级分布(2) & " D=" & 评级分布(3)
     Dim i As Integer
     For i = 0 To 100
@@ -286,7 +286,7 @@ Public Sub XL算研_展探大盘个股联动()
     If 计数 = 0 Then MsgBox "全息失败": Exit Sub
     Dim 文件号 As Integer: 文件号 = FreeFile
     Open CSV路径 For Output As #文件号
-    Print #文件号, "CIDL,代称,日冲策分,仓周类,月基带周,月基带日,月基策略,行业益盟,是宽基指数"
+    Print #文件号, "CIDL,代称,日冲策分,仓周类,月基带周,月基带日,月基策周,行业益盟,是宽基指数"
     Dim X As Long, R As Long: R = 0
     For X = LBound(谕组, 1) To UBound(谕组, 1)
         Dim CIDL2 As String: CIDL2 = 谕组(X, 位qt代码)
@@ -296,7 +296,7 @@ Public Sub XL算研_展探大盘个股联动()
         行文本 = CIDL2 & "," & 谕组(X, 位qt代称)
         行文本 = 行文本 & "," & IIf(VBA.IsNumeric(谕组(X, 位谕of日冲策分)), CStr(谕组(X, 位谕of日冲策分)), "")
         行文本 = 行文本 & "," & 谕组(X, 位谕of仓周类) & "," & 谕组(X, 位谕of月基带周)
-        行文本 = 行文本 & "," & 谕组(X, 位谕of月基带日) & "," & 谕组(X, 位谕of月基策略)
+        行文本 = 行文本 & "," & 谕组(X, 位谕of月基带日) & "," & 谕组(X, 位谕of月基策周)
         行文本 = 行文本 & "," & 谕组(X, 位qt行益)
         行文本 = 行文本 & "," & IIf(CIDL2 = "sh000001" Or CIDL2 = "sz399006" Or CIDL2 = "sh000688", "是", "")
         Print #文件号, 行文本
@@ -343,17 +343,17 @@ Public Sub 测试_日冲22态()
     Debug.Print "===== 耗时: " & CLng(Timer - TT) & "秒 ====="
 End Sub
 '========================================================================================
-' 测试_日冲策略vs日周联动 — 对比日冲策略(A-H)与日周联动(周向)的对应关系
+' 测试_月基策日vs日周联动 — 对比月基策日(A-H)与日周联动(周向)的对应关系
 ' 输出：各等级在 升/待/降 三种周向中的分布比例
 ' 预期：A/B/C级(日级别好)→周向=升比例高，D/H级(日级别差)→周向=降比例高
 '========================================================================================
-Public Sub 测试_日冲策略vs日周联动()
+Public Sub 测试_月基策日vs日周联动()
     Dim TT As Single: TT = Timer
     Dim 谕组 As Variant
     Dim 计数 As Long
     Dim X As Long
 
-    Debug.Print "===== 日冲策略 vs 日周联动(周向) 对比 ====="
+    Debug.Print "===== 月基策日 vs 日周联动(周向) 对比 ====="
     计数 = IQQQ跨码据擎_数程生成全息(谕组, 常花中股, 实结类型:="sSCC")
     If 计数 = 0 Then Debug.Print "生成失败": Exit Sub
 
@@ -362,12 +362,12 @@ Public Sub 测试_日冲策略vs日周联动()
     Set 统计 = CreateObject("Scripting.Dictionary")
     Dim 总行 As Long
     For X = LBound(谕组, 1) To UBound(谕组, 1)
-        Dim 日冲 As String: 日冲 = 谕组(X, 位谕of日冲策略)
+        Dim 月基策日 As String: 月基策日 = 谕组(X, 位谕of月基策日)
         Dim 日联 As String: 日联 = 谕组(X, 位谕of日层联动)
-        If 日冲 <> "" And 日联 <> "" Then
+        If 月基策日 <> "" And 日联 <> "" Then
             Dim 周向 As String: 周向 = Left$(日联, 1)
             If InStr("升降待", 周向) > 0 Then
-                Dim Key As String: Key = 日冲 & "|" & 周向
+                Dim Key As String: Key = 月基策日 & "|" & 周向
                 统计(Key) = 统计(Key) + 1
                 总行 = 总行 + 1
             End If
