@@ -1117,13 +1117,28 @@ End Function
 '########################################################################################
 '########################################################################################
 Sub STBASE结算检查_完备检测()
+    Dim 花册ok As Boolean, 藏库ok As Boolean, 历统时ok As Boolean
     Dim MSG: MSG = "===== 结算完备检查 " & Format(Now, "yyyy-mm-dd HH:mm") & " =====" & vbCrLf
-    MSG = MSG & STBASE结算检查_花册(): MSG = MSG & STBASE结算检查_藏库(): MSG = MSG & STBASE结算检查_历统时()
+    MSG = MSG & STBASE结算检查_花册(花册ok): MSG = MSG & STBASE结算检查_藏库(藏库ok): MSG = MSG & STBASE结算检查_历统时(历统时ok)
+    '=============================================
+    '结论：是否需要重新结算
+    '=============================================
+    MSG = MSG & vbCrLf & "======================================" & vbCrLf & "【结论】" & vbCrLf
+    If 花册ok And 藏库ok And 历统时ok Then
+        MSG = MSG & "  结算完备，无需重新结算" & vbCrLf
+    Else
+        MSG = MSG & "  需要重新结算：" & vbCrLf
+        If Not 花册ok Then MSG = MSG & "    - 花册不完备（停牌过多或日期不匹配）" & vbCrLf
+        If Not 藏库ok Then MSG = MSG & "    - 藏库不完备（股票数过少或日期不匹配）" & vbCrLf
+        If Not 历统时ok Then MSG = MSG & "    - 历统时不完备（股票数过少或日期不匹配）" & vbCrLf
+    End If
     Debug.Print MSG: MsgBox MSG, vbOKOnly, "结算完备检查"
 End Sub
-Private Function STBASE结算检查_花册() As String
+Private Function STBASE结算检查_花册(ByRef ok As Boolean) As String
     Dim R: R = vbCrLf & "【花册】" & vbCrLf
-    Dim WS As Worksheet: If Not STBASE外簿工具_花册链接(WS, 常花中股) Then R = R & "  [-链接失败-]" & vbCrLf: STBASE结算检查_花册 = R: Exit Function
+    Dim WS As Worksheet
+    If Not STBASE外簿工具_花册链接(WS, 常花中股) Then R = R & "  [-链接失败-]" & vbCrLf: ok = False: STBASE结算检查_花册 = R: Exit Function
+    ok = True
     Dim A As Variant: UTL数据转换_集WS2ARR A, WS, 总列:=花列甲道 + 花宽单道 * 3
     Dim s: s = STCALL花册管理_重制花天P9子程重置信息8停牌(A, 法道基列:=花列甲道, 指定花册:=常花中股)
     Dim L: L = Split(s, vbCrLf): Dim 停 As Integer: 停 = CInt(L(0))
@@ -1137,70 +1152,63 @@ Private Function STBASE结算检查_花册() As String
     Dim 期望日 As Date: 期望日 = STBASE取据引擎查时戳由外库(指定结期上限:=Date)
     Dim 期望周 As Date: 期望周 = 时程结期推算质程(常期类为周, 期望日)
     Dim 期望月 As Date: 期望月 = 时程结期推算质程(常期类为月, 期望日)
-    '统计停牌/未停牌（A数组已被停牌函数标记，停牌列=法道基列-1+位os停牌）
+    '统计停牌/未停牌
     Dim 停牌列 As Integer: 停牌列 = 花列甲道 - 1 + 位os停牌
     Dim 总数 As Long: 总数 = 0
     Dim 停数 As Long: 停数 = 0
     For i = LBound(A, 1) To UBound(A, 1)
-        '只统计有CIDL的有效行（第1列非空）
-        If A(i, 1) <> "" Then
-            总数 = 总数 + 1
-            If A(i, 停牌列) = "S" Then 停数 = 停数 + 1
-        End If
+        If A(i, 1) <> "" Then 总数 = 总数 + 1: If A(i, 停牌列) = "S" Then 停数 = 停数 + 1
     Next
     Dim 未停数 As Long: 未停数 = 总数 - 停数
-    '停牌统计
     R = R & "  总股票数=" & 总数 & vbCrLf
     R = R & "  停牌数=" & 停数
-    If 停数 < 100 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配: 停牌数>=100]" & vbCrLf
-    R = R & "  未停牌数=" & 未停数
-    If 未停数 > 1000 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配: 未停牌数<=1000]" & vbCrLf
-    '日类
+    If 停数 < 100 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf: ok = False
+    R = R & "  未停牌数=" & 未停数 & vbCrLf
     R = R & "  期望日类结期=" & 期望日 & vbCrLf
     R = R & "  实际日类结期=" & d日
-    If d日 = 期望日 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf
-    '周类
+    If d日 = 期望日 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf: ok = False
     R = R & "  期望周类结期=" & 期望周 & vbCrLf
     R = R & "  实际周类结期=" & d周
-    If d周 = 期望周 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf
-    '月类
+    If d周 = 期望周 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf: ok = False
     R = R & "  期望月类结期=" & 期望月 & vbCrLf
     R = R & "  实际月类结期=" & d月
-    If d月 = 期望月 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf
+    If d月 = 期望月 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf: ok = False
     Erase A: STBASE结算检查_花册 = R
 End Function
-Private Function STBASE结算检查_藏库() As String
+Private Function STBASE结算检查_藏库(ByRef ok As Boolean) As String
     Dim R: R = vbCrLf & "【藏库】" & vbCrLf
-    Dim WS As Worksheet: If Not STBASE外簿工具_藏库链接(WS, 常期类为日) Then R = R & "  [-链接失败-]" & vbCrLf: STBASE结算检查_藏库 = R: Exit Function
+    Dim WS As Worksheet: If Not STBASE外簿工具_藏库链接(WS, 常期类为日) Then R = R & "  [-链接失败-]" & vbCrLf: ok = False: STBASE结算检查_藏库 = R: Exit Function
+    ok = True
     Dim 行: 行 = WS.UsedRange.Rows.Count
-    Dim 总股票数: 总股票数 = 行 - 3  '前3行是表头/交索/更源
+    Dim 总股票数: 总股票数 = 行 - 3
     R = R & "  总股票数=" & 总股票数
-    If 总股票数 > 1000 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf
+    If 总股票数 > 1000 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf: ok = False
     Dim 末列: 末列 = WS.UsedRange.Columns.Count: Dim v: v = WS.Cells(1, 末列).Value
     Dim 期望日: 期望日 = STBASE取据引擎查时戳由外库(指定结期上限:=Date)
     R = R & "  期望结日=" & 期望日 & vbCrLf
     R = R & "  最新交易日=" & IIf(IsDate(v), Format(v, "yyyy-mm-dd"), CStr(v))
     If IsDate(v) Then
-        If CLng(v) = CLng(期望日) Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf
+        If CLng(v) = CLng(期望日) Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf: ok = False
     Else
-        R = R & " [不匹配: 非日期]" & vbCrLf
+        R = R & " [不匹配: 非日期]" & vbCrLf: ok = False
     End If
     STBASE结算检查_藏库 = R
 End Function
-Private Function STBASE结算检查_历统时() As String
+Private Function STBASE结算检查_历统时(ByRef ok As Boolean) As String
     Dim R: R = vbCrLf & "【历统时】" & vbCrLf
-    Dim WS As Worksheet: If Not STBASE外簿工具_花册链接(WS, 常花中股) Then R = R & "  [-链接失败-]" & vbCrLf: STBASE结算检查_历统时 = R: Exit Function
+    Dim WS As Worksheet: If Not STBASE外簿工具_花册链接(WS, 常花中股) Then R = R & "  [-链接失败-]" & vbCrLf: ok = False: STBASE结算检查_历统时 = R: Exit Function
+    ok = True
     Dim 总行: 总行 = WS.UsedRange.Rows.Count - 1
     R = R & "  总股票数=" & 总行
-    If 总行 > 1000 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf
+    If 总行 > 1000 Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf: ok = False
     Dim 列: 列 = 花列统道 + 位统时列结期 - 1: Dim v: v = WS.Cells(2, 列).Value
     Dim 期望日: 期望日 = STBASE取据引擎查时戳由外库(指定结期上限:=Date)
     R = R & "  期望结日=" & 期望日 & vbCrLf
     R = R & "  历统时终期=" & IIf(IsDate(v), Format(v, "yyyy-mm-dd"), CStr(v))
     If IsDate(v) Then
-        If CLng(v) = CLng(期望日) Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf
+        If CLng(v) = CLng(期望日) Then R = R & " [匹配]" & vbCrLf Else R = R & " [不匹配]" & vbCrLf: ok = False
     Else
-        R = R & " [不匹配: 非日期]" & vbCrLf
+        R = R & " [不匹配: 非日期]" & vbCrLf: ok = False
     End If
     STBASE结算检查_历统时 = R
 End Function
