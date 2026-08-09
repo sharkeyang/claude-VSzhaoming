@@ -477,7 +477,7 @@ Public Const 位谕of仓周类 = 位谕始of族策 + 11    '由神谕生成（�
 Public Const 位谕of仓日类 = 位谕始of族策 + 12    '由神谕生成（基于日线层护级CD+层护段AB，第2785行），跨码管理读取
 '--- 日冲策略 ---
 Public Const 位谕of日冲策略 = 位谕始of族策 + 13       '日冲策略: 三级策略名称(如"等4A")，周门过滤+等高线匹配
-Public Const 位谕of日冲策分 = 位谕始of族策 + 14     '日冲策分: 下日高≥2%概率(0~100)，赛马全量数据
+Public Const 位谕of日冲策分 = 位谕始of族策 + 14     '日冲策分: 等高线+条件评分(37~61)，排名表排序用
 Public Const 位谕of日层联动 = 位谕始of族策 + 15     '周日联动: 周看涨但日下跌捡漏, 输出周/日
 Public Const 位谕of日层漏提示 = 位谕始of族策 + 16     '日层漏提示: 精密捡漏信号
 '--- 日冲22态 ---
@@ -3403,7 +3403,7 @@ If UBCID是代码(CIDL) = True Then
             '============================================================================
             Dim 日冲pZA As Double, 日冲pDSHA1 As Double, 日冲小样本 As String, 日冲H2分 As Double, 日冲评级 As String
             If IQQQ跨码工具_查月基分日基程(日EF护级, 日CD护级, 日AB护级, 日冲pZA, 日冲pDSHA1, 日冲小样本) Then
-                '日冲H2分由等高线后策略映射赋值，此处不再覆盖
+                '月基日H2: 从CSV查表独立获取下日DSHR>2概率，与等高线评分无关
                 日冲H2分 = IQQQ跨码工具_查月基日H2(日EF护级, 日CD护级, 日AB护级, 周市板)
                 ' 日冲H2分 = 评级(A/B/C/D) + 分数(2位)，如"A39"可直接排序
                 If 日冲H2分 >= 35 Then
@@ -3474,7 +3474,7 @@ If UBCID是代码(CIDL) = True Then
                 谕组(X, 位谕of月基策日) = 月基策日分类
             Else
                 谕组(X, 位谕of月基策日) = "无数据"
-                '日冲策分由等高线后策略映射赋值，此处不覆盖
+                '月基日H2: 无数据时填D00
                 谕组(X, 位谕of月基日H2) = "D00"
             End If
             '============================================================================
@@ -3657,7 +3657,7 @@ If UBCID是代码(CIDL) = True Then
             '第1级：市板过滤 — 非核心池跳过
             Dim 值市板 As String: 值市板 = 谕组(X, 位qt市板)
             If 值市板 = "" Then 值市板 = IQQQ跨码工具_获取单码市板(CIDL)
-            If 值市板 <> 常市板指 And 值市板 <> 常市板基 And 值市板 <> 常市板票Qif And 值市板 <> 常市板票Qst Then
+            If 值市板 <> "Qd" And 值市板 <> "Qe" And 值市板 <> "Qif" And 值市板 <> "Qst" Then
                 '核心池，继续周门过滤
                 If 日类BTZC > 0 And 日类BTCD > 0 Then  '第2级：周门
                     Dim 等BSHA As Double: 等BSHA = Val(谕组(X, 位谕of日层BSHA))
@@ -6712,6 +6712,8 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of月基分周) = "月基分周" & vbCrLf & "(5周维持)"
         .Cells(1, 位谕of月基带周) = "月基带周" & vbCrLf & "(CD→AB)"
         .Cells(1, 位谕of月基带日) = "月基带日(AB-CD-EF)"
+        .Cells(1, 位谕of月基策日) = "月基策日"
+        .Cells(1, 位谕of月基日H2) = "月基日H2"
         '仓周/仓日分类
         .Cells(1, 位谕of仓周类) = "仓周"
         .Cells(1, 位谕of仓日类) = "仓日"
@@ -6722,9 +6724,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of日冲策略) = "日冲策略"
         .Cells(1, 位谕of日层段) = "日层段"
         .Cells(1, 位谕of日层机警) = "日机警"
-        .Cells(1, 位谕of月基策日) = "月基策日"
         .Cells(1, 位谕of日冲策分) = "日冲策分"
-        .Cells(1, 位谕of月基日H2) = "月基日H2"
         .Cells(1, 位谕of日冲22态) = "日冲22态"
         .Cells(1, 位谕of日层盈提示) = "盈提示"
         .Cells(1, 位谕of日层漏提示) = "漏提示（金+甲乙）"
@@ -6742,17 +6742,18 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周层四域).Interior.TintAndShade = -0.1
         .Columns(位谕of日层四域).Interior.TintAndShade = -0.2
         .Columns(位谕of日层漏提示).Interior.TintAndShade = -0.2
-        .Columns(位谕of月基策日).Interior.TintAndShade = -0.3
         .Columns(位谕of日层联动).Interior.TintAndShade = 0.1
         .Columns(位谕of日冲策略).Interior.TintAndShade = -0.4
         .Columns(位谕of日层机警).Interior.TintAndShade = -0.5
         .Columns(位谕of策传).Interior.Color = 常色四灰
         
-        .Columns(位谕of月基策周).Interior.Color = 常色四43
-        .Columns(位谕of月基分命).Interior.Color = 常色七碧
-        .Columns(位谕of月基分周).Interior.Color = 常色六碧
-        .Columns(位谕of月基带周).Interior.Color = 常色五碧
+        .Columns(位谕of月基策周).Interior.Color = 常色三碧
+        .Columns(位谕of月基分命).Interior.Color = 常色五碧
+        .Columns(位谕of月基分周).Interior.Color = 常色八碧
+        .Columns(位谕of月基带周).Interior.Color = 常色六碧
         .Columns(位谕of月基带日).Interior.Color = 常色四碧
+        .Columns(位谕of月基策日).Interior.Color = 常色六43
+        .Columns(位谕of月基日H2).Interior.Color = 常色五43
         .Columns(位谕of周冲策略).Interior.Color = 常色四靛
         .Columns(位谕of周冲策分).Interior.Color = 常色五靛
     End With
@@ -6760,31 +6761,32 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '列：列宽
     '------------------------------------------------------------------------------------
     With WS.Columns(基列)
-        .Columns(位谕of周层四域).ColumnWidth = 4
-        .Columns(位谕of日层四域).ColumnWidth = 4
-        .Columns(位谕of日层联动).ColumnWidth = 8
-        .Columns(位谕of日冲策略).ColumnWidth = 10
-        .Columns(位谕of日层段).ColumnWidth = 4
-        .Columns(位谕of日层机警).ColumnWidth = 15
-        .Columns(位谕of月基策日).ColumnWidth = 7
-        .Columns(位谕of日冲策分).ColumnWidth = 6
-        .Columns(位谕of月基日H2).ColumnWidth = 4
-        .Columns(位谕of月基日H2).HorizontalAlignment = xlLeft
-        .Columns(位谕of日冲22态).ColumnWidth = 15
-        .Columns(位谕of日冲22态).HorizontalAlignment = xlLeft
-        .Columns(位谕of日层盈提示).ColumnWidth = 5
-        .Columns(位谕of日层漏提示).ColumnWidth = 12
-        .Columns(位谕of日层盈提示).HorizontalAlignment = xlRight
-        .Columns(位谕of月基带日).ColumnWidth = 14
-        .Columns(位谕of仓周类).ColumnWidth = 3
-        .Columns(位谕of仓日类).ColumnWidth = 3
+        .Columns(位谕of周冲策略).ColumnWidth = 10
+        .Columns(位谕of周冲策分).ColumnWidth = 4
         .Columns(位谕of月基策周).ColumnWidth = 9
         .Columns(位谕of月基分命).ColumnWidth = 4
         .Columns(位谕of月基分周).ColumnWidth = 4
         .Columns(位谕of月基带周).ColumnWidth = 9
-        .Columns(位谕of周冲策略).ColumnWidth = 10
-        .Columns(位谕of周冲策分).ColumnWidth = 4
+        .Columns(位谕of月基带日).ColumnWidth = 14
+        .Columns(位谕of月基策日).ColumnWidth = 7
+        .Columns(位谕of月基日H2).ColumnWidth = 4
+        .Columns(位谕of月基日H2).HorizontalAlignment = xlLeft
+        .Columns(位谕of日冲策略).ColumnWidth = 12
+        .Columns(位谕of日冲策分).ColumnWidth = 3
         .Columns(位谕of策传).ColumnWidth = 0.2
+        .Columns(位谕of周层四域).ColumnWidth = 4
+        .Columns(位谕of日层四域).ColumnWidth = 4
+        .Columns(位谕of仓周类).ColumnWidth = 3
+        .Columns(位谕of仓日类).ColumnWidth = 3
+        
+        .Columns(位谕of日层联动).ColumnWidth = 8
+        .Columns(位谕of日层段).ColumnWidth = 4
+        .Columns(位谕of日层机警).ColumnWidth = 15
+        .Columns(位谕of日冲22态).ColumnWidth = 15
+        .Columns(位谕of日冲22态).HorizontalAlignment = xlLeft
+        .Columns(位谕of日层盈提示).ColumnWidth = 5
+        .Columns(位谕of日层盈提示).HorizontalAlignment = xlRight
+        .Columns(位谕of日层漏提示).ColumnWidth = 12
     End With
     '------------------------------------------------------------------------------------
     '列：显示
