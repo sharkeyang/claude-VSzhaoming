@@ -121,10 +121,8 @@ Public Const 位谕of日层界 = 位谕始of族日层 + 3
 '卖提示包含：/触顶否/高幅（偏幅）/管宽（哼JC）/陡（均线拉开距离）/叠（连续波幅）/连阳数
 Public Const 位谕of日层柱排 = 位谕始of族日层 + 4
 Public Const 位谕of日层等 = 位谕始of族日层 + 5
-'等高线机会与警示（在神谕中计算，筛选直接读取）
-Public Const 位谕of日层等机警 = 位谕始of族日层 + 6
 '--------------------------
-Public Const 位谕终of族日层 = 位谕始of族日层 + 6
+Public Const 位谕终of族日层 = 位谕始of族日层 + 5
 '----------------------------------------------------
 '指标群：族日管
 Public Const 位谕始of族日管 = 位谕终of族日层 + 1
@@ -366,38 +364,10 @@ Public Const 位谕of周奏数CD叉CB = 位谕始of族周奏 + 11       '针对�
 Public Const 位谕终of族周奏 = 位谕始of族周奏 + 11
 '----------------------------------------------------------------------------------------
 '----------------------------------------------------------------------------------------
-'指标群：月类乾坤体系
-'----------------------------------------------------------------------------------------
-'----------------------------------------------------------------------------------------
-Public Const 位谕始of族月类 = 位谕终of族周奏 + 1
-'-----------
-Public Const 位谕of月道尊比柱 = 位谕始of族月类 + 0
-Public Const 位谕of月道尊BTIB = 位谕始of族月类 + 1
-'-----------
-Public Const 位谕of月波临低幅 = 位谕始of族月类 + 2
-Public Const 位谕of月波临高幅 = 位谕始of族月类 + 3
-Public Const 位谕of月波临涨幅 = 位谕始of族月类 + 4
-Public Const 位谕of月波今涨幅 = 位谕始of族月类 + 5
-'-----------
-Public Const 位谕of月管上符串 = 位谕始of族月类 + 6
-Public Const 位谕of月管中符串 = 位谕始of族月类 + 7
-Public Const 位谕of月管并符串 = 位谕始of族月类 + 8
-'-----------
-Public Const 位谕of月道竖态 = 位谕始of族月类 + 9
-Public Const 位谕of月道层类 = 位谕始of族月类 + 10
-Public Const 位谕of月道横类 = 位谕始of族月类 + 11
-'-----------
-Public Const 位谕of月道奏启 = 位谕始of族月类 + 12
-Public Const 位谕of月道奏数交BC = 位谕始of族月类 + 13
-Public Const 位谕of月道奏数BC叉BA = 位谕始of族月类 + 14
-Public Const 位谕of月基月局 = 位谕始of族月类 + 15
-Public Const 位谕终of族月类 = 位谕of月基月局
-'----------------------------------------------------------------------------------------
-'----------------------------------------------------------------------------------------
 '指标群：族均
 '----------------------------------------------------------------------------------------
 '----------------------------------------------------------------------------------------
-Public Const 位谕始of族日均 = 位谕终of族月类 + 1
+Public Const 位谕始of族日均 = 位谕终of族周奏 + 1
 Public Const 位谕of日类BTZA = 位谕始of族日均 + 0
 Public Const 位谕of日类BTZB = 位谕始of族日均 + 1
 Public Const 位谕of日类BTZC = 位谕始of族日均 + 2
@@ -474,18 +444,47 @@ Public Const 位谕of日层段 = 位谕始of族策 + 10     '日层段: 仓位�
 Public Const 位谕of月基策日 = 位谕始of族策 + 11     '月基策日: 龙/唏/嘘/屁 + 强/弱 + 甲后缀
 Public Const 位谕of月基日H2 = 位谕始of族策 + 12    '月基日H2: 评级(A/B/C/D)+下日DSHR>2分数2位，如"A39"，升序排序
 '--- 日冲策略 ---
-Public Const 位谕of日冲策略 = 位谕始of族策 + 13       '日冲策略: 三级策略名称(如"等4A")，周门过滤+等高线匹配
-Public Const 位谕of日冲策分 = 位谕始of族策 + 14     '日冲策分: 下日高≥2%概率(0~100)，赛马全量数据
-Public Const 位谕of日层联动 = 位谕始of族策 + 15     '周日联动: 周看涨但日下跌捡漏, 输出周/日
-Public Const 位谕of日层漏提示 = 位谕始of族策 + 16     '日层漏提示: 精密捡漏信号
-Public Const 位谕of日层机警 = 位谕始of族策 + 18     '原+16，后移
-Public Const 位谕of日层盈提示 = 位谕始of族策 + 19     '日层盈提示: 止盈信号
+Public Const 位谕of日冲策分 = 位谕始of族策 + 13     '日冲策分: 下日高≥2%概率(0~100)，赛马全量数据
+Public Const 位谕of日冲策略 = 位谕始of族策 + 14       '日冲策略: 三级策略名称(如"等4A")，周门过滤+等高线匹配
+Public Const 位谕of日层机警 = 位谕始of族策 + 15     '原+16，后移
 '-----------
-Public Const 位谕of周层四域 = 位谕始of族策 + 20
-Public Const 位谕of日层四域 = 位谕始of族策 + 21
+Public Const 位谕of日层漏提示 = 位谕始of族策 + 16     '日层漏提示: 精密捡漏信号
+Public Const 位谕of日层联动 = 位谕始of族策 + 17     '周日联动: 周看涨但日下跌捡漏, 输出周/日
+Public Const 位谕of日层盈提示 = 位谕始of族策 + 18    '日层盈提示: 止盈信号
+'-----------
+Public Const 位谕of周层四域 = 位谕始of族策 + 19
+Public Const 位谕of日层四域 = 位谕始of族策 + 20
 Public Const 位谕终of族策 = 位谕of日层四域
 '----------------------------------------------------------------------------------------
-Public Const 位谕列终全部 = 位谕终of族策
+'----------------------------------------------------------------------------------------
+'指标群：月类乾坤体系
+'----------------------------------------------------------------------------------------
+'----------------------------------------------------------------------------------------
+Public Const 位谕始of族月类 = 位谕终of族策 + 1
+'-----------
+Public Const 位谕of月道尊比柱 = 位谕始of族月类 + 0
+Public Const 位谕of月道尊BTIB = 位谕始of族月类 + 1
+'-----------
+Public Const 位谕of月波临低幅 = 位谕始of族月类 + 2
+Public Const 位谕of月波临高幅 = 位谕始of族月类 + 3
+Public Const 位谕of月波临涨幅 = 位谕始of族月类 + 4
+Public Const 位谕of月波今涨幅 = 位谕始of族月类 + 5
+'-----------
+Public Const 位谕of月管上符串 = 位谕始of族月类 + 6
+Public Const 位谕of月管中符串 = 位谕始of族月类 + 7
+Public Const 位谕of月管并符串 = 位谕始of族月类 + 8
+'-----------
+Public Const 位谕of月道竖态 = 位谕始of族月类 + 9
+Public Const 位谕of月道层类 = 位谕始of族月类 + 10
+Public Const 位谕of月道横类 = 位谕始of族月类 + 11
+'-----------
+Public Const 位谕of月道奏启 = 位谕始of族月类 + 12
+Public Const 位谕of月道奏数交BC = 位谕始of族月类 + 13
+Public Const 位谕of月道奏数BC叉BA = 位谕始of族月类 + 14
+Public Const 位谕of月基月局 = 位谕始of族月类 + 15
+Public Const 位谕终of族月类 = 位谕of月基月局
+'----------------------------------------------------------------------------------------
+Public Const 位谕列终全部 = 位谕终of族月类
 '----------------------------------------------------------------------------------------
 
 
@@ -3649,7 +3648,7 @@ If UBCID是代码(CIDL) = True Then
             ElseIf 日类BTZC > 0 And 日类BTCD > 0 Then
                 等机警 = "开门"
             End If
-            谕组(X, 位谕of日层等机警) = 等机警
+            谕组(X, 位谕of日层机警) = 等机警
             '============================================================================
             '信号分类（机警提示）
             '============================================================================
@@ -5650,8 +5649,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of日层界) = "层界"
         .Cells(1, 位谕of日层柱排) = "柱排"
         .Cells(1, 位谕of日层等) = "等高线"
-        .Cells(1, 位谕of日层等机警) = "等机警"
-            End With
+    End With
     With WS.Columns(基列)
         With .Columns(位谕始of族日层).Borders(xlEdgeLeft)
            .Color = 常色二灰
@@ -5688,7 +5686,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层柱型).ColumnWidth = 6
         .Columns(位谕of日层界).ColumnWidth = 6
         .Columns(位谕of日层柱排).ColumnWidth = 12
-        .Columns(位谕of日层等机警).ColumnWidth = 8
     End With
     With WS.Columns(基列)
         .Columns(位谕of日层柱排).Hidden = True
@@ -6619,7 +6616,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '列：列宽
     '------------------------------------------------------------------------------------
     With WS.Columns(基列)
-        .Columns(位谕of周冲策略).ColumnWidth = 10
+        .Columns(位谕of周冲策略).ColumnWidth = 6
         .Columns(位谕of周冲策分).ColumnWidth = 4
         .Columns(位谕of月基策周).ColumnWidth = 9
         .Columns(位谕of月基分命).ColumnWidth = 4
@@ -6630,20 +6627,23 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of月基日H2).ColumnWidth = 3
         .Columns(位谕of月基日H2).HorizontalAlignment = xlLeft
         .Columns(位谕of日冲策略).HorizontalAlignment = xlLeft
-        .Columns(位谕of日冲策略).ColumnWidth = 12
+        .Columns(位谕of日冲策略).ColumnWidth = 8
         .Columns(位谕of日冲策分).ColumnWidth = 3
-        .Columns(位谕of策传).ColumnWidth = 0.2
-        .Columns(位谕of周层四域).ColumnWidth = 4
-        .Columns(位谕of日层四域).ColumnWidth = 4
+        
+        .Columns(位谕of日层机警).HorizontalAlignment = xlLeft
+        .Columns(位谕of日层机警).ColumnWidth = 8
+        .Columns(位谕of日层漏提示).ColumnWidth = 6
+        .Columns(位谕of日层漏提示).HorizontalAlignment = xlLeft
+        .Columns(位谕of日层联动).ColumnWidth = 8
+        
+        .Columns(位谕of日层段).ColumnWidth = 4
+        .Columns(位谕of日层盈提示).ColumnWidth = 4
+        .Columns(位谕of日层盈提示).HorizontalAlignment = xlRight
         .Columns(位谕of仓周类).ColumnWidth = 3
         .Columns(位谕of仓日类).ColumnWidth = 3
-        
-        .Columns(位谕of日层联动).ColumnWidth = 8
-        .Columns(位谕of日层段).ColumnWidth = 4
-        .Columns(位谕of日层机警).ColumnWidth = 15
-        .Columns(位谕of日层盈提示).ColumnWidth = 5
-        .Columns(位谕of日层盈提示).HorizontalAlignment = xlRight
-        .Columns(位谕of日层漏提示).ColumnWidth = 12
+        .Columns(位谕of周层四域).ColumnWidth = 4
+        .Columns(位谕of日层四域).ColumnWidth = 4
+        .Columns(位谕of策传).ColumnWidth = 0.2
     End With
     '------------------------------------------------------------------------------------
     '列：显示
