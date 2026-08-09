@@ -6617,7 +6617,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
     With WS.Columns(基列)
         .Columns(位谕of周冲策略).ColumnWidth = 6
         .Columns(位谕of周冲策分).ColumnWidth = 4
-        .Columns(位谕of月基策周).ColumnWidth = 9
+        .Columns(位谕of月基策周).ColumnWidth = 7.5
         .Columns(位谕of月基分命).ColumnWidth = 4
         .Columns(位谕of月基分周).ColumnWidth = 4
         .Columns(位谕of月基带周).ColumnWidth = 9
