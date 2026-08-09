@@ -3657,7 +3657,7 @@ If UBCID是代码(CIDL) = True Then
             '第1级：市板过滤 — 非核心池跳过
             Dim 值市板 As String: 值市板 = 谕组(X, 位qt市板)
             If 值市板 = "" Then 值市板 = IQQQ跨码工具_获取单码市板(CIDL)
-            If 值市板 <> "Qd" And 值市板 <> "Qe" And 值市板 <> "Qif" And 值市板 <> "Qst" Then
+            If 值市板 <> 常市板指 And 值市板 <> 常市板基 And 值市板 <> 常市板票Qif And 值市板 <> 常市板票Qst Then
                 '核心池，继续周门过滤
                 If 日类BTZC > 0 And 日类BTCD > 0 Then  '第2级：周门
                     Dim 等BSHA As Double: 等BSHA = Val(谕组(X, 位谕of日层BSHA))
@@ -3674,46 +3674,72 @@ If UBCID是代码(CIDL) = True Then
                     Dim 等策分 As Double: 等策分 = 0
                     '第3级：等高线 + 第4级：条件评分
                     If 等值 = "等4" Then
-                        If 等BSHA5 And 等连阳2 Then 等策略名 = "等4.偏5连门": 等策分 = 60
-                        ElseIf 等BSHA5 Then 等策略名 = "等4.偏5": 等策分 = 59
-                        ElseIf 等BSHA3 And 等连阳2 Then 等策略名 = "等4.偏3连门": 等策分 = 55
-                        ElseIf 等连阳2 Then 等策略名 = "等4.连": 等策分 = 49
-                        ElseIf 等层主2 And 等升排2 Then 等策略名 = "等4.层主升": 等策分 = 46
-                        ElseIf 等升排2 Then 等策略名 = "等4.升": 等策分 = 42
-                        ElseIf 等跌排2 Then 等策略名 = "等4.跌排": 等策分 = 39
+                        If 等BSHA5 And 等连阳2 Then
+                            等策略名 = "等4.偏5连门": 等策分 = 60
+                        ElseIf 等BSHA5 Then
+                            等策略名 = "等4.偏5": 等策分 = 59
+                        ElseIf 等BSHA3 And 等连阳2 Then
+                            等策略名 = "等4.偏3连门": 等策分 = 55
+                        ElseIf 等连阳2 Then
+                            等策略名 = "等4.连": 等策分 = 49
+                        ElseIf 等层主2 And 等升排2 Then
+                            等策略名 = "等4.层主升": 等策分 = 46
+                        ElseIf 等升排2 Then
+                            等策略名 = "等4.升": 等策分 = 42
+                        ElseIf 等跌排2 Then
+                            等策略名 = "等4.跌排": 等策分 = 39
                         End If
                     ElseIf 等值 = "等3" Then
-                        If 等BSHA5 And 等连阳2 Then 等策略名 = "等3.偏5连门": 等策分 = 58
-                        ElseIf 等BSHA5 Then 等策略名 = "等3.偏5": 等策分 = 54
-                        ElseIf 等BSHA3 And 等连阳2 Then 等策略名 = "等3.偏3连门": 等策分 = 53
-                        ElseIf 等连阳2 Then 等策略名 = "等3.连": 等策分 = 49
-                        ElseIf 等层主2 Then 等策略名 = "等3.层主": 等策分 = 44
-                        ElseIf 等跌排2 Then 等策略名 = "等3.跌排": 等策分 = 37
+                        If 等BSHA5 And 等连阳2 Then
+                            等策略名 = "等3.偏5连门": 等策分 = 58
+                        ElseIf 等BSHA5 Then
+                            等策略名 = "等3.偏5": 等策分 = 54
+                        ElseIf 等BSHA3 And 等连阳2 Then
+                            等策略名 = "等3.偏3连门": 等策分 = 53
+                        ElseIf 等连阳2 Then
+                            等策略名 = "等3.连": 等策分 = 49
+                        ElseIf 等层主2 Then
+                            等策略名 = "等3.层主": 等策分 = 44
+                        ElseIf 等跌排2 Then
+                            等策略名 = "等3.跌排": 等策分 = 37
                         End If
                     ElseIf 等值 = "等1" Then
-                        If 等BSHA5 And 等连阳2 Then 等策略名 = "等1.偏5连门": 等策分 = 61
-                        ElseIf 等BSHA5 Then 等策略名 = "等1.偏5": 等策分 = 56
-                        ElseIf 等层主2 Then 等策略名 = "等1.层主": 等策分 = 44
+                        If 等BSHA5 And 等连阳2 Then
+                            等策略名 = "等1.偏5连门": 等策分 = 61
+                        ElseIf 等BSHA5 Then
+                            等策略名 = "等1.偏5": 等策分 = 56
+                        ElseIf 等层主2 Then
+                            等策略名 = "等1.层主": 等策分 = 44
                         End If
                     ElseIf 等值 = "等2" Then
-                        If 等BSHA5 And 等连阳2 Then 等策略名 = "等2.偏5连门": 等策分 = 57
-                        ElseIf 等BSHA5 Then 等策略名 = "等2.偏5": 等策分 = 54
+                        If 等BSHA5 And 等连阳2 Then
+                            等策略名 = "等2.偏5连门": 等策分 = 57
+                        ElseIf 等BSHA5 Then
+                            等策略名 = "等2.偏5": 等策分 = 54
                         End If
                     ElseIf 等值 = "等5" Then
-                        If 等BSHA5 Then 等策略名 = "等5.偏5": 等策分 = 61
-                        ElseIf 等BSHA3 Then 等策略名 = "等5.偏3": 等策分 = 53
+                        If 等BSHA5 Then
+                            等策略名 = "等5.偏5": 等策分 = 61
+                        ElseIf 等BSHA3 Then
+                            等策略名 = "等5.偏3": 等策分 = 53
                         End If
                     ElseIf 等值 = "等8" Then
-                        If 等BSHA5 Then 等策略名 = "等8.偏5": 等策分 = 52
-                        ElseIf 等BSHA3 Then 等策略名 = "等8.偏3": 等策分 = 50
+                        If 等BSHA5 Then
+                            等策略名 = "等8.偏5": 等策分 = 52
+                        ElseIf 等BSHA3 Then
+                            等策略名 = "等8.偏3": 等策分 = 50
                         End If
                     ElseIf 等值 = "等6" Then
-                        If 等BSHA5 Then 等策略名 = "等6.偏5": 等策分 = 49
-                        ElseIf 等BSHA3 Then 等策略名 = "等6.偏3": 等策分 = 48
+                        If 等BSHA5 Then
+                            等策略名 = "等6.偏5": 等策分 = 49
+                        ElseIf 等BSHA3 Then
+                            等策略名 = "等6.偏3": 等策分 = 48
                         End If
                     ElseIf 等值 = "等7" Then
-                        If 等BSHA5 Then 等策略名 = "等7.偏5": 等策分 = 54
-                        ElseIf 等BSHA3 Then 等策略名 = "等7.偏3": 等策分 = 51
+                        If 等BSHA5 Then
+                            等策略名 = "等7.偏5": 等策分 = 54
+                        ElseIf 等BSHA3 Then
+                            等策略名 = "等7.偏3": 等策分 = 51
                         End If
                     End If
                     '写入策略名（等级前置）和策分
