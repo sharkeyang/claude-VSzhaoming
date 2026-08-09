@@ -3647,53 +3647,83 @@ If UBCID是代码(CIDL) = True Then
                 End If
             End If
             谕组(X, 位谕of日层等) = 等值
-            '============================================================================
-            '日冲策略（三级策略名称 + H2概率）
-            ' 周门过滤 + 等高线 + 条件组合 → 映射到等XA和H2分
-            ' 全量赛马数据，H2=下日高≥2%概率
+                        '============================================================================
+            '日冲策略（市板过滤 + 周门 + 等高线 + 条件评分）
+            ' 输出：策略名(等级+等+数字+条件) + 策分(H2整数)
+            ' 核心池：Qic/Qim/Qit/Qin，排除Qd/Qe/Qif/Qst
             '============================================================================
             谕组(X, 位谕of日冲策略) = ""
-            If 日类BTZC > 0 And 日类BTCD > 0 Then  '周门
-                Dim 等BSHA As Double: 等BSHA = Val(谕组(X, 位谕of日层BSHA))
-                Dim 等连阳 As Long: 等连阳 = Val(谕组(X, 位谕of日层BT连阳))
-                Dim 等层主 As String: 等层主 = 谕组(X, 位谕of日层界)
-                Dim 等柱排 As String: 等柱排 = 谕组(X, 位谕of日层柱排)
-                Dim 等BSHA5 As Boolean: 等BSHA5 = (等BSHA > 5)
-                Dim 等连阳2 As Boolean: 等连阳2 = (等连阳 > 0)
-                Dim 等层主2 As Boolean: 等层主2 = (Left$(等层主, 1) = "主")
-                Dim 等升排2 As Boolean: 等升排2 = (Left$(等柱排, 1) = "升")
-                '策略映射
-                If 等值 = "等4" Then
-                    If 等BSHA5 And 等连阳2 Then
-                        谕组(X, 位谕of日冲策略) = "等4A": 谕组(X, 位谕of日冲策分) = 59.6
-                    ElseIf 等BSHA5 Then
-                        谕组(X, 位谕of日冲策略) = "等4B": 谕组(X, 位谕of日冲策分) = 58.8
-                    ElseIf 等层主2 And 等升排2 Then
-                        谕组(X, 位谕of日冲策略) = "等4C": 谕组(X, 位谕of日冲策分) = 41.5
-                    ElseIf 等升排2 Then
-                        谕组(X, 位谕of日冲策略) = "等4D": 谕组(X, 位谕of日冲策分) = 38.2
+            谕组(X, 位谕of日冲策分) = 0
+            '第1级：市板过滤 — 非核心池跳过
+            Dim 值市板 As String: 值市板 = 谕组(X, 位qt市板)
+            If 值市板 = "" Then 值市板 = IQQQ跨码工具_获取单码市板(CIDL)
+            If 值市板 <> "Qd" And 值市板 <> "Qe" And 值市板 <> "Qif" And 值市板 <> "Qst" Then
+                '核心池，继续周门过滤
+                If 日类BTZC > 0 And 日类BTCD > 0 Then  '第2级：周门
+                    Dim 等BSHA As Double: 等BSHA = Val(谕组(X, 位谕of日层BSHA))
+                    Dim 等连阳 As Long: 等连阳 = Val(谕组(X, 位谕of日层BT连阳))
+                    Dim 等层主 As String: 等层主 = 谕组(X, 位谕of日层界)
+                    Dim 等柱排 As String: 等柱排 = 谕组(X, 位谕of日层柱排)
+                    Dim 等BSHA5 As Boolean: 等BSHA5 = (等BSHA > 5)
+                    Dim 等BSHA3 As Boolean: 等BSHA3 = (等BSHA > 3)
+                    Dim 等连阳2 As Boolean: 等连阳2 = (等连阳 > 0)
+                    Dim 等层主2 As Boolean: 等层主2 = (Left$(等层主, 1) = "主")
+                    Dim 等升排2 As Boolean: 等升排2 = (Left$(等柱排, 1) = "升")
+                    Dim 等跌排2 As Boolean: 等跌排2 = (Left$(等柱排, 1) = "跌")
+                    Dim 等策略名 As String: 等策略名 = ""
+                    Dim 等策分 As Double: 等策分 = 0
+                    '第3级：等高线 + 第4级：条件评分
+                    If 等值 = "等4" Then
+                        If 等BSHA5 And 等连阳2 Then 等策略名 = "等4.偏5连门": 等策分 = 60
+                        ElseIf 等BSHA5 Then 等策略名 = "等4.偏5": 等策分 = 59
+                        ElseIf 等BSHA3 And 等连阳2 Then 等策略名 = "等4.偏3连门": 等策分 = 55
+                        ElseIf 等连阳2 Then 等策略名 = "等4.连": 等策分 = 49
+                        ElseIf 等层主2 And 等升排2 Then 等策略名 = "等4.层主升": 等策分 = 46
+                        ElseIf 等升排2 Then 等策略名 = "等4.升": 等策分 = 42
+                        ElseIf 等跌排2 Then 等策略名 = "等4.跌排": 等策分 = 39
+                        End If
+                    ElseIf 等值 = "等3" Then
+                        If 等BSHA5 And 等连阳2 Then 等策略名 = "等3.偏5连门": 等策分 = 58
+                        ElseIf 等BSHA5 Then 等策略名 = "等3.偏5": 等策分 = 54
+                        ElseIf 等BSHA3 And 等连阳2 Then 等策略名 = "等3.偏3连门": 等策分 = 53
+                        ElseIf 等连阳2 Then 等策略名 = "等3.连": 等策分 = 49
+                        ElseIf 等层主2 Then 等策略名 = "等3.层主": 等策分 = 44
+                        ElseIf 等跌排2 Then 等策略名 = "等3.跌排": 等策分 = 37
+                        End If
+                    ElseIf 等值 = "等1" Then
+                        If 等BSHA5 And 等连阳2 Then 等策略名 = "等1.偏5连门": 等策分 = 61
+                        ElseIf 等BSHA5 Then 等策略名 = "等1.偏5": 等策分 = 56
+                        ElseIf 等层主2 Then 等策略名 = "等1.层主": 等策分 = 44
+                        End If
+                    ElseIf 等值 = "等2" Then
+                        If 等BSHA5 And 等连阳2 Then 等策略名 = "等2.偏5连门": 等策分 = 57
+                        ElseIf 等BSHA5 Then 等策略名 = "等2.偏5": 等策分 = 54
+                        End If
+                    ElseIf 等值 = "等5" Then
+                        If 等BSHA5 Then 等策略名 = "等5.偏5": 等策分 = 61
+                        ElseIf 等BSHA3 Then 等策略名 = "等5.偏3": 等策分 = 53
+                        End If
+                    ElseIf 等值 = "等8" Then
+                        If 等BSHA5 Then 等策略名 = "等8.偏5": 等策分 = 52
+                        ElseIf 等BSHA3 Then 等策略名 = "等8.偏3": 等策分 = 50
+                        End If
+                    ElseIf 等值 = "等6" Then
+                        If 等BSHA5 Then 等策略名 = "等6.偏5": 等策分 = 49
+                        ElseIf 等BSHA3 Then 等策略名 = "等6.偏3": 等策分 = 48
+                        End If
+                    ElseIf 等值 = "等7" Then
+                        If 等BSHA5 Then 等策略名 = "等7.偏5": 等策分 = 54
+                        ElseIf 等BSHA3 Then 等策略名 = "等7.偏3": 等策分 = 51
+                        End If
                     End If
-                ElseIf 等值 = "等3" Then
-                    If 等BSHA5 And 等连阳2 Then
-                        谕组(X, 位谕of日冲策略) = "等3A": 谕组(X, 位谕of日冲策分) = 56.9
-                    ElseIf 等BSHA5 Then
-                        谕组(X, 位谕of日冲策略) = "等3B": 谕组(X, 位谕of日冲策分) = 53.3
-                    ElseIf 等连阳2 Then
-                        谕组(X, 位谕of日冲策略) = "等3C": 谕组(X, 位谕of日冲策分) = 44.9
-                    ElseIf 等层主2 Then
-                        谕组(X, 位谕of日冲策略) = "等3D": 谕组(X, 位谕of日冲策分) = 37.1
+                    '写入策略名（等级前置）和策分
+                    If 等策略名 <> "" Then
+                        谕组(X, 位谕of日冲策略) = IQQQ跨码工具_日冲等级(等策分) & 等策略名
+                        谕组(X, 位谕of日冲策分) = 等策分
                     End If
-                ElseIf 等值 = "等1" And 等层主2 Then
-                    谕组(X, 位谕of日冲策略) = "等1D": 谕组(X, 位谕of日冲策分) = 39.1
-                ElseIf 等值 = "等2" And 等BSHA5 Then
-                    谕组(X, 位谕of日冲策略) = "等2B": 谕组(X, 位谕of日冲策分) = 54.1
-                ElseIf 等值 = "等5" And 等BSHA5 Then
-                    谕组(X, 位谕of日冲策略) = "等5A": 谕组(X, 位谕of日冲策分) = 59.5
-                ElseIf 等值 = "等8" And 等BSHA5 Then
-                    谕组(X, 位谕of日冲策略) = "等8B": 谕组(X, 位谕of日冲策分) = 51.6
                 End If
             End If
-            '============================================================================
+'============================================================================
             '日层段（仓位状态）
             '============================================================================
             谕组(X, 位谕of日层段) = "NA"
@@ -7365,4 +7395,22 @@ Private Function IQQQ跨码据擎_数程生成跨码管理2日段统计( _
         End If
     End If
     IQQQ跨码据擎_数程生成跨码管理2日段统计 = 1
+End Function
+
+
+'========================================================================================
+'IQQQ跨码工具_日冲等级 — 根据H2概率返回等级字母（等级前置用于排序）
+'========================================================================================
+Private Function IQQQ跨码工具_日冲等级(ByVal H2分 As Double) As String
+    If H2分 > 60 Then
+        IQQQ跨码工具_日冲等级 = "A"
+    ElseIf H2分 >= 50 Then
+        IQQQ跨码工具_日冲等级 = "B"
+    ElseIf H2分 >= 40 Then
+        IQQQ跨码工具_日冲等级 = "C"
+    ElseIf H2分 >= 30 Then
+        IQQQ跨码工具_日冲等级 = "D"
+    Else
+        IQQQ跨码工具_日冲等级 = "不参考"
+    End If
 End Function
