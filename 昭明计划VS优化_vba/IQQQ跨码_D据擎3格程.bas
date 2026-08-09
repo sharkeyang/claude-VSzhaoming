@@ -849,50 +849,6 @@ End If
                             .Font.Color = 常色八红
                         End If
                 End With
-                '-------------------------------------------------------------------------
-                '日层系 买提示指标
-                '-------------------------------------------------------------------------
-                        With .Cells(1, 位谕of日冲策略)
-                                If InStr(.Value, "NA") > 0 Then
-                                    .Font.Color = .Interior.Color
-                                    .Font.TintAndShade = -0.1
-                                ElseIf InStr(.Value, "卖浮") > 0 Then
-                                    .Font.Color = 常色四红
-                                End If
-                        End With
-                        '------------------------------------------------------------
-                        With .Cells(1, 位谕of月基策日)
-                                If InStr(.Value, "弱") > 0 Then
-                                    .Font.Color = .Interior.Color
-                                    .Font.TintAndShade = -0.2
-                                ElseIf InStr(.Value, "武") > 0 Then
-                                    .Font.Color = 常色二红
-                                ElseIf InStr(.Value, "虎") > 0 Then
-                                    .Font.Color = 常色四红
-                                End If
-                        End With
-                        '------------------------------------------------------------
-                        With .Cells(1, 位谕of日层联动)
-                                If Left$(.Value, 1) = "N" Then
-                                    .Font.Color = 常色一红
-                                ElseIf InStr(.Value, "降") > 0 Then
-                                    .Font.Color = .Interior.Color
-                                    .Font.TintAndShade = -0.2
-                                ElseIf InStr(.Value, "待") > 0 Then
-                                    .Font.Color = 常色四黄
-                                End If
-                        End With
-                        '------------------------------------------------------------
-                        With .Cells(1, 位谕of日层盈提示)
-                                If InStr(.Value, "连") > 0 Then
-                                    .Font.Bold = True
-                                End If
-                                If InStr(.Value, "高") > 0 Or InStr(.Value, "偏") > 0 Then
-                                    .Font.Color = 常色三红
-                                ElseIf InStr(.Value, "宽") > 0 Then
-                                    .Font.Color = 常色三青
-                                End If
-                        End With
                 '========================================================================
                 '检验：日波系
                 '检验：标注日类卖出建议
@@ -1103,12 +1059,53 @@ End If
                         .Font.TintAndShade = -0.2
                     End If
                 End With
+                With .Cells(1, 位谕of月基策日)
+                        If InStr(.Value, "弱") > 0 Then
+                            .Font.Color = .Interior.Color
+                            .Font.TintAndShade = -0.2
+                        ElseIf InStr(.Value, "武") > 0 Then
+                            .Font.Color = 常色二红
+                        ElseIf InStr(.Value, "虎") > 0 Then
+                            .Font.Color = 常色四红
+                        End If
+                End With
                 '------------------------------------------------------------------------
                 With .Cells(1, 位谕of日冲策分)
                     If .Value = 0 Then
                         .Font.Color = .Interior.Color
                         .Font.TintAndShade = -0.2
                     End If
+                End With
+                '------------------------------------------------------------
+                '------------------------------------------------------------
+                With .Cells(1, 位谕of日层段)
+                        If InStr(.Value, "NA") > 0 Then
+                            .Font.Color = .Interior.Color
+                            .Font.TintAndShade = -0.1
+                        ElseIf InStr(.Value, "卖浮") > 0 Then
+                            .Font.Color = 常色四红
+                        End If
+                End With
+                With .Cells(1, 位谕of日层联动)
+                        If Left$(.Value, 1) = "N" Then
+                            .Font.Color = 常色一红
+                        ElseIf InStr(.Value, "降") > 0 Then
+                            .Font.Color = .Interior.Color
+                            .Font.TintAndShade = -0.2
+                        ElseIf InStr(.Value, "待") > 0 Then
+                            .Font.Color = 常色四黄
+                        End If
+                End With
+                '------------------------------------------------------------
+                With .Cells(1, 位谕of日层盈提示)
+                        If InStr(.Value, "连") > 0 Then
+                            .Font.Bold = True
+                        End If
+                        If InStr(.Value, "高") > 0 Or InStr(.Value, "偏") > 0 Then
+                            .Font.Color = 常色三红
+                        ElseIf InStr(.Value, "宽") > 0 Then
+                            .Font.Color = 常色三青
+                        End If
                 End With
                 '------------------------------------------------------------------------
         End With
