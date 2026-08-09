@@ -201,23 +201,23 @@ AB好 := IFS(日AB护级='甲', 1, IFS(日AB护级='乙', 1, IFS(日AB护级='�
 
 {--- 四级分类输出 ---}
 四级:=
-IFS(周期条件DT8 and EF好=1 and CD好=1 and AB好=1, 'A_主',
-IFS(周期条件DT8 and EF好=1 and CD好=1 and AB好=0, 'B_被',
-IFS(周期条件DT8 and EF好=1 and CD好=0 and AB好=1, 'C_试',
-IFS(周期条件DT8 and EF好=0 and CD好=1 and AB好=1, 'E_主',
-IFS(周期条件DT8 and EF好=1 and CD好=0 and AB好=0, 'D_禁',
-IFS(周期条件DT8 and EF好=0 and CD好=1 and AB好=0, 'F_被',
-IFS(周期条件DT8 and EF好=0 and CD好=0 and AB好=1, 'G_试',
-IFS(周期条件DT8 and EF好=0 and CD好=0 and AB好=0, 'H_禁',
+IFS(周期条件DT8 and EF好=1 and CD好=1 and AB好=1, 'A(主)',
+IFS(周期条件DT8 and EF好=1 and CD好=1 and AB好=0, 'B(被)',
+IFS(周期条件DT8 and EF好=1 and CD好=0 and AB好=1, 'C(被)',
+IFS(周期条件DT8 and EF好=0 and CD好=1 and AB好=1, 'E(主)',
+IFS(周期条件DT8 and EF好=1 and CD好=0 and AB好=0, 'D(被)',
+IFS(周期条件DT8 and EF好=0 and CD好=1 and AB好=0, 'F(被)',
+IFS(周期条件DT8 and EF好=0 and CD好=0 and AB好=1, 'G(傻)屎捡豆',
+IFS(周期条件DT8 and EF好=0 and CD好=0 and AB好=0, 'H(禁)',
 ''
 )))))))),DRAWNULL,COLORgray;
 四级,DRAWNULL,COLORgray;
 {================================  勿入提示  =======================================}
 {--- 四级分类：坚决禁止提示（红色X，比灰色x更醒目）---}
-DRAWTEXT(周期条件DT8 and 四级='H_禁', L*0.99, 'X'),COLORgray,LAYER1;
+DRAWTEXT(周期条件DT8 and 四级='H(禁)', L*0.99, 'X'),COLORgray,LAYER1;
 DRAWTEXT(周期条件DT9 and not(均线条件JZ上JC), L*0.99, 'x'),COLORgray,LAYER1;
-{===================================================================================}
-FILLRGN( JE ,JF ,周期条件DT8, RGB(111,0,33) ),LAYER6;
+{===================================================================================
+FILLRGN( JE ,JF ,周期条件DT8, RGB(111,0,33) ),LAYER6;}
 {===================================================================================}
 
 
