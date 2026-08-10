@@ -1105,15 +1105,18 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     With WSTO.Rows(末行).Font: .Bold = True: End With
     With WSTO.Rows(末行).Interior: .Color = 常色九灰: End With
     末行 = 末行 + 1
-    Dim 策日 As Variant, 策日数 As Integer, 策日额 As Double
-    Dim 策日表 As Variant: 策日表 = Array("A", "B", "C", "D", "E", "F", "G", "H")
-    For Each 策日 In 策日表
+    Dim 策日A As Variant, 策日 As Variant, 策日数 As Integer, 策日额 As Double
+    Dim 策日表 As Variant: 策日表 = Array(_
+        Array("A", "A主"), Array("B", "B被"), Array("C", "C被"), Array("D", "D被"), _
+        Array("E", "E主"), Array("F", "F被"), Array("G", "G傻"), Array("H", "H禁"))
+    For Each 策日A In 策日表
+        策日 = 策日A(0)
         If 策日典集.Exists(策日) Then
             策日数 = 策日典集(策日): 策日额 = 策日典集额(策日)
         Else
             策日数 = 0: 策日额 = 0
         End If
-        WSTO.Cells(末行, 1).Value = 策日
+        WSTO.Cells(末行, 1).Value = 策日A(1)
         WSTO.Cells(末行, 2).Value = 策日数
         WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
         WSTO.Cells(末行, 3).Value = Round(策日额, 1)
