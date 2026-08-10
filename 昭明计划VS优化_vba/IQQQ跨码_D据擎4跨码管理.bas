@@ -1108,8 +1108,8 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     末行 = 末行 + 1
     Dim 策日A As Variant, 策日 As Variant, 策日数 As Integer, 策日额 As Double
     Dim 策日表 As Variant: 策日表 = Array(_
-        Array("A", "A主"), Array("B", "B被"), Array("C", "C被"), Array("D", "D被"), _
-        Array("E", "E主"), Array("F", "F被"), Array("G", "G傻"), Array("H", "H禁"))
+        Array("A", "A强好主"), Array("B", "B强好被"), Array("C", "C弱好被"), Array("D", "D弱坏被"), _
+        Array("E", "E强好主"), Array("F", "F强坏被"), Array("G", "G弱好傻"), Array("H", "H弱坏禁"))
     For Each 策日A In 策日表
         策日 = 策日A(0)
         If 策日典集.Exists(策日) Then
