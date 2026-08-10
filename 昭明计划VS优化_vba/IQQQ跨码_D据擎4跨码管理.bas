@@ -274,17 +274,22 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     '--- 风控 ---
     Dim 超限名单 As String
     Dim 单票超限 As String
-    '--- 仓位分布 ---
-    Dim 仓低数 As Integer: 仓低数 = 0
-    Dim 仓低额 As Double: 仓低额 = 0
-    Dim 仓中数 As Integer: 仓中数 = 0
-    Dim 仓中额 As Double: 仓中额 = 0
-    Dim 仓满数 As Integer: 仓满数 = 0
-    Dim 仓满额 As Double: 仓满额 = 0
-    Dim 仓超数 As Integer: 仓超数 = 0
-    Dim 仓超额 As Double: 仓超额 = 0
-    Dim 仓值 As Variant
-    Dim 单票额典集 As New Dictionary   'X → 单票额，循环结束后按最终总持仓额集中度分组
+    '--- 仓位分布（按单票额绝对值分档，单位千元） ---
+    Dim 仓1千下 As Integer: 仓1千下 = 0
+    Dim 仓1千下额 As Double: 仓1千下额 = 0
+    Dim 仓1_3千 As Integer: 仓1_3千 = 0
+    Dim 仓1_3千额 As Double: 仓1_3千额 = 0
+    Dim 仓3_5千 As Integer: 仓3_5千 = 0
+    Dim 仓3_5千额 As Double: 仓3_5千额 = 0
+    Dim 仓5_10千 As Integer: 仓5_10千 = 0
+    Dim 仓5_10千额 As Double: 仓5_10千额 = 0
+    Dim 仓10_25千 As Integer: 仓10_25千 = 0
+    Dim 仓10_25千额 As Double: 仓10_25千额 = 0
+    Dim 仓25_50千 As Integer: 仓25_50千 = 0
+    Dim 仓25_50千额 As Double: 仓25_50千额 = 0
+    Dim 仓50千上 As Integer: 仓50千上 = 0
+    Dim 仓50千上额 As Double: 仓50千上额 = 0
+    Dim 单票额典集 As New Dictionary   'X → 单票额
     '--- 资金账户 ---
     Dim 福现金 As Double: 福现金 = 0
     Dim 彦现金 As Double: 彦现金 = 0
@@ -607,20 +612,19 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             End If
         End If
     Next X
-    '--- 仓位分布：按最终总持仓额集中度分组 ---
-    Dim 仓X As Variant, 仓占比 As Double
+    '--- 仓位分布：按单票额绝对值分档(千元) ---
+    Dim 仓X As Variant, 仓额 As Double
     For Each 仓X In 单票额典集.Keys
-        仓占比 = 单票额典集(仓X) / IIf(总持仓额 > 0, 总持仓额, 1)
-        If 仓占比 >= 0.75 Then
-            仓满数 = 仓满数 + 1
-            仓满额 = 仓满额 + 单票额典集(仓X)
-        ElseIf 仓占比 >= 0.25 Then
-            仓中数 = 仓中数 + 1
-            仓中额 = 仓中额 + 单票额典集(仓X)
-        Else
-            仓低数 = 仓低数 + 1
-            仓低额 = 仓低额 + 单票额典集(仓X)
-        End If
+        仓额 = 单票额典集(仓X)
+        Select Case 仓额
+            Case Is < 1: 仓1千下 = 仓1千下 + 1: 仓1千下额 = 仓1千下额 + 仓额
+            Case Is < 3: 仓1_3千 = 仓1_3千 + 1: 仓1_3千额 = 仓1_3千额 + 仓额
+            Case Is < 5: 仓3_5千 = 仓3_5千 + 1: 仓3_5千额 = 仓3_5千额 + 仓额
+            Case Is < 10: 仓5_10千 = 仓5_10千 + 1: 仓5_10千额 = 仓5_10千额 + 仓额
+            Case Is < 25: 仓10_25千 = 仓10_25千 + 1: 仓10_25千额 = 仓10_25千额 + 仓额
+            Case Is < 50: 仓25_50千 = 仓25_50千 + 1: 仓25_50千额 = 仓25_50千额 + 仓额
+            Case Else: 仓50千上 = 仓50千上 + 1: 仓50千上额 = 仓50千上额 + 仓额
+        End Select
     Next
 '========================================================================================
 '输出：标题
@@ -1128,52 +1132,79 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 1).Font.Bold = True
     WSTO.Cells(末行, 1).Font.Size = 14
     末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "仓位"
+    WSTO.Cells(末行, 1).Value = "持仓额"
     WSTO.Cells(末行, 2).Value = "票数"
     WSTO.Cells(末行, 3).Value = "票额"
     WSTO.Cells(末行, 4).Value = "票额占比"
     With WSTO.Rows(末行).Font: .Bold = True: End With
     With WSTO.Rows(末行).Interior: .Color = 常色九灰: End With
     末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "低仓(<25%)"
-    WSTO.Cells(末行, 2).Value = 仓低数
+    WSTO.Cells(末行, 1).Value = "1千以下"
+    WSTO.Cells(末行, 2).Value = 仓1千下
     WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
-    WSTO.Cells(末行, 3).Value = Round(仓低额, 1)
+    WSTO.Cells(末行, 3).Value = Round(仓1千下额, 1)
     WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 3).HorizontalAlignment = xlRight
-    WSTO.Cells(末行, 4).Value = Format(仓低额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
+    WSTO.Cells(末行, 4).Value = Format(仓1千下额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
     WSTO.Cells(末行, 4).HorizontalAlignment = xlRight
     末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "中仓(25%~75%)"
-    WSTO.Cells(末行, 2).Value = 仓中数
+    WSTO.Cells(末行, 1).Value = "1~3千"
+    WSTO.Cells(末行, 2).Value = 仓1_3千
     WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
-    WSTO.Cells(末行, 3).Value = Round(仓中额, 1)
+    WSTO.Cells(末行, 3).Value = Round(仓1_3千额, 1)
     WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 3).HorizontalAlignment = xlRight
-    WSTO.Cells(末行, 4).Value = Format(仓中额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
+    WSTO.Cells(末行, 4).Value = Format(仓1_3千额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
     WSTO.Cells(末行, 4).HorizontalAlignment = xlRight
     末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "满仓(75%~100%)"
-    WSTO.Cells(末行, 2).Value = 仓满数
+    WSTO.Cells(末行, 1).Value = "3~5千"
+    WSTO.Cells(末行, 2).Value = 仓3_5千
     WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
-    WSTO.Cells(末行, 3).Value = Round(仓满额, 1)
+    WSTO.Cells(末行, 3).Value = Round(仓3_5千额, 1)
     WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 3).HorizontalAlignment = xlRight
-    WSTO.Cells(末行, 4).Value = Format(仓满额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
+    WSTO.Cells(末行, 4).Value = Format(仓3_5千额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
     WSTO.Cells(末行, 4).HorizontalAlignment = xlRight
     末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "超限(>100%)"
-    WSTO.Cells(末行, 1).Font.Color = IIf(仓超数 > 0, 常色主红, 常色主黑)
-    WSTO.Cells(末行, 2).Value = 仓超数
+    WSTO.Cells(末行, 1).Value = "5~10千"
+    WSTO.Cells(末行, 2).Value = 仓5_10千
     WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
-    WSTO.Cells(末行, 3).Value = Round(仓超额, 1)
+    WSTO.Cells(末行, 3).Value = Round(仓5_10千额, 1)
     WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
     WSTO.Cells(末行, 3).HorizontalAlignment = xlRight
-    WSTO.Cells(末行, 4).Value = Format(仓超额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
+    WSTO.Cells(末行, 4).Value = Format(仓5_10千额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
     WSTO.Cells(末行, 4).HorizontalAlignment = xlRight
+    末行 = 末行 + 1
+    WSTO.Cells(末行, 1).Value = "10~25千"
+    WSTO.Cells(末行, 2).Value = 仓10_25千
+    WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
+    WSTO.Cells(末行, 3).Value = Round(仓10_25千额, 1)
+    WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
+    WSTO.Cells(末行, 3).HorizontalAlignment = xlRight
+    WSTO.Cells(末行, 4).Value = Format(仓10_25千额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
+    WSTO.Cells(末行, 4).HorizontalAlignment = xlRight
+    末行 = 末行 + 1
+    WSTO.Cells(末行, 1).Value = "25~50千"
+    WSTO.Cells(末行, 2).Value = 仓25_50千
+    WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
+    WSTO.Cells(末行, 3).Value = Round(仓25_50千额, 1)
+    WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
+    WSTO.Cells(末行, 3).HorizontalAlignment = xlRight
+    WSTO.Cells(末行, 4).Value = Format(仓25_50千额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
+    WSTO.Cells(末行, 4).HorizontalAlignment = xlRight
+    末行 = 末行 + 1
+    WSTO.Cells(末行, 1).Value = "50千以上"
+    WSTO.Cells(末行, 2).Value = 仓50千上
+    WSTO.Cells(末行, 2).HorizontalAlignment = xlRight
+    WSTO.Cells(末行, 3).Value = Round(仓50千上额, 1)
+    WSTO.Cells(末行, 3).NumberFormatLocal = "#,##0.0"
+    WSTO.Cells(末行, 3).HorizontalAlignment = xlRight
+    WSTO.Cells(末行, 4).Value = Format(仓50千上额 / IIf(总持仓额 > 0, 总持仓额, 1), "0%")
+    WSTO.Cells(末行, 4).HorizontalAlignment = xlRight
+    末行 = 末行 + 1
     '--- 规则说明 ---
     末行 = 末行 + 1
-    WSTO.Cells(末行, 1).Value = "规则：低仓=单票占比<25%  |  中仓=25%~75%  |  满仓=75%~100%  |  超限=占比>100%(集中度下不可能)"
+    WSTO.Cells(末行, 1).Value = "规则：按单票持仓额(千元)分档：1千以下 | 1~3千 | 3~5千 | 5~10千 | 10~25千 | 25~50千 | 50千以上"
     WSTO.Cells(末行, 1).Font.Color = 常色主灰
     WSTO.Cells(末行, 1).Font.Italic = True
     WSTO.Cells(末行, 1).Font.Size = 9
