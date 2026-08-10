@@ -305,7 +305,6 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     Dim 仓周上限 As Double
     Dim 组合占比 As Double
     Dim 仓周违规 As String
-    Dim 值仓位比 As Double
     '--- 行业指数映射 ---
     Dim 行业指数映射 As Dictionary
     Dim 行业指数典集 As New Dictionary  '行业→Array(名称, CIDL, 类型)
@@ -606,13 +605,8 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
                 End If
             Next
             '--- 仓限倍超限 ---
-            If VBA.IsNumeric(谕组(X, 位谕of仓限总)) Then
-                If CDbl(谕组(X, 位谕of仓限总)) > 0 Then
-                    值仓位比 = 谕组(X, 位谕of仓持数) / 100 / CDbl(谕组(X, 位谕of仓限总))
-                    If 值仓位比 > 1 Then
-                        仓周违规 = 仓周违规 & "[仓限]" & 谕组(X, 位qt代称) & "=" & Round(值仓位比, 1) & "倍(超限)" & vbCrLf
-                    End If
-                End If
+            If InStr(谕组(X, 位谕of仓位比), "倍") > 0 Then
+                仓周违规 = 仓周违规 & "[仓限]" & 谕组(X, 位qt代称) & "=" & 谕组(X, 位谕of仓位比) & "(超限)" & vbCrLf
             End If
             '--- 策略合规 ---
             If InStr(谕组(X, 位谕of月基策日), "禁") > 0 And 谕组(X, 位谕of仓持数) > 0 Then
