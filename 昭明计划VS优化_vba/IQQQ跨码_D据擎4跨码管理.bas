@@ -606,10 +606,12 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
                 End If
             Next
             '--- 仓限倍超限 ---
-            If 谕组(X, 位谕of仓限总) > 0 Then
-                值仓位比 = 谕组(X, 位谕of仓持数) / 100 / 谕组(X, 位谕of仓限总)
-                If 值仓位比 > 1 Then
-                    仓周违规 = 仓周违规 & "[仓限]" & 谕组(X, 位qt代称) & "=" & Round(值仓位比, 1) & "倍(超限)" & vbCrLf
+            If VBA.IsNumeric(谕组(X, 位谕of仓限总)) Then
+                If CDbl(谕组(X, 位谕of仓限总)) > 0 Then
+                    值仓位比 = 谕组(X, 位谕of仓持数) / 100 / CDbl(谕组(X, 位谕of仓限总))
+                    If 值仓位比 > 1 Then
+                        仓周违规 = 仓周违规 & "[仓限]" & 谕组(X, 位qt代称) & "=" & Round(值仓位比, 1) & "倍(超限)" & vbCrLf
+                    End If
                 End If
             End If
             '--- 策略合规 ---
