@@ -300,7 +300,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     Dim 仓额排名 As Double, 仓名排名 As String
     Dim j As Integer
     Dim k As Integer
-    '--- 仓周类上限 ---
+    '--- 仓限倍超限 ---
     Dim 仓周类 As String
     Dim 仓周上限 As Double
     Dim 组合占比 As Double
@@ -569,15 +569,16 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             End If
             '--- 仓位分布 ---
             仓值 = 谕组(X, 位谕of仓位比)
-            If VBA.IsNumeric(仓值) Then
-                If 仓值 > 1 Then
-                    仓超数 = 仓超数 + 1
-                    仓超额 = 仓超额 + 单票额
-                    单票超限 = 单票超限 & "[仓位]" & 谕组(X, 位qt代称) & "(" & 仓值 & "倍)" & vbCrLf
-                ElseIf 仓值 >= 0.75 Then
+            If InStr(仓值, "倍") > 0 Then
+                ' "X倍" → 超限(>100%)
+                仓超数 = 仓超数 + 1
+                仓超额 = 仓超额 + 单票额
+                单票超限 = 单票超限 & "[仓位]" & 谕组(X, 位qt代称) & "(" & 仓值 & ")" & vbCrLf
+            ElseIf VBA.IsNumeric(仓值) Then
+                If CDbl(仓值) >= 0.75 Then
                     仓满数 = 仓满数 + 1
                     仓满额 = 仓满额 + 单票额
-                ElseIf 仓值 >= 0.25 Then
+                ElseIf CDbl(仓值) >= 0.25 Then
                     仓中数 = 仓中数 + 1
                     仓中额 = 仓中额 + 单票额
                 Else
@@ -585,7 +586,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
                     仓低额 = 仓低额 + 单票额
                 End If
             Else
-                '非数值仓位比（如"仓限禁旨""仓限为0""2倍"）归入低仓
+                '非数值仓位比（如"仓限禁旨""仓限为0"）归入低仓
                 仓低数 = 仓低数 + 1
                 仓低额 = 仓低额 + 单票额
             End If
@@ -1311,9 +1312,9 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
         WSTO.Cells(末行, 2).Value = "所有持仓符合月基策日"
         末行 = 末行 + 1
     End If
-    '--- 仓周类上限 ---
+    '--- 仓限倍超限 ---
     If Len(仓周违规) > 0 Then
-        WSTO.Cells(末行, 1).Value = "X仓周类超限"
+        WSTO.Cells(末行, 1).Value = "X仓限倍超限"
         WSTO.Cells(末行, 1).Font.Color = 常色主红
         Dim 仓周行 As Variant
         仓周行 = Split(仓周违规, vbCrLf)
@@ -1338,9 +1339,9 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
         Next
         末行 = 末行 + UBound(仓周行) + 1
     Else
-        WSTO.Cells(末行, 1).Value = "OK仓周类上限"
+        WSTO.Cells(末行, 1).Value = "OK仓限倍超限"
         WSTO.Cells(末行, 1).Font.Color = 常色主绿
-        WSTO.Cells(末行, 2).Value = "所有股票符合仓周类上限(金银90%/唏嘘50%/屎尿20%)"
+        WSTO.Cells(末行, 2).Value = "所有股票符合仓限倍上限"
         末行 = 末行 + 1
     End If
 '========================================================================================
@@ -1538,15 +1539,15 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             End If
         Next
     End If
-    '--- 仓周类上限建议 ---
+    '--- 仓限倍超限建议 ---
     If Len(仓周违规) > 0 Then
         仓周行 = Split(仓周违规, vbCrLf)
         For i = 0 To UBound(仓周行)
             If 仓周行(i) <> "" Then
                 建议数 = 建议数 + 1
-                WSTO.Cells(末行, 1).Value = "仓周类上限"
+                WSTO.Cells(末行, 1).Value = "仓限倍超限"
                 WSTO.Cells(末行, 2).Value = 仓周行(i)
-                WSTO.Cells(末行, 3).Value = "减仓至组合占比<=上限"
+                WSTO.Cells(末行, 3).Value = "减仓至仓限倍内"
                 WSTO.Cells(末行, 3).Font.Color = 常色主黄
                 末行 = 末行 + 1
             End If
