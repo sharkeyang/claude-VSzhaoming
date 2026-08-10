@@ -1370,18 +1370,10 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 14).Value = "月基带日"
     WSTO.Cells(末行, 15).Value = "仓周类"
     WSTO.Cells(末行, 16).Value = "仓日类"
-    WSTO.Cells(末行, 17).Value = "日层段"
-    WSTO.Cells(末行, 18).Value = "月基策日"
-    WSTO.Cells(末行, 19).Value = "月基日H2"
-    WSTO.Cells(末行, 20).Value = "日冲策分"
-    WSTO.Cells(末行, 21).Value = "日冲策略"
-    WSTO.Cells(末行, 22).Value = "日层机警"
-    WSTO.Cells(末行, 23).Value = "日层漏提示"
-    WSTO.Cells(末行, 24).Value = "日层联动"
-    WSTO.Cells(末行, 25).Value = "日层盈提示"
-    WSTO.Cells(末行, 26).Value = "周层四域"
-    WSTO.Cells(末行, 27).Value = "日层四域"
-    WSTO.Cells(末行, 28).Value = "策略分类"
+    WSTO.Cells(末行, 17).Value = "月基策日"
+    WSTO.Cells(末行, 18).Value = "月基日H2"
+    WSTO.Cells(末行, 19).Value = "日冲策分"
+    WSTO.Cells(末行, 20).Value = "策略分类"
     With WSTO.Rows(末行).Font: .Bold = True: End With
     With WSTO.Rows(末行).Interior: .Color = 常色九灰: End With
     明细行 = 末行 + 1
@@ -1412,27 +1404,19 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(明细行, 14).Value = 谕组(X, 位谕of月基带日)
     WSTO.Cells(明细行, 15).Value = 谕组(X, 位谕of仓周类)
     WSTO.Cells(明细行, 16).Value = 谕组(X, 位谕of仓日类)
-    WSTO.Cells(明细行, 17).Value = 谕组(X, 位谕of日层段)
-    WSTO.Cells(明细行, 18).Value = 谕组(X, 位谕of月基策日)
-    WSTO.Cells(明细行, 19).Value = 谕组(X, 位谕of月基日H2)
-    If VBA.IsNumeric(谕组(X, 位谕of日冲策分)) Then WSTO.Cells(明细行, 20).Value = 谕组(X, 位谕of日冲策分)
-    WSTO.Cells(明细行, 21).Value = 谕组(X, 位谕of日冲策略)
-    WSTO.Cells(明细行, 22).Value = 谕组(X, 位谕of日层机警)
-    WSTO.Cells(明细行, 23).Value = 谕组(X, 位谕of日层漏提示)
-    WSTO.Cells(明细行, 24).Value = 谕组(X, 位谕of日层联动)
-    WSTO.Cells(明细行, 25).Value = 谕组(X, 位谕of日层盈提示)
-    WSTO.Cells(明细行, 26).Value = 谕组(X, 位谕of周层四域)
-    WSTO.Cells(明细行, 27).Value = 谕组(X, 位谕of日层四域)
-    '策略分类
-    If 谕组(X, 位谕of月基策周) <> "" And Left$(谕组(X, 位谕of月基策周), 2) <> "NA" Then
-        WSTO.Cells(明细行, 28).Value = "月基"
-    ElseIf VBA.IsNumeric(谕组(X, 位谕of周冲策分)) And 谕组(X, 位谕of周冲策分) >= 50 Then
-        WSTO.Cells(明细行, 28).Value = "周冲"
-    ElseIf VBA.IsNumeric(谕组(X, 位谕of日冲策分)) And 谕组(X, 位谕of日冲策分) >= 50 Then
-        WSTO.Cells(明细行, 28).Value = "日冲"
-    Else
-        WSTO.Cells(明细行, 28).Value = "非策略"
-    End If
+    WSTO.Cells(明细行, 17).Value = 谕组(X, 位谕of月基策日)
+    WSTO.Cells(明细行, 18).Value = 谕组(X, 位谕of月基日H2)
+    If VBA.IsNumeric(谕组(X, 位谕of日冲策分)) Then WSTO.Cells(明细行, 19).Value = 谕组(X, 位谕of日冲策分)
+                '策略分类
+                If 谕组(X, 位谕of月基策周) <> "" And Left$(谕组(X, 位谕of月基策周), 2) <> "NA" Then
+                    WSTO.Cells(明细行, 20).Value = "月基"
+                ElseIf VBA.IsNumeric(谕组(X, 位谕of周冲策分)) And 谕组(X, 位谕of周冲策分) >= 50 Then
+                    WSTO.Cells(明细行, 20).Value = "周冲"
+                ElseIf VBA.IsNumeric(谕组(X, 位谕of日冲策分)) And 谕组(X, 位谕of日冲策分) >= 50 Then
+                    WSTO.Cells(明细行, 20).Value = "日冲"
+                Else
+                    WSTO.Cells(明细行, 20).Value = "非策略"
+                End If
                 明细行 = 明细行 + 1
             End If
     Next
@@ -1460,18 +1444,10 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 14).Value = "月基带日"
     WSTO.Cells(末行, 15).Value = "仓周类"
     WSTO.Cells(末行, 16).Value = "仓日类"
-    WSTO.Cells(末行, 17).Value = "日层段"
-    WSTO.Cells(末行, 18).Value = "月基策日"
-    WSTO.Cells(末行, 19).Value = "月基日H2"
-    WSTO.Cells(末行, 20).Value = "日冲策分"
-    WSTO.Cells(末行, 21).Value = "日冲策略"
-    WSTO.Cells(末行, 22).Value = "日层机警"
-    WSTO.Cells(末行, 23).Value = "日层漏提示"
-    WSTO.Cells(末行, 24).Value = "日层联动"
-    WSTO.Cells(末行, 25).Value = "日层盈提示"
-    WSTO.Cells(末行, 26).Value = "周层四域"
-    WSTO.Cells(末行, 27).Value = "日层四域"
-    WSTO.Cells(末行, 28).Value = "策略分类"
+    WSTO.Cells(末行, 17).Value = "月基策日"
+    WSTO.Cells(末行, 18).Value = "月基日H2"
+    WSTO.Cells(末行, 19).Value = "日冲策分"
+    WSTO.Cells(末行, 20).Value = "策略分类"
     With WSTO.Rows(末行).Font: .Bold = True: End With
     With WSTO.Rows(末行).Interior: .Color = 常色九灰: End With
     明细行 = 末行 + 1
@@ -1502,27 +1478,19 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(明细行, 14).Value = 谕组(X, 位谕of月基带日)
     WSTO.Cells(明细行, 15).Value = 谕组(X, 位谕of仓周类)
     WSTO.Cells(明细行, 16).Value = 谕组(X, 位谕of仓日类)
-    WSTO.Cells(明细行, 17).Value = 谕组(X, 位谕of日层段)
-    WSTO.Cells(明细行, 18).Value = 谕组(X, 位谕of月基策日)
-    WSTO.Cells(明细行, 19).Value = 谕组(X, 位谕of月基日H2)
-    If VBA.IsNumeric(谕组(X, 位谕of日冲策分)) Then WSTO.Cells(明细行, 20).Value = 谕组(X, 位谕of日冲策分)
-    WSTO.Cells(明细行, 21).Value = 谕组(X, 位谕of日冲策略)
-    WSTO.Cells(明细行, 22).Value = 谕组(X, 位谕of日层机警)
-    WSTO.Cells(明细行, 23).Value = 谕组(X, 位谕of日层漏提示)
-    WSTO.Cells(明细行, 24).Value = 谕组(X, 位谕of日层联动)
-    WSTO.Cells(明细行, 25).Value = 谕组(X, 位谕of日层盈提示)
-    WSTO.Cells(明细行, 26).Value = 谕组(X, 位谕of周层四域)
-    WSTO.Cells(明细行, 27).Value = 谕组(X, 位谕of日层四域)
-    '策略分类
-    If 谕组(X, 位谕of月基策周) <> "" And Left$(谕组(X, 位谕of月基策周), 2) <> "NA" Then
-        WSTO.Cells(明细行, 28).Value = "月基"
-    ElseIf VBA.IsNumeric(谕组(X, 位谕of周冲策分)) And 谕组(X, 位谕of周冲策分) >= 50 Then
-        WSTO.Cells(明细行, 28).Value = "周冲"
-    ElseIf VBA.IsNumeric(谕组(X, 位谕of日冲策分)) And 谕组(X, 位谕of日冲策分) >= 50 Then
-        WSTO.Cells(明细行, 28).Value = "日冲"
-    Else
-        WSTO.Cells(明细行, 28).Value = "非策略"
-    End If
+    WSTO.Cells(明细行, 17).Value = 谕组(X, 位谕of月基策日)
+    WSTO.Cells(明细行, 18).Value = 谕组(X, 位谕of月基日H2)
+    If VBA.IsNumeric(谕组(X, 位谕of日冲策分)) Then WSTO.Cells(明细行, 19).Value = 谕组(X, 位谕of日冲策分)
+                '策略分类
+                If 谕组(X, 位谕of月基策周) <> "" And Left$(谕组(X, 位谕of月基策周), 2) <> "NA" Then
+                    WSTO.Cells(明细行, 20).Value = "月基"
+                ElseIf VBA.IsNumeric(谕组(X, 位谕of周冲策分)) And 谕组(X, 位谕of周冲策分) >= 50 Then
+                    WSTO.Cells(明细行, 20).Value = "周冲"
+                ElseIf VBA.IsNumeric(谕组(X, 位谕of日冲策分)) And 谕组(X, 位谕of日冲策分) >= 50 Then
+                    WSTO.Cells(明细行, 20).Value = "日冲"
+                Else
+                    WSTO.Cells(明细行, 20).Value = "非策略"
+                End If
                 明细行 = 明细行 + 1
             End If
     Next
