@@ -1789,7 +1789,7 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
         Open 日文件 For Output As #1
         '等高线分类：等1=边,等2=近弱,等3=远强,等4=回归,等5=下边,等6=下近,等7=下远,等8=下回
         '详见 IQQQ跨码_D据擎2神谕.bas 中 位谕of日层等 的注释
-        Print #1, "日期,收,开,高,低,涨幅,高幅,DXEF,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,管释,撤哼JC,类合,BSLA,宽哈JC,BT鼎,BTZA,BT连阳,顶型,等高线"
+        Print #1, "日期,收,开,高,低,涨幅,高幅,DXEF,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,管释,撤哼JC,类合,BSLA,宽哈JC,BT鼎,BTZA,BT连阳,顶型,日等型"
 
         For X = LBound(谕组, 1) To UBound(谕组, 1)
             Dim 日高幅 As Double
@@ -1799,8 +1799,6 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
             If X < UBound(谕组, 1) Then
                 次日高幅 = ARRLLL(X + 1, 基位日类 + 位os结幅HR0)
             End If
-            Dim 行头 As String
-            Dim 行尾 As String
             行头 = ARRLLL(X, 基位日类 + 位os结期) & "," & _
                 ARRLLL(X, 基位日类 + 位os结收) & "," & _
                 ARRLLL(X, 基位日类 + 位os结开) & "," & _
@@ -2004,9 +2002,9 @@ Public Sub XL算展取样_谕组批量通用(Optional 模式 As String = "", Opt
         '判断实际需要生成哪些模式
         Dim 实际模式 As String
         If 模式 = "周" Then
-            实际模式 = "周"
+            实际模式 = IIf(已有周.Exists("谕组周_" & CIDL), "", "周")
         ElseIf 模式 = "日" Then
-            实际模式 = "日"
+            实际模式 = IIf(已有日.Exists("谕组日_" & CIDL), "", "日")
         Else '周+日
             Dim 缺周 As Boolean, 缺日 As Boolean
             缺周 = Not 已有周.Exists("谕组周_" & CIDL)

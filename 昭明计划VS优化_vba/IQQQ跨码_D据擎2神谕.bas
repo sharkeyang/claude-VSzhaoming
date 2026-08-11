@@ -5565,7 +5565,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of日层柱型) = "柱型DJA"
         .Cells(1, 位谕of日层界) = "层界"
         .Cells(1, 位谕of日层柱排) = "柱排"
-        .Cells(1, 位谕of日层等) = "等高线"
+        .Cells(1, 位谕of日层等) = "日等型"
     End With
     With WS.Columns(基列)
         With .Columns(位谕始of族日层).Borders(xlEdgeLeft)
