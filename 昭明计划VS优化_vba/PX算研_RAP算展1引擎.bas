@@ -1705,7 +1705,7 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
         Dim 周文件 As String
         周文件 = 周路径 & "谕组周_" & 被研代码 & ".csv"
         Open 周文件 For Output As #1
-        Print #1, "主期,周涨,PR,HR,WXAB,波型,柱排周,盈提示,WXCD,ZA周,ZB周,ZC周,周龄,周键"
+        Print #1, "主期,周涨,PR,HR,WXAB,波型,柱排周,柱型周,层界周,盈提示,WXCD,ZA周,ZB周,ZC周,ZD周,ZE周,ZF周,AB周,CD周,中符串周,周龄,周键"
 
         Dim 基位日类 As Integer: 基位日类 = 0
         Dim 基位周类 As Integer: 基位周类 = 花宽单道
@@ -1720,11 +1720,19 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
                     Replace(谕组(X, 位谕of周层护型), ",", ";") & "," & _
                     Replace(谕组(X, 位谕of周层波型), ",", ";") & "," & _
                     Replace(谕组(X, 位谕of周层柱排), ",", ";") & "," & _
+                    Replace(谕组(X, 位谕of周层柱型), ",", ";") & "," & _
+                    Replace(谕组(X, 位谕of周层界), ",", ";") & "," & _
                     谕组(X, 位谕of周层盈提示) & "," & _
                     Replace(谕组(X, 位谕of周层大局), ",", ";") & "," & _
                     谕组(X, 位谕of周类BTZA) & "," & _
                     谕组(X, 位谕of周类BTZB) & "," & _
                     谕组(X, 位谕of周类BTZC) & "," & _
+                    谕组(X, 位谕of周类BTZD) & "," & _
+                    谕组(X, 位谕of周类BTZE) & "," & _
+                    谕组(X, 位谕of周类BTZF) & "," & _
+                    谕组(X, 位谕of周类BTAB) & "," & _
+                    谕组(X, 位谕of周类BTCD) & "," & _
+                    Replace(谕组(X, 位谕of周管中符串), ",", ";") & "," & _
                     ARRLLL(X, 基位周类 + 位os基累龄) & "," & _
                     "True"
             End If
