@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "D:\@VSwork\VS昭明计划VBA优化\____temp\验证_日冲三级组合_v2.py", line 20, in <module>
-    '->ZE>0': float(r['->ZE>0']),
-                    ~^^^^^^^^^^
-KeyError: '->ZE>0'

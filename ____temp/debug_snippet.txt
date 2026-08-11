@@ -1,5 +1,0 @@
-末行 = 5
-    WSTO.Cells(末行, 1).Value = "持仓"
-    WSTO.Cells(末行, 2).Value = 福票数
-    WSTO.Cells(末行, 3).Value = Round(福仓额, 1)
-    WS
