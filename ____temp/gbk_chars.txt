@@ -1,0 +1,4 @@
+Found 1 unique non-GBK chars
+  U+2194: ↔
+Arrow char count: 3
+L3659:                 '下侧：镜面映射 A↔F, B↔E, C↔D
