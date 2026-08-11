@@ -1712,60 +1712,61 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
         Dim X As Integer
         For X = LBound(谕组, 1) To UBound(谕组, 1)
             If ARRLLL(X, 基位周类 + 位os结期) = ARRLLL(X, 基位日类 + 位os结期) Then
-                Print #1, _
-                    ARRLLL(X, 基位日类 + 位os结期) & "," & _
-                    谕组(X, 位谕of周波今涨幅) & "," & _
-                    谕组(X, 位谕of周波临涨幅) & "," & _
-                    谕组(X, 位谕of周波临高幅) & "," & _
-                    Replace(谕组(X, 位谕of周层护型), ",", ";") & "," & _
-                    Replace(谕组(X, 位谕of周层波型), ",", ";") & "," & _
-                    Replace(谕组(X, 位谕of周层柱排), ",", ";") & "," & _
-                    Replace(谕组(X, 位谕of周层柱型), ",", ";") & "," & _
-                    Replace(谕组(X, 位谕of周层界), ",", ";") & "," & _
-                    Replace(谕组(X, 位谕of周层三鳄), ",", ";") & "," & _
-                    谕组(X, 位谕of周层盈丘幅) & "," & _
-                    谕组(X, 位谕of周层盈顶幅) & "," & _
-                    谕组(X, 位谕of周层盈提示) & "," & _
-                    Replace(谕组(X, 位谕of周层大局), ",", ";") & "," & _
-                    谕组(X, 位谕of周类BTZA) & "," & _
-                    谕组(X, 位谕of周类BTZB) & "," & _
-                    谕组(X, 位谕of周类BTZC) & "," & _
-                    谕组(X, 位谕of周类BTZD) & "," & _
-                    谕组(X, 位谕of周类BTZE) & "," & _
-                    谕组(X, 位谕of周类BTZF) & "," & _
-                    谕组(X, 位谕of周类BTAB) & "," & _
-                    谕组(X, 位谕of周类BTAC) & "," & _
-                    谕组(X, 位谕of周类BTBC) & "," & _
-                    谕组(X, 位谕of周类BTAD) & "," & _
-                    谕组(X, 位谕of周类BTBD) & "," & _
-                    谕组(X, 位谕of周类BTCD) & "," & _
-                    谕组(X, 位谕of周类BTCE) & "," & _
-                    谕组(X, 位谕of周类BTDE) & "," & _
-                    谕组(X, 位谕of周类BTCF) & "," & _
-                    谕组(X, 位谕of周类BTEF) & "," & _
-                    谕组(X, 位谕of周龟BT底) & "," & _
-                    谕组(X, 位谕of周龟BT哈) & "," & _
-                    谕组(X, 位谕of周龟BT哼) & "," & _
-                    谕组(X, 位谕of周龟BT顶) & "," & _
-                    谕组(X, 位谕of周龟BT合底哈) & "," & _
-                    谕组(X, 位谕of周龟BT合顶哼) & "," & _
-                    谕组(X, 位谕of周龟极折) & "," & _
-                    谕组(X, 位谕of周龟顶态) & "," & _
-                    Replace(谕组(X, 位谕of周龟顶型), ",", ";") & "," & _
-                    谕组(X, 位谕of周龟顶触) & "," & _
-                    Replace(谕组(X, 位谕of周管上符范), ",", ";") & "," & _
-                    Replace(谕组(X, 位谕of周管上符串), ",", ";") & "," & _
-                    Replace(谕组(X, 位谕of周管宽符串), ",", ";") & "," & _
-                    谕组(X, 位谕of周管宽哼JA) & "," & _
-                    谕组(X, 位谕of周管撤哼JA) & "," & _
-                    Replace(谕组(X, 位谕of周管中符串), ",", ";") & "," & _
-                    Replace(谕组(X, 位谕of周管中符范), ",", ";") & "," & _
-                    谕组(X, 位谕of周管BT鼎) & "," & _
-                    Replace(谕组(X, 位谕of周管并符范), ",", ";") & "," & _
-                    Replace(谕组(X, 位谕of周管并符串), ",", ";") & "," & _
-                    谕组(X, 位谕of周层类) & "," & _
-                    ARRLLL(X, 基位周类 + 位os基累龄) & "," & _
-                    "True"
+                Dim 行CSV As String: 行CSV = ""
+                行CSV = 行CSV & ARRLLL(X, 基位日类 + 位os结期) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周波今涨幅) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周波临涨幅) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周波临高幅) & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周层护型), ",", ";") & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周层波型), ",", ";") & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周层柱排), ",", ";") & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周层柱型), ",", ";") & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周层界), ",", ";") & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周层三鳄), ",", ";") & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周层盈丘幅) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周层盈顶幅) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周层盈提示) & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周层大局), ",", ";") & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTZA) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTZB) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTZC) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTZD) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTZE) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTZF) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTAB) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTAC) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTBC) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTAD) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTBD) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTCD) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTCE) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTDE) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTCF) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周类BTEF) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周龟BT底) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周龟BT哈) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周龟BT哼) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周龟BT顶) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周龟BT合底哈) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周龟BT合顶哼) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周龟极折) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周龟顶态) & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周龟顶型), ",", ";") & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周龟顶触) & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周管上符范), ",", ";") & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周管上符串), ",", ";") & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周管宽符串), ",", ";") & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周管宽哼JA) & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周管撤哼JA) & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周管中符串), ",", ";") & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周管中符范), ",", ";") & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周管BT鼎) & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周管并符范), ",", ";") & ","
+                行CSV = 行CSV & Replace(谕组(X, 位谕of周管并符串), ",", ";") & ","
+                行CSV = 行CSV & 谕组(X, 位谕of周层类) & ","
+                行CSV = 行CSV & ARRLLL(X, 基位周类 + 位os基累龄) & ","
+                行CSV = 行CSV & "True"
+                Print #1, 行CSV
             End If
         Next X
         Close #1
