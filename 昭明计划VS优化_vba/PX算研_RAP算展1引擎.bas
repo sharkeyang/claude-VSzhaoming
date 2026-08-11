@@ -1712,8 +1712,6 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
         Dim X As Integer
         For X = LBound(谕组, 1) To UBound(谕组, 1)
             If ARRLLL(X, 基位周类 + 位os结期) = ARRLLL(X, 基位日类 + 位os结期) Then
-                Dim 行头 As String
-                Dim 行尾 As String
                 Dim 行尾2 As String
                 行头 = ARRLLL(X, 基位日类 + 位os结期) & "," & _
                     谕组(X, 位谕of周波今涨幅) & "," & _
