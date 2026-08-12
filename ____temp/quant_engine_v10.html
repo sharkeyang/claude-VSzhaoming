@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>QUANT ENGINE v10.0</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0e17;color:#c8d6e5;font-family:'Courier New',Consolas,monospace;overflow:hidden;height:100vh}
+#loader{position:fixed;top:0;left:0;width:100%;height:2px;z-index:999;background:#0a0e17}
+#loader-bar{height:100%;width:0;background:linear-gradient(90deg,#f0b90b,#00d4aa);transition:width .3s}
+#app{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;height:100vh;gap:2px;padding:2px;background:#1a1f2e}
+.quad{background:#0d111c;border:1px solid #1e2a3a;border-radius:4px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.quad-header{background:linear-gradient(90deg,#151d2e,#0d111c);padding:6px 14px;font-size:11px;font-weight:700;color:#f0b90b;letter-spacing:2px;border-bottom:1px solid #1e2a3a;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.quad-header .badge{font-size:9px;color:#4a5a7a;letter-spacing:1px}
+.quad-body{flex:1;overflow:hidden;position:relative}
+#chart-box{width:100%;height:100%}
+.playback-bar{display:flex;align-items:center;gap:8px;padding:4px 14px;background:#0f1420;border-top:1px solid #1e2a3a;flex-shrink:0}
+.playback-bar button{background:#1a2340;border:1px solid #2a3a5a;color:#c8d6e5;padding:2px 10px;font-size:11px;border-radius:3px;cursor:pointer;font-family:inherit}
+.playback-bar button:hover{background:#2a3a5a;color:#f0b90b}
+.playback-bar .slider{flex:1;height:4px;-webkit-appearance:none;background:#1a2340;border-radius:2px;outline:none}
+.playback-bar .slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#f0b90b;cursor:pointer}
+.playback-bar .time-label{font-size:10px;color:#6a7a9a;min-width:80px}
+.strategy-panel{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;height:100%}
+.strategy-inputs{display:flex;flex-direction:column;gap:6px}
+.strategy-inputs label{font-size:10px;color:#6a7a9a;letter-spacing:1px}
+.strategy-inputs input,.strategy-inputs select{background:#0f1420;border:1px solid #1e2a3a;color:#c8d6e5;padding:4px 8px;font-size:11px;border-radius:3px;font-family:inherit;outline:none}
+.strategy-inputs input:focus,.strategy-inputs select:focus{border-color:#f0b90b}
+.btn{background:#1a2340;border:1px solid #2a3a5a;color:#c8d6e5;padding:5px 10px;font-size:10px;border-radius:3px;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn:hover{background:#2a3a5a;color:#f0b90b}
+.btn-gold{background:#f0b90b20;border-color:#f0b90b40;color:#f0b90b}
+.btn-gold:hover{background:#f0b90b40}
+.btn-red{background:#ff334420;border-color:#ff334440;color:#ff3344}
+.btn-red:hover{background:#ff334440}
+.btn-green{background:#00d4aa20;border-color:#00d4aa40;color:#00d4aa}
+.btn-green:hover{background:#00d4aa40}
+.strategy-results{grid-column:1/3;overflow-y:auto;background:#0a0e17;border:1px solid #1e2a3a;border-radius:3px;padding:6px}
+.strategy-results::-webkit-scrollbar{width:3px}
+.strategy-results::-webkit-scrollbar-thumb{background:#2a3a5a;border-radius:2px}
+.strategy-item{padding:5px 6px;border-bottom:1px solid #151d2e;font-size:10px;cursor:pointer;transition:background .2s}
+.strategy-item:hover{background:#151d2e}
+.strategy-item .s-name{color:#f0b90b;font-weight:700}
+.strategy-item .s-style{color:#00d4aa;font-size:9px}
+.strategy-item .s-detail{color:#6a7a9a;font-size:9px;margin-top:2px}
+.strategy-item .s-metrics{color:#4a5a7a;font-size:9px;margin-top:1px}
+.signal-panel{display:flex;flex-direction:column;padding:10px;height:100%;gap:6px}
+.signal-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1}
+.signal-card{background:#0f1420;border:1px solid #1e2a3a;border-radius:4px;padding:8px;display:flex;flex-direction:column;justify-content:center}
+.signal-card .label{font-size:9px;color:#4a5a7a;letter-spacing:1px}
+.signal-card .value{font-size:22px;font-weight:700;font-family:'Courier New',Consolas,monospace;margin-top:2px;transition:all .3s}
+.signal-card .value.up{color:#ff3344}
+.signal-card .value.down{color:#00d4aa}
+.signal-card .value.gold{color:#f0b90b}
+.signal-tag{display:flex;gap:6px;margin-top:4px}
+.tag{font-size:9px;padding:2px 8px;border-radius:10px;border:1px solid}
+.tag-long{border-color:#ff334440;color:#ff3344;background:#ff334410}
+.tag-short{border-color:#00d4aa40;color:#00d4aa;background:#00d4aa10}
+.terminal-log{height:100%;padding:8px;overflow-y:auto;font-size:10px;line-height:1.6;background:#060a12}
+.terminal-log::-webkit-scrollbar{width:3px}
+.terminal-log::-webkit-scrollbar-thumb{background:#2a3a5a;border-radius:2px}
+.terminal-log .log-line{opacity:1;transition:opacity .8s;color:#4a5a7a}
+.terminal-log .log-line.fade{opacity:0}
+.terminal-log .log-line .hl{color:#f0b90b}
+.terminal-log .log-line .hl-up{color:#ff3344}
+.terminal-log .log-line .hl-down{color:#00d4aa}
+.terminal-log .log-line .hl-dim{color:#2a3a5a}
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#00000080;z-index:1000;justify-content:center;align-items:center}
+.modal-overlay.show{display:flex}
+.modal{background:#0d111c;border:1px solid #f0b90b40;border-radius:6px;width:480px;max-height:80vh;overflow-y:auto;padding:16px}
+.modal h3{color:#f0b90b;font-size:13px;margin-bottom:8px;letter-spacing:1px}
+.modal table{width:100%;border-collapse:collapse;font-size:10px}
+.modal td,.modal th{padding:4px 6px;border:1px solid #1e2a3a;text-align:right}
+.modal th{color:#6a7a9a;font-weight:400;text-align:center;background:#0f1420}
+.modal .close-btn{float:right;background:0;border:0;color:#f0b90b;font-size:16px;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="loader"><div id="loader-bar"></div></div>
+<div id="app">
+  <!-- TL: Chart -->
+  <div class="quad" id="quad-tl">
+    <div class="quad-header"><span>■ 日线回测图</span><span class="badge">BTC/USDT · 4Y</span></div>
+    <div class="quad-body"><div id="chart-box"></div></div>
+    <div class="playback-bar">
+      <button id="btnPlay">▶</button>
+      <button id="btnReset">⏹</button>
+      <input type="range" class="slider" id="chartSlider" min="0" max="1000" value="1000">
+      <span class="time-label" id="timeLabel">2022-01-01</span>
+    </div>
+  </div>
+  <!-- BL: Strategy -->
+  <div class="quad" id="quad-bl">
+    <div class="quad-header"><span>■ 策略引擎</span><span class="badge">v2.1</span></div>
+    <div class="quad-body">
+      <div class="strategy-panel">
+        <div class="strategy-inputs">
+          <label>标的</label>
+          <input id="sym" value="BTC/USDT">
+          <label>胜率下限 %</label>
+          <input id="winRate" value="55" type="number">
+          <label>止损 %</label>
+          <input id="stopLoss" value="5" type="number">
+          <label>目标 %</label>
+          <input id="target" value="15" type="number">
+          <label>赔率</label>
+          <input id="odds" value="2.5" type="number" step="0.1">
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">
+            <button class="btn btn-gold" id="btnFetch">📡 获取数据</button>
+            <button class="btn btn-green" id="btnAI">🧠 AI 生成</button>
+            <button class="btn btn-gold" id="btnBatch">⚡ 生成10策略</button>
+            <button class="btn btn-red" id="btnShort">🔻 反向做空</button>
+          </div>
+        </div>
+        <div class="strategy-results" id="strategyResults"></div>
+      </div>
+    </div>
+  </div>
+  <!-- TR: Signal -->
+  <div class="quad" id="quad-tr">
+    <div class="quad-header"><span>■ 信号面板</span><span class="badge" id="signalTag">LONG</span></div>
+    <div class="quad-body">
+      <div class="signal-panel">
+        <div class="signal-tag">
+          <span class="tag tag-long" id="tagLong">▲ LONG</span>
+          <span class="tag tag-short" id="tagShort">▼ SHORT</span>
+        </div>
+        <div class="signal-grid" id="signalGrid"></div>
+      </div>
+    </div>
+  </div>
+  <!-- BR: Terminal -->
+  <div class="quad" id="quad-br">
+    <div class="quad-header"><span>■ 终端日志</span><span class="badge" id="logCount">0 lines</span></div>
+    <div class="quad-body"><div class="terminal-log" id="terminalLog"></div></div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"></div></div>
+<script>
+// ============ DATA GEN ============
+function genOHLC(n=1000){
+  let data=[],dt=new Date('2021-01-01'),p=42000;
+  for(let i=0;i<n;i++){
+    dt=new Date(dt.getTime()+86400000);
+    if(dt.getDay()===0||dt.getDay()===6){i--;continue}
+    let r=(Math.random()-0.48)*0.04;
+    let o=p,c=p*(1+r),h=Math.max(o,c)*(1+Math.random()*0.015),l=Math.min(o,c)*(1-Math.random()*0.015);
+    if(i>200&&i<250)r+=0.015;if(i>400&&i<450)r-=0.02;if(i>600&&i<650)r+=0.025;if(i>800&&i<850)r-=0.018;
+    c=p*(1+r);h=Math.max(o,c)*(1+Math.random()*0.015);l=Math.min(o,c)*(1-Math.random()*0.015);
+    p=c;data.push({d:dt.toISOString().slice(0,10),o,h,l,c,v:Math.floor(Math.random()*5000+1000)});
+  }
+  return data;
+}
+function calcMA(data,n){
+  return data.map((_,i)=>{
+    if(i<n-1)return null;
+    let s=0;for(let j=i-n+1;j<=i;j++)s+=data[j].c;return +(s/n).toFixed(2);
+  });
+}
+// ============ STATE ============
+const data=genOHLC(1000);
+const MA20=calcMA(data,20);
+let playing=false,playIdx=data.length-1,chartSlider=document.getElementById('chartSlider'),chartIns=null;
+const echartsBox=document.getElementById('chart-box');
+const signalNames=[
+  {k:'VOL',l:'波动率',cls:'gold'},{k:'SCORE',l:'综合评分',cls:'gold'},
+  {k:'WIN',l:'胜率',cls:'up'},{k:'ODDS',l:'赔率',cls:'down'},
+  {k:'RISK',l:'风险',cls:'down'},{k:'POS',l:'仓位',cls:'gold'},
+  {k:'EV',l:'EV期望',cls:'up'}
+];
+// ============ ECHARTS ============
+function initChart(){
+  chartIns=echarts.init(echartsBox);
+  window.addEventListener('resize',()=>chartIns&&chartIns.resize());
+  renderChart(data.length-1);
+}
+function renderChart(endIdx){
+  const start=Math.max(0,endIdx-199);
+  const slice=data.slice(start,endIdx+1);
+  const maSlice=MA20.slice(start,endIdx+1);
+  const dates=slice.map(d=>d.d);
+  const ohlc=slice.map(d=>[d.o,d.c,d.l,d.h]);
+  chartIns.setOption({
+    backgroundColor:'transparent',
+    grid:{left:'4%',right:'4%',top:'6%',bottom:'10%',containLabel:true},
+    tooltip:{trigger:'axis',axisPointer:{type:'cross'},backgroundColor:'#0d111c',borderColor:'#f0b90b40',textStyle:{color:'#c8d6e5',fontSize:10}},
+    xAxis:{type:'category',data:dates,axisLine:{lineStyle:{color:'#1e2a3a'}},axisLabel:{color:'#4a5a7a',fontSize:8,fontFamily:'Courier New'}},
+    yAxis:{type:'value',scale:true,splitLine:{lineStyle:{color:'#1a2340',type:'dashed'}},axisLabel:{color:'#4a5a7a',fontSize:8,fontFamily:'Courier New'}},
+    visualMap:{show:false,seriesIndex:0,dimension:1,pieces:[{value:1,color:'#ff3344'},{value:-1,color:'#00d4aa'}],backgroundColor:'#0d111c'},
+    series:[{
+      name:'K',type:'candlestick',data:ohlc.map((d,i)=>({value:[d[0],d[1],d[2],d[3]],itemStyle:{color:'#ff3344',color0:'#00d4aa',borderColor:'#ff3344',borderColor0:'#00d4aa'}})),
+      markLine:{silent:true,data:[{yAxis:42000,label:{formatter:'MA20',color:'#f0b90b',fontSize:9},lineStyle:{color:'#f0b90b60',type:'dashed'}}]}
+    },{
+      name:'MA20',type:'line',data:maSlice.map(v=>v===null?null:+v.toFixed(2)),
+      lineStyle:{color:'#f0b90b',width:1},symbol:'none',smooth:true
+    }]
+  });
+  document.getElementById('timeLabel').textContent=dates[dates.length-1]||'';
+}
+// ============ PLAYBACK ============
+document.getElementById('btnPlay').onclick=()=>{
+  playing=!playing;
+  document.getElementById('btnPlay').textContent=playing?'⏸':'▶';
+  if(playing)playStep();
+};
+document.getElementById('btnReset').onclick=()=>{playing=false;document.getElementById('btnPlay').textContent='▶';playIdx=data.length-1;chartSlider.value=playIdx;renderChart(playIdx);addLog('⏹ 回放重置','hl')};
+chartSlider.oninput=function(){playIdx=+this.value;renderChart(playIdx);document.getElementById('timeLabel').textContent=data[playIdx]?.d||''};
+function playStep(){
+  if(!playing)return;
+  playIdx=Math.min(playIdx+1,data.length-1);
+  chartSlider.value=playIdx;renderChart(playIdx);
+  document.getElementById('timeLabel').textContent=data[playIdx]?.d||'';
+  if(playIdx<data.length-1)setTimeout(playStep,80);
+  else{playing=false;document.getElementById('btnPlay').textContent='▶'}
+}
+// ============ SIGNAL ============
+function randSignal(){
+  const vol=+(Math.random()*80+20).toFixed(1);
+  const score=+(Math.random()*40+60).toFixed(1);
+  const win=+(Math.random()*30+40).toFixed(1);
+  const odds=+(Math.random()*2+1.5).toFixed(2);
+  const risk=+(Math.random()*40+10).toFixed(1);
+  const pos=+(Math.random()*100).toFixed(0);
+  const ev=+(Math.random()*60-10).toFixed(2);
+  const isLong=Math.random()>0.4;
+  return {vol,score,win,odds,risk,pos,ev,isLong};
+}
+function renderSignal(sig){
+  const grid=document.getElementById('signalGrid');
+  const vals=[sig.vol,sig.score,sig.win,sig.odds,sig.risk,sig.pos,sig.ev];
+  grid.innerHTML=signalNames.map((s,i)=>`<div class="signal-card"><div class="label">${s.l}</div><div class="value ${s.cls}" id="sigVal${i}">0</div></div>`).join('');
+  // animate
+  vals.forEach((v,i)=>{
+    const el=document.getElementById(`sigVal${i}`);
+    animateNum(el,0,v,800);
+  });
+  // tags
+  document.getElementById('tagLong').style.opacity=sig.isLong?'1':'0.3';
+  document.getElementById('tagShort').style.opacity=sig.isLong?'0.3':'1';
+  document.getElementById('signalTag').textContent=sig.isLong?'LONG':'SHORT';
+}
+function animateNum(el,from,to,dur){
+  const start=performance.now();
+  function tick(now){
+    const t=Math.min((now-start)/dur,1);
+    const v=from+(to-from)*t;
+    el.textContent=typeof to==='number'&&to%1!==0?v.toFixed(2):v.toFixed(1);
+    if(t<1)requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+// ============ TERMINAL ============
+const logEl=document.getElementById('terminalLog');
+let logCount=0;
+function addLog(msg,cls=''){
+  const line=document.createElement('div');
+  line.className='log-line';
+  line.innerHTML=`<span class="hl-dim">[${new Date().toLocaleTimeString()}]</span> ${msg}`;
+  logEl.appendChild(line);logEl.scrollTop=logEl.scrollHeight;
+  logCount++;document.getElementById('logCount').textContent=logCount+' lines';
+  setTimeout(()=>line.classList.add('fade'),5000);
+  // limit
+  while(logEl.children.length>200)logEl.removeChild(logEl.firstChild);
+}
+function addOHLC(){setInterval(()=>{
+  const d=data[Math.floor(Math.random()*data.length)];
+  const cls=d.c>d.o?'hl-up':'hl-down';
+  addLog(`O:<span class="${cls}">${d.o.toFixed(2)}</span> H:<span class="${cls}">${d.h.toFixed(2)}</span> L:<span class="${cls}">${d.l.toFixed(2)}</span> C:<span class="${cls}">${d.c.toFixed(2)}</span> V:${d.v.toFixed(0)}`);
+},1200)}
+// ============ STRATEGY ============
+const strategies=[
+  {name:'趋势跟踪MA20',style:'趋势',buy:'价格站上MA20且成交量放大',sell:'跌破MA20或RSI>70',pos:'60%',win:62,ror:2.8,dd:12,trades:[]},
+  {name:'突破布林带',style:'突破',buy:'价格突破布林上轨且成交量>1.5x',sell:'回落至中轨或止损',pos:'40%',win:55,ror:3.2,dd:18,trades:[]},
+  {name:'均值回归',style:'反转',buy:'RSI<30且偏离MA20>5%',sell:'RSI>50或盈利目标',pos:'30%',win:58,ror:2.1,dd:8,trades:[]},
+  {name:'动量突破',style:'动量',buy:'连续3根阳线且涨幅>5%',sell:'出现阴线或成交量萎缩',pos:'50%',win:51,ror:3.5,dd:22,trades:[]},
+  {name:'网格交易',style:'震荡',buy:'每下跌2%加仓一档',sell:'每上涨3%减仓一档',pos:'20%',win:65,ror:1.5,dd:5,trades:[]},
+  {name:'通道突破',style:'趋势',buy:'价格突破20日高点',sell:'跌破10日低点',pos:'55%',win:53,ror:2.9,dd:15,trades:[]},
+  {name:'VWAP策略',style:'日内',buy:'价格低于VWAP且成交量放大',sell:'价格高于VWAP+0.5%',pos:'35%',win:59,ror:2.3,dd:10,trades:[]},
+  {name:'双均线交叉',style:'趋势',buy:'MA5金叉MA20',sell:'MA5死叉MA20',pos:'45%',win:50,ror:2.6,dd:20,trades:[]},
+  {name:'支撑阻力',style:'反转',buy:'触碰前低支撑位收阳线',sell:'触碰前高阻力位收阴线',pos:'25%',win:56,ror:2.0,dd:9,trades:[]},
+  {name:'机器学习',style:'AI',buy:'多因子模型评分>80',sell:'评分<40或止损',pos:'70%',win:67,ror:3.8,dd:14,trades:[]},
+];
+function genTrades(n=20){
+  const trades=[];
+  for(let i=0;i<n;i++){
+    const idx=Math.floor(Math.random()*(data.length-60));
+    const entry=data[idx].c;
+    const exit=data[idx+Math.floor(Math.random()*30+5)].c;
+    const pnl=(exit-entry)/entry*100;
+    trades.push({date:data[idx].d,entry:+entry.toFixed(2),exit:+exit.toFixed(2),pnl:+pnl.toFixed(2)});
+  }
+  return trades;
+}
+function showReport(s){
+  const trades=genTrades(20);
+  const wins=trades.filter(t=>t.pnl>0);
+  const loss=trades.filter(t=>t.pnl<=0);
+  const cumPnl=trades.reduce((a,t)=>a+t.pnl,0);
+  const winRate=+(wins.length/trades.length*100).toFixed(1);
+  const avgWin=wins.length?+(wins.reduce((a,t)=>a+t.pnl,0)/wins.length).toFixed(2):0;
+  const avgLoss=loss.length?+(loss.reduce((a,t)=>a+t.pnl,0)/loss.length).toFixed(2):0;
+  const profitFactor=loss.length?+(Math.abs(avgWin*wins.length/(avgLoss*loss.length))).toFixed(2):'∞';
+  let maxDD=0,peak=0;
+  trades.forEach((t,i)=>{const eq=trades.slice(0,i+1).reduce((a,tt)=>a+tt.pnl,0);peak=Math.max(peak,eq);maxDD=Math.max(maxDD,peak-eq);});
+  document.getElementById('modalOverlay').classList.add('show');
+  document.getElementById('modalContent').innerHTML=`
+    <button class="close-btn" onclick="document.getElementById('modalOverlay').classList.remove('show')">✕</button>
+    <h3>📊 ${s.name} 回测绩效报告</h3>
+    <table><tr><th>累计收益</th><th>胜率</th><th>盈亏比</th><th>最大回撤</th><th>交易次数</th></tr>
+    <tr><td style="color:${cumPnl>0?'#ff3344':'#00d4aa'}">${cumPnl>0?'+':''}${cumPnl.toFixed(2)}%</td>
+        <td>${winRate}%</td><td>${profitFactor}</td><td style="color:#00d4aa">${maxDD.toFixed(2)}%</td><td>${trades.length}</td></tr></table>
+    <table style="margin-top:8px"><tr><th>日期</th><th>入场</th><th>出场</th><th>盈亏</th></tr>
+    ${trades.map(t=>`<tr><td>${t.date}</td><td>${t.entry}</td><td>${t.exit}</td><td style="color:${t.pnl>0?'#ff3344':'#00d4aa'}">${t.pnl>0?'+':''}${t.pnl}%</td></tr>`).join('')}
+    </table>`;
+}
+function renderStrategies(arr){
+  const el=document.getElementById('strategyResults');
+  el.innerHTML=arr.map(s=>`<div class="strategy-item" onclick="showReport(this.__s)"><div><span class="s-name">${s.name}</span> <span class="s-style">${s.style}</span></div><div class="s-detail">买:${s.buy} | 卖:${s.sell}</div><div class="s-metrics">仓位:${s.pos} | 胜率:${s.win}% | 赔率:${s.ror}</div></div>`.replace('this.__s',`this.__s`)).join('');
+  arr.forEach((s,i)=>{el.children[i].__s=s;});
+}
+// ============ EVENTS ============
+document.getElementById('btnFetch').onclick=()=>{addLog('📡 获取数据中...','hl');setTimeout(()=>addLog('✅ 获取完成: 1000根K线','hl'),800)};
+document.getElementById('btnAI').onclick=()=>{
+  const win=+document.getElementById('winRate').value;
+  const sl=+document.getElementById('stopLoss').value;
+  const tg=+document.getElementById('target').value;
+  const od=+document.getElementById('odds').value;
+  const s=strategies[Math.floor(Math.random()*10)];
+  s.win=Math.min(95,Math.max(30,win+Math.floor(Math.random()*20-10)));
+  s.ror=+(od+Math.random()*0.5-0.25).toFixed(1);
+  addLog(`🧠 AI生成策略: ${s.name} 胜率${s.win}% 赔率${s.ror}`,'hl');
+  renderStrategies([s]);
+};
+document.getElementById('btnBatch').onclick=()=>{
+  const win=+document.getElementById('winRate').value;
+  const od=+document.getElementById('odds').value;
+  const batch=strategies.map((s,i)=>({...s,win:Math.min(95,Math.max(30,win+Math.floor(Math.random()*15-7))),ror:+(od+Math.random()*0.8-0.4).toFixed(1)}));
+  addLog(`⚡ 生成10个策略完成`,'hl');
+  renderStrategies(batch);
+};
+document.getElementById('btnShort').onclick=()=>{
+  const s=strategies[Math.floor(Math.random()*10)];
+  const short={...s,name:s.name+' (做空)',style:'做空 '+s.style,buy:s.sell,sell:s.buy};
+  addLog(`🔻 反向做空策略: ${short.name}`,'hl');
+  renderStrategies([short]);
+};
+// ============ INIT ============
+initChart();
+renderSignal(randSignal());
+renderStrategies([strategies[0]]);
+addOHLC();
+addLog('🚀 QUANT ENGINE v10.0 启动完成','hl');
+addLog('📡 数据源: 模拟生成 · 1000根日线','hl');
+addLog('💡 点击策略查看回测绩效报告','hl');
+
+// loader
+let pct=0;
+const li=setInterval(()=>{pct+=Math.random()*15+5;if(pct>=100){pct=100;clearInterval(li)}document.getElementById('loader-bar').style.width=pct+'%';},100);
+setTimeout(()=>document.getElementById('loader').style.display='none',1200);
+
+// signal refresh
+setInterval(()=>{renderSignal(randSignal());addLog('📊 信号刷新','');},8000);
+</script>
+</body>
+</html>

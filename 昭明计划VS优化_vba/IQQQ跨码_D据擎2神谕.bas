@@ -443,7 +443,7 @@ Public Const 位谕of月基策日 = 位谕始of族策 + 10     '月基策日: �
 Public Const 位谕of月基日H2 = 位谕始of族策 + 11    '月基日H2: 评级(A/B/C/D)+下日DSHR>2分数2位，如"A39"，升序排序
 '--- 日冲策略 ---
 Public Const 位谕of日冲策分 = 位谕始of族策 + 12     '日冲策分: 下日高≥2%概率(0~100)，赛马全量数据
-Public Const 位谕of日冲策略 = 位谕始of族策 + 13       '日冲策略: 三级策略名称(如"等4A")，周门过滤+等高线匹配
+Public Const 位谕of日冲策略 = 位谕始of族策 + 13       '日冲策略: 三级策略名称(如"等2A")，周门过滤+等高线匹配
 Public Const 位谕of日层机警 = 位谕始of族策 + 14     '原+16，后移
 '-----------
 Public Const 位谕of日层漏提示 = 位谕始of族策 + 15     '日层漏提示: 精密捡漏信号
@@ -3473,16 +3473,14 @@ If UBCID是代码(CIDL) = True Then
                     End If
             '============================================================================
             '============================================================================
-            '等高线分类：等1~等8，基于DTZA(日ZA)+日中符(中符串)末位，阈值3(与柱型对齐)
+            '等高线分类：等1~等7（6等），基于DTZA(日ZA)+日中符(中符串)末位
             ' 等1: DTZA=1, 任意末位     → DJA边缘刚站上
-            ' 等2: DTZA=2~3, 末位CDEF  → 近DJA软弱
+            ' 等2: DTZA≥2, 末位CDEF    → 原等2+等4合并，含回归DJA+软弱
             ' 等3: DTZA≥2, 末位AB      → 远离DJA强势主升
-            ' 等4: DTZA>3, 末位CDEF    → 回归DJA
             ' 等5: DTZA=-1, 任意末位    → DJA边缘下方
-            ' 等6: DTZA=-3~-2, 末位ABCD → 近DJA下方偏强
+            ' 等6: DTZA≤-2, 末位ABCD   → 原等6+等8合并，含回归+近DJA偏强
             ' 等7: DTZA≤-2, 末位EF     → 远离DJA弱势
-            ' 等8: DTZA<-3, 末位ABCD   → 回归DJA（极少）
-            '注：末位=Right$(中符串,1)，仅看当前柱。VBA末位逻辑，阈值|3|与柱型对齐。
+            '注：末位=Right$(中符串,1)，仅看当前柱。VBA末位逻辑，6等简化版（2026-08-12）。
             '============================================================================
             Dim 等日ZA As Double: 等日ZA = 组结算(X, 基位日类 + 位osBTZA)
             Dim 等日中符 As String: 等日中符 = 谕组(X, 位谕of日管中符串)
@@ -3492,23 +3490,19 @@ If UBCID是代码(CIDL) = True Then
                 等值 = "等1"  'DJA边缘刚站上
             ElseIf 等日ZA > 0 Then
                 '上侧：DTZA≥2时，根据日中符末位区分AB(强)和CDEF(弱)
-                If 等日ZA > 3 And InStr("CDEF", 等日末符) > 0 Then
-                    等值 = "等4"  '远离后回归DJA
-                ElseIf 等日ZA >= 2 And InStr("CDEF", 等日末符) > 0 Then
-                    等值 = "等2"  '近DJA软弱
-                ElseIf 等日ZA >= 2 And InStr("AB", 等日末符) > 0 Then
+                If 等日ZA >= 2 And InStr("AB", 等日末符) > 0 Then
                     等值 = "等3"  '远离DJA强势主升
+                ElseIf 等日ZA >= 2 And InStr("CDEF", 等日末符) > 0 Then
+                    等值 = "等2"  '原等2+等4合并：近DJA软弱~回归DJA
                 End If
             ElseIf 等日ZA = -1 Then
                 等值 = "等5"  'DJA边缘下方
             ElseIf 等日ZA < 0 Then
                 '下侧：镜面映射 A<>F, B<>E, C<>D
-                If 等日ZA < -3 And InStr("ABCD", 等日末符) > 0 Then
-                    等值 = "等8"  '回归DJA（极少）
-                ElseIf 等日ZA >= -3 And InStr("ABCD", 等日末符) > 0 Then
-                    等值 = "等6"  '近DJA下方偏强
-                ElseIf 等日ZA <= -2 And InStr("EF", 等日末符) > 0 Then
+                If 等日ZA <= -2 And InStr("EF", 等日末符) > 0 Then
                     等值 = "等7"  '远离DJA弱势
+                ElseIf 等日ZA <= -2 And InStr("ABCD", 等日末符) > 0 Then
+                    等值 = "等6"  '原等6+等8合并：近DJA偏强~回归
                 End If
             End If
             谕组(X, 位谕of日层等) = 等值
@@ -3538,23 +3532,7 @@ If UBCID是代码(CIDL) = True Then
                     Dim 等策略名 As String: 等策略名 = ""
                     Dim 等策分 As Double: 等策分 = 0
                     '第3级：等高线 + 第4级：条件评分
-                    If 等值 = "等4" Then
-                        If 等BSHA5 And 等连阳2 Then
-                            等策略名 = "等4.偏5连门": 等策分 = 60
-                        ElseIf 等BSHA5 Then
-                            等策略名 = "等4.偏5": 等策分 = 59
-                        ElseIf 等BSHA3 And 等连阳2 Then
-                            等策略名 = "等4.偏3连门": 等策分 = 55
-                        ElseIf 等连阳2 Then
-                            等策略名 = "等4.连": 等策分 = 49
-                        ElseIf 等层主2 And 等升排2 Then
-                            等策略名 = "等4.层主升": 等策分 = 46
-                        ElseIf 等升排2 Then
-                            等策略名 = "等4.升": 等策分 = 42
-                        ElseIf 等跌排2 Then
-                            等策略名 = "等4.跌排": 等策分 = 39
-                        End If
-                    ElseIf 等值 = "等3" Then
+                    If 等值 = "等3" Then
                         If 等BSHA5 And 等连阳2 Then
                             等策略名 = "等3.偏5连门": 等策分 = 58
                         ElseIf 等BSHA5 Then
@@ -3578,9 +3556,21 @@ If UBCID是代码(CIDL) = True Then
                         End If
                     ElseIf 等值 = "等2" Then
                         If 等BSHA5 And 等连阳2 Then
-                            等策略名 = "等2.偏5连门": 等策分 = 57
+                            等策略名 = "等2.偏5连门": 等策分 = 58
                         ElseIf 等BSHA5 Then
-                            等策略名 = "等2.偏5": 等策分 = 54
+                            等策略名 = "等2.偏5": 等策分 = 57
+                        ElseIf 等BSHA3 And 等连阳2 Then
+                            等策略名 = "等2.偏3连门": 等策分 = 53
+                        ElseIf 等BSHA3 Then
+                            等策略名 = "等2.偏3": 等策分 = 51
+                        ElseIf 等连阳2 Then
+                            等策略名 = "等2.连": 等策分 = 48
+                        ElseIf 等层主2 And 等升排2 Then
+                            等策略名 = "等2.层主升": 等策分 = 45
+                        ElseIf 等升排2 Then
+                            等策略名 = "等2.升": 等策分 = 40
+                        ElseIf 等跌排2 Then
+                            等策略名 = "等2.跌排": 等策分 = 39
                         End If
                     ElseIf 等值 = "等5" Then
                         If 等BSHA5 Then
@@ -3588,17 +3578,11 @@ If UBCID是代码(CIDL) = True Then
                         ElseIf 等BSHA3 Then
                             等策略名 = "等5.偏3": 等策分 = 53
                         End If
-                    ElseIf 等值 = "等8" Then
-                        If 等BSHA5 Then
-                            等策略名 = "等8.偏5": 等策分 = 52
-                        ElseIf 等BSHA3 Then
-                            等策略名 = "等8.偏3": 等策分 = 50
-                        End If
                     ElseIf 等值 = "等6" Then
                         If 等BSHA5 Then
-                            等策略名 = "等6.偏5": 等策分 = 49
+                            等策略名 = "等6.偏5": 等策分 = 52
                         ElseIf 等BSHA3 Then
-                            等策略名 = "等6.偏3": 等策分 = 48
+                            等策略名 = "等6.偏3": 等策分 = 49
                         End If
                     ElseIf 等值 = "等7" Then
                         If 等BSHA5 Then
@@ -3640,9 +3624,6 @@ If UBCID是代码(CIDL) = True Then
                 Else
                     等机警 = "等3"
                 End If
-            '--- 等4：等4+ZC>0+CD>0 ---
-            ElseIf 等值 = "等4" And 日类BTZC > 0 And 日类BTCD > 0 Then
-                等机警 = "等4"
             '--- 开门：ZC>0+CD>0（无条件叠加） ---
             ElseIf 日类BTZC > 0 And 日类BTCD > 0 Then
                 等机警 = "开门"

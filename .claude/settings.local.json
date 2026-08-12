@@ -1,6 +1,7 @@
 {
   "permissions": {
     "allow": [
+      "Bash(*)",
       "Bash(code --list-extensions)",
       "Bash(python -c ' *)",
       "Bash(cat \"$HOME/.claude/settings.json\" 2>/dev/null || echo \"not found\")",
@@ -52,6 +53,7 @@
       "WebSearch",
       "WebFetch(domain:finance.sina.com.cn)",
       "WebFetch(domain:quote.eastmoney.com)"
-    ]
+    ],
+    "defaultMode": "bypassPermissions"
   }
 }

@@ -394,12 +394,16 @@ Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional ByR
     End With
     '-------------------------------
     Dim 值股东代码 As String
-    值股东代码 = Trim(ARRTS(2, 位列TS股东代码))
-    Select Case 值股东代码
-        Case 常股代宝彦_上证, 常股代宝彦_深证: 指定列仓 = 位列花天仓宝彦: 值常池名 = 常仓名宝彦: 账户 = 常仓名宝彦
-        Case 常股代宝福_上证, 常股代宝福_深证: 指定列仓 = 位列花天仓宝福: 值常池名 = 常仓名宝福: 账户 = 常仓名宝福
-        Case Else: MsgBox "无法识别股东代码：" & 值股东代码: Exit Function
-    End Select
+    Dim 行号扫描 As Long
+    For 行号扫描 = 2 To UBound(ARRTS, 1)
+        值股东代码 = Trim(ARRTS(行号扫描, 位列TS股东代码))
+        Select Case 值股东代码
+            Case 常股代宝彦_上证, 常股代宝彦_深证, Val(常股代宝彦_深证): 指定列仓 = 位列花天仓宝彦: 值常池名 = 常仓名宝彦: 账户 = 常仓名宝彦: GoTo 找到账户
+            Case 常股代宝福_上证, 常股代宝福_深证, Val(常股代宝福_深证): 指定列仓 = 位列花天仓宝福: 值常池名 = 常仓名宝福: 账户 = 常仓名宝福: GoTo 找到账户
+        End Select
+    Next
+    MsgBox "无法识别股东代码，请检查文件格式": Exit Function
+找到账户:
     '-------------------------------
     WBTS.Close False
     Set WBTS = Nothing
