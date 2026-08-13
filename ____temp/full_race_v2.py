@@ -12,12 +12,13 @@ with open('____temp/市板映射.csv', 'r', encoding='utf-8-sig') as f:
             CODE2BOARD[row[0].strip()] = row[1].strip()
 CORE = {'Qic', 'Qim', 'Qit', 'Qin'}
 
-stats = defaultdict(lambda: [0, 0, 0])
+stats = defaultdict(lambda: [0, 0, 0, 0])
 
-def add(key, nxt, h2, h3):
+def add(key, nxt, h1, h2, h3):
     stats[key][0] += 1
-    stats[key][1] += h2
-    stats[key][2] += h3
+    stats[key][1] += h1
+    stats[key][2] += h2
+    stats[key][3] += h3
 
 def get_cls(dtza, cx):
     """6等分类：从 DTZA(日ZA) + 中符串末位 推导"""
@@ -71,6 +72,7 @@ for fname in os.listdir('昭明算展/谕组日'):
                 cls_counts[cls] += 1
                 total_rows += 1
 
+                hit1 = 1 if nxt_gf >= 1 else 0
                 hit2 = 1 if nxt_gf >= 2 else 0
                 hit3 = 1 if nxt_gf >= 3 else 0
 
@@ -104,7 +106,7 @@ for fname in os.listdir('昭明算展/谕组日'):
                 }
                 for cname, cval in conds.items():
                     if cval:
-                        add(f'{cls}|{cname}', nxt_gf, hit2, hit3)
+                        add(f'{cls}|{cname}', nxt_gf, hit1, hit2, hit3)
     except Exception:
         pass
 
@@ -117,17 +119,18 @@ BENCH = 37.1
 MIN_N = 1000
 
 rows = []
-for k, (n, h2, h3) in stats.items():
+for k, (n, h1, h2, h3) in stats.items():
+    p1 = h1 / n * 100 if n else 0
     p2 = h2 / n * 100 if n else 0
     p3 = h3 / n * 100 if n else 0
     if p2 > BENCH and n >= MIN_N:
-        rows.append((p2, k, n, p3))
+        rows.append((p2, k, n, p1, p3))
 
-rows.sort(key=lambda x: (-x[0], -x[2]))  # 按≥2%降序，同分按样本降序
+rows.sort(key=lambda x: (-x[0], -x[2]))
 
 out.write(f'=== 全量赛马排名（≥2% > {BENCH}%，n≥{MIN_N}，共{len(rows)}条）===\n')
-out.write(f'{"排名":>4s} {"策略":<28s} {"样本":>10s} {"≥2%":>8s} {"≥3%":>8s}\n')
-out.write('-' * 65 + '\n')
+out.write(f'{"排名":>4s} {"策略":<28s} {"样本":>10s} {"≥1%":>8s} {"≥2%":>8s} {"≥3%":>8s}\n')
+out.write('-' * 72 + '\n')
 
 def grade(p):
     if p > 60: return 'A'
@@ -135,11 +138,11 @@ def grade(p):
     if p > 40: return 'C'
     return 'D'
 
-for i, (p2, k, n, p3) in enumerate(rows, 1):
+for i, (p2, k, n, p1, p3) in enumerate(rows, 1):
     cl, cond = k.split('|', 1)
     g = grade(p2)
     name = f'{g}{cl}.{cond}'
-    out.write(f'{i:>4d} {name:<28s} {n:>10,} {p2:>7.1f}% {p3:>7.1f}%\n')
+    out.write(f'{i:>4d} {name:<28s} {n:>10,} {p1:>7.1f}% {p2:>7.1f}% {p3:>7.1f}%\n')
 
 out.close()
 print(f'Done: {len(rows)} strategies, {total_rows} rows, {files_core} files')
