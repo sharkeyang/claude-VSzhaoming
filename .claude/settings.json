@@ -6,17 +6,7 @@
       "Write(d:/@VSwork/**/*)",
       "Edit(d:/@VSwork/**/*)",
       "Glob(d:/@VSwork/**/*)",
-      "Grep(d:/@VSwork/**/*)",
-      "Bash(python -c ' *)",
-      "Bash(timeout 30 python -c ' *)",
-      "Bash(git add *)",
-      "Bash(git commit *)",
-      "Bash(cat > *)",
-      "Bash(python _产出物/MC3.8_全量周等型验证.py)",
-      "Bash(python _产出物/MC3.9_全量周微观指标P3.py)",
-      "Bash(python _产出物/MC3.10_月基分周优化.py)",
-      "Bash(python -c \"import subprocess; r = subprocess.run\\(['tasklist'], capture_output=True, text=True\\); print\\([l for l in r.stdout.splitlines\\(\\) if 'python' in l.lower\\(\\)]\\)\")",
-      "Bash(timeout 300 python _产出物/MC3.10_月基分周优化.py)"
+      "Grep(d:/@VSwork/**/*)"
     ],
     "defaultMode": "bypassPermissions",
     "additionalDirectories": [

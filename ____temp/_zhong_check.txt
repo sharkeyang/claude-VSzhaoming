@@ -1,0 +1,8 @@
+Total samples: 658
+涨幅 range: -8.06 ~ 11.37
+涨幅 median: -0.23
+涨幅 P1: -5.02, P99: 4.09
+次日高幅 range: -4.51 ~ 29.98
+次日高幅 median: 0.63
+涨幅 >50% samples: 0
+次日高幅 >50% samples: 0
