@@ -1815,7 +1815,7 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
                 ARRLLL(X, 基位日类 + 位osBTZA) & "," & _
                 ARRLLL(X, 基位日类 + 位osBTZC) & "," & _
                 ARRLLL(X, 基位日类 + 位osBTZE) & "," & _
-                Replace(谕组(X, 位谕of日冲策略), ",", ";") & "," & _
+                Replace(谕组(X, 位谕of日策略P2), ",", ";") & "," & _
                 Replace(谕组(X, 位谕of日层机警), ",", ";") & "," & _
                 Replace(谕组(X, 位谕of日层四域), ",", ";") & "," & _
                 谕组(X, 位谕of日层BSHA) & "," & _

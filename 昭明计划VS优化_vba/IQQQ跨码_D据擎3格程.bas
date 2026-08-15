@@ -1041,25 +1041,25 @@ End If
         '================================================================================
         With WS.Cells(行号遍历, 基列)
                 '------------------------------------------------------------------------
-                With .Cells(1, 位谕of月基策周)
+                With .Cells(1, 位谕of月策略周)
                     If InStr(.Value, "NA") > 0 Then
                         .Font.Color = 常色三红
                     End If
                 End With
                 '------------------------------------------------------------------------
-                With .Cells(1, 位谕of月基分命)
+                With .Cells(1, 位谕of月策分命)
                     If .Value = 0 Then
                         .Font.Color = .Interior.Color
                         .Font.TintAndShade = -0.2
                     End If
                 End With
-                With .Cells(1, 位谕of月基分周)
+                With .Cells(1, 位谕of月策分周)
                     If .Value = 0 Then
                         .Font.Color = .Interior.Color
                         .Font.TintAndShade = -0.2
                     End If
                 End With
-                With .Cells(1, 位谕of月基策日)
+                With .Cells(1, 位谕of月策略日)
                         If InStr(.Value, "弱") > 0 Then
                             .Font.Color = .Interior.Color
                             .Font.TintAndShade = -0.2
@@ -1070,10 +1070,32 @@ End If
                         End If
                 End With
                 '------------------------------------------------------------------------
-                With .Cells(1, 位谕of日冲策分)
+                With .Cells(1, 位谕of日策分P2)
                     If .Value = 0 Then
                         .Font.Color = .Interior.Color
                         .Font.TintAndShade = -0.2
+                    End If
+                End With
+                '------------------------------------------------------------------------
+                With .Cells(1, 位谕of周策分P1)
+                    If .Value = "_" Then
+                        .Font.Color = .Interior.Color
+                    ElseIf Left$(.Value, 1) = "_" Then
+                        .Font.Color = 常色二灰
+                    End If
+                End With
+                With .Cells(1, 位谕of周策分P3)
+                    If .Value = "_" Then
+                        .Font.Color = .Interior.Color
+                    ElseIf Left$(.Value, 1) = "_" Then
+                        .Font.Color = 常色二灰
+                    End If
+                End With
+                With .Cells(1, 位谕of月策分日P2)
+                    If .Value = "_" Then
+                        .Font.Color = .Interior.Color
+                    ElseIf Left$(.Value, 1) = "_" Then
+                        .Font.Color = 常色二灰
                     End If
                 End With
                 '------------------------------------------------------------
@@ -1255,17 +1277,17 @@ End If
 '        End With
 '        End If
         '================================================================================
-        '月基带日：按8格分类设底色
+        '月策带日：按8格分类设底色
         '================================================================================
-        With WS.Cells(行号遍历, 基列).Cells(1, 位谕of月基带日)
+        With WS.Cells(行号遍历, 基列).Cells(1, 位谕of月策带日)
             .Font.Color = 常色主黑  '统一黑字
-            Dim 月基带日 As String
-            月基带日 = .Value
-            If Len(月基带日) >= 5 Then
+            Dim 月策带日 As String
+            月策带日 = .Value
+            If Len(月策带日) >= 5 Then
                 Dim DXEF As String, DXCD As String, DXAB As String
-                DXEF = Mid$(月基带日, 2, 1)
-                DXCD = Mid$(月基带日, InStr(3, 月基带日, "(") + 1, 1)
-                DXAB = Mid$(月基带日, InStr(InStr(3, 月基带日, "(") + 1, 月基带日, "(") + 1, 1)
+                DXEF = Mid$(月策带日, 2, 1)
+                DXCD = Mid$(月策带日, InStr(3, 月策带日, "(") + 1, 1)
+                DXAB = Mid$(月策带日, InStr(InStr(3, 月策带日, "(") + 1, 月策带日, "(") + 1, 1)
 
                 Dim 是否EF好 As Boolean, 是否CD好 As Boolean, 是否AB好 As Boolean
                 是否EF好 = (DXEF = "金" Or DXEF = "银" Or DXEF = "唏")
