@@ -251,21 +251,20 @@ Public Sub XL算研_测试日冲数据()
         If Not (Left$(CIDL, 2) = "sh" Or Left$(CIDL, 2) = "sz") Then GoTo 跳过
         Dim h2 As Variant: h2 = 谕组(X, 位谕of月策分日P2)
         If VarType(h2) = vbString And Len(h2) >= 3 Then
-            Dim 评级 As String: 评级 = Left$(h2, 1)
-            Dim 分数 As Integer: 分数 = Val(Mid$(h2, 2))
+            '20260815：格式改为 期望HR+G/_+策分（如"4G39"），第二位G=高于基线，_=低于基线
+            Dim 评级 As String: 评级 = Mid$(h2, 2, 1)
+            Dim 分数 As Integer: 分数 = Val(Mid$(h2, 3))
             If 分数 >= 0 And 分数 <= 100 Then 分布(分数) = 分布(分数) + 1
             Select Case 评级
-                Case "A": 评级分布(0) = 评级分布(0) + 1
-                Case "B": 评级分布(1) = 评级分布(1) + 1
-                Case "C": 评级分布(2) = 评级分布(2) + 1
-                Case "D": 评级分布(3) = 评级分布(3) + 1
+                Case "G": 评级分布(0) = 评级分布(0) + 1
+                Case "_": 评级分布(1) = 评级分布(1) + 1
             End Select
             总 = 总 + 1
         End If
 跳过:
     Next
     Debug.Print "=== 月策分日P2分布 ==="
-    Debug.Print "总样本: " & 总 & " 评级: A=" & 评级分布(0) & " B=" & 评级分布(1) & " C=" & 评级分布(2) & " D=" & 评级分布(3)
+    Debug.Print "总样本: " & 总 & " 高于基线(G)=" & 评级分布(0) & " 低于基线(_)=" & 评级分布(1)
     Dim i As Integer
     For i = 0 To 100
         If 分布(i) > 0 Then Debug.Print "  " & Format(i, "00") & "=" & 分布(i);
@@ -294,7 +293,7 @@ Public Sub XL算研_展探大盘个股联动()
         If Not (Left$(CIDL2, 2) = "sh" Or Left$(CIDL2, 2) = "sz") Then GoTo 跳过2
         Dim 行文本 As String
         行文本 = CIDL2 & "," & 谕组(X, 位qt代称)
-        行文本 = 行文本 & "," & IIf(VBA.IsNumeric(谕组(X, 位谕of日策分P2)), CStr(谕组(X, 位谕of日策分P2)), "")
+        行文本 = 行文本 & "," & IIf(谕组(X, 位谕of日策分P2) <> "", 谕组(X, 位谕of日策分P2), "")
         行文本 = 行文本 & "," & 谕组(X, 位谕of仓周类) & "," & 谕组(X, 位谕of月策带周)
         行文本 = 行文本 & "," & 谕组(X, 位谕of月策带日) & "," & 谕组(X, 位谕of月策略周)
         行文本 = 行文本 & "," & 谕组(X, 位qt行益)

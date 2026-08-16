@@ -55,7 +55,12 @@ Public Sub UTL宏工具_END()
     If UTL宏工具_DEPTH = 0 Then
         Application.ScreenUpdating = True
         Application.DisplayAlerts = True
-        Application.Calculation = xlCalculationAutomatic
+        '20260815：仅当Excel可见时才设置Calculation。
+        'Python COM后台调用时Excel不可见(Visible=False)，设置Calculation会1004。
+        '用If判断而非On Error Resume Next，避免掩盖其他错误。
+        If Application.Visible Then
+            Application.Calculation = xlCalculationAutomatic
+        End If
         Application.Interactive = True
         Application.EnableEvents = True
     End If

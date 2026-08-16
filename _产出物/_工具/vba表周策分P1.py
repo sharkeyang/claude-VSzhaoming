@@ -63,10 +63,8 @@ m3 = (wk['ZA周'] >= 2) & wk['末位'].isin(['A', 'B'])
 m5 = wk['ZA周'] == -1
 m6 = (wk['ZA周'] <= -2) & wk['末位'].isin(['A', 'B', 'C', 'D'])
 m7 = (wk['ZA周'] <= -2) & wk['末位'].isin(['E', 'F'])
-m_za4 = wk['ZA周'] >= 4
-m_za04 = (wk['ZA周'] >= 0) & (wk['ZA周'] < 4)
-m_zan3 = (wk['ZA周'] >= -3) & (wk['ZA周'] < 0)
-m_zal3 = wk['ZA周'] < -3
+m_za_pos = wk['ZA周'] > 0
+m_za_neg = wk['ZA周'] < 0
 m_gold = wk['WXCD'].str.contains('金', na=False)
 m_silver = wk['WXCD'].str.contains('银', na=False)
 m_xi = wk['WXCD'].str.contains('唏', na=False)
@@ -77,10 +75,8 @@ m_ab_good = wk['WXAB'].str.contains('甲|乙|己', na=False)
 m_ab_bad = wk['WXAB'].str.contains('丙|丁|戊', na=False)
 
 za_configs = [
-    ('ZA≥4', m_za4, [('等3', m3), ('等2', m2)], ['0橅', '1柜', '2栅', '3桮']),
-    ('ZA≥0~<4', m_za04, [('等3', m3), ('等2', m2), ('等1', m1)], ['4上WJA']),
-    ('ZA≥-3~<0', m_zan3, [('等7', m7), ('等6', m6), ('等5', m5)], ['5跌破']),
-    ('ZA<-3', m_zal3, [('等7', m7), ('等6', m6)], ['7姗', '6娝']),
+    ('ZA>0', m_za_pos, [('等3', m3), ('等2', m2), ('等1', m1)], ['0橅', '1柜', '2栅', '3桮']),
+    ('ZA<0', m_za_neg, [('等7', m7), ('等6', m6), ('等5', m5)], ['6娝', '7姗', '8姖', '9妩']),
 ]
 wxcd_configs = [('金', m_gold), ('银', m_silver), ('唏', m_xi), ('嘘', m_xu), ('尿', m_niao), ('屎', m_shi)]
 wxab_configs = [('甲乙己', m_ab_good), ('丙丁戊', m_ab_bad)]
@@ -92,10 +88,7 @@ for za_name, za_mask, eq_list, dx_list in za_configs:
             for zp_name, zp_mask in [('升排', m_up), ('人排', m_ren), ('跌排', m_dn)]:
                 for cd_name, cd_mask in wxcd_configs:
                     for ab_name, ab_mask in wxab_configs:
-                        if d in ['0橅', '1柜', '2栅', '3桮', '7姗', '6娝']:
-                            mask = za_mask & eq_mask & (wk['地型'] == d) & zp_mask & cd_mask & ab_mask
-                        else:
-                            mask = za_mask & eq_mask & zp_mask & cd_mask & ab_mask
+                        mask = za_mask & eq_mask & (wk['地型'] == d) & zp_mask & cd_mask & ab_mask
                         n = mask.sum()
                         if n >= MIN_SAMPLE:
                             g = wk.loc[mask]

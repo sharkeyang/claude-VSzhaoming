@@ -2163,18 +2163,9 @@ End Sub
 Public Function UGSOP_MENU_调整(Optional bSave As Boolean = True) As Boolean
     UTL宏工具_BEGIN
     '------------------------------------------------------------------------------------
-    If Application.ProductCode = "{90150000-0011-0000-1000-0000000FF1CE}" _
-    Or Application.ProductCode = "{90150000-000F-0000-0000-0000000FF1CE}" _
-    Or Application.ProductCode = "{90160000-000F-0000-0000-0000000FF1CE}" _
-    Or Application.ProductCode = "{90160000-000F-0000-1000-0000000FF1CE}" _
-    Then
-        UGSOP_MENU_生成
-    Else
-        Application.DisplayAlerts = False
-        ActiveWorkbook.ChangeFileAccess xlReadOnly
-        Kill ActiveWorkbook.FullName
-        ThisWorkbook.Close False
-    End If
+    '20260815：删除Application.ProductCode判断（Excel 2016+已移除该属性，导致编译错误"属性的使用无效"）
+    '直接生成菜单，不再做版本判断。原Else分支（关闭并删除工作簿）为防拷贝逻辑，新版本Excel不触发。
+    UGSOP_MENU_生成
     '------------------------------------------------------------------------------------
     'With Application.CommandBars(1).Controls("昭明")
     '.Controls("Initilize Settings").Visible = Not bWKSP

@@ -1047,18 +1047,6 @@ End If
                     End If
                 End With
                 '------------------------------------------------------------------------
-                With .Cells(1, 位谕of月策分命)
-                    If .Value = 0 Then
-                        .Font.Color = .Interior.Color
-                        .Font.TintAndShade = -0.2
-                    End If
-                End With
-                With .Cells(1, 位谕of月策分周)
-                    If .Value = 0 Then
-                        .Font.Color = .Interior.Color
-                        .Font.TintAndShade = -0.2
-                    End If
-                End With
                 With .Cells(1, 位谕of月策略日)
                         If InStr(.Value, "弱") > 0 Then
                             .Font.Color = .Interior.Color
@@ -1070,7 +1058,10 @@ End If
                         End If
                 End With
                 '------------------------------------------------------------------------
-                With .Cells(1, 位谕of日策分P2)
+                '20260815：策分列字体颜色统一
+                '  纯数字（月策分命/月策分周）：=0 → 背景色隐藏
+                '  编码（周策分P1/P3、月策分日P2、日策分P2）：="_"→背景色隐藏；InStr"_"→常色二灰弱化
+                With .Cells(1, 位谕of月策分命)
                     If .Value = 0 Then
                         .Font.Color = .Interior.Color
                         .Font.TintAndShade = -0.2
@@ -1080,21 +1071,34 @@ End If
                 With .Cells(1, 位谕of周策分P1)
                     If .Value = "_" Then
                         .Font.Color = .Interior.Color
-                    ElseIf Left$(.Value, 1) = "_" Then
+                    ElseIf InStr(.Value, "_") > 0 Then
                         .Font.Color = 常色二灰
                     End If
                 End With
                 With .Cells(1, 位谕of周策分P3)
                     If .Value = "_" Then
                         .Font.Color = .Interior.Color
-                    ElseIf Left$(.Value, 1) = "_" Then
+                    ElseIf InStr(.Value, "_") > 0 Then
                         .Font.Color = 常色二灰
                     End If
                 End With
                 With .Cells(1, 位谕of月策分日P2)
                     If .Value = "_" Then
                         .Font.Color = .Interior.Color
-                    ElseIf Left$(.Value, 1) = "_" Then
+                    ElseIf InStr(.Value, "_") > 0 Then
+                        .Font.Color = 常色二灰
+                    End If
+                End With
+                With .Cells(1, 位谕of月策分周)
+                    If .Value = 0 Then
+                        .Font.Color = .Interior.Color
+                        .Font.TintAndShade = -0.2
+                    End If
+                End With
+                With .Cells(1, 位谕of日策分P2)
+                    If .Value = "_" Then
+                        .Font.Color = .Interior.Color
+                    ElseIf InStr(.Value, "_") > 0 Then
                         .Font.Color = 常色二灰
                     End If
                 End With

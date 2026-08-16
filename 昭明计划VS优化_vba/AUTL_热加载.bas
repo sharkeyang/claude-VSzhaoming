@@ -32,6 +32,18 @@ Public Sub AUTL_热加载()
     On Error GoTo 0
     Call 热加载_执行("D:\@VSwork\VS昭明计划VBA优化\昭明计划VS优化_vba\", True)
     '------------------------------------------------------------------------------------
+    '20260815：热加载后保存工作簿，确保磁盘.xlsm同步最新代码。
+    '否则Python COM(zdata.py --vba)打开的是磁盘旧文件。
+    On Error Resume Next
+    ThisWorkbook.Save
+    If Err.Number = 0 Then
+        Debug.Print "已保存工作簿"
+    Else
+        Debug.Print "保存失败: " & Err.Description
+        Err.Clear
+    End If
+    On Error GoTo 0
+    '------------------------------------------------------------------------------------
     UTL宏工具_强制重置状态
 End Sub
 
