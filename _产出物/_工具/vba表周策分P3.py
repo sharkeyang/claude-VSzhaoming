@@ -32,12 +32,8 @@ def load():
 def encode(p3, avg):
     h = int(avg) if avg >= 0 else 0
     if h > 9: h = 9
-    if p3 >= 90: g = 'A'
-    elif p3 >= 80: g = 'B'
-    elif p3 >= 70: g = 'C'
-    elif p3 >= 60: g = 'D'
-    elif p3 >= 50: g = 'E'
-    else: g = 'F'
+    if p3 >= 51: g = 'G'
+    else: g = '_'
     return f'{h}{g}{int(p3):02d}'
 
 def match_strategy(row):

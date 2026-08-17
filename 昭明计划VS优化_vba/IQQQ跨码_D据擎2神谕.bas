@@ -422,37 +422,41 @@ Public Const 位谕终of族仓 = 位谕of仓限倍
 'AI冲高信号列（在神谕列尾新增）
 '四域体系（列尾新增）
 Public Const 位谕始of族策 = 位谕终of族仓 + 1
-'--- 周策略 P1 ---
-Public Const 位谕of周策略P1 = 位谕始of族策 + 0     '周策略P1: 完整条件(如"等2_0橅_升排_{银_甲乙己}")
-Public Const 位谕of周策分P1 = 位谕始of族策 + 1    '周策分P1: 编码(如"6G84")，期望HR取整+G/_+P1取整。G=下周冲高≥1%概率≥78(全量基线)，_=低于基线
+'--- 周仓类 ---
+Public Const 位谕of仓周类 = 位谕始of族策 + 0
 '--- 周策略 P3 ---
-Public Const 位谕of周策略P3 = 位谕始of族策 + 2     '周策略P3: 匹配的策略名(如"金升非")
-Public Const 位谕of周策分P3 = 位谕始of族策 + 3    '周策分P3: 编码(如"5G58")，期望HR取整+G/_+P3取整。G=下周冲高≥3%概率≥51(全量基线)，_=低于基线
+Public Const 位谕of周策略P3 = 位谕始of族策 + 1     '周策略P3: 匹配的策略名(如"金升非")
+Public Const 位谕of周策分P3 = 位谕始of族策 + 2    '周策分P3: 编码(如"5G58")，期望HR取整+G/_+P3取整。G=下周冲高≥3%概率≥51(全量基线50.7取整)，_=低于基线
+'--- 周策略 P1 ---
+Public Const 位谕of周策略P1 = 位谕始of族策 + 3     '周策略P1: 完整条件(如"等2_0橅_升排_{银_甲}")
+Public Const 位谕of周策分P1 = 位谕始of族策 + 4    '周策分P1: 编码(如"6G84")，期望HR取整+G/_+P1取整。G=下周冲高≥1%概率≥78(全量基线78.1取整)，_=低于基线
+'--- 周策略 ZA ---
+Public Const 位谕of周策略ZA = 位谕始of族策 + 5     '周策略ZA: 柱排|顶触|盈提示(如"连阳|触高|宽高")
+Public Const 位谕of周策分ZA = 位谕始of族策 + 6    '周策分ZA: 编码(如"7G79")，期望HR取整+G/_+维持率取整。G=下周WXZA仍≥0概率≥50，_=低于50。注意：数值是下周ZA维持率(0~100)非下周冲高概率
 '--- 月策略周 三变量 ---
-Public Const 位谕of月策分命 = 位谕始of族策 + 4     '月策分命: 股性分(0~100)，从CSV查表，恶庄天然过滤
-Public Const 位谕of月策略周 = 位谕始of族策 + 5     '月策略周: 多长(积极)/多长(消极)/多长(不定)/多被(金)/多被(银)/多被(唏)/NA(空看)/NA(空长)
-Public Const 位谕of月策分周 = 位谕始of族策 + 6     '月策分周(5周): 当前周波型×柱排状态, 5周后是否仍在多长(续持率取整), 仅对多长评分
-Public Const 位谕of月策带周 = 位谕始of族策 + 7     '月策带周: (WXCD)▲/↘/↗/▽ WXCD→WXAB带动
-Public Const 位谕of月策带日 = 位谕始of族策 + 8     '月策带日: (DXAB)同上(DXCD)同上(DXEF) 日级别DXAB→DXCD→DXEF带动
-'--- 仓周/仓日分类 ---
-Public Const 位谕of仓周类 = 位谕始of族策 + 9
-Public Const 位谕of仓日类 = 位谕始of族策 + 10
-Public Const 位谕of日层段 = 位谕始of族策 + 11
+Public Const 位谕of月策分命 = 位谕始of族策 + 7     '月策分命: 股性分(0~100)，从CSV查表，恶庄天然过滤
+Public Const 位谕of月策略周 = 位谕始of族策 + 8     '月策略周: 多长(积极)/多长(消极)/多长(不定)/多被(金)/多被(银)/多被(唏)/NA(空看)/NA(空长)
+Public Const 位谕of月策分周 = 位谕始of族策 + 9     '月策分周(5周): 当前周波型×柱排状态, 5周后是否仍在多长(续持率取整), 仅对多长评分
+Public Const 位谕of月策带周 = 位谕始of族策 + 10    '月策带周: (WXCD)▲/↘/↗/▽ WXCD→WXAB带动
+Public Const 位谕of月策带日 = 位谕始of族策 + 11    '月策带日: (DXAB)同上(DXCD)同上(DXEF) 日级别DXAB→DXCD→DXEF带动
+'--- 仓日分类 ---
+Public Const 位谕of仓日类 = 位谕始of族策 + 12
+Public Const 位谕of日层段 = 位谕始of族策 + 13
 '--- 月策略日 ---
-Public Const 位谕of月策略日 = 位谕始of族策 + 12     '月策略日: 龙/唏/嘘/屁 + 强/弱 + 甲后缀
-Public Const 位谕of月策分日P2 = 位谕始of族策 + 13   '月策分日P2: 编码(如"4G39")，期望HR取整+G/_+概率取整。G=下日冲高≥2%概率≥30(查表下限)，_=低于下限
+Public Const 位谕of月策略日 = 位谕始of族策 + 14     '月策略日: 龙/唏/嘘/屁 + 强/弱 + 甲后缀
+Public Const 位谕of月策分日P2 = 位谕始of族策 + 15   '月策分日P2: 编码(如"4G39")，期望HR取整+G/_+概率取整。G=下日冲高≥2%概率≥30(查表下限)，_=低于下限
 '--- 日策略 P2 ---
-Public Const 位谕of日策分P2 = 位谕始of族策 + 14     '日策分P2: 编码(如"5G58")，期望HR取整+G/_+评分取整。G=评分≥50(B级)，_=低于50。注意：数值是评分(37~61)非概率
-Public Const 位谕of日策略P2 = 位谕始of族策 + 15     '日策略P2: 三级策略名称(如"等2A")
-Public Const 位谕of日层机警 = 位谕始of族策 + 16
+Public Const 位谕of日策分P2 = 位谕始of族策 + 16     '日策分P2: 编码(如"5G58")，期望HR取整+G/_+评分取整。G=评分≥50(B级)，_=低于50。注意：数值是评分(37~61)非概率
+Public Const 位谕of日策略P2 = 位谕始of族策 + 17     '日策略P2: 三级策略名称(如"等2A")
+Public Const 位谕of日层机警 = 位谕始of族策 + 18
 '-----------
-Public Const 位谕of日层漏提示 = 位谕始of族策 + 17
-Public Const 位谕of日层联动 = 位谕始of族策 + 18
-Public Const 位谕of日层盈提示 = 位谕始of族策 + 19
+Public Const 位谕of日层漏提示 = 位谕始of族策 + 19
+Public Const 位谕of日层联动 = 位谕始of族策 + 20
+Public Const 位谕of日层盈提示 = 位谕始of族策 + 21
 '-----------
-Public Const 位谕of周层四域 = 位谕始of族策 + 20
-Public Const 位谕of策传 = 位谕始of族策 + 21
-Public Const 位谕of日层四域 = 位谕始of族策 + 22
+Public Const 位谕of周层四域 = 位谕始of族策 + 22
+Public Const 位谕of策传 = 位谕始of族策 + 23
+Public Const 位谕of日层四域 = 位谕始of族策 + 24
 Public Const 位谕终of族策 = 位谕of日层四域
 '----------------------------------------------------------------------------------------
 '----------------------------------------------------------------------------------------
@@ -1628,6 +1632,9 @@ If UBCID是代码(CIDL) = True Then
                     ElseIf Right(组结算(X, 基位周类 + 位os具并符串), 2) = 常枚并符跌孕 & 常枚并符升孕 _
                         Or Right(组结算(X, 基位周类 + 位os具并符串), 2) = 常枚并符升孕 & 常枚并符跌孕 Then
                         谕组(X, 位谕of周层柱排) = "(人)人.孕孕" & 常枚并符跌孕 & 常枚并符升孕
+                    ElseIf Len(组结算(X, 基位周类 + 位os具并符串)) < 2 Then
+                        ' 第一根K线：无前周数据，柱排概念不适用
+                        谕组(X, 位谕of周层柱排) = "首柱"
                     Else
                         谕组(X, 位谕of周层柱排) = "错.未赋值"
                     End If
@@ -1721,6 +1728,9 @@ If UBCID是代码(CIDL) = True Then
                     ElseIf Right(组结算(X, 基位日类 + 位os具并符串), 2) = 常枚并符跌孕 & 常枚并符升孕 _
                         Or Right(组结算(X, 基位日类 + 位os具并符串), 2) = 常枚并符升孕 & 常枚并符跌孕 Then
                         谕组(X, 位谕of日层柱排) = "(人)人.孕孕" & 常枚并符跌孕 & 常枚并符升孕
+                    ElseIf Len(组结算(X, 基位日类 + 位os具并符串)) < 2 Then
+                        ' 第一根K线：无前日数据，柱排概念不适用
+                        谕组(X, 位谕of日层柱排) = "首柱"
                     Else
                         谕组(X, 位谕of日层柱排) = "错.未赋值"
                     End If
@@ -2932,17 +2942,8 @@ If UBCID是代码(CIDL) = True Then
                 If 周策分P3编码 = "" Then
                     谕组(X, 位谕of周策分P3) = "_"
                 Else
-                    '20260815：第二位改为G/_标识是否高于基线。P3基线=51（全量P3=50.6取整）。G=下周冲高≥3%概率≥51，_=低于基线
-                    Dim 周P3取整 As Integer: 周P3取整 = Val(Mid$(周策分P3编码, 3, 2))
-                    If 周P3取整 > 0 Then
-                        If 周P3取整 >= 51 Then
-                            谕组(X, 位谕of周策分P3) = Left$(周策分P3编码, 1) & "G" & Mid$(周策分P3编码, 3)
-                        Else
-                            谕组(X, 位谕of周策分P3) = Left$(周策分P3编码, 1) & "_" & Mid$(周策分P3编码, 3)
-                        End If
-                    Else
-                        谕组(X, 位谕of周策分P3) = "_"
-                    End If
+                    '20260816：策分表已是G/_格式，直接存储
+                    谕组(X, 位谕of周策分P3) = 周策分P3编码
                 End If
             Else
                 '20260815：策略名为空时，策分也设为_（统一）
@@ -2980,22 +2981,100 @@ If UBCID是代码(CIDL) = True Then
                 If 周策分P1 = "" Then
                     谕组(X, 位谕of周策分P1) = "_"
                 Else
-                    '20260815：第二位改为G/_标识是否高于基线。P1基线=78（全量P1=78.1取整）。G=下周冲高≥1%概率≥78，_=低于基线
-                    Dim 周P1取整 As Integer: 周P1取整 = Val(Mid$(周策分P1, 3, 2))
-                    If 周P1取整 > 0 Then
-                        If 周P1取整 >= 78 Then
-                            谕组(X, 位谕of周策分P1) = Left$(周策分P1, 1) & "G" & Mid$(周策分P1, 3)
-                        Else
-                            谕组(X, 位谕of周策分P1) = Left$(周策分P1, 1) & "_" & Mid$(周策分P1, 3)
-                        End If
-                    Else
-                        谕组(X, 位谕of周策分P1) = "_"
-                    End If
+                    '20260816：策分表已是G/_格式，直接存储
+                    谕组(X, 位谕of周策分P1) = 周策分P1
                     谕组(X, 位谕of周策略P1) = 周策略P1
                 End If
             Else
                 '20260815：策略名为空时，策分也设为_（统一）
                 谕组(X, 位谕of周策分P1) = "_"
+            End If
+            '============================================================================
+            'ZA策略（基于柱排+顶触+盈提示三维分类，维持WXZA>0概率）
+            '============================================================================
+            If 周ZA > 0 Then
+                '生成ZA策略名：柱排|顶触|盈提示
+                Dim 周ZA柱排 As String: 周ZA柱排 = 谕组(X, 位谕of周层柱排)
+                Dim 周ZA顶触 As String: 周ZA顶触 = 谕组(X, 位谕of周龟顶型)
+                Dim 周ZA盈提 As String: 周ZA盈提 = 谕组(X, 位谕of周层盈提示)
+                Dim 周ZA策略 As String: 周ZA策略 = ""
+
+                '柱排形态
+                If Left$(周ZA柱排, 1) = "升" Then
+                    If InStr(周ZA柱排, "尾连") > 0 Then
+                        周ZA策略 = "连阳"
+                    ElseIf InStr(周ZA柱排, "尾吞") > 0 Then
+                        周ZA策略 = "升吞"
+                    ElseIf InStr(周ZA柱排, "尾反孕") > 0 Then
+                        周ZA策略 = "升反孕"
+                    Else
+                        周ZA策略 = "其他"
+                    End If
+                ElseIf Left$(周ZA柱排, 1) = "跌" Then
+                    If InStr(周ZA柱排, "尾连") > 0 Then
+                        周ZA策略 = "连跌"
+                    ElseIf InStr(周ZA柱排, "尾吞") > 0 Then
+                        周ZA策略 = "跌吞"
+                    ElseIf InStr(周ZA柱排, "尾反孕") > 0 Then
+                        周ZA策略 = "跌反孕"
+                    Else
+                        周ZA策略 = "其他"
+                    End If
+                ElseIf InStr(周ZA柱排, "吞吞") > 0 Then
+                    周ZA策略 = "阴阳阴"
+                ElseIf InStr(周ZA柱排, "孕孕") > 0 Then
+                    周ZA策略 = "孕孕"
+                Else
+                    周ZA策略 = "其他"
+                End If
+
+                '顶触状态
+                If InStr(周ZA顶触, "高") > 0 Then
+                    周ZA策略 = 周ZA策略 & "|触高"
+                ElseIf InStr(周ZA顶触, "撤") > 0 Then
+                    周ZA策略 = 周ZA策略 & "|离撤"
+                Else
+                    周ZA策略 = 周ZA策略 & "|其他"
+                End If
+
+                '盈提示
+                If InStr(周ZA盈提, "宽高连3") > 0 Then
+                    周ZA策略 = 周ZA策略 & "|宽高连3"
+                ElseIf InStr(周ZA盈提, "连3") > 0 Then
+                    周ZA策略 = 周ZA策略 & "|连3"
+                ElseIf InStr(周ZA盈提, "宽高") > 0 Then
+                    周ZA策略 = 周ZA策略 & "|宽高"
+                ElseIf InStr(周ZA盈提, "高") > 0 Then
+                    周ZA策略 = 周ZA策略 & "|高"
+                ElseIf InStr(周ZA盈提, "宽") > 0 Then
+                    周ZA策略 = 周ZA策略 & "|宽"
+                Else
+                    周ZA策略 = 周ZA策略 & "|其他"
+                End If
+
+                '查表
+                Dim 周策分ZA As String: 周策分ZA = IQQQ跨码工具_查周策分ZA(周ZA策略)
+                If 周策分ZA <> "" Then
+                    谕组(X, 位谕of周策略ZA) = 周ZA策略
+                    '编码格式与其他策分一致：期望HR取整+G/_+维持率取整
+                    '维持率=下周WXZA仍≥0的概率（非下周冲高概率，注意与P1/P3区分）
+                    Dim 周ZA维持取整 As Integer: 周ZA维持取整 = Val(Mid$(周策分ZA, 3, 2))
+                    If 周ZA维持取整 > 0 Then
+                        If 周ZA维持取整 >= 50 Then
+                            谕组(X, 位谕of周策分ZA) = Left$(周策分ZA, 1) & "G" & Mid$(周策分ZA, 3)
+                        Else
+                            谕组(X, 位谕of周策分ZA) = Left$(周策分ZA, 1) & "_" & Mid$(周策分ZA, 3)
+                        End If
+                    Else
+                        谕组(X, 位谕of周策分ZA) = "_"
+                    End If
+                Else
+                    谕组(X, 位谕of周策略ZA) = ""
+                    谕组(X, 位谕of周策分ZA) = "_"
+                End If
+            Else
+                谕组(X, 位谕of周策略ZA) = ""
+                谕组(X, 位谕of周策分ZA) = "_"
             End If
             '============================================================================
 '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -6581,10 +6660,14 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕列终全部) = "占位"
         'AI冲高信号列
         .Cells(1, 位谕of策传) = "策传"
-        .Cells(1, 位谕of周策略P1) = "周策略P1"
-        .Cells(1, 位谕of周策分P1) = "周策分P1"
+        '周策略ZA（新顺序：仓周类→周策略ZA→周策分ZA→周策略P3→周策分P3→周策略P1→周策分P1）
+        .Cells(1, 位谕of仓周类) = "仓周"
+        .Cells(1, 位谕of周策略ZA) = "周策略ZA"
+        .Cells(1, 位谕of周策分ZA) = "周策分ZA"
         .Cells(1, 位谕of周策略P3) = "周策略P3"
         .Cells(1, 位谕of周策分P3) = "周策分P3"
+        .Cells(1, 位谕of周策略P1) = "周策略P1"
+        .Cells(1, 位谕of周策分P1) = "周策分P1"
         .Cells(1, 位谕of月策分命) = "月策分命"
         .Cells(1, 位谕of月策略周) = "月策略周"
         .Cells(1, 位谕of月策分周) = "月策分周" & vbCrLf & "(5周维持)"
@@ -6593,7 +6676,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of月策略日) = "月策略日"
         .Cells(1, 位谕of月策分日P2) = "月策分日P2"
         '仓周/仓日分类
-        .Cells(1, 位谕of仓周类) = "仓周"
         .Cells(1, 位谕of仓日类) = "仓日"
         '四域列
         .Cells(1, 位谕of周层四域) = "四域周"
@@ -6624,6 +6706,12 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日策略P2).Interior.TintAndShade = -0.4
         .Columns(位谕of日层机警).Interior.TintAndShade = -0.5
         .Columns(位谕of仓周类).Interior.TintAndShade = -0.4
+        .Columns(位谕of周策略ZA).Interior.Color = 常色四靛
+        .Columns(位谕of周策分ZA).Interior.Color = 常色五靛
+        .Columns(位谕of周策略P3).Interior.Color = 常色四靛
+        .Columns(位谕of周策分P3).Interior.Color = 常色五靛
+        .Columns(位谕of周策略P1).Interior.Color = 常色四靛
+        .Columns(位谕of周策分P1).Interior.Color = 常色五靛
         .Columns(位谕of仓日类).Interior.TintAndShade = -0.3
         .Columns(位谕of日层段).Interior.TintAndShade = -0.1
         .Columns(位谕of策传).Interior.Color = 常色四灰
@@ -6646,14 +6734,18 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '列：列宽
     '------------------------------------------------------------------------------------
     With WS.Columns(基列)
-        .Columns(位谕of周策略P1).ColumnWidth = 8
-        .Columns(位谕of周策略P1).HorizontalAlignment = xlLeft
-        .Columns(位谕of周策分P1).ColumnWidth = 4
-        .Columns(位谕of周策分P1).NumberFormat = "@"
+        .Columns(位谕of周策略ZA).ColumnWidth = 8
+        .Columns(位谕of周策略ZA).HorizontalAlignment = xlLeft
+        .Columns(位谕of周策分ZA).ColumnWidth = 4
+        .Columns(位谕of周策分ZA).NumberFormat = "@"
         .Columns(位谕of周策略P3).ColumnWidth = 6
         .Columns(位谕of周策略P3).HorizontalAlignment = xlLeft
         .Columns(位谕of周策分P3).ColumnWidth = 4
         .Columns(位谕of周策分P3).NumberFormat = "@"
+        .Columns(位谕of周策略P1).ColumnWidth = 8
+        .Columns(位谕of周策略P1).HorizontalAlignment = xlLeft
+        .Columns(位谕of周策分P1).ColumnWidth = 4
+        .Columns(位谕of周策分P1).NumberFormat = "@"
         .Columns(位谕of月策略周).ColumnWidth = 7.5
         .Columns(位谕of月策分命).ColumnWidth = 4
         .Columns(位谕of月策分周).ColumnWidth = 4
@@ -6687,6 +6779,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '列：显示
     '------------------------------------------------------------------------------------
     With WS.Columns(基列)
+        .Columns(位谕of周层大局).Hidden = True  '20260816：隐藏周层大局
     End With
 '========================================================================================
 '格式化：测试
@@ -6864,10 +6957,19 @@ Public Function IQQQ跨码工具_生成P1编码(ByVal ZA周 As Double, ByVal 等
     End If
 
     'WXAB
-    If InStr(WXAB护, "甲") > 0 Or InStr(WXAB护, "乙") > 0 Or InStr(WXAB护, "己") > 0 Then
-        WXAB名 = "甲乙己"
+    '20260816：策略名写具体值（甲/乙/己/丙/丁/戊），查表时用InStr按范围匹配策分表（甲乙己/丙丁戊）
+    If InStr(WXAB护, "甲") > 0 Then
+        WXAB名 = "甲"
+    ElseIf InStr(WXAB护, "乙") > 0 Then
+        WXAB名 = "乙"
+    ElseIf InStr(WXAB护, "己") > 0 Then
+        WXAB名 = "己"
+    ElseIf InStr(WXAB护, "丙") > 0 Then
+        WXAB名 = "丙"
+    ElseIf InStr(WXAB护, "丁") > 0 Then
+        WXAB名 = "丁"
     Else
-        WXAB名 = "丙丁戊"
+        WXAB名 = "戊"
     End If
 
     '地型：20260815改为二元WTZA+纯并符，直接用地型参数（0橅/1柜/2栅/3桮/6娝/7姗/8姖/9妩）
@@ -6875,7 +6977,7 @@ Public Function IQQQ跨码工具_生成P1编码(ByVal ZA周 As Double, ByVal 等
     Dim 地型名 As String
     地型名 = 地型
 
-    '生成完整策略名（用于查表），格式：等2_0橅_升排_{银_甲乙己}
+    '生成完整策略名（用于查表），格式：等2_0橅_升排_{银_甲}
     IQQQ跨码工具_生成P1编码 = 等类 & "_" & 地型名 & "_" & 柱排向 & "_{" & WXCD名 & "_" & WXAB名 & "}"
 End Function
 '========================================================================================
@@ -6906,7 +7008,62 @@ Public Function IQQQ跨码工具_查周策分P1(ByVal 策略名 As String) As St
         已加载P1 = True
     End If
 
-    If 概率典P1.Exists(策略名) Then IQQQ跨码工具_查周策分P1 = 概率典P1(策略名) Else IQQQ跨码工具_查周策分P1 = ""
+    '20260816：策略名是具体值（如"等2_0橅_升排_{银_甲}"），策分表是范围（如"等2_0橅_升排_{银_甲乙己}"）
+    '先用精确匹配（如果策分表也有具体值）
+    If 概率典P1.Exists(策略名) Then
+        IQQQ跨码工具_查周策分P1 = 概率典P1(策略名)
+        Exit Function
+    End If
+
+    '精确匹配失败，用InStr范围匹配
+    '提取策略名中的WXAB具体值，替换为范围后匹配
+    Dim 末下划线 As Integer: 末下划线 = InStrRev(策略名, "_")
+    Dim 花括号位 As Integer: 花括号位 = InStr(策略名, "{")
+    If 末下划线 > 0 And 花括号位 > 0 Then
+        Dim WXAB值 As String: WXAB值 = Mid$(策略名, 末下划线 + 1, Len(策略名) - 末下划线 - 1)
+        WXAB值 = Left$(WXAB值, 1)  '取第一个字（甲/乙/己/丙/丁/戊）
+        Dim 范围条件 As String
+        If InStr("甲乙己", WXAB值) > 0 Then 范围条件 = "甲乙己" Else 范围条件 = "丙丁戊"
+        Dim 前半 As String: 前半 = Left$(策略名, 末下划线)
+        Dim 键 As Variant
+        For Each 键 In 概率典P1.Keys
+            If InStr(键, 前半) > 0 And InStr(键, 范围条件) > 0 Then
+                IQQQ跨码工具_查周策分P1 = 概率典P1(键)
+                Exit Function
+            End If
+        Next
+    End If
+
+    IQQQ跨码工具_查周策分P1 = ""
+End Function
+'========================================================================================
+
+'========================================================================================
+'查周策分ZA — 基于柱排+顶触+盈提示三维分类，查维持WXZA>0概率
+'========================================================================================
+Public Function IQQQ跨码工具_查周策分ZA(ByVal 策略名 As String) As String
+    Static 概率典ZA As Dictionary
+    Static 已加载ZA As Boolean
+    Dim 文件号 As Integer, 行内容 As String
+    Dim 字段 As Variant
+
+    If Not 已加载ZA Then
+        Set 概率典ZA = New Dictionary
+        文件号 = FreeFile
+        Open ThisWorkbook.Path & "\_产出物\_工具\vba表周策分ZA.txt" For Input As #文件号
+            Line Input #文件号, 行内容  '跳过表头
+            Do While Not EOF(文件号)
+                Line Input #文件号, 行内容
+                字段 = Split(行内容, vbTab)
+                If UBound(字段) >= 1 Then
+                    概率典ZA(字段(0)) = 字段(1)  '长名称→编码
+                End If
+            Loop
+        Close #文件号
+        已加载ZA = True
+    End If
+
+    If 概率典ZA.Exists(策略名) Then IQQQ跨码工具_查周策分ZA = 概率典ZA(策略名) Else IQQQ跨码工具_查周策分ZA = ""
 End Function
 '========================================================================================
 

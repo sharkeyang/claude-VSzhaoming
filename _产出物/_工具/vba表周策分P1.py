@@ -37,12 +37,8 @@ def seg(w, i):
 def encode(p1, avg):
     h = int(avg) if avg >= 0 else 0
     if h > 9: h = 9
-    if p1 >= 90: g = 'A'
-    elif p1 >= 80: g = 'B'
-    elif p1 >= 70: g = 'C'
-    elif p1 >= 60: g = 'D'
-    elif p1 >= 50: g = 'E'
-    else: g = 'F'
+    if p1 >= 78: g = 'G'
+    else: g = '_'
     return f'{h}{g}{int(p1):02d}'
 
 def make_name(eq, d, zp, cd, ab):
