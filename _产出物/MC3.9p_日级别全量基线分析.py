@@ -3,7 +3,7 @@
 """
 MC3.9p_日级别全量基线分析.py
 =====================
-日级别全量基线分析（剔除Qst后）。
+日级别全量基线分析（剔除Qst+Qin后）。
 分析维度：
 1. 日级别基线（P1/P2/P3）
 2. 等高线6等区分度
@@ -13,7 +13,7 @@ MC3.9p_日级别全量基线分析.py
     python _产出物/MC3.9p_日级别全量基线分析.py
 """
 
-import pandas as pd, glob, os, sys, warnings
+import pandas as pd, glob, os, sys, warnings, json
 warnings.simplefilter('ignore')
 
 sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf-8', buffering=1)
@@ -88,6 +88,22 @@ print('MC3.9p 日级别全量基线分析')
 print('=' * 80)
 print()
 wk = load_all()
+
+# 加载市板映射，剔除Qin（非成分股）
+print('\n[过滤] 加载市板映射...', flush=True)
+try:
+    with open('_产出物/MP1_花册分类映射.json', 'r', encoding='utf-8') as f:
+        board_map = json.load(f)
+    # 从代码列提取CIDL（去掉前缀）
+    wk['cidl'] = wk['代码'].astype(str).str.strip()
+    wk['市板'] = wk['cidl'].map(board_map)
+    # 剔除Qin
+    n_before = len(wk)
+    wk = wk[wk['市板'] != 'Qin']
+    wk = wk.dropna(subset=['市板'])
+    print(f'  剔除Qin: {n_before - len(wk)} 行, 剩余 {len(wk)} 行', flush=True)
+except Exception as e:
+    print(f'  警告: 无法加载市板映射 ({e}), 跳过Qin过滤', flush=True)
 
 baseline_p1 = (wk['下日HR'] >= 1).mean() * 100
 baseline_p2 = (wk['下日HR'] >= 2).mean() * 100

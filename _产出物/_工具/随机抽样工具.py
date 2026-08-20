@@ -9,12 +9,12 @@ import os, glob, random, pandas as pd
 _市板映射 = None
 _市板dict = None
 
-核心池板块 = {'Qic', 'Qim', 'Qit', 'Qin'}
-排除池板块 = {'Qd', 'Qe', 'Qif', 'Qst'}
+核心池板块 = {'Qic', 'Qim', 'Qit'}  # 高波池（已剔除Qin非成分股）
+排除池板块 = {'Qd', 'Qe', 'Qif', 'Qst', 'Qin'}
 板块说明 = {
     'Qd': '指数', 'Qe': '基金/ETF', 'Qst': 'ST/退市',
     'Qif': '沪深300', 'Qic': '中证500', 'Qim': '中证1000',
-    'Qit': '中证2000', 'Qin': '中证非'
+    'Qit': '中证2000', 'Qin': '中证非（已剔除）'
 }
 
 def 加载市板映射(path='____temp/市板映射.csv'):

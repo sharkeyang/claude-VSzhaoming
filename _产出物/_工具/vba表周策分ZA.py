@@ -30,12 +30,14 @@ def load():
     return wk
 
 def encode(broke_rate):
-    """编码：G/_ + 跌破率取整
+    """编码：W/_ + 跌破率取整
     broke_rate = 下周跌破WJA（WXZA<0）概率（%），如 2
-    编码格式：G(≥50)/_(<50) + 跌破率取整(00-99)
-    G=下周跌破WJA概率≥50（危险），_=下周跌破WJA概率<50（安全）
+    编码格式：W(≥基准30)/_(<基准30) + 跌破率取整(00-99)
+    W=下周跌破WJA概率≥30%（warning危险，是基准19%的1.6倍），_=下周跌破WJA概率<30%（安全）
+    全量基准跌破率=19.0%，但维持率高达81%，跌破率≥30%才是真正危险
+    注意：ZA预测消极概率用W(warning)，P1/P3预测积极概率用G(good)
     """
-    if broke_rate >= 50: g = 'G'
+    if broke_rate >= 30: g = 'W'
     else: g = '_'
     return f'{g}{int(broke_rate):02d}'
 

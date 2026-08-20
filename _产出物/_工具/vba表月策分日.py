@@ -232,9 +232,9 @@ print(f'  共{len(rows)}条 -> {outpath}')
 
 # 生成市板表（按市板比例分配）
 print('=== 生成 vba表月策分日市板.txt ===')
-shibans = ['Qd', 'Qe', 'Qif', 'Qic', 'Qimit', 'Qin']
-# 市板比例（基于全量数据分布）
-sb_ratio = {'Qd': 0.08, 'Qe': 0.12, 'Qif': 0.15, 'Qic': 0.15, 'Qimit': 0.25, 'Qin': 0.25}
+shibans = ['Qd', 'Qe', 'Qif', 'Qic', 'Qimit']  # Qin已剔除
+# 市板比例（基于全量数据分布，剔除Qin后重新分配）
+sb_ratio = {'Qd': 0.10, 'Qe': 0.16, 'Qif': 0.20, 'Qic': 0.20, 'Qimit': 0.34}
 
 rows_sb = []
 for (ief, icd, iab), (n, pze0, pzezc, pzezcza, pdsha1, tag) in sorted(DATA.items()):
