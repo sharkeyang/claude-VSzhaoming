@@ -40,8 +40,8 @@ def classify_dg(za, mid):
 市板映射 = pd.read_csv('____temp/市板映射.csv', encoding='utf-8')
 市板映射['CIDL'] = 市板映射['CIDL'].astype(str).str.strip()
 市板dict = dict(zip(市板映射['CIDL'], 市板映射['市板']))
-# 核心池 = Qic(中证500) + Qim(中证1000) + Qit(中证2000) + Qin(中证非)
-核心池板块 = {'Qic', 'Qim', 'Qit', 'Qin'}
+# 核心池 = Qic(中证500) + Qim(中证1000) + Qit(中证2000)（已剔除Qin）
+核心池板块 = {'Qic', 'Qim', 'Qit'}  # 高波池（已剔除Qin非成分股）
 排除池板块 = {'Qd', 'Qe', 'Qif', 'Qst'}
 print(f"市板映射: {len(市板映射)} 条, 核心池板块: {核心池板块}", flush=True)
 

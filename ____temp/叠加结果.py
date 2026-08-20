@@ -6,7 +6,7 @@ DATA_DIR='昭明算展/谕组日'
 COL_ZA='日ZA';COL_ZC='日ZC';COL_ZE='日ZE';COL_MID='中符串';COL_NEXT='次日高幅'
 COL_柱排='柱排';COL_护型='DXAB';COL_涨幅='涨幅';COL_连阳='BT连阳';COL_顶型='顶型'
 市板映射=pd.read_csv('____temp/市板映射.csv',encoding='utf-8');市板映射['CIDL']=市板映射['CIDL'].astype(str).str.strip()
-市板dict=dict(zip(市板映射['CIDL'],市板映射['市板']));核心={'Qic','Qim','Qit','Qin'}
+市板dict=dict(zip(市板映射['CIDL'],市板映射['市板']));核心={'Qic','Qim','Qit'}  # 高波池（已剔除Qin）
 def dg(za,mid):
     if pd.isna(za)or za=='':return'NA'
     za=float(za);mid=str(mid)if pd.notna(mid)else'';lc=mid[-1]if len(mid)>0 else''

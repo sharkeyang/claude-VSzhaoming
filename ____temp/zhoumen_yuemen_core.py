@@ -12,7 +12,7 @@ with open('____temp/市板映射.csv', 'r', encoding='utf-8-sig') as f:
         if len(row) >= 2:
             CODE2BOARD[row[0].strip()] = row[1].strip()
 
-CORE = {'Qic', 'Qim', 'Qit', 'Qin'}
+CORE = {'Qic', 'Qim', 'Qit'}  # 高波池（已剔除Qin非成分股）
 n_core = sum(1 for b in CODE2BOARD.values() if b in CORE)
 n_excl = sum(1 for b in CODE2BOARD.values() if b not in CORE)
 out = io.open('____temp/_zhoumen_yuemen_core.txt', 'w', encoding='utf-8')

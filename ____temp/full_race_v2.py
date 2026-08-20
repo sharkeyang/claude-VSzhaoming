@@ -10,7 +10,7 @@ with open('____temp/市板映射.csv', 'r', encoding='utf-8-sig') as f:
     for row in r:
         if len(row) >= 2:
             CODE2BOARD[row[0].strip()] = row[1].strip()
-CORE = {'Qic', 'Qim', 'Qit', 'Qin'}
+CORE = {'Qic', 'Qim', 'Qit'}  # 高波池（已剔除Qin非成分股）
 
 stats = defaultdict(lambda: [0, 0, 0, 0])
 

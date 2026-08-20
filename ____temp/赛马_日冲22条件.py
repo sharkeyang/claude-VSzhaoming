@@ -6,7 +6,7 @@
 
 方法：
 - 随机取 500 个谕组日文件（避免字母序偏倚）
-- 只分析核心池(Qic/Qim/Qit/Qin)，门开后(ZC>0 且 ZE>0)
+- 只分析核心池(Qic/Qim/Qit)，门开后(ZC>0 且 ZE>0)
 - 对每个条件，在等高线×柱排×护型每个分组内，比较"带条件" vs "不带条件"的 P(≥2%)/P(≥3%)
 - 组内提升按条件样本量加权平均 = 该条件在基座上的净提升(pp)
 - 同时给出全局(不加条件)基线作为参照
@@ -51,7 +51,7 @@ def classify_dg(za, mid):
 市板映射 = pd.read_csv('____temp/市板映射.csv', encoding='utf-8')
 市板映射['CIDL'] = 市板映射['CIDL'].astype(str).str.strip()
 市板dict = dict(zip(市板映射['CIDL'], 市板映射['市板']))
-核心池板块 = {'Qic', 'Qim', 'Qit', 'Qin'}
+核心池板块 = {'Qic', 'Qim', 'Qit'}  # 高波池（已剔除Qin非成分股）
 
 # ========== 随机抽样 ==========
 files = sorted(glob.glob(os.path.join(DATA_DIR, '谕组日_*.csv')))

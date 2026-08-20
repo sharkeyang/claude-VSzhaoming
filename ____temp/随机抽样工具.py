@@ -9,7 +9,7 @@ import os, glob, random, pandas as pd
 _市板映射 = None
 _市板dict = None
 
-核心池板块 = {'Qic', 'Qim', 'Qit', 'Qin'}
+核心池板块 = {'Qic', 'Qim', 'Qit'}  # 高波池（已剔除Qin非成分股）
 排除池板块 = {'Qd', 'Qe', 'Qif', 'Qst'}
 板块说明 = {
     'Qd': '指数', 'Qe': '基金/ETF', 'Qst': 'ST/退市',

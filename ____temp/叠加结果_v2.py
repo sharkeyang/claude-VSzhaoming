@@ -8,7 +8,7 @@ COL_柱排='柱排';COL_护型='DXAB';COL_涨幅='涨幅';COL_连阳='BT连阳';
 市板映射=pd.read_csv('____temp/市板映射.csv',encoding='utf-8')
 市板映射['CIDL']=市板映射['CIDL'].astype(str).str.strip()
 市板dict=dict(zip(市板映射['CIDL'],市板映射['市板']))
-核心={'Qic','Qim','Qit','Qin'}
+核心={'Qic','Qim','Qit'}  # 高波池（已剔除Qin）
 def dg(za,mid):
     if pd.isna(za)or za=='':return'NA'
     za=float(za);mid=str(mid)if pd.notna(mid)else'';lc=mid[-1]if len(mid)>0 else''
