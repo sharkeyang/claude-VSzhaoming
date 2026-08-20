@@ -759,6 +759,8 @@ Function STCALL花册管理_重制花天P9子程重置信息1市板( _
         ElseIf UBCID是中股票(CIDL) = True Then
             If InStr(组花册(X, 位列花天代称), "ST") > 0 Or InStr(组花册(X, 位列花天代称), "退") > 0 Then
                 值市板 = 常市板票Qst
+            ElseIf CIDL Like 常通配全码北交股 Then
+                值市板 = "Qbj"  '北交所，单独分类不纳入Qin
             ElseIf 组花册(X, 位列花天是否中股300) = "Y" Then
                 值市板 = 常市板票Qif  ' Qif = 沪深300
             ElseIf 组花册(X, 位列花天是否中证500) = "Y" Then

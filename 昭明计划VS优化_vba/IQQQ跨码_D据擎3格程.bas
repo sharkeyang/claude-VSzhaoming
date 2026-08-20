@@ -1082,6 +1082,13 @@ End If
                         .Font.Color = 常色二灰
                     End If
                 End With
+                With .Cells(1, 位谕of周策分ZA)
+                    If .Value = "_" Then
+                        .Font.Color = .Interior.Color
+                    ElseIf InStr(.Value, "_") > 0 Then
+                        .Font.Color = 常色二灰
+                    End If
+                End With
                 With .Cells(1, 位谕of月策分日P2)
                     If .Value = "_" Then
                         .Font.Color = .Interior.Color
@@ -1110,6 +1117,12 @@ End If
                             .Font.TintAndShade = -0.1
                         ElseIf InStr(.Value, "卖浮") > 0 Then
                             .Font.Color = 常色四红
+                        End If
+                End With
+                With .Cells(1, 位谕of日层段期)
+                        If .Value = 0 Then
+                            .Font.Color = .Interior.Color
+                            .Font.TintAndShade = -0.1
                         End If
                 End With
                 With .Cells(1, 位谕of日层联动)

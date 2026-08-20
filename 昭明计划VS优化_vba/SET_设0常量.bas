@@ -88,13 +88,13 @@ Public Const 常池名黑 = "Zn"      '黑名单
 '定义各种市场类别的通配符
 Public Const 常市板指 = "Qd"
 Public Const 常市板基 = "Qe"
-'中证成分分类（替代旧Qs分类）
-Public Const 常市板票Qst = "Qst"  'ST/退市
 Public Const 常市板票Qif = "Qif"  '沪深300
 Public Const 常市板票Qic = "Qic"  '中证500
 Public Const 常市板票Qim = "Qim"  '中证1000
 Public Const 常市板票Qit = "Qit"  '中证2000
 Public Const 常市板票Qin = "Qin"  '中证非（非成分股）
+Public Const 常市板票Qbj = "Qbj"
+Public Const 常市板票Qst = "Qst"  'ST/退市
 '-----------------------------------------------
 '定义各种代码的通配符
 Public Const 常通配码缀上证 = "sh"
