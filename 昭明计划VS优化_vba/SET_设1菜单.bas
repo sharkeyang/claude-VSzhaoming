@@ -1420,23 +1420,6 @@ Public Sub UGSOP_MENU_生成()
 '========================================================================================
 '菜项决策
 '========================================================================================
-'    '------------------------------------------------------------------------------------
-'    '模块：更新并归类
-'    '------------------------------------------------------------------------------------
-'    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .BeginGroup = True
-'        .Caption = "归类引擎"
-'        .Enabled = False
-'    End With
-'    '------------------------------------------------------------------------------------
-'    '模块：甄别本页
-'    '------------------------------------------------------------------------------------
-'    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .BeginGroup = True
-'        .OnAction = "IQQQ跨码展擎_按行汇总调程"
-'        .Caption = "甄别本页乾坤"
-'        .FaceId = 305
-'    End With
     '------------------------------------------------------------------------------------
     '模块：瓜分本页
     '------------------------------------------------------------------------------------
@@ -1445,22 +1428,6 @@ Public Sub UGSOP_MENU_生成()
         .Caption = "瓜分本页"
         .Enabled = False
     End With
-    
-'    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎瓜页前调决策按B横周"
-'        .Caption = "瓜分本页 按周局"
-'        .FaceId = 450
-'    End With
-'    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎瓜页前调决策按D混周机"
-'        .Caption = "瓜分本页 按周机"
-'        .FaceId = 450
-'    End With
-'    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎瓜页前调决策按E池"
-'        .Caption = "瓜分本页 按池"
-'        .FaceId = 450
-'    End With
     '------------------------------------------------------------------------------------
     '------------------------------------------------------------------------------------
     '模块：QQQ引擎
@@ -1472,11 +1439,7 @@ Public Sub UGSOP_MENU_生成()
         .Enabled = False
     End With
     
-    With 菜项决策.Controls.Add(Type:=msoControlButton)
-        .OnAction = "IQQQ展擎主前调_sCCC式决策简按混日机"
-        .Caption = "sCCC式决策简按混日机"
-        .FaceId = 226 '772 '486
-    End With
+
     With 菜项决策.Controls.Add(Type:=msoControlButton)
         .OnAction = "IQQQ展擎主前调_sCCC式决策简按周仓日综"
         .Caption = "sCCC式决策简按周仓日综"
@@ -1497,12 +1460,6 @@ Public Sub UGSOP_MENU_生成()
         .Caption = "QQQ引擎 即时cCCC版"
         .Enabled = False
     End With
-    '-------------------------------------------------------
-'    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎主前调_cCCC式决策简按混日机"
-'        .Caption = "cCCC式决策简按混日机"
-'        .FaceId = 226 '772 '486
-'    End With
     '-------------------------------------------------------
     With 菜项决策.Controls.Add(Type:=msoControlButton)
         .OnAction = "IQQQ展擎主前调_cCCC式决策简按周仓日综"
@@ -1535,17 +1492,6 @@ Public Sub UGSOP_MENU_生成()
         .Caption = "cCCC式决策详按周仓周地 外簿"
         .FaceId = 226 '772 '486
     End With
-    '-------------------------------------------------------
-'    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎主前调_cCCC式细分市类按周层"
-'        .Caption = "cCCC式细分市类按周层"
-'        .FaceId = 226 '772 '486
-'    End With
-'    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎主前调_cCCC式细分市类按日层"
-'        .Caption = "cCCC式细分市类按日层"
-'        .FaceId = 226 '772 '486
-'    End With
     '------------------------------------------------------------------------------------
     '------------------------------------------------------------------------------------
     '模块：QQQ引擎
@@ -1556,12 +1502,6 @@ Public Sub UGSOP_MENU_生成()
         .Caption = "QQQ引擎 实时sSCC版"
         .Enabled = False
     End With
-    '-------------------------------------------------------
-'    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎主前调_sSCC式决策简按混日机"
-'        .Caption = "sSCC式决策简按混日机"
-'        .FaceId = 226 '772 '486
-'    End With
     '-------------------------------------------------------
     With 菜项决策.Controls.Add(Type:=msoControlButton)
         .OnAction = "IQQQ展擎主前调_sSCC式决策简按周仓日综"
@@ -1594,17 +1534,6 @@ Public Sub UGSOP_MENU_生成()
         .Caption = "sSCC式决策详按周仓周地 外簿"
         .FaceId = 226 '772 '486
     End With
-    '-------------------------------------------------------
-'    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎主前调_sSCC式细分市类按周层"
-'        .Caption = "sSCC式细分市类按周层"
-'        .FaceId = 226 '772 '486
-'    End With
-'    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎主前调_sSCC式细分市类按日层"
-'        .Caption = "sSCC式细分市类按日层"
-'        .FaceId = 226 '772 '486
-'    End With
     '------------------------------------------------------------------------------------
     '------------------------------------------------------------------------------------
     '模块：QQQ引擎
@@ -1614,12 +1543,6 @@ Public Sub UGSOP_MENU_生成()
         .Caption = "QQQ引擎 实时sSSC版"
         .Enabled = False
     End With
-    '-------------------------------------------------------
-'    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎主前调_sSSC式决策简按混日机"
-'        .Caption = "sSSC式决策简按混日机"
-'        .FaceId = 226 '772 '486
-'    End With
     '-------------------------------------------------------
     With 菜项决策.Controls.Add(Type:=msoControlButton)
         .OnAction = "IQQQ展擎主前调_sSSC式决策简按周仓日综"
@@ -1668,7 +1591,7 @@ Public Sub UGSOP_MENU_生成()
 '        .FaceId = 226 '772 '486
 '    End With
 '    With 菜项决策.Controls.Add(Type:=msoControlButton)
-'        .OnAction = "IQQQ展擎主前调_sSSS式决策简按混日层"
+'        .OnAction = "IQQQ展擎主前调_sSSS式决策简按周仓日综"
 '        .Caption = "sSSS式决策简按周仓日综"
 '        .FaceId = 226 '772 '486
 '    End With
