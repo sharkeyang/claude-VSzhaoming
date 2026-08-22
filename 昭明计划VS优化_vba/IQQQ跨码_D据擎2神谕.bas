@@ -443,21 +443,23 @@ Public Const 位谕of月策带日 = 位谕始of族策 + 11    '月策带日: (DX
 Public Const 位谕of仓日类 = 位谕始of族策 + 12
 Public Const 位谕of日层段 = 位谕始of族策 + 13    '日层段: 持主(DXZE>0+DXZC>0+DXZA>0)/持被(ZE>0+ZC>0+ZA<=0)/卖浮(ZE>0+ZC<=0)/NA。持主期望HR=2.19%，持主+BSHA>=5+触顶=3.42%(最强)
 Public Const 位谕of日层段期 = 位谕始of族策 + 14   '日层段期: min(DTZE,DTZC)，当前已持有天数。1=刚站上，值越大已持有越久。平均剩余持有期随min增大而增加(1→12.3天, >=30→17.0天)
+'--- 日必赢分类（DXZC×DXCD×DXAB综合） ---
+Public Const 位谕of日层赢 = 位谕始of族策 + 15   '日层赢: 介(介入)/持(持有)/被(被动)/参A(参考可介入)/参B(参考应退出)/_弃(回避)，非弃且DXZE<0加前缀_
 '--- 月策略日 ---
-Public Const 位谕of月策略日 = 位谕始of族策 + 15     '月策略日: 龙/唏/嘘/屁 + 强/弱 + 甲后缀
-Public Const 位谕of月策分日P2 = 位谕始of族策 + 16   '月策分日P2: 编码(如"4G39")，期望HR取整+G/_+概率取整。G=下日冲高≥2%概率≥30(查表下限)，_=低于下限
+Public Const 位谕of月策略日 = 位谕始of族策 + 16     '月策略日: 龙/唏/嘘/屁 + 强/弱 + 甲后缀
+Public Const 位谕of月策分日P2 = 位谕始of族策 + 17   '月策分日P2: 编码(如"4G39")，期望HR取整+G/_+概率取整。G=下日冲高≥2%概率≥30(查表下限)，_=低于下限
 '--- 日策略 P2 ---
-Public Const 位谕of日策分P2 = 位谕始of族策 + 17     '日策分P2: 编码(如"5G58")，期望HR取整+G/_+评分取整。G=评分≥50(B级)，_=低于50。注意：数值是评分(37~61)非概率
-Public Const 位谕of日策略P2 = 位谕始of族策 + 18     '日策略P2: 三级策略名称(如"等2A")
-Public Const 位谕of日层机警 = 位谕始of族策 + 19
+Public Const 位谕of日策分P2 = 位谕始of族策 + 18     '日策分P2: 编码(如"5G58")，期望HR取整+G/_+评分取整。G=评分≥50(B级)，_=低于50。注意：数值是评分(37~61)非概率
+Public Const 位谕of日策略P2 = 位谕始of族策 + 19     '日策略P2: 三级策略名称(如"等2A")
+Public Const 位谕of日层机警 = 位谕始of族策 + 20
 '-----------
-Public Const 位谕of日层漏提示 = 位谕始of族策 + 20
-Public Const 位谕of日层联动 = 位谕始of族策 + 21
-Public Const 位谕of日层盈提示 = 位谕始of族策 + 22
+Public Const 位谕of日层漏提示 = 位谕始of族策 + 21
+Public Const 位谕of日层联动 = 位谕始of族策 + 22
+Public Const 位谕of日层盈提示 = 位谕始of族策 + 23
 '-----------
-Public Const 位谕of周层四域 = 位谕始of族策 + 23
-Public Const 位谕of策传 = 位谕始of族策 + 24
-Public Const 位谕of日层四域 = 位谕始of族策 + 25
+Public Const 位谕of周层四域 = 位谕始of族策 + 24
+Public Const 位谕of策传 = 位谕始of族策 + 25
+Public Const 位谕of日层四域 = 位谕始of族策 + 26
 Public Const 位谕终of族策 = 位谕of日层四域
 '----------------------------------------------------------------------------------------
 '----------------------------------------------------------------------------------------
@@ -3747,6 +3749,49 @@ If UBCID是代码(CIDL) = True Then
                 谕组(X, 位谕of日层段期) = 0
             End If
             '============================================================================
+            '日层必赢：综合DXZE×DXCD×DXAB，先定第2位分类，再按DXZE加前缀
+            '  DXCD上/忐/忠 + 日层界储/初 → 介
+            '  DXCD上/忐/忠 + (DXAB∈{丙丁戊} 或 BTZC<0) → 被
+            '  DXCD上/忐/忠 + 其他 → 持
+            '  DXCD中 + DXAB∈{甲乙己} → 参A
+            '  DXCD中 + 其他 → 参B
+            '  DXCD下/忑 → 弃
+            '  非"弃"且 DXZE<0 → 加前缀 _
+            '============================================================================
+            Dim 日必赢类 As String: 日必赢类 = ""
+            Dim 日层护型 As String: 日层护型 = 谕组(X, 位谕of日层护型)
+            Dim DXAB护段 As String
+            Dim 日CD护级 As String
+            If Len(日层护型) >= 2 Then DXAB护段 = Mid$(日层护型, 2, 1)
+            'DXCD护级从 位谕of月策带日 第2个括号提取（结构：(EF)X(CD)Y(AB)）
+            Dim 月策带日段() As String: 月策带日段 = Split(谕组(X, 位谕of月策带日), "(")
+            If UBound(月策带日段) >= 2 Then 日CD护级 = Left$(月策带日段(2), 1)
+
+            '第2位：综合分类
+            If InStr("上忐忠", 日CD护级) > 0 Then
+                If Left$(谕组(X, 位谕of日层界), 1) = "储" Or Left$(谕组(X, 位谕of日层界), 1) = "初" Then
+                    日必赢类 = "介"
+                ElseIf InStr("丙丁戊", DXAB护段) > 0 Or 日类BTZC < 0 Then
+                    日必赢类 = "被"
+                Else
+                    日必赢类 = "持"
+                End If
+            ElseIf 日CD护级 = "中" Then
+                If InStr("甲乙己", DXAB护段) > 0 Then
+                    日必赢类 = "参A"
+                Else
+                    日必赢类 = "参B"
+                End If
+            Else
+                    日必赢类 = "_弃"
+            End If
+            '前缀：非"弃"且 DXZE<0 加 "_"
+            If 日必赢类 = "_弃" Then
+            Else
+                If 日类BTZE < 0 Then 日必赢类 = "_" & 日必赢类
+            End If
+            谕组(X, 位谕of日层赢) = 日必赢类
+            '============================================================================
             '等高线机警（供筛选直接读取，避免组结算引用）
             '没有必要单独输出，<日层机警>只用于参考。
             '============================================================================
@@ -6686,6 +6731,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of日策略P2) = "日策略P2"
         .Cells(1, 位谕of日层段) = "日层段"
         .Cells(1, 位谕of日层段期) = "日层段期"
+        .Cells(1, 位谕of日层赢) = "日赢"
         .Cells(1, 位谕of日层机警) = "日机警"
         .Cells(1, 位谕of日策分P2) = "日策分P2"
         .Cells(1, 位谕of日层盈提示) = "盈提示"
@@ -6717,6 +6763,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周策分ZA).Interior.Color = 常色五靛
         .Columns(位谕of仓日类).Interior.TintAndShade = -0.3
         .Columns(位谕of日层段).Interior.TintAndShade = -0.1
+        .Columns(位谕of日层赢).Interior.TintAndShade = -0.3
         .Columns(位谕of策传).Interior.Color = 常色四灰
 
         .Columns(位谕of月策略周).Interior.Color = 常色四碧
@@ -6767,6 +6814,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层联动).ColumnWidth = 8
         
         .Columns(位谕of日层段).ColumnWidth = 4
+        .Columns(位谕of日层赢).ColumnWidth = 4
         .Columns(位谕of日层盈提示).ColumnWidth = 4
         .Columns(位谕of日层盈提示).HorizontalAlignment = xlRight
         .Columns(位谕of仓日类).ColumnWidth = 3

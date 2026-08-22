@@ -1125,6 +1125,14 @@ End If
                             .Font.TintAndShade = -0.1
                         End If
                 End With
+                With .Cells(1, 位谕of日层赢)
+                        If .Value = "_弃" Then
+                            .Font.Color = .Interior.Color
+                            .Font.TintAndShade = -0.1
+                        ElseIf Left$(.Value, 1) = "_" Then
+                            .Font.Color = 常色三红
+                        End If
+                End With
                 With .Cells(1, 位谕of日层联动)
                         If Left$(.Value, 1) = "N" Then
                             .Font.Color = 常色一红

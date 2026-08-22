@@ -103,8 +103,8 @@ def verify(xlsm_path: str, bas_dir: str) -> dict:
     excel = None
     wb = None
     try:
-        # ★ 关键：用 Dispatch() 新建独立进程，绝不碰已有 Excel ★
-        excel = win32com.client.Dispatch("Excel.Application")
+        # ★ 关键：用 DispatchEx() 新建独立进程，绝不碰已有 Excel ★
+        excel = win32com.client.DispatchEx("Excel.Application")
         excel.Visible = False
         excel.DisplayAlerts = False
         excel.EnableEvents = False
