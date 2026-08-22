@@ -1,99 +1,71 @@
-# -*- coding: utf-8 -*-
-with open(r'D:\@VSwork\VS昭明计划VBA优化\昭明计划VS优化_vba\IQQQ跨码_D据擎4跨码管理.bas', 'r', encoding='utf-8') as f:
-    text = f.read()
+import re
 
-# STEP 1: Remove 大盘评分 row
-old = '    大盘行 = 21\n    WSTO.Cells(大盘行, 1).Value = "大盘评分"\n    WSTO.Cells(大盘行, 7).Value = Format(总上限, "0%")'
-text = text.replace(old, '')
+with open('_主文档/MC3.3.4_研究日冲策略探索形态.md', 'r', encoding='utf-8') as f:
+    content = f.read()
 
-# STEP 2: Fix 福账户 33% position
-old = 'WSTO.Cells(大盘行, 3).Value = Round(福上限, 1): WSTO.Cells(大盘行, 3).NumberFormatLocal = "#,##0.0"\n    WSTO.Cells(大盘行, 7).Value = Format(总上限, "0%")'
-new = 'WSTO.Cells(大盘行, 2).Value = Format(总上限, "0%")\n    WSTO.Cells(大盘行, 3).Value = Round(福上限, 1): WSTO.Cells(大盘行, 3).NumberFormatLocal = "#,##0.0"'
-text = text.replace(old, new, 1)
+# 1. Remove orphan # lines
+content = content.replace('\n#\n###', '\n###')
+content = content.replace('\n#\n####', '\n####')
 
-# STEP 3: Fix 彦账户 33% position
-old = 'WSTO.Cells(大盘行, 5).Value = Round(彦上限, 1): WSTO.Cells(大盘行, 5).NumberFormatLocal = "#,##0.0"\n    WSTO.Cells(大盘行, 7).Value = Format(总上限, "0%")'
-new = 'WSTO.Cells(大盘行, 4).Value = Format(总上限, "0%")\n    WSTO.Cells(大盘行, 5).Value = Round(彦上限, 1): WSTO.Cells(大盘行, 5).NumberFormatLocal = "#,##0.0"'
-text = text.replace(old, new, 1)
+# 2. Fix 2.1.4 heading level
+content = content.replace('### 2.1.4 个体差异分析', '#### 2.1.4 个体差异分析')
 
-# STEP 4: Fix status display in brackets
-pairs = [
-    ('WSTO.Cells(大盘行, 3).Value = Round(福月基额, 1) & "(" & Format(福月基比, "0%") & ")"',
-     'WSTO.Cells(大盘行, 3).Value = Round(福月基额, 1) & "(" & IIf(福月基额 >= 福月基目标, "达标", "缺额") & ")"'),
-    ('WSTO.Cells(大盘行, 3).Value = Round(福周冲额, 1) & "(" & Format(福周冲比, "0%") & ")"',
-     'WSTO.Cells(大盘行, 3).Value = Round(福周冲额, 1) & "(" & IIf(福周冲额 <= 福周冲目标, "达标", "超额") & ")"'),
-    ('WSTO.Cells(大盘行, 3).Value = Round(福日冲额, 1) & "(" & Format(福日冲比, "0%") & ")"',
-     'WSTO.Cells(大盘行, 3).Value = Round(福日冲额, 1) & "(" & IIf(福日冲额 <= 福日冲目标, "达标", "超额") & ")"'),
-    ('WSTO.Cells(大盘行, 5).Value = Round(彦月基额, 1) & "(" & Format(彦月基比, "0%") & ")"',
-     'WSTO.Cells(大盘行, 5).Value = Round(彦月基额, 1) & "(" & IIf(彦月基额 >= 彦月基目标, "达标", "缺额") & ")"),
-    ('WSTO.Cells(大盘行, 5).Value = Round(彦周冲额, 1) & "(" & Format(彦周冲比, "0%") & ")"',
-     'WSTO.Cells(大盘行, 5).Value = Round(彦周冲额, 1) & "(" & IIf(彦周冲额 <= 彦周冲目标, "达标", "超额") & ")"),
-    ('WSTO.Cells(大盘行, 5).Value = Round(彦日冲额, 1) & "(" & Format(彦日冲比, "0%") & ")"',
-     'WSTO.Cells(大盘行, 5).Value = Round(彦日冲额, 1) & "(" & IIf(彦日冲额 <= 彦日冲目标, "达标", "超额") & ")"),
-    ('WSTO.Cells(大盘行, 3).Value = Round(福非策额, 1) & "(无目标)"',
-     'WSTO.Cells(大盘行, 3).Value = Round(福非策额, 1) & "(" & IIf(福非策额 > 0, "超额", "0%") & ")"'),
-    ('WSTO.Cells(大盘行, 5).Value = Round(彦非策额, 1) & "(无目标)"',
-     'WSTO.Cells(大盘行, 5).Value = Round(彦非策额, 1) & "(" & IIf(彦非策额 > 0, "超额", "0%") & ")"'),
-]
-for old, new in pairs:
-    if old in text:
-        text = text.replace(old, new, 1)
+# 3. Fix 2.5 sub-section numbering
+s_25 = content.find('### 2.5 子专题：DXAB护型转移研究')
+e_25 = content.find('## 附录', s_25)
+sec_25 = content[s_25:e_25]
 
-# STEP 5: Fix 彦日冲 label
-old = 'WSTO.Cells(大盘行, 1).Value = "  \u251c\u2500\u65e5\u51b2"'
-new = 'WSTO.Cells(大盘行, 1).Value = "  \u251c\u2500\u65e5\u51b2(<=20%)"'
-text = text.replace(old, new, 1)
+headings = []
+for m in re.finditer(r'^#### 2\.5\.[0-9] (.*)', sec_25, re.MULTILINE):
+    headings.append((m.start(), m.group()))
 
-# STEP 6: Add 彦日冲目标
-old = 'Dim 彦周冲目标 As Double: 彦周冲目标 = 彦上限 * 0.5'
-new = 'Dim 彦周冲目标 As Double: 彦周冲目标 = 彦上限 * 0.5\n    Dim 彦日冲目标 As Double: 彦日冲目标 = 彦上限 * 0.2'
-text = text.replace(old, new, 1)
+for i, (pos, full) in enumerate(headings):
+    new_num = i + 1
+    text = full.split(' ', 2)[2]
+    new_full = f'#### 2.5.{new_num} {text}'
+    sec_25 = sec_25.replace(full, new_full)
 
-# STEP 7: Shift row numbers
-for old_val in range(22, 32):
-    new_val = old_val - 1
-    text = text.replace('\u5927\u76d8\u884c = {}'.format(old_val), '\u5927\u76d8\u884c = {}'.format(new_val))
+content = content[:s_25] + sec_25 + content[e_25:]
 
-# STEP 8: Update 行业分布 row numbers
-text = text.replace('\n末行 = 32\n', '\n末行 = 31\n')
-text = text.replace('\n末行 = 33\n', '\n末行 = 32\n')
-text = text.replace('\n末行 = 34\n', '\n末行 = 33\n')
+# 4. Move appendix to end
+s_app = content.find('## 附录：DXZA全周期分类')
+s_6 = content.find('## 六、按形态探索')
+sec_6 = content[s_6:s_app]
+sec_app = content[s_app:]
+before_6 = content[:s_6]
+content = before_6 + sec_6 + '\n\n' + sec_app
 
-# STEP 9: Update formatting references
-text = text.replace('WSTO.Rows(33).RowHeight', 'WSTO.Rows(32).RowHeight')
-text = text.replace('行业分布表头(行33)', '行业分布表头(行32)')
-text = text.replace('WSTO.Cells(33, 1), WSTO.Cells(33, 14)', 'WSTO.Cells(32, 1), WSTO.Cells(32, 14)')
-text = text.replace('行业分布数据行(34至末行)', '行业分布数据行(33至末行)')
-text = text.replace('For X = 34 To 末行整', 'For X = 33 To 末行整')
-text = text.replace('行业分布数据行(31至末行)', '行业分布数据行(33至末行)')
-text = text.replace('For X = 31 To 末行整', 'For X = 33 To 末行整')
+# 5. Reorder: 2.2 -> 2.5 -> 2.6 -> 2.7
+s_22 = content.find('### 2.2 子专题：DXAB特征统计数据')
+s_26 = content.find('### 2.6 子专题：DXAB与DXZC分段')
+s_25 = content.find('### 2.5 子专题：DXAB护型转移研究')
+s_4 = content.find('## 四、基本条件')
 
-# STEP 10: Update 大盘仓位限制 data range
-text = text.replace('大盘仓位限制数据行(21-31)', '大盘仓位限制数据行(20-30)')
-text = text.replace('For X = 21 To 31', 'For X = 20 To 30')
+sec_25_full = content[s_25:s_4]
+content = content[:s_25] + content[s_4:]
+s_22_end = content.find('### 2.6', s_22)
+content = content[:s_22_end] + sec_25_full + '\n' + content[s_22_end:]
 
-# STEP 11: Update 末列整
-text = text.replace('末列整 = 10', '末列整 = 14')
+# 6. Fix table format
+old_t = '| 当前护型 | 维持率 | 主要转移方向 |\n|:---\n### 2.5 深入探索方向'
+new_t = '| 当前护型 | 维持率 | 主要转移方向 |\n|:-------:|:------:|:-----------|\n| **甲** | 83.2% | →乙10.1%（仍正交） |\n| **乙** | 84.4% | →丙13.9%（转负交） |\n| 丙 | 34.4% | →丁43.0%, →乙22.6%（转正交） |\n| **丁** | 84.5% | →戊9.4% |\n| **戊** | 86.2% | →己12.3% |\n| 己 | 35.9% | →甲42.9%（转正交）, →戊21.2% |\n\n#### 2.5.1 已验证的结论（详见 §一）'
+content = content.replace(old_t, new_t)
 
-# STEP 12: Update 各节标题行
-text = text.replace('Array(3, 11, 20, 29)', 'Array(3, 11, 20, 31)')
+# 7. Fix 6.12 table
+old_612 = '| 窗口 | 均阳柱率 | 总样本 | 最佳参数 | 说明 |\n|:\n### 2.6 子专题：DXAB与DXZC分段'
+new_612 = '| 窗口 | 均阳柱率 | 总样本 | 最佳参数 | 说明 |\n|:---:|:--------:|:------:|:---------|:-----|\n| **5** | **12.2%** | 1,517 | DS顶JA=12, 波动≥1%, DJB | ✅ 有效，样本充足 |\n| 10 | 16.7% | 272 | DS顶JA=5~8, DJB | ⚠️ 样本偏少 |\n| 15/20 | — | <50 | 样本不足 | ❌ 不可靠 |\n\n**结论：**\n- 窄管条件确实有效，阳柱率从基准~4-8%提升到**12.2~16.7%**（+4~8pp）\n- **DS顶JA阈值越大越好**（12优于5），说明“窄管”的初始定义过严\n- 均幅涨/均幅高数据存在列偏移bbug（显示-80%~-118%），**优先级较低，暂不处理**\n\n---\n\n### 2.6 子专题：DXAB与DXZC分段'
+content = content.replace(old_612, new_612)
 
-# STEP 13: 右对齐 block
-new_align = """    '--- 右对齐 ---
-    With WSTO
-        For X = 20 To 30
-            .Rows(X).HorizontalAlignment = xlRight
-            .Cells(X, 1).HorizontalAlignment = xlLeft
-        Next
-    End With"""
-if "--- 右对齐 ---" in text:
-    # Already has 右对齐, skip
-    pass
-else:
-    # Add after 大盘仓位限制 formatting
-    text = text.replace("'--- 大盘仓位限制数据行(20-30)浅灰间隔 ---",
-                        "'--- 大盘仓位限制数据行(20-30)浅灰间隔 ---\n" + new_align)
+# 8. Update dimension 8
+old_d8 = '> **核心发现：护型本身是DXZA持续时长的主导因素，外部条件（DXCD/DXZC/DXEF）的影响极小（<5%）。**'
+new_d8 = '> **核心发现：护型本身是DXZA持续时长的主导因素——强势护型会持续强势，弱势护型会持续弱势。外部条件（DXCD/DXZC/DXEF）的影响极小（<5%）。**\n>\n> **分析意义：** 这个结论的实战价值在于——**护型本身已经包含了趋势持续性的信息，不需要额外看其他条件。** 己出现=强势会持续（均6~7天），丙出现=弱势会持续（均6~7天），外部条件改变不了这个格局。唯一的例外是DXZC>0可缩短负ZA持续，但幅度有限（7%）。'
+content = content.replace(old_d8, new_d8)
 
-with open(r'D:\@VSwork\VS昭明计划VBA优化\昭明计划VS优化_vba\IQQQ跨码_D据擎4跨码管理.bas', 'w', encoding='utf-8') as f:
-    f.write(text)
+# 9. Update TOC
+old_toc = '## 目录\n\n- [一、日冲策略总览](#一日冲策略总览)\n    - [1.1 策略定位](#11-策略定位)\n    - [1.2 现状与瓶颈](#12-现状与瓶颈)\n    - [1.3 下日冲高概率结论](#13-下日冲高概率结论)\n- [二、DXZC+DXAB 最小模型验证（全量数据结论）](#二dxzcdxab-最小模型验证)\n    - [2.0 核心准则（全量数据验证）](#20-核心准则)\n    - [2.1 核心验证结果](#21-核心验证结果)\n    - [2.2 子专题：DXAB特征统计数据](#22-子专题dxab特征统计数据)\n    - [2.6 子专题：DXAB与DXZC分段](#26-子专题dxab与dxzc分段)\n    - [2.7 子专题：DXAB与DXCD协同效应](#27-子专题dxab与dxcd协同效应)\n    - [2.5 子专题：DXAB护型转移研究](#25-子专题dxab护型转移研究)\n- [附录：DXZA全周期分类 — 22种状态完整报告](#附录dxza全周期分类-22种状态完整报告)\n- [四、基本条件：日类什么位置会有阳柱](#四基本条件日类什么位置会有阳柱)\n- [五、日周联动（周←→日映射）](#五日周联动)\n    - [5.1 日周结合：先周后日操作框架](#51-日周结合先周后日操作框架)\n    - [5.2 周←→日映射关系](#52-周日映射关系)\n    - [5.3 月基四域→日冲5层 完整映射](#53-月基四域日冲5层-完整映射)\n    - [5.4 日冲5层操作列表](#54-日冲5层操作列表)\n    - [5.5 为什么G级需要单独处理为“傻吃屎豆”](#55-为什么g级需要单独处理为傻吃屎豆)\n- [六、按形态探索](#六按形态探索)'
+new_toc = '## 目录\n\n- [一、日冲策略总览](#一日冲策略总览)\n    - [1.1 策略定位](#11-策略定位)\n    - [1.2 现状与瓶颈](#12-现状与瓶颈)\n    - [1.3 下日冲高概率结论](#13-下日冲高概率结论)\n- [二、DXZC+DXAB 最小模型验证（全量数据结论）](#二dxzcdxab-最小模型验证)\n    - [2.0 核心准则（全量数据验证）](#20-核心准则)\n    - [2.1 核心验证结果](#21-核心验证结果)\n    - [2.2 子专题：DXAB特征统计数据](#22-子专题dxab特征统计数据)\n    - [2.5 子专题：DXAB护型转移研究](#25-子专题dxab护型转移研究)\n    - [2.6 子专题：DXAB与DXZC分段](#26-子专题dxab与dxzc分段)\n    - [2.7 子专题：DXAB与DXCD协同效应](#27-子专题dxab与dxcd协同效应)\n- [四、基本条件：日类什么位置会有阳柱](#四基本条件日类什么位置会有阳柱)\n- [五、日周联动（周←→日映射）](#五日周联动)\n    - [5.1 日周结合：先周后日操作框架](#51-日周结合先周后日操作框架)\n    - [5.2 周←→日映射关系](#52-周日映射关系)\n    - [5.3 月基四域→日冲5层 完整映射](#53-月基四域日冲5层-完整映射)\n    - [5.4 日冲5层操作列表](#54-日冲5层操作列表)\n    - [5.5 为什么G级需要单独处理为“傻吃屎豆”](#55-为什么g级需要单独处理为傻吃屎豆)\n- [六、按形态探索](#六按形态探索)\n- [附录：DXZA全周期分类 — 22种状态完整报告](#附录dxza全周期分类-22种状态完整报告)'
+content = content.replace(old_toc, new_toc)
+
+with open('_主文档/MC3.3.4_研究日冲策略探索形态.md', 'w', encoding='utf-8') as f:
+    f.write(content)
 print('All fixes applied')

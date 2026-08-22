@@ -55,7 +55,9 @@
       "WebFetch(domain:quote.eastmoney.com)",
       "Bash(python \"____temp/周冲模型三维分析.py\")",
       "Bash(python \"____temp/金银波型等型三维分析.py\")",
-      "Bash(python \"____temp/冲高阈值分析.py\")"
+      "Bash(python \"____temp/冲高阈值分析.py\")",
+      "Skill(fewer-permission-prompts)",
+      "Skill(fewer-permission-prompts:*)"
     ],
     "defaultMode": "bypassPermissions"
   }
