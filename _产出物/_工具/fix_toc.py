@@ -22,10 +22,10 @@ def gfm_anchor(text):
     return text
 
 def parse_headings(content):
-    """提取所有 ## 和 ### 标题"""
+    """提取所有 ## / ### / #### 标题"""
     headings = []
     for i, line in enumerate(content.split('\n'), 1):
-        m = re.match(r'^(#{2,3})\s+(.+)$', line)
+        m = re.match(r'^(#{2,4})\s+(.+)$', line)
         if m:
             level = len(m.group(1))
             text = m.group(2).strip()
@@ -34,11 +34,13 @@ def parse_headings(content):
     return headings
 
 def build_toc(headings):
-    """根据标题列表生成 TOC 文本"""
+    """根据标题列表生成 TOC 文本（跳过目录标题本身）"""
     lines = []
     lines.append('**目录：**')
     lines.append('')
     for h in headings:
+        if h['text'] == '目录':
+            continue
         indent = '    ' * (h['level'] - 2)
         lines.append(f'{indent}- [{h["text"]}](#{h["anchor"]})')
     return '\n'.join(lines)
@@ -66,7 +68,7 @@ def check_cross_refs(content, headings):
     return issues
 
 def check_gaps(headings):
-    """检测编号断号"""
+    """检测编号断号（仅检测同一章内的断号，跨章跳号不算）"""
     nums = []
     for h in headings:
         m = re.match(r'(\d+\.\d+)', h['text'])
@@ -76,7 +78,11 @@ def check_gaps(headings):
     for i in range(1, len(nums)):
         cur = nums[i]
         prev = nums[i-1]
-        # 检查是否跳跃超过0.1
+        # 仅当同一章（整数部分相同）时才检测断号
+        cur_chapter = cur.split('.')[0]
+        prev_chapter = prev.split('.')[0]
+        if cur_chapter != prev_chapter:
+            continue
         try:
             cur_f = float(cur)
             prev_f = float(prev)
@@ -127,24 +133,28 @@ def fix_toc(filepath, dry_run=False):
 
     # 替换 TOC
     if not dry_run:
-        # 找 TOC 区域（从 **目录：** 到第一个 ## 标题之间）
-        toc_start = content.find('**目录：**')
-        first_h2 = None
-        for h in headings:
-            if h['level'] == 2:
-                first_h2 = h['text']
-                break
-        if first_h2:
-            idx = content.find(f'## {first_h2}')
-            if idx >= 0 and toc_start >= 0:
-                new_content = content[:toc_start] + toc + '\n\n' + content[idx:]
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    f.write(new_content)
-                print(f'\n✅ TOC 已更新到 {filepath}')
-            else:
-                print('\n⚠️ 无法定位 TOC 区域，请手动替换')
-        else:
-            print('\n⚠️ 未找到 ## 标题')
+        # 定位 TOC 区域：从目录标记（**目录：** 或 ## 目录）到第一个非目录 ## 标题
+        toc_marker = '**目录：**'
+        toc_start = content.find(toc_marker)
+        if toc_start < 0:
+            toc_marker = '## 目录'
+            toc_start = content.find(toc_marker)
+        if toc_start < 0:
+            print('\n⚠️ 未找到目录标记（**目录：** 或 ## 目录）')
+            return
+
+        # 目录标记之后，找第一个 ## 标题作为 TOC 结束位置
+        after_marker = content[toc_start + len(toc_marker):]
+        m = re.search(r'^## ', after_marker, re.MULTILINE)
+        if not m:
+            print('\n⚠️ 无法定位 TOC 区域，请手动替换')
+            return
+        toc_end = toc_start + len(toc_marker) + m.start()
+
+        new_content = content[:toc_start] + toc + '\n\n' + content[toc_end:]
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(new_content)
+        print(f'\n✅ TOC 已更新到 {filepath}')
 
 
 if __name__ == '__main__':
