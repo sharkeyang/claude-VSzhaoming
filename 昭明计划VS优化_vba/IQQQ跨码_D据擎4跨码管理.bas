@@ -1395,7 +1395,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 14).Value = "月策带日"
     WSTO.Cells(末行, 15).Value = "仓周类"
     WSTO.Cells(末行, 16).Value = "仓日类"
-    WSTO.Cells(末行, 17).Value = "日层段"
+    WSTO.Cells(末行, 17).Value = "日层赢"
     WSTO.Cells(末行, 18).Value = "月策略日"
     WSTO.Cells(末行, 19).Value = "月策分日P2"
     WSTO.Cells(末行, 20).Value = "日策分P2"
@@ -1437,7 +1437,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(明细行, 14).Value = 谕组(X, 位谕of月策带日)
     WSTO.Cells(明细行, 15).Value = 谕组(X, 位谕of仓周类)
     WSTO.Cells(明细行, 16).Value = 谕组(X, 位谕of仓日类)
-    WSTO.Cells(明细行, 17).Value = 谕组(X, 位谕of日层段)
+    WSTO.Cells(明细行, 17).Value = 谕组(X, 位谕of日层赢)
     WSTO.Cells(明细行, 18).Value = 谕组(X, 位谕of月策略日)
     WSTO.Cells(明细行, 19).Value = 谕组(X, 位谕of月策分日P2)
     If 谕组(X, 位谕of日策分P2) <> "" Then WSTO.Cells(明细行, 20).Value = 谕组(X, 位谕of日策分P2)
@@ -1485,7 +1485,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(末行, 14).Value = "月策带日"
     WSTO.Cells(末行, 15).Value = "仓周类"
     WSTO.Cells(末行, 16).Value = "仓日类"
-    WSTO.Cells(末行, 17).Value = "日层段"
+    WSTO.Cells(末行, 17).Value = "日层赢"
     WSTO.Cells(末行, 18).Value = "月策略日"
     WSTO.Cells(末行, 19).Value = "月策分日P2"
     WSTO.Cells(末行, 20).Value = "日策分P2"
@@ -1527,7 +1527,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
     WSTO.Cells(明细行, 14).Value = 谕组(X, 位谕of月策带日)
     WSTO.Cells(明细行, 15).Value = 谕组(X, 位谕of仓周类)
     WSTO.Cells(明细行, 16).Value = 谕组(X, 位谕of仓日类)
-    WSTO.Cells(明细行, 17).Value = 谕组(X, 位谕of日层段)
+    WSTO.Cells(明细行, 17).Value = 谕组(X, 位谕of日层赢)
     WSTO.Cells(明细行, 18).Value = 谕组(X, 位谕of月策略日)
     WSTO.Cells(明细行, 19).Value = 谕组(X, 位谕of月策分日P2)
     If 谕组(X, 位谕of日策分P2) <> "" Then WSTO.Cells(明细行, 20).Value = 谕组(X, 位谕of日策分P2)

@@ -1789,7 +1789,7 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
         Open 日文件 For Output As #1
         '等高线分类(6等)：等1=边,等2=近弱+回归,等3=远强,等5=下边,等6=下近+下回,等7=下远
         '详见 IQQQ跨码_D据擎2神谕.bas 中 位谕of日层等 的注释
-        Print #1, "日期,收,开,高,低,涨幅,高幅,日周联动,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,管释,撤哼JC,类合,BSLA,宽哈JC,BT鼎,BTZA,BT连阳,顶型,日等型"
+        Print #1, "日期,收,开,高,低,涨幅,高幅,日周联动,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,管释,撤哼JC,类合,BSLA,宽哈JC,BT鼎,BTZA,BT连阳,顶型,日等型,仓日类,仓日期,日层赢"
 
         For X = LBound(谕组, 1) To UBound(谕组, 1)
             Dim 日高幅 As Double
@@ -1843,7 +1843,10 @@ Public Sub XL算展取样_谕组单股通用(被研代码 As String, Optional �
                 谕组(X, 位谕of日层BTZA) & "," & _
                 谕组(X, 位谕of日层BT连阳) & "," & _
                 Replace(ARRLLL(X, 基位日类 + 位os基顶型), ",", ";") & "," & _
-                谕组(X, 位谕of日层等)
+                谕组(X, 位谕of日层等) & "," & _
+                Replace(谕组(X, 位谕of仓日类), ",", ";") & "," & _
+                谕组(X, 位谕of仓日期) & "," & _
+                谕组(X, 位谕of日层赢)
             Print #1, 行头 & 行尾
         Next X
         Close #1

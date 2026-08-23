@@ -1111,15 +1111,13 @@ End If
                 End With
                 '------------------------------------------------------------
                 '------------------------------------------------------------
-                With .Cells(1, 位谕of日层段)
-                        If InStr(.Value, "NA") > 0 Then
-                            .Font.Color = .Interior.Color
-                            .Font.TintAndShade = -0.1
-                        ElseIf InStr(.Value, "卖浮") > 0 Then
-                            .Font.Color = 常色四红
-                        End If
+                With .Cells(1, 位谕of仓日类)
+                    If .Value = "无" Then
+                        .Font.Color = .Interior.Color
+                        .Font.TintAndShade = -0.2
+                    End If
                 End With
-                With .Cells(1, 位谕of日层段期)
+                With .Cells(1, 位谕of仓日期)
                         If .Value = 0 Then
                             .Font.Color = .Interior.Color
                             .Font.TintAndShade = -0.1
@@ -1193,13 +1191,6 @@ End If
                     '判断仓位是否过小：防止踏空
                 End With
                 End If
-                '------------------------------------------------------------------------
-                With .Cells(1, 位谕of仓日类)
-                    If .Value = "无" Then
-                        .Font.Color = .Interior.Color
-                        .Font.TintAndShade = -0.2
-                    End If
-                End With
                 '------------------------------------------------------------------------
         End With
 '        '================================================================================
