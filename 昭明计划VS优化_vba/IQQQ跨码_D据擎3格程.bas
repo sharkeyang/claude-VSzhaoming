@@ -1216,7 +1216,7 @@ End If
 '                        设定scheme = 30
 '                End If
 '                '-------------------------------------------------------------------------
-'                If Len(.Cells(1, 位谕of周道乾坤)) > 0 Then
+'                If Len(.Cells(1, 位谕of策传)) > 0 Then
 '                With .Cells(1, 设定目列)
 '                        '.Comment.Delete
 '                        .AddComment
@@ -1226,7 +1226,7 @@ End If
 '                        .Comment.Shape.TextFrame.Characters.Font.Size = 10
 '                        .Comment.Shape.TextFrame.Characters.Font.Name = "宋体"
 '                        .Comment.Shape.Fill.Solid
-'                        .Comment.text text:=WS.Cells(行号遍历, 基列).cells(1, 位谕of周道乾坤).Value
+'                        .Comment.text text:=WS.Cells(行号遍历, 基列).cells(1, 位谕of策传).Value
 '                        .Comment.Shape.Fill.ForeColor.SchemeColor = 设定scheme
 '                End With
 '                End If

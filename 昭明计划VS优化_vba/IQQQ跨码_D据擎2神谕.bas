@@ -317,12 +317,11 @@ Public Const 位谕终of族周德 = 位谕始of族周德 + 3
 '----------------------------------------------------
 '指标群：族周道（包含月级别均线）
 Public Const 位谕始of族周道 = 位谕终of族周德 + 1
-Public Const 位谕of周道乾坤 = 位谕始of族周道 + 0        '包括WJF\WJE
-Public Const 位谕of周道奏 = 位谕始of族周道 + 1          '道奏：衡量节奏
-Public Const 位谕of周道护DE部BTCW = 位谕始of族周道 + 2      '包括WJD\WJC
-Public Const 位谕of周道护DE部之护 = 位谕始of族周道 + 3      '包括WJD\WJE\WJW
-Public Const 位谕of周道护CD部之值 = 位谕始of族周道 + 4      '包括WJD\WJC
-Public Const 位谕of周道护CD部之护 = 位谕始of族周道 + 5     '包括WJC\WJD\WJU
+Public Const 位谕of周道奏 = 位谕始of族周道 + 0          '道奏：衡量节奏
+Public Const 位谕of周道护DE部BTCW = 位谕始of族周道 + 1      '包括WJD\WJC
+Public Const 位谕of周道护DE部之护 = 位谕始of族周道 + 2      '包括WJD\WJE\WJW
+Public Const 位谕of周道护CD部之值 = 位谕始of族周道 + 3      '包括WJD\WJC
+Public Const 位谕of周道护CD部之护 = 位谕始of族周道 + 4     '包括WJC\WJD\WJU
 Public Const 位谕终of族周道 = 位谕of周道护CD部之护
 '----------------------------------------------------
 '指标群：族周道：周奏（基于均线CDE）
@@ -5532,13 +5531,11 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '首行
     '------------------------------------------------------------------------------------
     With WS.Cells(基行, 基列)
-        .Cells(1, 位谕of周道乾坤) = "乾坤路径"
         .Cells(1, 位谕of周道奏) = "奏" & vbCrLf & "周"
         .Cells(1, 位谕of周道护CD部之值) = "部" & vbCrLf & "周"
         .Cells(1, 位谕of周道护CD部之护) = "护CD" & vbCrLf & "周"
         .Cells(1, 位谕of周道护DE部之护) = "护DE" & vbCrLf & "周"
         .Cells(1, 位谕of周道护DE部BTCW) = "龄龙" & vbCrLf & "周"
-        
         .Cells(1, 位谕of周奏丘) = "奏" & vbCrLf & "周"
         .Cells(1, 位谕of周奏启) = "启" & vbCrLf & "周"
         .Cells(1, 位谕of周奏数交CD) = "#CD"
@@ -5574,11 +5571,8 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Font.Size = 9
     End With
     With WS.Columns(基列)
-        .Columns(位谕of周道乾坤).HorizontalAlignment = xlLeft
-        .Columns(位谕of周道乾坤).Interior.TintAndShade = -0.3
         .Columns(位谕of周道奏).HorizontalAlignment = xlLeft
         .Columns(位谕of周道奏).Interior.TintAndShade = -0.3
-    
         .Columns(位谕of周道护CD部之值).Interior.Color = 常色四蓝
         .Columns(位谕of周道护DE部BTCW).Interior.Color = 常色六蓝
         .Columns(位谕of周道护DE部BTCW).Font.Color = 常色四灰
@@ -5605,13 +5599,11 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '列：列宽
     '------------------------------------------------------------------------------------
     With WS.Columns(基列)
-        .Columns(位谕of周道乾坤).ColumnWidth = 17
         .Columns(位谕of周道奏).ColumnWidth = 9
         .Columns(位谕of周道护DE部BTCW).ColumnWidth = 3
         .Columns(位谕of周道护CD部之值).ColumnWidth = 5
         .Columns(位谕of周道护DE部之护).ColumnWidth = 5.5
         .Columns(位谕of周道护CD部之护).ColumnWidth = 5
-        
         .Columns(位谕of周奏丘).ColumnWidth = 16
         .Columns(位谕of周奏数DE叉DZ).ColumnWidth = 3.5
         .Columns(位谕of周奏数DE叉CB).ColumnWidth = 3.5
@@ -5622,12 +5614,10 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '------------------------------------------------------------------------------------
     With WS.Columns(基列)
         .Columns(位谕of周道奏).Hidden = True
-        .Columns(位谕of周道乾坤).Hidden = True
         .Columns(位谕of周道护CD部之护).Hidden = True
         .Columns(位谕of周道护CD部之值).Hidden = True
         .Columns(位谕of周道护DE部BTCW).Hidden = True
         .Columns(位谕of周道护DE部之护).Hidden = True
-    
         .Columns(位谕of周奏丘).Hidden = True
         .Columns(位谕of周奏启).Hidden = True
         .Columns(位谕of周奏数交CD).Hidden = True

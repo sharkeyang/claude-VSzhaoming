@@ -1394,17 +1394,17 @@ Public Sub UGSOP_MENU_生成()
     End With
 
     With 菜项算展.Controls.Add(Type:=msoControlButton)
-        .OnAction = "XL算展取样_谕组批量默认"
+        .OnAction = "XL算展取样调程_谕组批量默认"
         .Caption = "周+日"
         .FaceId = 772
     End With
     With 菜项算展.Controls.Add(Type:=msoControlButton)
-        .OnAction = "XL算展取样_谕组批量日"
+        .OnAction = "XL算展取样调程_谕组批量日"
         .Caption = "只日"
         .FaceId = 772
     End With
     With 菜项算展.Controls.Add(Type:=msoControlButton)
-        .OnAction = "XL算展取样_谕组批量周"
+        .OnAction = "XL算展取样调程_谕组批量周"
         .Caption = "只周"
         .FaceId = 772
     End With
