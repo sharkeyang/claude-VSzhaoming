@@ -62,11 +62,11 @@ PARTLINE(JA,  1, RGB(  0,111,111))     ,LAYER3,LINETHICK2,dotline;
 PARTLINE(JZ,  1, RGB( 66,  0,  0))     ,LAYER3,LINETHICK1;
 
 PARTLINE(JG,  周期条件DT8,  RGB(77, 99,99))     ,LAYER4,LINETHICK6;
-PARTLINE(JF,  周期条件DT8,  RGB(88,  0,  0))     ,LAYER4,LINETHICK8;
-PARTLINE(JE,  周期条件DT8L, RGB(88,88,  0))     ,LAYER4,LINETHICK8;
-PARTLINE(JD,  周期条件DT8L, RGB(166,0,  0))     ,LAYER4,LINETHICK6;
+PARTLINE(JF,  周期条件DT8,  RGB(88,  0,  0))     ,LAYER4,LINETHICK7;
+PARTLINE(JE,  周期条件DT8L, RGB(88,88,  0))     ,LAYER4,LINETHICK9;
+PARTLINE(JD,  周期条件DT8L, RGB(166,0,  0))     ,LAYER4,LINETHICK5;
 PARTLINE(JC,  周期条件DT8L, RGB(166,166,0))     ,LAYER4,LINETHICK5;
-PARTLINE(JE,  周期条件DT9,  RGB(77, 99,99))    ,LAYER4,LINETHICK6;
+PARTLINE(JE,  周期条件DT9,  RGB(77, 99,99))    ,LAYER4,LINETHICK7;
 PARTLINE(JD,  周期条件DT9,  RGB(200,  0,  0))     ,LAYER4,LINETHICK5;
 PARTLINE(JC,  周期条件DT9H,  RGB(188,188, 0))     ,LAYER3,LINETHICK5;
 {----------------------------------------标注管宽太大----------------}
@@ -126,7 +126,7 @@ IFS(周期条件DT8, 四域日,
 {===================================================================================}
 {--- 四域背景色 ---}
 DRAWGBK (四域='多长', RGB( 25, 40, 99)), LAYER7;
-DRAWGBK (四域='多被', RGB( 55,22,  0)), LAYER7;
+DRAWGBK (四域='多被', RGB( 77,22,  0)), LAYER7;
 DRAWGBK (四域='空看', RGB( 33, 33, 33)), LAYER7;
 {===================================================================================}
 
@@ -216,8 +216,6 @@ IFS(周期条件DT8 and EF好=0 and CD好=0 and AB好=0, 'H(禁)',
 {--- 四级分类：坚决禁止提示（红色X，比灰色x更醒目）---}
 DRAWTEXT(周期条件DT8 and 四级='H(禁)', L*0.99, 'X'),COLORgray,LAYER1;
 DRAWTEXT(周期条件DT9 and not(均线条件JZ上JC), L*0.99, 'x'),COLORgray,LAYER1;
-{===================================================================================
-FILLRGN( JE ,JF ,周期条件DT8, RGB(111,0,33) ),LAYER6;}
 {===================================================================================}
 
 
@@ -328,6 +326,9 @@ IFS(周期条件DT8L,  '__' + 局乾, ''),DRAWNULL,COLORGRAY;
 {逃出日线级别反复纠缠的陷阱}
 IFS(周期条件DT8,   '__' + 局坤 ,''),DRAWNULL,COLORGRAY;
 {===================================================================================}
+
+
+
 
 {===================================================================================}
 {--------------------------------   管上符   -----------------------------------}
@@ -463,8 +464,8 @@ DT1970_WD := DATETOD1970(DATE)-WEEKDAY;
 {周节点}
 DRAWTEXT(周期条件DT8 and ref(DT1970_WD,1)<DT1970_WD, JC, 'o'),COLORyellow,LAYER1;
 {月节点}
-STICKLINE(周期条件DT8 and ref(month,1)<>month,JA,JF,0.1,-1000),COLORRED;
-STICKLINE(周期条件DT9 and ref(month,1)<>month,GHHH,JD,0.1,-1000),COLORblue,layer6;
+STICKLINE(周期条件DT8 and ref(month,1)<>month,JA,JE,0.1,-1000),COLORRED;
+STICKLINE(周期条件DT9 and ref(month,1)<>month,JA,JC,0.1,-1000),COLORblue,layer6;
 {===================================================================================}
 
 
@@ -475,49 +476,37 @@ STICKLINE(周期条件DT9 and ref(month,1)<>month,GHHH,JD,0.1,-1000),COLORblue,l
 {=================================    仓位分类   ====================================}
 {--- DJEDC之上仓位操作分类（仅日线）---}
 DDJE之上 := 均线条件JZ上JE;
-DDJC之上 := 均线条件JZ上JC;
 DDJA之上 := 均线条件JZ上JA;
-DDJA之下 := NOT(均线条件JZ上JA);
-{--- 日线DJE上（预计算，减少仓位分类重复判断）---}
-日线DJE上 := 周期条件DT8 and DDJE之上;
-{--- 上破DJC（刚上破）---}
-上破DJC := DDJC之上 and NOT(REF(DDJC之上, 1));
-{--- 诱多模式 ---}
-连阴后阳 := REF(价格条件C_DN and 价格条件R1_DN, 1) and 价格条件C_UP;
-阴阳阴后阳 := REF(价格条件C_DN and 价格条件R1_UP, 2) and REF(价格条件C_UP, 1) and REF(价格条件C_DN, 1) and 价格条件C_UP;
 上破DJA三柱内 := DDJA之上 and REF(NOT(DDJA之上), 1) and NOT(REF(NOT(DDJA之上), 2));
-{--- 止盈条件 ---}
-偏离大 := 管宽周偏哼JA>=15;
-{--- 捡漏条件 ---}
-买漏日条件 := DDJA之上 and 价格条件C_DN;
-买漏周条件 := DDJA之下 and 价格条件C_UP;
-{=================================   基本分类   =====================================}
-{--- 核心持仓状态 ---}
-基本分类 :=
-IFS(日线DJE上 and NOT(DDJC之上), '卖浮',
-IFS(日线DJE上 and DDJC之上 and 上破DJC, '买初',
-IFS(日线DJE上 and DDJC之上 and DDJA之上, '持主',
-IFS(日线DJE上 and DDJC之上 and DDJA之下, '持被',
-'')))),DRAWNULL,COLORwhite;
-{=================================   信号分类   =====================================}
-{--- 仅DJC之上有效，叠加在基本分类之上 ---}
-信号分类 :=
-IFS(日线DJE上 and DDJC之上 and DDJA之上 and 偏离大, '警止盈',
-IFS(日线DJE上 and DDJC之上 and DDJA之上 and (上破DJA三柱内 or 连阴后阳 or 阴阳阴后阳), '警诱多',
-IFS(日线DJE上 and DDJC之上 and DDJA之上 and 买漏日条件, '机漏日',
-IFS(日线DJE上 and DDJC之上 and DDJA之下 and 买漏周条件, '机漏周',
-'')))),DRAWNULL,COLORwhite;
-{=================================   仓位显示   =====================================}
-{--- 基本分类显示（DJE位置） ---}
-DRAWTEXT(周期条件DT8 and 基本分类='买初', JE, '买初'),COLORFF3300,LAYER2;
-DRAWTEXT(周期条件DT8 and 基本分类='持主', JE, '持主'),COLOR660000,LAYER1;
-DRAWTEXT(周期条件DT8 and 基本分类='持被', JE, '持被'),COLORAA9900,LAYER1;
-DRAWTEXT(周期条件DT8 and 基本分类='卖浮', JE, '卖浮'),COLOR222266,LAYER1;
-{--- 信号分类显示（DJC位置） ---}
-DRAWTEXT(周期条件DT8 and 信号分类='警止盈', JC, '警盈'),COLOR00AAAA,LAYER2;
-DRAWTEXT(周期条件DT8 and 信号分类='警诱多', JC, '警诱'),COLOR006666,LAYER2;
-DRAWTEXT(周期条件DT8 and 信号分类='机漏日', JC, '机日'),COLOR00DD00,LAYER2;
-DRAWTEXT(周期条件DT8 and 信号分类='机漏周', JC, '机周'),COLOR00AA00,LAYER2;
-{===================================================================================}
+{=================================   日层赢   =======================================}
+{--- 预计算：DXZE<0 ---}
+日层赢_DXZE下 := NOT(DDJE之上);
+{--- 预计算：日层界储/初（JB<JC且JZ>=JC，即短期未金叉但价格已站上JC）---}
+日层赢_储初 := IFS(NOT(均线条件JB上JC) and 均线条件JZ上JC, 1, 0);
+{--- 预计算：DXAB甲乙己 ---}
+日层赢_甲乙己 := IFS(日AB护级='甲', 1, IFS(日AB护级='乙', 1, IFS(日AB护级='己', 1, 0)));
+{--- 日层赢第2位 ---}
+日层赢_2 :=
+IFS(周期条件DT8 and 日CD护级='上' and 日层赢_储初=1, IFS(日层赢_甲乙己=1, '介A', '介B'),
+IFS(周期条件DT8 and 日CD护级='上' and 日层赢_储初=0, IFS(日层赢_甲乙己=1, '持A', '持B'),
+IFS(周期条件DT8 and 日CD护级='忐' and 日层赢_储初=1, IFS(日层赢_甲乙己=1, '介A', '介B'),
+IFS(周期条件DT8 and 日CD护级='忐' and 日层赢_储初=0, IFS(日层赢_甲乙己=1, '持A', '持B'),
+IFS(周期条件DT8 and 日CD护级='忠' and 日层赢_储初=1, IFS(日层赢_甲乙己=1, '介A', '介B'),
+IFS(周期条件DT8 and 日CD护级='忠' and 日层赢_储初=0, IFS(日层赢_甲乙己=1, '持A', '持B'),
+IFS(周期条件DT8 and 日CD护级='中' and 日层赢_甲乙己=1, '参A',
+IFS(周期条件DT8 and 日CD护级='中' and 日层赢_甲乙己=0, '参B',
+''
+))))))));
+{--- 日层赢最终（非空且DXZE<0加前缀_） ---}
+日层赢 :=
+IFS(周期条件DT8 and 日层赢_2='', '_弃',
+IFS(周期条件DT8 and 日层赢_DXZE下=1, '_' + 日层赢_2,
+日层赢_2));
+{--- 日层赢显示（JE位置，颜色：参→深黄，持→cyan，介→绿，_弃→红）---}
+DRAWTEXT(周期条件DT8 and 日层赢='_弃', JE, '_弃'),COLORRED,LAYER1;
+DRAWTEXT(周期条件DT8 and (日层赢='参A' or 日层赢='参B' or 日层赢='_参A' or 日层赢='_参B'), JE, 日层赢),COLOR00BBBB,LAYER1;
+DRAWTEXT(周期条件DT8 and (日层赢='持A' or 日层赢='_持A'), JE, 日层赢),COLORCYAN,LAYER1;
+DRAWTEXT(周期条件DT8 and (日层赢='持B' or 日层赢='_持B'), JE, 日层赢),COLORAAAA00,LAYER1;
+DRAWTEXT(周期条件DT8 and (日层赢='介A' or 日层赢='介B' or 日层赢='_介A' or 日层赢='_介B'), JE, 日层赢),COLORGREEN,LAYER1;
 
 
