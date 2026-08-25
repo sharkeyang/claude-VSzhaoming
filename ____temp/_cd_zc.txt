@@ -1,0 +1,7 @@
+DXCD × DXZC符号:
+DXCD=上 DXZC>0=True: 2118
+DXCD=忑 DXZC>0=False: 1849
+DXCD=下 DXZC>0=False: 495
+DXCD=忐 DXZC>0=True: 423
+DXCD=忠 DXZC>0=True: 360
+DXCD=中 DXZC>0=False: 357

@@ -1677,7 +1677,7 @@ End Function
 '      Call XL算展取样调程_谕组单股通用("sz159919", , "周")    → 只周
 '      Call XL算展取样调程_谕组单股通用("sz159919", , "日")    → 只日
 '      Call XL算展取样调程_谕组单股通用("sz159919", "D:\p")    → 指定路径+周+日
-'参数：输出路径 — 可选，空=默认目录
+'参数：输出路径 — 可选，空=默认目录(ThisWorkbook.Path\昭明算展\谕组周\和\谕组日\)；指定则周/日CSV都写到该文件夹(不加子目录)
 '      模式 — "周"/"日"/""，默认周+日
 '========================================================================================
 Public Sub XL算展取样调程_谕组单股通用(被研代码 As String, Optional 输出路径 As String = "", Optional 模式 As String = "")
@@ -1789,7 +1789,7 @@ Public Sub XL算展取样调程_谕组单股通用(被研代码 As String, Optio
         Open 日文件 For Output As #1
         '等高线分类(6等)：等1=边,等2=近弱+回归,等3=远强,等5=下边,等6=下近+下回,等7=下远
         '详见 IQQQ跨码_D据擎2神谕.bas 中 位谕of日层等 的注释
-        Print #1, "日期,收,开,高,低,涨幅,高幅,日周联动,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,管释,撤哼JC,类合,BSLA,宽哈JC,BT鼎,BTZA,BT连阳,顶型,日等型,仓日类,仓日期,日层赢"
+        Print #1, "日期,收,开,高,低,涨幅,高幅,日周联动,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日BTEF,日BTZF,日段,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,管释,撤哼JC,类合,BSLA,宽哈JC,BT鼎,BTZA,BT连阳,顶型,日等型,仓日类,仓日期,日层赢,月策带日"
 
         For X = LBound(谕组, 1) To UBound(谕组, 1)
             Dim 日高幅 As Double
@@ -1847,6 +1847,7 @@ Public Sub XL算展取样调程_谕组单股通用(被研代码 As String, Optio
                 Replace(谕组(X, 位谕of仓日类), ",", ";") & "," & _
                 谕组(X, 位谕of仓日期) & "," & _
                 谕组(X, 位谕of日层赢)
+            行尾 = 行尾 & "," & ARRLLL(X, 基位日类 + 位osBTEF) & "," & ARRLLL(X, 基位日类 + 位osBTZF) & "," & Replace(谕组(X, 位谕of月策带日), ",", ";")
             Print #1, 行头 & 行尾
         Next X
         Close #1
@@ -1872,16 +1873,19 @@ End Sub
 '功能：批量通用 — 遍历花册导出谕组CSV（支持按市板抽样）
 '========================================================================================
 '========================================================================================
-'用法：Call XL算展取样调程_谕组批量通用                  → 花天(中股), 周+日
+'用法：Call XL算展取样调程_谕组批量通用                  → 花天(中股), 周+日, 默认目录
 '      Call XL算展取样调程_谕组批量通用 "日"             → 花天(中股), 只日
 '      Call XL算展取样调程_谕组批量通用 "日", "花港指"    → 港股指, 只日
 '      Call XL算展取样调程_谕组批量通用 , "花港通"        → 港股通, 周+日
 '      Call XL算展取样调程_谕组批量通用 "日", , 100       → 花天, 每市板100只, 2010-2015上市
+'      Call XL算展取样调程_谕组批量通用 , , , "D:\导出"   → 指定输出文件夹, 周+日
 '参数：模式 — "周"/"日"/""，默认周+日
 '      花册名 — 花册表名，默认常花中股(花天)
 '      抽样数 — 0=全量，>0=每市板抽N只(仅取2010-2015年上市)
+'      输出路径 — 可选，空=默认目录(ThisWorkbook.Path\昭明算展\谕组周\和\谕组日\)；指定则周/日CSV都写到该文件夹
+'      注意：断点继续按"目标文件夹已有文件"跳过。若重新导出(如加了新列)，务必先清空目标文件夹，否则旧文件会被跳过、缺失新列。
 '========================================================================================
-Public Sub XL算展取样调程_谕组批量通用(Optional 模式 As String = "", Optional 花册名 As String = "", Optional 抽样数 As Long = 0)
+Public Sub XL算展取样调程_谕组批量通用(Optional 模式 As String = "", Optional 花册名 As String = "", Optional 抽样数 As Long = 0, Optional 输出路径 As String = "")
     If 模式 = "" Then 模式 = "周+日"
     If 花册名 = "" Then 花册名 = 常花中股
 
@@ -1890,10 +1894,15 @@ Public Sub XL算展取样调程_谕组批量通用(Optional 模式 As String = "
         MsgBox "花册链接失败: " & 花册名, vbExclamation: Exit Sub
     End If
 
-    '=== 输出路径 — 集中定义，可随时修改 ===
+    '=== 输出路径 — 集中定义，可随时修改；若传入 输出路径 参数则优先使用 ===
     Dim 周路径 As String, 日路径 As String
-    周路径 = ThisWorkbook.Path & "\昭明算展\谕组周\"
-    日路径 = ThisWorkbook.Path & "\昭明算展\谕组日\"
+    If 输出路径 = "" Then
+        周路径 = ThisWorkbook.Path & "\昭明算展\谕组周\"
+        日路径 = ThisWorkbook.Path & "\昭明算展\谕组日\"
+    Else
+        周路径 = 输出路径
+        日路径 = 输出路径
+    End If
 
     Dim FSO As Object
     Set FSO = CreateObject("Scripting.FileSystemObject")
@@ -2024,7 +2033,7 @@ Public Sub XL算展取样调程_谕组批量通用(Optional 模式 As String = "
         End If
 
         If 实际模式 <> "" Then
-            Call XL算展取样调程_谕组单股通用(CStr(CIDL), , 实际模式)
+            Call XL算展取样调程_谕组单股通用(CStr(CIDL), 输出路径, 实际模式)
             计数 = 计数 + 1
             If 计数 Mod 500 = 0 Then
                 Debug.Print "[" & Format(Now, "hh:mm:ss") & "] 已完成: " & 计数 & " 只, 耗时: " & CLng(IIf(Timer < TT, Timer - TT + 86400, Timer - TT)) & "秒"

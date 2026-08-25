@@ -432,32 +432,35 @@ Public Const 位谕of周策分P1 = 位谕始of族策 + 4    '周策分P1: 编码
 '--- 周策略 ZA ---
 Public Const 位谕of周策略ZA = 位谕始of族策 + 5     '周策略ZA: 柱排|顶触|盈提示(如"连阳|触高|宽高")
 Public Const 位谕of周策分ZA = 位谕始of族策 + 6    '周策分ZA: 编码(如"_01")，W(≥基准30)/_(<基准30)+跌破率取整。W=下周跌破WJA概率≥30%（warning危险，是基准19%的1.6倍），_=下周跌破WJA概率<30%（安全）。全量基准跌破率=19.0%，但维持率高达81%，跌破率≥30%才是真正危险。注意：与P1/P3相反，ZA预测消极概率用W(warning)，P1/P3预测积极概率用G(good)
+'--- 周策略 转坏/转好（WXCD×护型） ---
+Public Const 位谕of周策分坏 = 位谕始of族策 + 7   '周策分坏: 编码(如"W38")，W=转坏率≥30%危险，_=安全。转坏率=向更差护型转移或维持在最差的概率
+Public Const 位谕of周策分好 = 位谕始of族策 + 8   '周策分好: 编码(如"G83")，G=转好率≥30%值得关注，_=低于阈值。转好率=转为甲或乙(ZA>0)的概率
 '--- 月策略周 三变量 ---
-Public Const 位谕of月策分命 = 位谕始of族策 + 7     '月策分命: 股性分(0~100)，从CSV查表，恶庄天然过滤
-Public Const 位谕of月策略周 = 位谕始of族策 + 8     '月策略周: 多长(积极)/多长(消极)/多长(不定)/多被(金)/多被(银)/多被(唏)/NA(空看)/NA(空长)
-Public Const 位谕of月策分周 = 位谕始of族策 + 9     '月策分周(5周): 当前周波型×柱排状态, 5周后是否仍在多长(续持率取整), 仅对多长评分
-Public Const 位谕of月策带周 = 位谕始of族策 + 10    '月策带周: (WXCD)▲/↘/↗/▽ WXCD→WXAB带动
-Public Const 位谕of月策带日 = 位谕始of族策 + 11    '月策带日: (DXAB)同上(DXCD)同上(DXEF) 日级别DXAB→DXCD→DXEF带动
+Public Const 位谕of月策分命 = 位谕始of族策 + 9     '月策分命: 股性分(0~100)，从CSV查表，恶庄天然过滤
+Public Const 位谕of月策略周 = 位谕始of族策 + 10     '月策略周: 多长(积极)/多长(消极)/多长(不定)/多被(金)/多被(银)/多被(唏)/NA(空看)/NA(空长)
+Public Const 位谕of月策分周 = 位谕始of族策 + 11     '月策分周(5周): 当前周波型×柱排状态, 5周后是否仍在多长(续持率取整), 仅对多长评分
+Public Const 位谕of月策带周 = 位谕始of族策 + 12    '月策带周: (WXCD)▲/↘/↗/▽ WXCD→WXAB带动
+Public Const 位谕of月策带日 = 位谕始of族策 + 13    '月策带日: (DXAB)同上(DXCD)同上(DXEF) 日级别DXAB→DXCD→DXEF带动
 '--- 仓日分类 ---
-Public Const 位谕of仓日类 = 位谕始of族策 + 12
-Public Const 位谕of仓日期 = 位谕始of族策 + 13   '仓日期: min(DTZE,DTZC)，当前已持有天数。1=刚站上，值越大已持有越久
+Public Const 位谕of仓日类 = 位谕始of族策 + 14
+Public Const 位谕of仓日期 = 位谕始of族策 + 15   '仓日期: min(DTZE,DTZC)，当前已持有天数。1=刚站上，值越大已持有越久
 '--- 日必赢分类（DXZE×DXCD×DXAB综合） ---
-Public Const 位谕of日层赢 = 位谕始of族策 + 14   '日层赢: 介A/介B(介入)/持A/持B(持有)/参A/参B(参考)/_弃(回避)，非弃且DXZE<0加前缀_
+Public Const 位谕of日层赢 = 位谕始of族策 + 16   '日层赢: 介A/介B(介入)/持A/持B(持有)/参A/参B(参考)/_弃(回避)，非弃且DXZE<0加前缀_
 '--- 月策略日 ---
-Public Const 位谕of月策略日 = 位谕始of族策 + 15     '月策略日: 龙/唏/嘘/屁 + 强/弱 + 甲后缀
-Public Const 位谕of月策分日P2 = 位谕始of族策 + 16   '月策分日P2: 编码(如"4G39")，期望HR取整+G/_+概率取整。G=下日冲高≥2%概率≥30(查表下限)，_=低于下限
+Public Const 位谕of月策略日 = 位谕始of族策 + 17     '月策略日: 龙/唏/嘘/屁 + 强/弱 + 甲后缀
+Public Const 位谕of月策分日P2 = 位谕始of族策 + 18   '月策分日P2: 编码(如"4G39")，期望HR取整+G/_+概率取整。G=下日冲高≥2%概率≥30(查表下限)，_=低于下限
 '--- 日策略 P2 ---
-Public Const 位谕of日策分P2 = 位谕始of族策 + 17     '日策分P2: 编码(如"5G58")，期望HR取整+G/_+评分取整。G=评分≥50(B级)，_=低于50。注意：数值是评分(37~61)非概率
-Public Const 位谕of日策略P2 = 位谕始of族策 + 18     '日策略P2: 三级策略名称(如"等2A")
-Public Const 位谕of日层机警 = 位谕始of族策 + 19
+Public Const 位谕of日策分P2 = 位谕始of族策 + 19     '日策分P2: 编码(如"5G58")，期望HR取整+G/_+评分取整。G=评分≥50(B级)，_=低于50。注意：数值是评分(37~61)非概率
+Public Const 位谕of日策略P2 = 位谕始of族策 + 20     '日策略P2: 三级策略名称(如"等2A")
+Public Const 位谕of日层机警 = 位谕始of族策 + 21
 '-----------
-Public Const 位谕of日层漏提示 = 位谕始of族策 + 20
-Public Const 位谕of日层联动 = 位谕始of族策 + 21
-Public Const 位谕of日层盈提示 = 位谕始of族策 + 22
+Public Const 位谕of日层漏提示 = 位谕始of族策 + 22
+Public Const 位谕of日层联动 = 位谕始of族策 + 23
+Public Const 位谕of日层盈提示 = 位谕始of族策 + 24
 '-----------
-Public Const 位谕of周层四域 = 位谕始of族策 + 23
-Public Const 位谕of策传 = 位谕始of族策 + 24
-Public Const 位谕of日层四域 = 位谕始of族策 + 25
+Public Const 位谕of周层四域 = 位谕始of族策 + 25
+Public Const 位谕of策传 = 位谕始of族策 + 26
+Public Const 位谕of日层四域 = 位谕始of族策 + 27
 Public Const 位谕终of族策 = 位谕of日层四域
 '----------------------------------------------------------------------------------------
 '----------------------------------------------------------------------------------------
@@ -3027,6 +3030,56 @@ If UBCID是代码(CIDL) = True Then
             Else
                 谕组(X, 位谕of周策略ZA) = ""
                 谕组(X, 位谕of周策分ZA) = "_"
+            End If
+            '============================================================================
+            '周策分坏/周策分好（基于WXCD×护型，查表）
+            '============================================================================
+            Dim 周WXCD名 As String: 周WXCD名 = ""
+            Dim 周局串 As String: 周局串 = 谕组(X, 位谕of周层大局)
+            If InStr(周局串, "金") > 0 Then 周WXCD名 = "金"
+            If InStr(周局串, "银") > 0 Then 周WXCD名 = "银"
+            If InStr(周局串, "唏") > 0 Then 周WXCD名 = "唏"
+            If InStr(周局串, "嘘") > 0 Then 周WXCD名 = "嘘"
+            If InStr(周局串, "尿") > 0 Then 周WXCD名 = "尿"
+            If InStr(周局串, "屎") > 0 Then 周WXCD名 = "屎"
+
+            Dim 周护串 As String: 周护串 = 谕组(X, 位谕of周层护型)
+            Dim 周护名 As String: 周护名 = ""
+            If InStr(周护串, "甲") > 0 Then 周护名 = "甲"
+            If InStr(周护串, "乙") > 0 Then
+                If InStr(周护串, "上") > 0 Or InStr(周护串, "中") > 0 Or InStr(周护串, "忐") > 0 Then
+                    周护名 = "乙(ZA>0)"
+                Else
+                    周护名 = "乙(ZA≤0)"
+                End If
+            End If
+            If InStr(周护串, "丙") > 0 Then 周护名 = "丙"
+            If InStr(周护串, "丁") > 0 Then 周护名 = "丁"
+            If InStr(周护串, "戊") > 0 Then
+                If InStr(周护串, "上") > 0 Or InStr(周护串, "中") > 0 Or InStr(周护串, "忐") > 0 Then
+                    周护名 = "戊(ZA>0)"
+                Else
+                    周护名 = "戊(ZA≤0)"
+                End If
+            End If
+            If InStr(周护串, "己") > 0 Then 周护名 = "己"
+
+            If 周WXCD名 <> "" And 周护名 <> "" Then
+                Dim 周策分坏 As String: 周策分坏 = IQQQ跨码工具_查周策分坏(周WXCD名, 周护名)
+                If 周策分坏 <> "" Then
+                    谕组(X, 位谕of周策分坏) = 周策分坏
+                Else
+                    谕组(X, 位谕of周策分坏) = "_"
+                End If
+                Dim 周策分好 As String: 周策分好 = IQQQ跨码工具_查周策分好(周WXCD名, 周护名)
+                If 周策分好 <> "" Then
+                    谕组(X, 位谕of周策分好) = 周策分好
+                Else
+                    谕组(X, 位谕of周策分好) = "_"
+                End If
+            Else
+                谕组(X, 位谕of周策分坏) = "_"
+                谕组(X, 位谕of周策分好) = "_"
             End If
             '============================================================================
 '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -6644,6 +6697,9 @@ Function IQQQ跨码展擎_按列神谕区域( _
         '周策略ZA
         .Cells(1, 位谕of周策略ZA) = "周策略ZA"
         .Cells(1, 位谕of周策分ZA) = "周策分ZA"
+        '周策分坏/好
+        .Cells(1, 位谕of周策分坏) = "周策分坏" & vbCrLf & "(转坏率)"
+        .Cells(1, 位谕of周策分好) = "周策分好" & vbCrLf & "(转好率)"
         .Cells(1, 位谕of月策分命) = "月策分命"
         .Cells(1, 位谕of月策略周) = "月策略周"
         .Cells(1, 位谕of月策分周) = "月策分周" & vbCrLf & "(5周维持)"
@@ -6687,6 +6743,8 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周策分P1).Interior.Color = 常色五靛
         .Columns(位谕of周策略ZA).Interior.Color = 常色四靛
         .Columns(位谕of周策分ZA).Interior.Color = 常色五靛
+        .Columns(位谕of周策分坏).Interior.Color = 常色四灰
+        .Columns(位谕of周策分好).Interior.Color = 常色四灰
         .Columns(位谕of仓日类).Interior.TintAndShade = -0.3
         .Columns(位谕of日层赢).Interior.TintAndShade = -0.3
         .Columns(位谕of策传).Interior.Color = 常色四灰
@@ -6718,6 +6776,10 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周策略ZA).HorizontalAlignment = xlLeft
         .Columns(位谕of周策分ZA).ColumnWidth = 4
         .Columns(位谕of周策分ZA).NumberFormat = "@"
+        .Columns(位谕of周策分坏).ColumnWidth = 4
+        .Columns(位谕of周策分坏).NumberFormat = "@"
+        .Columns(位谕of周策分好).ColumnWidth = 4
+        .Columns(位谕of周策分好).NumberFormat = "@"
         .Columns(位谕of月策略周).ColumnWidth = 7.5
         .Columns(位谕of月策分命).ColumnWidth = 4
         .Columns(位谕of月策分周).ColumnWidth = 4
@@ -7035,6 +7097,62 @@ Public Function IQQQ跨码工具_查周策分ZA(ByVal 策略名 As String) As St
     End If
 
     If 概率典ZA.Exists(策略名) Then IQQQ跨码工具_查周策分ZA = 概率典ZA(策略名) Else IQQQ跨码工具_查周策分ZA = ""
+End Function
+'========================================================================================
+'查周策分坏 — 基于WXCD×护型，查转坏率编码
+'========================================================================================
+Public Function IQQQ跨码工具_查周策分坏(ByVal WXCD名 As String, ByVal 护型名 As String) As String
+    Static 概率典坏 As Dictionary
+    Static 已加载坏 As Boolean
+    Dim 文件号 As Integer, 行内容 As String
+    Dim 字段 As Variant
+    Dim 键名 As String: 键名 = WXCD名 & "|" & 护型名
+
+    If Not 已加载坏 Then
+        Set 概率典坏 = New Dictionary
+        文件号 = FreeFile
+        Open ThisWorkbook.Path & "\_产出物\_工具\vba表周策分坏.txt" For Input As #文件号
+            Line Input #文件号, 行内容  '跳过表头
+            Do While Not EOF(文件号)
+                Line Input #文件号, 行内容
+                字段 = Split(行内容, vbTab)
+                If UBound(字段) >= 1 Then
+                    概率典坏(字段(0)) = 字段(1)
+                End If
+            Loop
+        Close #文件号
+        已加载坏 = True
+    End If
+
+    If 概率典坏.Exists(键名) Then IQQQ跨码工具_查周策分坏 = 概率典坏(键名) Else IQQQ跨码工具_查周策分坏 = ""
+End Function
+'========================================================================================
+'查周策分好 — 基于WXCD×护型，查转好率编码
+'========================================================================================
+Public Function IQQQ跨码工具_查周策分好(ByVal WXCD名 As String, ByVal 护型名 As String) As String
+    Static 概率典好 As Dictionary
+    Static 已加载好 As Boolean
+    Dim 文件号 As Integer, 行内容 As String
+    Dim 字段 As Variant
+    Dim 键名 As String: 键名 = WXCD名 & "|" & 护型名
+
+    If Not 已加载好 Then
+        Set 概率典好 = New Dictionary
+        文件号 = FreeFile
+        Open ThisWorkbook.Path & "\_产出物\_工具\vba表周策分好.txt" For Input As #文件号
+            Line Input #文件号, 行内容  '跳过表头
+            Do While Not EOF(文件号)
+                Line Input #文件号, 行内容
+                字段 = Split(行内容, vbTab)
+                If UBound(字段) >= 1 Then
+                    概率典好(字段(0)) = 字段(1)
+                End If
+            Loop
+        Close #文件号
+        已加载好 = True
+    End If
+
+    If 概率典好.Exists(键名) Then IQQQ跨码工具_查周策分好 = 概率典好(键名) Else IQQQ跨码工具_查周策分好 = ""
 End Function
 '========================================================================================
 

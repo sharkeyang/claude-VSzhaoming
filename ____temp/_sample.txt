@@ -1,0 +1,8 @@
+日期=2017/3/29 | DXEF=升矮/升持 | DXCD=上 | DXAB=a甲↗上1.I | 日ZA=1 | 日ZC=1 | 日ZE=1
+日期=2017/4/6 | DXEF=升矮/升持 | DXCD=上 | DXAB=a甲↗上2.B2 | 日ZA=2 | 日ZC=2 | 日ZE=2
+日期=2018/11/14 | DXEF=升冲/升减 | DXCD=上 | DXAB=a甲↗上3.B3 | 日ZA=3 | 日ZC=3 | 日ZE=3
+日期=2019/5/23 | DXEF=升零/跌等 | DXCD=忑 | DXAB=z丁↘忑-1.Y暂 | 日ZA=-1 | 日ZC=-1 | 日ZE=-1
+日期=2019/5/24 | DXEF=升矮/跌等 | DXCD=忑 | DXAB=r己↗忐-2.I暂 | 日ZA=1 | 日ZC=-2 | 日ZE=-2
+日期=2019/5/27 | DXEF=升冲/升减 | DXCD=上 | DXAB=a甲↗上1.B2暂 | 日ZA=2 | 日ZC=1 | 日ZE=1
+日期=2019/7/12 | DXEF=降零/跌观 | DXCD=忑 | DXAB=z丁↘忑-1.Y暂 | 日ZA=-1 | 日ZC=-1 | 日ZE=-1
+日期=2020/3/4 | DXEF=降零/跌观 | DXCD=上 | DXAB=a甲↗上1.I暂 | 日ZA=1 | 日ZC=1 | 日ZE=1
