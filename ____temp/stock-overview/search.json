@@ -1,0 +1,1 @@
+{"ok":true,"command":"symbol.search","data":{"item":[{"thscode":"300033.SZ","ticker":"300033","name":"同花顺","exchange":"SZ","asset_type":"a-share","currency":"CNY"}],"timestamp":1787644819535},"meta":{"source":"remote","request_id":"e77eab246c63440590cfbbd493d4d486","count":1,"truncated":false,"schema_version":"1"}}

@@ -1,0 +1,1486 @@
+{
+ "generated_at": "2026-08-26 05:44:50",
+ "timestamps": {
+  "hot_day": "2026-08-26 05:39:26",
+  "hot_hour": "2026-08-26 05:39:14",
+  "sky_day": "2026-08-26 05:39:34",
+  "sky_hour": "2026-08-26 05:39:56"
+ },
+ "lists": {
+  "hot_day": [
+   {
+    "rank": 1,
+    "name": "宇树科技",
+    "thscode": "688836.SH",
+    "ticker": "688836",
+    "heat": "7819091",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 2,
+    "name": "亨通光电",
+    "thscode": "600487.SH",
+    "ticker": "600487",
+    "heat": "4346666",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 3,
+    "name": "金健米业",
+    "thscode": "600127.SH",
+    "ticker": "600127",
+    "heat": "3336940",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 4,
+    "name": "长鑫科技",
+    "thscode": "688825.SH",
+    "ticker": "688825",
+    "heat": "3239558",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 5,
+    "name": "中际旭创",
+    "thscode": "300308.SZ",
+    "ticker": "300308",
+    "heat": "3190242",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 6,
+    "name": "汉森制药",
+    "thscode": "002412.SZ",
+    "ticker": "002412",
+    "heat": "2892596",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 7,
+    "name": "哈药股份",
+    "thscode": "600664.SH",
+    "ticker": "600664",
+    "heat": "2533037",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 8,
+    "name": "兆易创新",
+    "thscode": "603986.SH",
+    "ticker": "603986",
+    "heat": "2490416",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 9,
+    "name": "英维克",
+    "thscode": "002837.SZ",
+    "ticker": "002837",
+    "heat": "2350190",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 10,
+    "name": "神奇制药",
+    "thscode": "600613.SH",
+    "ticker": "600613",
+    "heat": "2296800",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 11,
+    "name": "白银有色",
+    "thscode": "601212.SH",
+    "ticker": "601212",
+    "heat": "2288951",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 12,
+    "name": "长飞光纤",
+    "thscode": "601869.SH",
+    "ticker": "601869",
+    "heat": "2269072",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 13,
+    "name": "通鼎互联",
+    "thscode": "002491.SZ",
+    "ticker": "002491",
+    "heat": "2111300",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 14,
+    "name": "百花医药",
+    "thscode": "600721.SH",
+    "ticker": "600721",
+    "heat": "2026941",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 15,
+    "name": "士兰微",
+    "thscode": "600460.SH",
+    "ticker": "600460",
+    "heat": "2018921",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 16,
+    "name": "楚天龙",
+    "thscode": "003040.SZ",
+    "ticker": "003040",
+    "heat": "1985946",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 17,
+    "name": "金牛化工",
+    "thscode": "600722.SH",
+    "ticker": "600722",
+    "heat": "1981732",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 18,
+    "name": "协鑫能科",
+    "thscode": "002015.SZ",
+    "ticker": "002015",
+    "heat": "1914415",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 19,
+    "name": "金螳螂",
+    "thscode": "002081.SZ",
+    "ticker": "002081",
+    "heat": "1906705",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 20,
+    "name": "湖南白银",
+    "thscode": "002716.SZ",
+    "ticker": "002716",
+    "heat": "1865531",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 21,
+    "name": "京东方A",
+    "thscode": "000725.SZ",
+    "ticker": "000725",
+    "heat": "1803966",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 22,
+    "name": "中天科技",
+    "thscode": "600522.SH",
+    "ticker": "600522",
+    "heat": "1729699",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 23,
+    "name": "新易盛",
+    "thscode": "300502.SZ",
+    "ticker": "300502",
+    "heat": "1709520",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 24,
+    "name": "黄河旋风",
+    "thscode": "600172.SH",
+    "ticker": "600172",
+    "heat": "1685631",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 25,
+    "name": "天孚通信",
+    "thscode": "300394.SZ",
+    "ticker": "300394",
+    "heat": "1636076",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 26,
+    "name": "药明康德",
+    "thscode": "603259.SH",
+    "ticker": "603259",
+    "heat": "1602097",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 27,
+    "name": "誉衡药业",
+    "thscode": "002437.SZ",
+    "ticker": "002437",
+    "heat": "1531875",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 28,
+    "name": "长电科技",
+    "thscode": "600584.SH",
+    "ticker": "600584",
+    "heat": "1519339",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 29,
+    "name": "圣阳股份",
+    "thscode": "002580.SZ",
+    "ticker": "002580",
+    "heat": "1468384",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 30,
+    "name": "东山精密",
+    "thscode": "002384.SZ",
+    "ticker": "002384",
+    "heat": "1462620",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   }
+  ],
+  "hot_hour": [
+   {
+    "rank": 1,
+    "name": "英维克",
+    "thscode": "002837.SZ",
+    "ticker": "002837",
+    "heat": "82920.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 2,
+    "name": "宇树科技",
+    "thscode": "688836.SH",
+    "ticker": "688836",
+    "heat": "66387.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 3,
+    "name": "杭电股份",
+    "thscode": "603618.SH",
+    "ticker": "603618",
+    "heat": "56883.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 4,
+    "name": "亨通光电",
+    "thscode": "600487.SH",
+    "ticker": "600487",
+    "heat": "56578.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 5,
+    "name": "金螳螂",
+    "thscode": "002081.SZ",
+    "ticker": "002081",
+    "heat": "49914.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 6,
+    "name": "汉森制药",
+    "thscode": "002412.SZ",
+    "ticker": "002412",
+    "heat": "49840.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 7,
+    "name": "金健米业",
+    "thscode": "600127.SH",
+    "ticker": "600127",
+    "heat": "45364.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 8,
+    "name": "楚天龙",
+    "thscode": "003040.SZ",
+    "ticker": "003040",
+    "heat": "40727.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 9,
+    "name": "黄河旋风",
+    "thscode": "600172.SH",
+    "ticker": "600172",
+    "heat": "38894.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 10,
+    "name": "百花医药",
+    "thscode": "600721.SH",
+    "ticker": "600721",
+    "heat": "32072.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 11,
+    "name": "通鼎互联",
+    "thscode": "002491.SZ",
+    "ticker": "002491",
+    "heat": "27119.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 12,
+    "name": "哈药股份",
+    "thscode": "600664.SH",
+    "ticker": "600664",
+    "heat": "26198.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 13,
+    "name": "长鑫科技",
+    "thscode": "688825.SH",
+    "ticker": "688825",
+    "heat": "24967.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 14,
+    "name": "神奇制药",
+    "thscode": "600613.SH",
+    "ticker": "600613",
+    "heat": "23925.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 15,
+    "name": "康盛股份",
+    "thscode": "002418.SZ",
+    "ticker": "002418",
+    "heat": "22951.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 16,
+    "name": "深中华A",
+    "thscode": "000017.SZ",
+    "ticker": "000017",
+    "heat": "22016.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 17,
+    "name": "中际旭创",
+    "thscode": "300308.SZ",
+    "ticker": "300308",
+    "heat": "20889.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 18,
+    "name": "中天科技",
+    "thscode": "600522.SH",
+    "ticker": "600522",
+    "heat": "20598.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 19,
+    "name": "新华百货",
+    "thscode": "600785.SH",
+    "ticker": "600785",
+    "heat": "20354.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 20,
+    "name": "中南文化",
+    "thscode": "002445.SZ",
+    "ticker": "002445",
+    "heat": "20079.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 21,
+    "name": "兆易创新",
+    "thscode": "603986.SH",
+    "ticker": "603986",
+    "heat": "20029.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 22,
+    "name": "一鸣食品",
+    "thscode": "605179.SH",
+    "ticker": "605179",
+    "heat": "19712.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 23,
+    "name": "誉衡药业",
+    "thscode": "002437.SZ",
+    "ticker": "002437",
+    "heat": "19422.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 24,
+    "name": "登海种业",
+    "thscode": "002041.SZ",
+    "ticker": "002041",
+    "heat": "19347.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 25,
+    "name": "士兰微",
+    "thscode": "600460.SH",
+    "ticker": "600460",
+    "heat": "19086.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 26,
+    "name": "飞龙股份",
+    "thscode": "002536.SZ",
+    "ticker": "002536",
+    "heat": "19019.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 27,
+    "name": "特发信息",
+    "thscode": "000070.SZ",
+    "ticker": "000070",
+    "heat": "18656.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 28,
+    "name": "京东方A",
+    "thscode": "000725.SZ",
+    "ticker": "000725",
+    "heat": "18621.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 29,
+    "name": "药明康德",
+    "thscode": "603259.SH",
+    "ticker": "603259",
+    "heat": "18563.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 30,
+    "name": "金牛化工",
+    "thscode": "600722.SH",
+    "ticker": "600722",
+    "heat": "18447.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   }
+  ],
+  "sky_day": [
+   {
+    "rank": 1,
+    "name": "英维克",
+    "thscode": "002837.SZ",
+    "ticker": "002837",
+    "heat": "9800.4",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 2,
+    "name": "杭电股份",
+    "thscode": "603618.SH",
+    "ticker": "603618",
+    "heat": "6274.3",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 3,
+    "name": "亨通光电",
+    "thscode": "600487.SH",
+    "ticker": "600487",
+    "heat": "4391.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 4,
+    "name": "金螳螂",
+    "thscode": "002081.SZ",
+    "ticker": "002081",
+    "heat": "4380.4",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 5,
+    "name": "金健米业",
+    "thscode": "600127.SH",
+    "ticker": "600127",
+    "heat": "3770.9",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 6,
+    "name": "黄河旋风",
+    "thscode": "600172.SH",
+    "ticker": "600172",
+    "heat": "3468.7",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 7,
+    "name": "康盛股份",
+    "thscode": "002418.SZ",
+    "ticker": "002418",
+    "heat": "3384.2",
+    "rank_change": 4,
+    "rank_trend": "up"
+   },
+   {
+    "rank": 8,
+    "name": "汉森制药",
+    "thscode": "002412.SZ",
+    "ticker": "002412",
+    "heat": "2572.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 9,
+    "name": "青山纸业",
+    "thscode": "600103.SH",
+    "ticker": "600103",
+    "heat": "2217.0",
+    "rank_change": 1,
+    "rank_trend": "up"
+   },
+   {
+    "rank": 10,
+    "name": "楚天龙",
+    "thscode": "003040.SZ",
+    "ticker": "003040",
+    "heat": "2197.2",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 11,
+    "name": "特发信息",
+    "thscode": "000070.SZ",
+    "ticker": "000070",
+    "heat": "2163.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 12,
+    "name": "金瑞矿业",
+    "thscode": "600714.SH",
+    "ticker": "600714",
+    "heat": "1820.1",
+    "rank_change": 6,
+    "rank_trend": "up"
+   },
+   {
+    "rank": 13,
+    "name": "申菱环境",
+    "thscode": "301018.SZ",
+    "ticker": "301018",
+    "heat": "1751.1",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 14,
+    "name": "佳力图",
+    "thscode": "603912.SH",
+    "ticker": "603912",
+    "heat": "1738.8",
+    "rank_change": 2,
+    "rank_trend": "up"
+   },
+   {
+    "rank": 15,
+    "name": "亿利达",
+    "thscode": "002686.SZ",
+    "ticker": "002686",
+    "heat": "1668.0",
+    "rank_change": 1,
+    "rank_trend": "up"
+   },
+   {
+    "rank": 16,
+    "name": "金富科技",
+    "thscode": "003018.SZ",
+    "ticker": "003018",
+    "heat": "1629.8",
+    "rank_change": 3,
+    "rank_trend": "up"
+   },
+   {
+    "rank": 17,
+    "name": "海南海药",
+    "thscode": "000566.SZ",
+    "ticker": "000566",
+    "heat": "1621.5",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 18,
+    "name": "透景生命",
+    "thscode": "300642.SZ",
+    "ticker": "300642",
+    "heat": "1601.4",
+    "rank_change": 2,
+    "rank_trend": "up"
+   },
+   {
+    "rank": 19,
+    "name": "甘咨询",
+    "thscode": "000779.SZ",
+    "ticker": "000779",
+    "heat": "1495.3",
+    "rank_change": 1,
+    "rank_trend": "up"
+   },
+   {
+    "rank": 20,
+    "name": "智云股份",
+    "thscode": "300097.SZ",
+    "ticker": "300097",
+    "heat": "1458.7",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 21,
+    "name": "华森制药",
+    "thscode": "002907.SZ",
+    "ticker": "002907",
+    "heat": "1456.7",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 22,
+    "name": "飞龙股份",
+    "thscode": "002536.SZ",
+    "ticker": "002536",
+    "heat": "1440.9",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 23,
+    "name": "凯莱英",
+    "thscode": "002821.SZ",
+    "ticker": "002821",
+    "heat": "1408.2",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 24,
+    "name": "我爱我家",
+    "thscode": "000560.SZ",
+    "ticker": "000560",
+    "heat": "1320.9",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 25,
+    "name": "泸州老窖",
+    "thscode": "000568.SZ",
+    "ticker": "000568",
+    "heat": "1285.5",
+    "rank_change": 4,
+    "rank_trend": "up"
+   },
+   {
+    "rank": 26,
+    "name": "石头科技",
+    "thscode": "688169.SH",
+    "ticker": "688169",
+    "heat": "1273.2",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 27,
+    "name": "新华百货",
+    "thscode": "600785.SH",
+    "ticker": "600785",
+    "heat": "1265.7",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 28,
+    "name": "金安国纪",
+    "thscode": "002636.SZ",
+    "ticker": "002636",
+    "heat": "1208.0",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 29,
+    "name": "湖南天雁",
+    "thscode": "600698.SH",
+    "ticker": "600698",
+    "heat": "1165.1",
+    "rank_change": 2,
+    "rank_trend": "up"
+   },
+   {
+    "rank": 30,
+    "name": "天秦装备",
+    "thscode": "300922.SZ",
+    "ticker": "300922",
+    "heat": "1133.4",
+    "rank_change": 2,
+    "rank_trend": "up"
+   }
+  ],
+  "sky_hour": [
+   {
+    "rank": 1,
+    "name": "英维克",
+    "thscode": "002837.SZ",
+    "ticker": "002837",
+    "heat": "4592.3",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 2,
+    "name": "杭电股份",
+    "thscode": "603618.SH",
+    "ticker": "603618",
+    "heat": "3268.2",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 3,
+    "name": "金螳螂",
+    "thscode": "002081.SZ",
+    "ticker": "002081",
+    "heat": "2483.5",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 4,
+    "name": "宇树科技",
+    "thscode": "688836.SH",
+    "ticker": "688836",
+    "heat": "2415.8",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 5,
+    "name": "金健米业",
+    "thscode": "600127.SH",
+    "ticker": "600127",
+    "heat": "2350.9",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 6,
+    "name": "汉森制药",
+    "thscode": "002412.SZ",
+    "ticker": "002412",
+    "heat": "2130.7",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 7,
+    "name": "太极实业",
+    "thscode": "600667.SH",
+    "ticker": "600667",
+    "heat": "1607.7",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 8,
+    "name": "楚天龙",
+    "thscode": "003040.SZ",
+    "ticker": "003040",
+    "heat": "1579.8",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 9,
+    "name": "士兰微",
+    "thscode": "600460.SH",
+    "ticker": "600460",
+    "heat": "1342.6",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 10,
+    "name": "兆易创新",
+    "thscode": "603986.SH",
+    "ticker": "603986",
+    "heat": "1225.3",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 11,
+    "name": "飞龙股份",
+    "thscode": "002536.SZ",
+    "ticker": "002536",
+    "heat": "1121.8",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 12,
+    "name": "中南文化",
+    "thscode": "002445.SZ",
+    "ticker": "002445",
+    "heat": "1042.1",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 13,
+    "name": "星宇股份",
+    "thscode": "601799.SH",
+    "ticker": "601799",
+    "heat": "1014.5",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 14,
+    "name": "通鼎互联",
+    "thscode": "002491.SZ",
+    "ticker": "002491",
+    "heat": "938.7",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 15,
+    "name": "金牛化工",
+    "thscode": "600722.SH",
+    "ticker": "600722",
+    "heat": "932.9",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 16,
+    "name": "凯莱英",
+    "thscode": "002821.SZ",
+    "ticker": "002821",
+    "heat": "864.9",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 17,
+    "name": "黄河旋风",
+    "thscode": "600172.SH",
+    "ticker": "600172",
+    "heat": "863.1",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 18,
+    "name": "高澜股份",
+    "thscode": "300499.SZ",
+    "ticker": "300499",
+    "heat": "861.1",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 19,
+    "name": "风华高科",
+    "thscode": "000636.SZ",
+    "ticker": "000636",
+    "heat": "855.1",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 20,
+    "name": "江西铜业",
+    "thscode": "600362.SH",
+    "ticker": "600362",
+    "heat": "846.4",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 21,
+    "name": "金富科技",
+    "thscode": "003018.SZ",
+    "ticker": "003018",
+    "heat": "843.9",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 22,
+    "name": "中毅达",
+    "thscode": "600610.SH",
+    "ticker": "600610",
+    "heat": "835.4",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 23,
+    "name": "沪电股份",
+    "thscode": "002463.SZ",
+    "ticker": "002463",
+    "heat": "801.9",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 24,
+    "name": "通富微电",
+    "thscode": "002156.SZ",
+    "ticker": "002156",
+    "heat": "801.1",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 25,
+    "name": "百花医药",
+    "thscode": "600721.SH",
+    "ticker": "600721",
+    "heat": "796.8",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 26,
+    "name": "中天科技",
+    "thscode": "600522.SH",
+    "ticker": "600522",
+    "heat": "750.3",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 27,
+    "name": "协鑫能科",
+    "thscode": "002015.SZ",
+    "ticker": "002015",
+    "heat": "748.9",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 28,
+    "name": "万向德农",
+    "thscode": "600371.SH",
+    "ticker": "600371",
+    "heat": "738.2",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 29,
+    "name": "紫金矿业",
+    "thscode": "601899.SH",
+    "ticker": "601899",
+    "heat": "720.1",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   },
+   {
+    "rank": 30,
+    "name": "登海种业",
+    "thscode": "002041.SZ",
+    "ticker": "002041",
+    "heat": "709.1",
+    "rank_change": 0,
+    "rank_trend": "flat"
+   }
+  ]
+ },
+ "overlap": {
+  "hot_day_hot_hour": 21,
+  "sky_day_sky_hour": 10,
+  "hot_day_sky_day": 7,
+  "hot_hour_sky_hour": 17,
+  "hot_day_sky_hour": 14
+ },
+ "trends": [
+  {
+   "thscode": "688836.SH",
+   "name": "宇树科技",
+   "series": [
+    {
+     "date": "2026-07-30",
+     "rank": 5545
+    },
+    {
+     "date": "2026-07-31",
+     "rank": 1117
+    },
+    {
+     "date": "2026-08-01",
+     "rank": 250
+    },
+    {
+     "date": "2026-08-02",
+     "rank": 283
+    },
+    {
+     "date": "2026-08-03",
+     "rank": 1379
+    },
+    {
+     "date": "2026-08-04",
+     "rank": 1643
+    },
+    {
+     "date": "2026-08-05",
+     "rank": 1273
+    },
+    {
+     "date": "2026-08-06",
+     "rank": 560
+    },
+    {
+     "date": "2026-08-07",
+     "rank": 402
+    },
+    {
+     "date": "2026-08-08",
+     "rank": 143
+    },
+    {
+     "date": "2026-08-09",
+     "rank": 37
+    },
+    {
+     "date": "2026-08-10",
+     "rank": 61
+    },
+    {
+     "date": "2026-08-11",
+     "rank": 105
+    },
+    {
+     "date": "2026-08-12",
+     "rank": 159
+    },
+    {
+     "date": "2026-08-13",
+     "rank": 239
+    },
+    {
+     "date": "2026-08-14",
+     "rank": 258
+    },
+    {
+     "date": "2026-08-15",
+     "rank": 94
+    },
+    {
+     "date": "2026-08-16",
+     "rank": 96
+    },
+    {
+     "date": "2026-08-17",
+     "rank": 144
+    },
+    {
+     "date": "2026-08-18",
+     "rank": 88
+    },
+    {
+     "date": "2026-08-19",
+     "rank": 1
+    },
+    {
+     "date": "2026-08-20",
+     "rank": 1
+    },
+    {
+     "date": "2026-08-21",
+     "rank": 1
+    },
+    {
+     "date": "2026-08-22",
+     "rank": 1
+    },
+    {
+     "date": "2026-08-23",
+     "rank": 1
+    },
+    {
+     "date": "2026-08-24",
+     "rank": 1
+    },
+    {
+     "date": "2026-08-25",
+     "rank": 1
+    },
+    {
+     "date": "2026-08-26",
+     "rank": 1
+    }
+   ]
+  },
+  {
+   "thscode": "600487.SH",
+   "name": "亨通光电",
+   "series": [
+    {
+     "date": "2026-07-27",
+     "rank": 23
+    },
+    {
+     "date": "2026-07-28",
+     "rank": 20
+    },
+    {
+     "date": "2026-07-29",
+     "rank": 21
+    },
+    {
+     "date": "2026-07-30",
+     "rank": 16
+    },
+    {
+     "date": "2026-07-31",
+     "rank": 18
+    },
+    {
+     "date": "2026-08-01",
+     "rank": 25
+    },
+    {
+     "date": "2026-08-02",
+     "rank": 30
+    },
+    {
+     "date": "2026-08-03",
+     "rank": 22
+    },
+    {
+     "date": "2026-08-04",
+     "rank": 18
+    },
+    {
+     "date": "2026-08-05",
+     "rank": 9
+    },
+    {
+     "date": "2026-08-06",
+     "rank": 11
+    },
+    {
+     "date": "2026-08-07",
+     "rank": 10
+    },
+    {
+     "date": "2026-08-08",
+     "rank": 10
+    },
+    {
+     "date": "2026-08-09",
+     "rank": 15
+    },
+    {
+     "date": "2026-08-10",
+     "rank": 12
+    },
+    {
+     "date": "2026-08-11",
+     "rank": 19
+    },
+    {
+     "date": "2026-08-12",
+     "rank": 14
+    },
+    {
+     "date": "2026-08-13",
+     "rank": 22
+    },
+    {
+     "date": "2026-08-14",
+     "rank": 2
+    },
+    {
+     "date": "2026-08-15",
+     "rank": 1
+    },
+    {
+     "date": "2026-08-16",
+     "rank": 2
+    },
+    {
+     "date": "2026-08-17",
+     "rank": 3
+    },
+    {
+     "date": "2026-08-18",
+     "rank": 7
+    },
+    {
+     "date": "2026-08-19",
+     "rank": 11
+    },
+    {
+     "date": "2026-08-20",
+     "rank": 6
+    },
+    {
+     "date": "2026-08-21",
+     "rank": 8
+    },
+    {
+     "date": "2026-08-22",
+     "rank": 11
+    },
+    {
+     "date": "2026-08-23",
+     "rank": 17
+    },
+    {
+     "date": "2026-08-24",
+     "rank": 14
+    },
+    {
+     "date": "2026-08-25",
+     "rank": 2
+    },
+    {
+     "date": "2026-08-26",
+     "rank": 2
+    }
+   ]
+  },
+  {
+   "thscode": "600127.SH",
+   "name": "金健米业",
+   "series": [
+    {
+     "date": "2026-07-27",
+     "rank": 2538
+    },
+    {
+     "date": "2026-07-28",
+     "rank": 2465
+    },
+    {
+     "date": "2026-07-29",
+     "rank": 2335
+    },
+    {
+     "date": "2026-07-30",
+     "rank": 2287
+    },
+    {
+     "date": "2026-07-31",
+     "rank": 2617
+    },
+    {
+     "date": "2026-08-01",
+     "rank": 2412
+    },
+    {
+     "date": "2026-08-02",
+     "rank": 2131
+    },
+    {
+     "date": "2026-08-03",
+     "rank": 1964
+    },
+    {
+     "date": "2026-08-04",
+     "rank": 2579
+    },
+    {
+     "date": "2026-08-05",
+     "rank": 2611
+    },
+    {
+     "date": "2026-08-06",
+     "rank": 341
+    },
+    {
+     "date": "2026-08-07",
+     "rank": 375
+    },
+    {
+     "date": "2026-08-08",
+     "rank": 524
+    },
+    {
+     "date": "2026-08-09",
+     "rank": 560
+    },
+    {
+     "date": "2026-08-10",
+     "rank": 671
+    },
+    {
+     "date": "2026-08-11",
+     "rank": 919
+    },
+    {
+     "date": "2026-08-12",
+     "rank": 1140
+    },
+    {
+     "date": "2026-08-13",
+     "rank": 1229
+    },
+    {
+     "date": "2026-08-14",
+     "rank": 1098
+    },
+    {
+     "date": "2026-08-15",
+     "rank": 1340
+    },
+    {
+     "date": "2026-08-16",
+     "rank": 689
+    },
+    {
+     "date": "2026-08-17",
+     "rank": 174
+    },
+    {
+     "date": "2026-08-18",
+     "rank": 52
+    },
+    {
+     "date": "2026-08-19",
+     "rank": 19
+    },
+    {
+     "date": "2026-08-20",
+     "rank": 8
+    },
+    {
+     "date": "2026-08-21",
+     "rank": 7
+    },
+    {
+     "date": "2026-08-22",
+     "rank": 15
+    },
+    {
+     "date": "2026-08-23",
+     "rank": 24
+    },
+    {
+     "date": "2026-08-24",
+     "rank": 11
+    },
+    {
+     "date": "2026-08-25",
+     "rank": 3
+    },
+    {
+     "date": "2026-08-26",
+     "rank": 3
+    }
+   ]
+  }
+ ]
+}
