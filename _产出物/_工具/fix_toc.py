@@ -22,10 +22,10 @@ def gfm_anchor(text):
     return text
 
 def parse_headings(content):
-    """提取所有 ## / ### / #### 标题"""
+    """提取所有 ## / ### / #### / ##### 标题"""
     headings = []
     for i, line in enumerate(content.split('\n'), 1):
-        m = re.match(r'^(#{2,4})\s+(.+)$', line)
+        m = re.match(r'^(#{2,5})\s+(.+)$', line)
         if m:
             level = len(m.group(1))
             text = m.group(2).strip()

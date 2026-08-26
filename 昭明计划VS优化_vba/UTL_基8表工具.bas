@@ -1112,21 +1112,18 @@ Function PBASE格程工具_表操工表新增( _
     PBASE格程工具_表操工表新增 = False
     If WB Is Nothing Then Set WB = ThisWorkbook
     If Len(sWS) = 0 Then Exit Function
-    ' 工作表名最长31字符，超长截断
-    Dim sWS_trim As String
-    sWS_trim = Left$(sWS, 31)
     ' 删除旧表（如有）
-    If UTL判断工表存在(sWS_trim, WB) Then
+    If UTL判断工表存在(sWS, WB) Then
         Dim bSave As Boolean
         bSave = Application.DisplayAlerts
         Application.DisplayAlerts = False
-        WB.Sheets(sWS_trim).Delete
+        WB.Sheets(sWS).Delete
         Application.DisplayAlerts = bSave
     End If
     ' 新建表
     Dim WSNEW As Worksheet
     Set WSNEW = WB.Sheets.Add(after:=WB.Sheets(WB.Sheets.Count))
-    WSNEW.Name = sWS_trim
+    WSNEW.Name = sWS
     WSNEW.Tab.Color = 基色底
     Set WS = WSNEW
     PBASE格程工具_表操工表新增 = True
