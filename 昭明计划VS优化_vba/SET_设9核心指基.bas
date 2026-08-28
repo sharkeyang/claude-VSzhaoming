@@ -254,6 +254,7 @@ With 典码称
     '--------------------------------------------------------------
     .Add Key:="sh515220", Item:="煤炭ETF"
     .Add Key:="sz159697", Item:="油气ETF"
+    .Add Key:="sz159980", Item:="有色ETF"
     .Add Key:="sh516780", Item:="稀土ETF"
     .Add Key:="sh515210", Item:="钢铁ETF"
     .Add Key:="sz159745", Item:="建材ETF"

@@ -1089,6 +1089,20 @@ End If
                         .Font.Color = 常色二灰
                     End If
                 End With
+                With .Cells(1, 位谕of周策分坏)
+                    If .Value = "_" Then
+                        .Font.Color = .Interior.Color
+                    ElseIf InStr(.Value, "_") > 0 Then
+                        .Font.Color = 常色三灰
+                    End If
+                End With
+                With .Cells(1, 位谕of周策分好)
+                    If .Value = "_" Then
+                        .Font.Color = .Interior.Color
+                    ElseIf InStr(.Value, "_") > 0 Then
+                        .Font.Color = 常色三灰
+                    End If
+                End With
                 With .Cells(1, 位谕of月策分日P2)
                     If .Value = "_" Then
                         .Font.Color = .Interior.Color
