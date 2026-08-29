@@ -33,3 +33,7 @@ ____temp/谕组日/
 昭明MMMM/
 昭明计划归档/
 算展.*.xlsx
+
+# ____temp 大文件 (parquet)
+*.parquet
+____temp/*.parquet
