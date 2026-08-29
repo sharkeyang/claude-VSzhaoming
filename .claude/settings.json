@@ -14,7 +14,8 @@
       "Bash(python _产出物/_工具/fix_toc.py \"_主文档/MC3.3_研究日冲策略.md\" --dry-run)",
       "Bash(python _产出物/_工具/fix_toc.py \"_主文档/MC3.1_C3周WXZC+WXAB全维度分析.md\" --dry-run)",
       "Bash(python _产出物/_工具/fix_toc.py \"_主文档/MC3.3_C2日DXZC+DXAB全维度分析.md\" --dry-run)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(git mv *)"
     ],
     "defaultMode": "bypassPermissions",
     "additionalDirectories": [
