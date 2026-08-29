@@ -6,7 +6,15 @@
       "Write(d:/@VSwork/**/*)",
       "Edit(d:/@VSwork/**/*)",
       "Glob(d:/@VSwork/**/*)",
-      "Grep(d:/@VSwork/**/*)"
+      "Grep(d:/@VSwork/**/*)",
+      "Bash(python _工具/fix_toc.py \"MC3.3_C2日DXZC+DXAB全维度分析.md\")",
+      "Bash(python \"_产出物/_工具/fix_toc.py\" \"MC3.3_C2日DXZC+DXAB全维度分析.md\")",
+      "Bash(python \"_产出物/_工具/fix_toc.py\" \"_主文档/MC3.3_C2日DXZC+DXAB全维度分析.md\")",
+      "Bash(python _产出物/_工具/fix_toc.py \"_主文档/MC3.3_C2日DXZC+DXAB全维度分析.md\" \"_主文档/MC3.3_研究日冲策略.md\" --dry-run)",
+      "Bash(python _产出物/_工具/fix_toc.py \"_主文档/MC3.3_研究日冲策略.md\" --dry-run)",
+      "Bash(python _产出物/_工具/fix_toc.py \"_主文档/MC3.1_C3周WXZC+WXAB全维度分析.md\" --dry-run)",
+      "Bash(python _产出物/_工具/fix_toc.py \"_主文档/MC3.3_C2日DXZC+DXAB全维度分析.md\" --dry-run)",
+      "Bash(python -c ' *)"
     ],
     "defaultMode": "bypassPermissions",
     "additionalDirectories": [
