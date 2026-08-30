@@ -143,13 +143,25 @@ def fix_toc(filepath, dry_run=False):
             print('\n⚠️ 未找到目录标记（**目录：** 或 ## 目录）')
             return
 
-        # 目录标记之后，找第一个 ## 标题作为 TOC 结束位置
+        # 目录标记之后，定位目录区真正结束的位置。
+        # 目录条目均为 "  - [标题](#锚点)" 格式（可带缩进）。从标记后的
+        # 第一个非空行开始逐行扫描：跳过空行与目录条目，遇到第一个
+        # "既不是空行、也不是目录条目"的行（正文标题 `## xxx`、分隔线
+        # `---` 等）即为目录结束。不依赖"第一个 ## 标题"这一脆弱假设，
+        # 避免把大目录文件的正文误判为目录而整体删除。
         after_marker = content[toc_start + len(toc_marker):]
-        m = re.search(r'^## ', after_marker, re.MULTILINE)
-        if not m:
-            print('\n⚠️ 无法定位 TOC 区域，请手动替换')
-            return
-        toc_end = toc_start + len(toc_marker) + m.start()
+        lines_after = after_marker.split('\n')
+        toc_end_offset = len(lines_after)
+        in_toc = True
+        for i, line in enumerate(lines_after):
+            if in_toc:
+                # 目录区内：空行或目录条目都算，继续
+                if line.strip() == '' or re.match(r'^\s*- \[', line):
+                    continue
+                # 第一个非空、非条目的行 → 目录到此结束
+                toc_end_offset = i
+                break
+        toc_end = toc_start + len(toc_marker) + toc_end_offset
 
         new_content = content[:toc_start] + toc + '\n\n' + content[toc_end:]
         with open(filepath, 'w', encoding='utf-8') as f:
