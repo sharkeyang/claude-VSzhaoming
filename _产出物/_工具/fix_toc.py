@@ -9,11 +9,11 @@ import re, sys, os
 sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf-8', buffering=1)
 
 def gfm_anchor(text):
-    """生成 GitHub 风格锚点"""
+    """生成 GitHub 风格锚点（与真实 GFM 规则一致：保留括号内文字，仅去括号符号）"""
     # 去掉数字点号后的空格（1.1 → 11）
     text = re.sub(r'(\d+)\.(\d+)', r'\1\2', text)
-    # 去掉括号及内容
-    text = re.sub(r'[（(][^)）]*[)）]', '', text)
+    # 仅去掉括号符号（（ ）( )），保留括号内文字——真实 GFM 锚点保留括号内容
+    text = text.replace('（', '').replace('）', '').replace('(', '').replace(')', '')
     # 转小写、去标点、空格变连字符
     text = text.lower()
     text = re.sub(r'[^\w一-鿿\s-]', '', text)
@@ -144,23 +144,32 @@ def fix_toc(filepath, dry_run=False):
             return
 
         # 目录标记之后，定位目录区真正结束的位置。
-        # 目录条目均为 "  - [标题](#锚点)" 格式（可带缩进）。从标记后的
-        # 第一个非空行开始逐行扫描：跳过空行与目录条目，遇到第一个
-        # "既不是空行、也不是目录条目"的行（正文标题 `## xxx`、分隔线
-        # `---` 等）即为目录结束。不依赖"第一个 ## 标题"这一脆弱假设，
-        # 避免把大目录文件的正文误判为目录而整体删除。
+        # 目录区是标记之后一段"连续"的目录条目块（条目间可有空行）。
+        # 从标记后第一个非空行开始，空行与 `- [` 条目都算目录区；遇到
+        # 第一个"既非空行、也非 `- [` 条目"的行（如 `---`、`##` 章节、
+        # `###` 片段、正文列表等）即目录结束。这样正文里的 `- [` 列表
+        # 不会被误判为目录，正文完整保留。
         after_marker = content[toc_start + len(toc_marker):]
         lines_after = after_marker.split('\n')
-        toc_end_offset = len(lines_after)
-        in_toc = True
-        for i, line in enumerate(lines_after):
-            if in_toc:
-                # 目录区内：空行或目录条目都算，继续
-                if line.strip() == '' or re.match(r'^\s*- \[', line):
+        toc_end_offset = len(after_marker)   # 字符偏移，默认到末尾
+        pos = 0
+        started = False
+        for line in lines_after:
+            is_entry = re.match(r'^\s*- \[', line)
+            is_blank = line.strip() == ''
+            if not started:
+                # 跳过目录标记后的前导空行
+                if is_blank:
+                    pos += len(line) + 1
                     continue
-                # 第一个非空、非条目的行 → 目录到此结束
-                toc_end_offset = i
-                break
+                started = True
+            if is_entry or is_blank:
+                # 目录区内：条目或条目间空行，继续
+                pos += len(line) + 1
+                continue
+            # 第一个非空、非条目的行 → 目录到此结束
+            toc_end_offset = pos
+            break
         toc_end = toc_start + len(toc_marker) + toc_end_offset
 
         new_content = content[:toc_start] + toc + '\n\n' + content[toc_end:]
