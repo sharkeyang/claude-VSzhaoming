@@ -3825,16 +3825,31 @@ If UBCID是代码(CIDL) = True Then
             Dim 等机警 As String: 等机警 = ""
             Dim 等顶型 As String: 等顶型 = 组结算(X, 基位日类 + 位os基顶型)
             Dim 等上符 As String: 等上符 = 谕组(X, 位谕of日管上符串)
-            '--- 等3龙头：等3+ZC>0+顶型含龙+上符末位A ---
-            If 等值 = "等3" And 日类BTZC > 0 Then
-                If InStr(等顶型, "龙") > 0 And Right$(等上符, 1) = "A" Then
-                    等机警 = "等3顶"
-                Else
-                    等机警 = "等3"
+            '--- 最强信号：触顶+十字星(无长上影)+BSHA≥8 → 高概率次日冲高（C6§5.10 约85%） ---
+            If 日类BTZC > 0 And Right$(等上符, 1) = "A" Then
+                If Val(谕组(X, 位谕of日层BSHA)) >= 8 Then
+                    '十字星(无长上影)判断：实体<10%全幅 且 上影<=2*实体
+                    Dim 实体 As Double: 实体 = Abs(日类今收 - 日类今开)
+                    Dim 全幅 As Double: 全幅 = 日类今高 - 日类今低
+                    Dim 上影 As Double: 上影 = 日类今高 - IIf(日类今收 > 日类今开, 日类今收, 日类今开)
+                    If 全幅 > 0 And 实体 < 0.1 * 全幅 And 上影 <= 2 * 实体 Then
+                        等机警 = "冲顶星"
+                    End If
                 End If
-            '--- 开门：ZC>0+CD>0（无条件叠加） ---
-            ElseIf 日类BTZC > 0 And 日类BTCD > 0 Then
-                等机警 = "开门"
+            End If
+            '--- 若未触发最强信号，回退到等高线机警 ---
+            If 等机警 = "" Then
+                '--- 等3龙头：等3+ZC>0+顶型含龙+上符末位A ---
+                If 等值 = "等3" And 日类BTZC > 0 Then
+                    If InStr(等顶型, "龙") > 0 And Right$(等上符, 1) = "A" Then
+                        等机警 = "等3顶"
+                    Else
+                        等机警 = "等3"
+                    End If
+                '--- 开门：ZC>0+CD>0（无条件叠加） ---
+                ElseIf 日类BTZC > 0 And 日类BTCD > 0 Then
+                    等机警 = "开门"
+                End If
             End If
             谕组(X, 位谕of日层机警) = 等机警
             '============================================================================
