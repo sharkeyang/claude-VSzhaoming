@@ -1,21 +1,23 @@
-"""日机验证_护型顶型.py — 按 DXAB护型 + 日顶型 寻找日机（可复用验证流程）
+"""日机验证_护型顶型.py — 按 DXAB护型 + 触顶/触哼(t顶/t哼) + 合顶 + 顶触 找日机（可复用验证流程）
 
-用法：python 日机验证_护型顶型.py <股票代码> <起始日期> <结束日期> [--列宽]
+用法：python 日机验证_护型顶型.py <股票代码> <起始日期> <结束日期>
 示例：python 日机验证_护型顶型.py sz300659 2019/8/9 2019/9/6
       python 日机验证_护型顶型.py sz000002 2020/3/1 2020/6/1
 
 数据源：昭明算展/谕组日/谕组日_<代码>.csv
-核心列（据 VBA 导出代码 PX算研_RAP算展1引擎.bas 精确映射，勿信表头名）：
+核心列（据 VBA 导出代码 PX算研_RAP算展1引擎.bas XL算展取样调程_谕组单股通用 精确映射，勿信表头名）：
   [0]日期 [1]收 [2]开 [3]高 [4]低 [5]涨幅 [6]高幅
   [9]日层护型 [10]日层柱排 [13]日ZA [14]日ZC
   [17]日层机警 [19]日层BSHA [21]日层脸哼JA [22]日层宽哼JC [23]偏顶JC
   [30]上符串(触顶A/哼B/哈v/底w/无_)  [43]顶型(位os基顶型)  [44]日等型
   [45]仓日类(护级+护段，非顶型)
+  [53]日龟BT顶(t顶)  [54]日龟BT哼(t哼)  [55]日龟顶触(龙a/龙b)  [56]日龟BT合顶哼
+  [57]日基月局 [58]日基周局 [59]日基日局 [60]日基乾局 [61]日基坤局
 
+主指标：上符串[30] + t顶[53] + t哼[54] + 顶触[55](龙a/龙b)；顶型[43]仅辅助
 上符串编码（VBA 结算.bas）：A=触顶 B=触哼 v=触哈 w=触底 _=无
 触顶=上符串右端'A'；合顶天数=从右往左连续'A'个数。
-顶型[43]：如 龙/雀/虎/篪/武/非 等形态（前缀 _/a/b/c/d/e/K 等表示位置/级别）。
-仓日类[45]：护级(上中下忐忠忑)首字 + 护段(甲乙丙丁戊己)首字，如 "上a"、"忐r"。
+⚠️ 列53-61 需用户导入修改后正式版并重跑取样才有；旧CSV无这些列（t顶/t哼/顶触为空）。
 """
 import io, sys, os, datetime
 
@@ -29,6 +31,10 @@ def parse_date(s):
         try: return datetime.datetime.strptime(s, fmt)
         except: pass
     raise ValueError(f"无法解析日期: {s}")
+
+def safe(s):
+    """安全取字符串值"""
+    return s if s is not None else ''
 
 def heding_days(s):
     """合顶天数 = 从右往左连续'A'个数"""
@@ -78,7 +84,13 @@ def load_csv(code):
                      '护型': c[9], '柱排': c[10], 'ZA': float(c[13]), 'ZC': float(c[14]),
                      '日机警': c[17], 'BSHA': c[19], '脸哼JA': c[21], '宽哼JC': c[22], '偏顶JC': c[23],
                      '上符串': c[30], '上符范': c[29], '宽符串': c[31],
-                     '顶型': c[43], '日等型': c[44], '仓日类': c[45], 'BTZA': c[41]})
+                     '顶型': c[43], '日等型': c[44], '仓日类': c[45], 'BTZA': c[41],
+                     # 新增列(需用户导入重跑后才有)
+                     't顶': safe(c[53]) if len(c)>53 else '', 't哼': safe(c[54]) if len(c)>54 else '',
+                     '顶触': safe(c[55]) if len(c)>55 else '', '合顶哼': safe(c[56]) if len(c)>56 else '',
+                     '日基月局': safe(c[57]) if len(c)>57 else '', '日基周局': safe(c[58]) if len(c)>58 else '',
+                     '日基日局': safe(c[59]) if len(c)>59 else '', '日基乾局': safe(c[60]) if len(c)>60 else '',
+                     '日基坤局': safe(c[61]) if len(c)>61 else ''})
     return hdr, rows
 
 def analyze(code, start_s, end_s):
@@ -100,27 +112,26 @@ def analyze(code, start_s, end_s):
 
     # 输出微观指标表
     print(f"\n{'日期':<11}{'收':>7}{'涨幅':>7}{'高幅':>7} {'护型':<16}{'ZA':>3}{'ZC':>4} "
-          f"{'上符串':<7}{'触顶':<4}{'合顶':<3} {'顶型[43]':<6} {'日等型':<4} {'仓日类':<4} 日机标记")
-    print('-'*115)
+          f"{'上符串':<7}{'合顶':<3} {'t顶':>3} {'t哼':>3} {'顶触':<8} {'顶型':<6} {'日等型':<4} 日机标记")
+    print('-'*118)
     for r in rows[ctx_start:ctx_end]:
         mark = ''
         if start <= r['date'] <= end:
             mark = judge(r)
-        ts = touch_state(r['上符串'])
         hd = heding_days(r['上符串'])
         print(f"{r['date_s']:<11}{r['收']:>7.2f}{r['涨幅']:>7.2f}{r['高幅']:>7.2f} "
               f"{r['护型']:<16}{r['ZA']:>3}{r['ZC']:>4} "
-              f"{r['上符串']:<7}{ts:<4}{hd:<3} {r['顶型']:<6} {r['日等型']:<4} {r['仓日类']:<4} {mark}")
+              f"{r['上符串']:<7}{hd:<3} {r['t顶']:>3} {r['t哼']:>3} {r['顶触']:<8} {r['顶型']:<6} {r['日等型']:<4} {mark}")
 
     print(f"\n{'='*100}")
     print("【日机标记说明】★=强烈介入/持有  ▲=可介入/关注  ●=转机/谨慎介入  ⚠=退出/回避")
+    print("【主指标】上符串[30](触顶A/触哼B/合顶) + t顶[53] + t哼[54] + 顶触[55](龙a/龙b)；顶型[43]仅辅助")
     print(f"{'='*100}\n")
 
 def judge(r):
-    """按 DXAB护型 + 日顶型[43] + 触顶/合顶 找日机
-    顶型[43]编码（VBA 神谕.bas 4460-4525）：
-      a龙=多头+触顶  b龙=多头+近顶  c雀=多头+顶弱  d虎=虎族(向下/返上风险)
-      e非=非多头  f武=哼JA管下弱  *篪=多头但ZA转负(异常)  前缀_/K等=位置/级别
+    """按 DXAB护型 + 触顶/触哼(t顶/t哼) + 合顶 + 顶触 找日机
+    主指标：上符串[30](触顶A/触哼B/合顶) + t顶[53] + t哼[54] + 顶触[55](龙a/龙b)
+    辅助：顶型[43](a龙/b龙/c雀/d虎/e非/f武/*篪) — 仅作参考，非主指标
     """
     hf = hx_first(r['护型'])
     hd = heding_days(r['上符串'])
@@ -128,48 +139,39 @@ def judge(r):
     top = r['顶型'] or ''
     zc = r['ZC']
     za = r['ZA']
-    # 提取顶型主体（去前缀，如 _a龙→a龙, Kc雀→c雀）
-    body = top
-    for pfx in ['a','b','c','d','e','f','K']:
-        if body.startswith(pfx):
-            body = body; break
-    # 判断顶型类别
-    is_long = ('龙' in top or '雀' in top)      # 多头排列
-    is_zhui = '篪' in top                        # 多头但ZA转负(异常)
-    is_weak = ('武' in top)                    # 哼JA管下弱(真弱)；e非=非多头过渡期非弱
-    is_hu = '虎' in top                          # 虎族(风险)
-    is_a_long = 'a龙' in top
-    is_b_long = 'b龙' in top
-    is_c_que = 'c雀' in top
+    t顶 = r['t顶']; t哼 = r['t哼']; 顶触 = r['顶触'] or ''
+    # 顶触/龙ab 判断（周/日顶触，如 龙a/龙b/高/低/G0一高）
+    is_long_touch = ('龙' in 顶触)     # 龙a/龙b
+    is_a_long = ('a龙' in 顶触) or ('龙a' in 顶触)
+    # 辅助顶型[43]类别
+    is_hu = '虎' in top
+    is_weak = '武' in top
+    is_zhui = '篪' in top
 
-    # 日机规则（基于正确顶型 + 验证结论 + 用户模型）
+    # 日机规则（主指标优先）
     if zc <= 0:
-        # ZC<=0: 非前提区，只标记转机观察
+        # ZC<=0: 非前提区
         if '甲' in hf or '乙' in hf:
             return '▲ 转机观察(ZC<=0)'
         return ''
     # ZC>0 前提区
-    # 顶型转弱优先（风险）：仅 虎(d)/武(f) 是真转弱；e非 是"非多头→多头"过渡期非转弱
+    # 顶型转弱优先（辅助）
     if is_hu or is_weak:
         return '⚠ 顶型转弱(虎/武)'
     if is_zhui and '甲' in hf:
         return '⚠ 甲+篪(ZA转负)'
     # 乙启动
-    if '乙' in hf and touch == '触顶' and is_long:
-        return '★★ 乙启动日机(顶'+body+')'
     if '乙' in hf and touch == '触顶':
-        return '★ 乙日机(触顶)'
+        return '★★ 乙启动日机(触顶)'
     # 甲
     if '甲' in hf and touch == '触顶' and hd >= 3 and is_a_long:
-        return '★ 甲强日机(合顶'+str(hd)+'+a龙)'
+        return '★ 甲强日机(合顶'+str(hd)+'+'+顶触+')'
     if '甲' in hf and touch == '触顶' and hd >= 3:
         return '★ 甲强日机(合顶'+str(hd)+')'
-    if '甲' in hf and touch == '触顶' and is_long:
+    if '甲' in hf and touch == '触顶' and (is_long_touch or '龙' in top):
         return '★ 甲日机(触顶+多头)'
     if '甲' in hf and touch == '触顶':
         return '★ 甲日机(触顶)'
-    if '甲' in hf and is_c_que:
-        return '▲ 甲关注(c雀顶弱)'
     # 己
     if '己' in hf and touch == '触顶':
         return '● 己触顶(观察转甲)'
