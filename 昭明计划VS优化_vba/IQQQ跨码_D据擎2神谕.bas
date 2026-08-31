@@ -3825,7 +3825,7 @@ If UBCID是代码(CIDL) = True Then
             Dim 等机警 As String: 等机警 = ""
             Dim 等顶型 As String: 等顶型 = 组结算(X, 基位日类 + 位os基顶型)
             Dim 等上符 As String: 等上符 = 谕组(X, 位谕of日管上符串)
-            '--- 最强信号：触顶+十字星(无长上影)+BSHA≥8 → 高概率次日冲高（C6§5.10 约85%） ---
+            '--- 最强信号：触顶+十字星(无长上影)+BSHA≥8 → 高概率次日冲高（C6§5.10 约85%，§5.12 乙更强83%） ---
             If 日类BTZC > 0 And Right$(等上符, 1) = "A" Then
                 If Val(谕组(X, 位谕of日层BSHA)) >= 8 Then
                     '十字星(无长上影)判断：实体<10%全幅 且 上影<=2*实体
@@ -3833,7 +3833,12 @@ If UBCID是代码(CIDL) = True Then
                     Dim 全幅 As Double: 全幅 = 日类今高 - 日类今低
                     Dim 上影 As Double: 上影 = 日类今高 - IIf(日类今收 > 日类今开, 日类今收, 日类今开)
                     If 全幅 > 0 And 实体 < 0.1 * 全幅 And 上影 <= 2 * 实体 Then
-                        等机警 = "冲顶星"
+                        '乙护型更强（83% vs 80.5%，§5.12），单独标记
+                        If InStr(DXAB护段, "乙") > 0 Then
+                            等机警 = "冲顶星乙"
+                        Else
+                            等机警 = "冲顶星"
+                        End If
                     End If
                 End If
             End If
