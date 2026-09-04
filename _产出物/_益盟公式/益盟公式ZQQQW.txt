@@ -485,28 +485,42 @@ DDJA之上 := 均线条件JZ上JA;
 日层赢_储初 := IFS(NOT(均线条件JB上JC) and 均线条件JZ上JC, 1, 0);
 {--- 预计算：DXAB甲乙己 ---}
 日层赢_甲乙己 := IFS(日AB护级='甲', 1, IFS(日AB护级='乙', 1, IFS(日AB护级='己', 1, 0)));
-{--- 日层赢第2位 ---}
+{--- 预计算：DXAB己戊（A后缀：己/戊 且 BTZA>0，BTZA用JZ>=JA近似）---}
+日层赢_己戊A := IFS(日AB护级='己', 1, IFS(日AB护级='戊', 1, 0)) and 均线条件JZ上JA;
+{--- 预计算：DXAB甲乙（B后缀）---}
+日层赢_甲乙B := IFS(日AB护级='甲', 1, IFS(日AB护级='乙', 1, 0));
+{--- 预计算：DXAB丙（v后缀）---}
+日层赢_丙v := IFS(日AB护级='丙', 1, 0);
+{--- 预计算：后缀（A/B/v/z，对齐VBA：己戊+BTZA>0→A，甲乙→B，丙→v，其他→z）---}
+日层赢_后缀 := IFS(日层赢_己戊A=1, 'A', IFS(日层赢_甲乙B=1, 'B', IFS(日层赢_丙v=1, 'v', 'z')));
+{--- 日层赢第2位（禁区/执念不带_，最终逻辑统一加） ---}
 日层赢_2 :=
-IFS(周期条件DT8 and 日CD护级='上' and 日层赢_储初=1, IFS(日层赢_甲乙己=1, '介A', '介B'),
-IFS(周期条件DT8 and 日CD护级='上' and 日层赢_储初=0, IFS(日层赢_甲乙己=1, '持A', '持B'),
-IFS(周期条件DT8 and 日CD护级='忐' and 日层赢_储初=1, IFS(日层赢_甲乙己=1, '介A', '介B'),
-IFS(周期条件DT8 and 日CD护级='忐' and 日层赢_储初=0, IFS(日层赢_甲乙己=1, '持A', '持B'),
-IFS(周期条件DT8 and 日CD护级='忠' and 日层赢_储初=1, IFS(日层赢_甲乙己=1, '介A', '介B'),
-IFS(周期条件DT8 and 日CD护级='忠' and 日层赢_储初=0, IFS(日层赢_甲乙己=1, '持A', '持B'),
-IFS(周期条件DT8 and 日CD护级='中' and 日层赢_甲乙己=1, '参A',
-IFS(周期条件DT8 and 日CD护级='中' and 日层赢_甲乙己=0, '参B',
+IFS(周期条件DT8 and 日CD护级='下' and 日层赢_DXZE下=1, '禁区',
+IFS(周期条件DT8 and 日CD护级='忑' and 日层赢_DXZE下=1, '禁区',
+IFS(周期条件DT8 and 日CD护级='下', '执念',
+IFS(周期条件DT8 and 日CD护级='忑', '执念',
+IFS(周期条件DT8 and 日CD护级='中', '执念',
+IFS(周期条件DT8 and 日CD护级='上' and 日层赢_储初=1, '介' + 日层赢_后缀,
+IFS(周期条件DT8 and 日CD护级='上' and 日层赢_储初=0, '持' + 日层赢_后缀,
+IFS(周期条件DT8 and 日CD护级='忐' and 日层赢_储初=1, '介' + 日层赢_后缀,
+IFS(周期条件DT8 and 日CD护级='忐' and 日层赢_储初=0, '持' + 日层赢_后缀,
+IFS(周期条件DT8 and 日CD护级='忠' and 日层赢_储初=1, '介' + 日层赢_后缀,
+IFS(周期条件DT8 and 日CD护级='忠' and 日层赢_储初=0, '持' + 日层赢_后缀,
 ''
-))))))));
-{--- 日层赢最终（非空且DXZE<0加前缀_） ---}
+)))))))))));
+{--- 日层赢最终（禁区/执念固定带_，其余DXZE<0加前缀_） ---}
 日层赢 :=
 IFS(周期条件DT8 and 日层赢_2='', '_弃',
+IFS(周期条件DT8 and 日层赢_2='禁区', '_禁区',
+IFS(周期条件DT8 and 日层赢_2='执念', '_执念',
 IFS(周期条件DT8 and 日层赢_DXZE下=1, '_' + 日层赢_2,
-日层赢_2));
-{--- 日层赢显示（JE位置，颜色：参→深黄，持→cyan，介→绿，_弃→红）---}
+日层赢_2))));
+{--- 日层赢显示（JE位置，颜色：禁区→红，执念→深红，持→cyan，介→绿，_弃→红）---}
 DRAWTEXT(周期条件DT8 and 日层赢='_弃', JE, '_弃'),COLORRED,LAYER1;
-DRAWTEXT(周期条件DT8 and (日层赢='参A' or 日层赢='参B' or 日层赢='_参A' or 日层赢='_参B'), JE, 日层赢),COLOR00BBBB,LAYER1;
-DRAWTEXT(周期条件DT8 and (日层赢='持A' or 日层赢='_持A'), JE, 日层赢),COLORCYAN,LAYER1;
-DRAWTEXT(周期条件DT8 and (日层赢='持B' or 日层赢='_持B'), JE, 日层赢),COLORAAAA00,LAYER1;
-DRAWTEXT(周期条件DT8 and (日层赢='介A' or 日层赢='介B' or 日层赢='_介A' or 日层赢='_介B'), JE, 日层赢),COLORGREEN,LAYER1;
+DRAWTEXT(周期条件DT8 and 日层赢='_禁区', JE, '_禁'),COLORRED,LAYER1;
+DRAWTEXT(周期条件DT8 and 日层赢='_执念', JE, '_念'),COLOR800000,LAYER1;
+DRAWTEXT(周期条件DT8 and (日层赢='持A' or 日层赢='持B' or 日层赢='_持A' or 日层赢='_持B'), JE, 日层赢),COLORCYAN,LAYER1;
+DRAWTEXT(周期条件DT8 and (日层赢='持v' or 日层赢='持z' or 日层赢='_持v' or 日层赢='_持z'), JE, 日层赢),COLORAAAA00,LAYER1;
+DRAWTEXT(周期条件DT8 and (日层赢='介A' or 日层赢='介B' or 日层赢='介v' or 日层赢='介z' or 日层赢='_介A' or 日层赢='_介B' or 日层赢='_介v' or 日层赢='_介z'), JE, 日层赢),COLORGREEN,LAYER1;
 
 

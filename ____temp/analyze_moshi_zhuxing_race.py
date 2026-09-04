@@ -17,7 +17,7 @@ import numpy as np, pandas as pd, os, glob, time, warnings
 warnings.simplefilter('ignore')
 
 DATA_DIR = r'D:\@VSwork\VS昭明计划VBA优化\昭明算展\谕组日'
-N_FILES = 800
+N_FILES = 99999
 np.random.seed(42)
 
 def classify_8(za, last):
@@ -91,19 +91,21 @@ def main():
 
     for i, f in enumerate(sampled):
         try:
-            df = pd.read_csv(f, encoding='gbk',
-                             usecols=['日ZA','中符串','次日高幅','柱型','日ZC','DXCD'])
+            # 按VBA列位置读取（勿看表头）：[13]日ZA [33]中符串 [26]次日高幅 [27]柱型 [14]日ZC [8]DXCD
+            df = pd.read_csv(f, encoding='gbk', header=None, skiprows=1,
+                             usecols=[13,33,26,27,14,8],
+                             names=['日ZA','中符串','次日高幅','柱型','日ZC','DXCD'])
         except: continue
         if len(df) < 100: continue
-        za = df['日ZA'].astype(float)
+        za = pd.to_numeric(df['日ZA'], errors='coerce')
         next_za = za.shift(-1)
         mid = df['中符串'].astype(str)
         last = mid.str[-1]
-        nh = df['次日高幅'].astype(float)
+        nh = pd.to_numeric(df['次日高幅'], errors='coerce')
         zhuxing = df['柱型']
 
         # 周门条件
-        zc_gt0 = df['日ZC'].astype(float) > 0
+        zc_gt0 = pd.to_numeric(df['日ZC'], errors='coerce') > 0
         dxcd_up = df['DXCD'].astype(str) == '上'
         zhoumen = zc_gt0 & dxcd_up
 
