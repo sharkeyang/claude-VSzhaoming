@@ -523,4 +523,3 @@ DRAWTEXT(周期条件DT8 and (日层赢='持A' or 日层赢='持B' or 日层赢=
 DRAWTEXT(周期条件DT8 and (日层赢='持v' or 日层赢='持z' or 日层赢='_持v' or 日层赢='_持z'), JE, 日层赢),COLORAAAA00,LAYER1;
 DRAWTEXT(周期条件DT8 and (日层赢='介A' or 日层赢='介B' or 日层赢='介v' or 日层赢='介z' or 日层赢='_介A' or 日层赢='_介B' or 日层赢='_介v' or 日层赢='_介z'), JE, 日层赢),COLORGREEN,LAYER1;
 
-
