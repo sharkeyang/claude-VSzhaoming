@@ -465,8 +465,8 @@ Else
                 If 是否适合日策略 = False Then
                         '过滤不适合日策略
                         是否已被剔除 = True
-                ElseIf 谕组(X, 位谕of日类BTZC) < 0 And (Right(谕组(X, 位谕of仓日类), 1) = "y" Or Right$(谕组(X, 位谕of仓日类), 1) = "z") Then
-                        '过滤（DXZC＜0且DXAB护型=丁戊）
+                ElseIf 谕组(X, 位谕of日类BTZC) < 0 And (Right(谕组(X, 位谕of仓日类), 1) = "c" Or Right(谕组(X, 位谕of仓日类), 1) = "y" Or Right$(谕组(X, 位谕of仓日类), 1) = "z") Then
+                        '过滤（DXZC＜0且DXAB护型=丙丁戊）：价格已下破DJC，DXAB正交与否无关，无机会
                         是否已被剔除 = True
                 ElseIf 谕组(X, 位谕of日类BTZE) < 0 Then
                     'DXZE之下：DXCD护级 上/中 → 正交；忐/忠 → 负交
