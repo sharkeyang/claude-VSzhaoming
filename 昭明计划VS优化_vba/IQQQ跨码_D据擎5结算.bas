@@ -679,10 +679,10 @@ Function STBASE结算引擎_单点结算核程(ByRef ARROS As Variant) As Intege
                     值单形上符 = 常枚上符顶 & ARROS(位os龟BT哼)
                 ElseIf ARROS(位os龟BT哼) > 0 Then '触哼
                     值单形上符 = 常枚上符哼 & ARROS(位os龟BT哼)
-                ElseIf ARROS(位os龟BT哈) > 0 Then '触哈
-                    值单形上符 = 常枚上符哈 & ARROS(位os龟BT哈)
                 ElseIf ARROS(位os龟BT底) > 0 Then '触底必触哈
                     值单形上符 = 常枚上符底 & ARROS(位os龟BT哈)
+                ElseIf ARROS(位os龟BT哈) > 0 Then '触哈
+                    值单形上符 = 常枚上符哈 & ARROS(位os龟BT哈)
                 Else                            '未触
                     值单形上符 = 常枚上符无
                 End If
@@ -1679,6 +1679,11 @@ Function STBASE结算工具_衍生色度按仓日类(值仓日类 As String) As 
         '--------------------------------------------------------------------------------
         '注20260619：针对【位谕of仓日类】与频谱中左侧表头，进行着色。
         '--------------------------------------------------------------------------------
+        If InStr(值仓日类, "禁") > 0 Then
+                值色数 = 常色二灰
+        ElseIf InStr(值仓日类, "念") > 0 Then
+                值色数 = 常色四灰
+        Else
                 Select Case 值仓日类
                 '系列D：靛绿色 (与本系统日类色系相符)
                 Case "无"
@@ -1703,6 +1708,7 @@ Function STBASE结算工具_衍生色度按仓日类(值仓日类 As String) As 
                     值色数 = 常色四橙
                 '----------------------------------------
                 End Select
+        End If
         '--------------------------------------------------------------------------------
         STBASE结算工具_衍生色度按仓日类 = 值色数
 End Function

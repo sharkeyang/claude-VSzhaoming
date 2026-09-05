@@ -1125,22 +1125,28 @@ End If
                 End With
                 '------------------------------------------------------------
                 '------------------------------------------------------------
-                With .Cells(1, 位谕of仓日类)
-                    If .Value = "无" Then
-                        .Font.Color = .Interior.Color
-                        .Font.TintAndShade = -0.2
-                    End If
-                End With
                 With .Cells(1, 位谕of仓日期)
                         If .Value = 0 Then
                             .Font.Color = .Interior.Color
                             .Font.TintAndShade = -0.1
                         End If
                 End With
+                With .Cells(1, 位谕of仓日类)
+                    If InStr(.Value, "禁") > 0 Then
+                        .Font.Color = .Interior.Color
+                        .Font.TintAndShade = -0.1
+                    ElseIf InStr(.Value, "念") > 0 Then
+                        .Font.Color = .Interior.Color
+                        .Font.TintAndShade = -0.3
+                    End If
+                End With
                 With .Cells(1, 位谕of日层赢)
-                        If .Value = "_弃" Then
+                        If .Value = "_禁区" Then
                             .Font.Color = .Interior.Color
                             .Font.TintAndShade = -0.1
+                        ElseIf .Value = "_执念" Then
+                            .Font.Color = .Interior.Color
+                            .Font.TintAndShade = -0.3
                         ElseIf Left$(.Value, 1) = "_" Then
                             .Font.Color = 常色三红
                         End If
@@ -1175,13 +1181,6 @@ End If
         '格式类：仓系
         '================================================================================
         With WS.Cells(行号遍历, 基列)
-                '------------------------------------------------------------------------
-'                '标记：操盘类别
-'                With .Cells(1, 位谕of仓日类)
-'                    .Interior.Color = STBASE结算工具_衍生色度按仓日类(.Value)
-'                    .Font.Color = .Interior.Color
-'                    .Font.TintAndShade = -0.1
-'                End With
                 '------------------------------------------------------------------------
                 '标记：仓赚损
                 With .Cells(1, 位谕of仓赚损)

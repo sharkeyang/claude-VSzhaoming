@@ -69,9 +69,9 @@ Function 现市基程_全局全球( _
                 End With
                 '给与清仓警告：
                 With MS.Cells(首行号上部, 目列).Cells(1, 位简式量比).Offset(0, 2)
-                    If InStr(值仓日类, "_") = 0 Then
+                    If Left$(值仓日类, 1) = "禁" Or Left$(值仓日类, 1) = "念" Then
                         .Value = "上证指数已下破DJC→使用所有仓位1/4"
-                    ElseIf InStr(值仓日类, "X") > 0 Then
+                    ElseIf InStr("cyz", Right$(值仓日类, 1)) > 0 Then
                         .Value = "上证指数已下破DJB→使用所有仓位1/2"
                     Else
                         .Value = "上证指数在DJB之上→使用所有仓位"
