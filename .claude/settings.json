@@ -15,7 +15,10 @@
       "Bash(python _产出物/_工具/fix_toc.py \"_主文档/MC3.1_C3周WXZC+WXAB全维度分析.md\" --dry-run)",
       "Bash(python _产出物/_工具/fix_toc.py \"_主文档/MC3.3_C2日DXZC+DXAB全维度分析.md\" --dry-run)",
       "Bash(python -c ' *)",
-      "Bash(git mv *)"
+      "Bash(git mv *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git commit -m 'C6/C7 微观指标验证：在管中运行模式、持有两管监控、周范围触顶合顶、个股转移一致性 *)"
     ],
     "defaultMode": "bypassPermissions",
     "additionalDirectories": [

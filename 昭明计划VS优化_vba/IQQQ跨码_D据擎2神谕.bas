@@ -3791,7 +3791,8 @@ If UBCID是代码(CIDL) = True Then
                     Dim 等策略名 As String: 等策略名 = ""
                     Dim 等策分 As Double: 等策分 = 0
                     '第3级：等高线 + 第4级：条件评分
-                    If 等值 = "等3" Then
+                    '注20260907：等值变量在fe4ac68重构中被删除，改用日等类（等高线分类，逻辑等价）
+                    If 日等类 = "等3" Then
                         If 等BSHA5 And 等连阳2 Then
                             等策略名 = "等3.偏5连门": 等策分 = 58
                         ElseIf 等BSHA5 Then
@@ -3805,7 +3806,7 @@ If UBCID是代码(CIDL) = True Then
                         ElseIf 等跌排2 Then
                             等策略名 = "等3.跌排": 等策分 = 37
                         End If
-                    ElseIf 等值 = "等1" Then
+                    ElseIf 日等类 = "等1" Then
                         If 等BSHA5 And 等连阳2 Then
                             等策略名 = "等1.偏5连门": 等策分 = 61
                         ElseIf 等BSHA5 Then
@@ -3813,7 +3814,7 @@ If UBCID是代码(CIDL) = True Then
                         ElseIf 等层主2 Then
                             等策略名 = "等1.层主": 等策分 = 44
                         End If
-                    ElseIf 等值 = "等2" Then
+                    ElseIf 日等类 = "等2" Then
                         If 等BSHA5 And 等连阳2 Then
                             等策略名 = "等2.偏5连门": 等策分 = 58
                         ElseIf 等BSHA5 Then
@@ -3831,19 +3832,19 @@ If UBCID是代码(CIDL) = True Then
                         ElseIf 等跌排2 Then
                             等策略名 = "等2.跌排": 等策分 = 39
                         End If
-                    ElseIf 等值 = "等5" Then
+                    ElseIf 日等类 = "等5" Then
                         If 等BSHA5 Then
                             等策略名 = "等5.偏5": 等策分 = 61
                         ElseIf 等BSHA3 Then
                             等策略名 = "等5.偏3": 等策分 = 53
                         End If
-                    ElseIf 等值 = "等6" Then
+                    ElseIf 日等类 = "等6" Then
                         If 等BSHA5 Then
                             等策略名 = "等6.偏5": 等策分 = 52
                         ElseIf 等BSHA3 Then
                             等策略名 = "等6.偏3": 等策分 = 49
                         End If
-                    ElseIf 等值 = "等7" Then
+                    ElseIf 日等类 = "等7" Then
                         If 等BSHA5 Then
                             等策略名 = "等7.偏5": 等策分 = 54
                         ElseIf 等BSHA3 Then

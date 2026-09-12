@@ -38,6 +38,14 @@ A quantitative trading/investment research system built in Excel VBA (57 standar
 
 In Claude Code chat, use `/vba2VS` and `/vba2EXCEL`. These skills handle Excel lifecycle (save/quit via COM), temp dir cleanup, and file sync automatically.
 
+### 🔴 铁律：每次重新导出数据后，先做元数据映射表
+
+**每次重大重新导出谕组日/谕组周 CSV 后，必须先做元数据映射表**（对照 VBA 导出代码 `PX算研_RAP算展1引擎.bas` 行头+行尾确认列序），再写任何分析脚本。**周类也要做。**
+
+- **绝不信 CSV 表头**——表头62列是 stale 的，数据按 VBA 真实顺序导出。
+- 权威列映射见 memory `csv-column-mapping-vba`（顶型[43]/日等型[44]/仓日类[45]/上符串[30]/BT连阳[42]/次日高幅[26]/BSHA[19]/宽哼JC[22]）。
+- 已踩坑：验证_己戊转甲.py 误用 col46/21/24 当 等型/BSHA/管宽，导致戊(ZA>0)转甲率数据错误。
+
 ### Manual commands (PowerShell, working dir = project root)
 
 **Export (xlsm → text files):**

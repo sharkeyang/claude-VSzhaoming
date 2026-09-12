@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXZC>0 护型操作决策流程图</title>
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'default',
+  flowchart: { curve: 'basis', nodeSpacing: 40, rankSpacing: 50 },
+  securityLevel: 'loose'
+});
+</script>
+<style>
+  body { font-family: "Microsoft YaHei", sans-serif; background: #f8f9fa; margin: 20px; }
+  h1 { text-align: center; color: #333; }
+  .container { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .note { color: #666; font-size: 13px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<h1>DXZC>0 护型操作决策流程图</h1>
+<div class="container">
+<pre class="mermaid">
+flowchart TD
+    START([DXZC>0 区域<br>DXCD=上/忐]) --> Q1{判断护型}
+
+    %% ===== 可做护型 =====
+    Q1 -->|甲 ZA>0| A[甲 ZA>0<br>P≥3% 27.26% 持续6.0天]
+    A --> A1[✅ 可做<br>持久稳定 正常升势]
+    A1 --> TIMING
+
+    Q1 -->|乙 ZA>0| B[乙 ZA>0<br>P≥3% 29.62% 持续5.1天]
+    B --> B1[✅ 可做<br>胜率最高 持久]
+    B1 --> TIMING
+
+    Q1 -->|己 ZA>0| C[己 ZA>0<br>P≥3% 25.79% 持续1.2天]
+    C --> C1[✅ 可做<br>短促 转甲62.1%]
+    C1 --> TIMING
+
+    %% ===== 交叉路口 =====
+    Q1 -->|乙 ZA<0| D[乙 ZA<0<br>P≥3% 25.17% 持续1.5天]
+    D --> D1{持仓 or 空仓?}
+    D1 -->|持仓| D2[⚠️ 退出<br>方向不明]
+    D1 -->|空仓| D3[⚠️ 等待选方向<br>转正30.6%/转丙32.2%]
+    D2 --> EXIT
+    D3 --> WAIT
+
+    %% ===== 持仓或退出 =====
+    Q1 -->|丙 ZA<0| E[丙 ZA<0<br>P≥3% 24.33% 持续1.5天]
+    E --> E1[⚠️ 持仓或退出<br>转坏概率高 转丁32.7%]
+    E1 --> EXIT
+
+    %% ===== 方向不明 =====
+    Q1 -->|戊 ZA>0| F[戊 ZA>0<br>P≥3% 25.27% 持续1.2天]
+    F --> F1[🔍 方向不明<br>本身不介入]
+    F1 --> F2{次日转好?}
+    F2 -->|转己35.2%/转甲14.8%| TIMING
+    F2 -->|转戊ZA<0 34.4%/维持| WAIT
+
+    %% ===== 放弃 =====
+    Q1 -->|丁 ZA<0| G[丁 ZA<0<br>P≥3% 24.92%]
+    G --> G1[❌ 放弃<br>死胡同 从不转正交]
+    G1 --> EXIT
+
+    Q1 -->|戊 ZA<0| H[戊 ZA<0<br>P≥3% 22.24%]
+    H --> H1[❌ 放弃<br>死胡同 从不转正交]
+    H1 --> EXIT
+
+    %% ===== 介入时机 =====
+    TIMING[介入时机<br>DJA丘 + 日等型 + BSHA5] --> T1{介入点}
+    T1 -->|等1 刚上穿DJA| T2[等1<br>P≥3% 31.42% 最强]
+    T1 -->|等2 柱体与DJA相交| T3[等2<br>P≥3% 30.34%]
+    T1 -->|等3 柱体不与DJA相交| T4[等3<br>P≥3% 29.46% 持有期]
+    T2 --> T5{BSHA5?}
+    T3 --> T5
+    T4 --> T5
+    T5 -->|偏离DJA≥5%| T6[✅ 强触发器<br>P≥3% 39.41%]
+    T5 -->|BSHA<5| T7[介入<br>P≥3% 29.84%]
+    T6 --> HOLD
+    T7 --> HOLD
+
+    %% ===== 持有 =====
+    HOLD[持有] --> S1{退出信号?}
+
+    %% ===== 退出信号 =====
+    S1 -->|假正交 DXCD中/下/忑| X1[🟡 警惕<br>快速负交55-84%]
+    S1 -->|升连上影阳柱| X2[🟠 退出<br>次日均涨幅仅0.04%]
+    S1 -->|BSHA从高位回落| X3[🟠 顶部信号<br>警惕]
+    S1 -->|出现乙ZA<0| X4[🔴 提前退出<br>70%转坏]
+    S1 -->|出现丙| X5[🔴 提前退出<br>41%转坏]
+    S1 -->|日ZC转负| X6[⚫ 强制退出<br>DJC丘结束]
+    S1 -->|无信号| HOLD2[✅ 坚定持有<br>甲/乙ZA>0 持久]
+
+    X1 --> EXIT
+    X2 --> EXIT
+    X3 --> EXIT
+    X4 --> EXIT
+    X5 --> EXIT
+    X6 --> EXIT
+
+    WAIT[等待/观察<br>不介入] --> START
+    EXIT([退出/回避])
+</pre>
+</div>
+<div class="note">
+  <strong>说明：</strong>本流程图基于 MC3.3.5 报告 §4.8 定型操作框架。DXZC>0 区域（DXCD=上/忐）内，按护型判断操作：甲/乙(ZA>0)/己 可做，乙(ZA<0)/丙 持仓或退出，戊(ZA>0) 方向不明（观察等待转己/甲），丁/戊(ZA<0) 放弃。介入时机 = DJA丘 + 日等型（等1最强）+ BSHA5 触发器。退出信号从轻到重：假正交→升连上影→BSHA回落→乙ZA<0/丙→日ZC转负（强制）。
+</div>
+</body>
+</html>
