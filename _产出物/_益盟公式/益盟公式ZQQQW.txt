@@ -205,7 +205,7 @@ IFS(周期条件DT8 and (日CD护级='中' or (DJE之上 and (日CD护级='下' 
 IFS(周期条件DT8 and (日CD护级='忠' or (DJE之下 and (日CD护级='上' or 日CD护级='忐'))), '鸡肋',
 IFS(周期条件DT8 and DJE之上 and (日CD护级='上' or 日CD护级='忐'), '主战场',
 ''
-))))),DRAWNULL,COLORgray;
+)))),DRAWNULL,COLORgray;
 四类区域,DRAWNULL,COLORgray;
 {================================  勿入提示  =======================================}
 {--- 四级分类：坚决禁止提示（红色X，比灰色x更醒目）---}
