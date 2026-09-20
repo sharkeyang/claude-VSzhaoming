@@ -1138,6 +1138,8 @@ End If
                     ElseIf InStr(.Value, "念") > 0 Then
                         .Font.Color = .Interior.Color
                         .Font.TintAndShade = -0.3
+                    ElseIf InStr(.Value, "肋") > 0 Then
+                        .Font.Color = 常色四黄
                     End If
                 End With
                 With .Cells(1, 位谕of日层赢)
