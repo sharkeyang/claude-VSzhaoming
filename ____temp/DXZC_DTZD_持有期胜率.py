@@ -20,13 +20,6 @@ with open(BOARD_MAP_PATH, 'r', encoding='utf-8') as f:
     board_map = json.load(f)
 高波池板块 = {'Qic', 'Qim', 'Qit'}
 
-def calc_ema60(prices):
-    alpha = 2/61
-    ema = [prices[0]]
-    for p in prices[1:]:
-        ema.append(alpha * p + (1-alpha) * ema[-1])
-    return ema
-
 files_done = 0
 
 # 各策略的持有期收益列表
@@ -52,39 +45,34 @@ for fname in os.listdir('昭明算展/谕组日'):
         with open(p, 'r', encoding='gbk', errors='replace') as f:
             r = csv.reader(f)
             header = next(r)
-            idx_close = header.index('收')
-            idx_zc = header.index('日ZC')
-            idx_ze = header.index('日ZE')
-            idx_涨幅 = header.index('涨幅')
+            # 固定列索引（对照 _产出物\_工具\元数据_vba数据映射_日类.md，勿信表头名）
+            idx_close = 1    # 收
+            idx_zc = 14      # 日ZC
+            idx_ze = 15      # 日ZE
+            idx_涨幅 = 5     # 涨幅
+            idx_dtzd = 63    # DTZD（JZ vs JD交叉天数，2026-09-24新增导出）
 
             prices = []
             zcs = []
             zes = []
+            dtzds = []
             for row in r:
-                if len(row) <= max(idx_close, idx_zc, idx_ze, idx_涨幅):
+                if len(row) <= max(idx_close, idx_zc, idx_ze, idx_涨幅, idx_dtzd):
                     continue
                 try:
                     close = float(row[idx_close])
                     zc = float(row[idx_zc])
                     ze = float(row[idx_ze])
+                    dtzd = float(row[idx_dtzd])
                 except (ValueError, IndexError):
                     continue
                 prices.append(close)
                 zcs.append(zc)
                 zes.append(ze)
-
-            if len(prices) < 61:
-                continue
-
-            ema60 = calc_ema60(prices)
-            dtzds = []
-            dtzd = 0
-            for i in range(len(prices)):
-                if prices[i] > ema60[i]:
-                    dtzd += 1
-                else:
-                    dtzd = 0
                 dtzds.append(dtzd)
+
+            if len(prices) < 1:
+                continue
 
             # 策略1: ZC>0 入场，ZC<=0 出场
             in_trade = False

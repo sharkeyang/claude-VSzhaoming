@@ -2,6 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(*)",
+      "Bash(python *)",
+      "Bash(python -c *)",
+      "Bash(python -c \" *)",
+      "Bash(python3 *)",
+      "Bash(python3 -c *)",
       "Bash(code --list-extensions)",
       "Bash(python -c ' *)",
       "Bash(cat \"$HOME/.claude/settings.json\" 2>/dev/null || echo \"not found\")",

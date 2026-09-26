@@ -23,13 +23,6 @@ def to_f(v):
     try: return float(v)
     except: return None
 
-def extract_dtab(dxab):
-    m = re.search(r'[上忐忠中忑下](-?\d+)', dxab)
-    if m:
-        try: return int(m.group(1))
-        except: return None
-    return None
-
 stats = defaultdict(int)
 tot = defaultdict(int)
 files_core = 0
@@ -42,17 +35,19 @@ for fname in sorted(os.listdir('昭明算展/谕组日')):
     files_core += 1
     prev_dxab = None
     prev_za = None
+    prev_dtab = None
     try:
         with open(os.path.join('昭明算展/谕组日', fname), encoding='gbk') as f:
             r = csv.reader(f); next(r)
             for row in r:
-                if len(row) <= 14: continue
+                if len(row) <= 64: continue
                 dxab = row[9].strip()
                 za = to_f(row[13])
+                dtab = to_f(row[64])  # DTAB[64]（JA vs JB交叉天数，2026-09-24新增导出）
                 if za is None: continue
                 # 前一柱是乙(ZA<0) → 看当前柱转移方向
-                if prev_dxab is not None and prev_dxab.startswith('b乙') and prev_za is not None and prev_za < 0:
-                    dtab = extract_dtab(prev_dxab)
+                if prev_dxab is not None and prev_dxab.startswith('b乙') and prev_za is not None and prev_za < 0 and prev_dtab is not None:
+                    dtab = prev_dtab
                     if dtab is not None:
                         if dxab.startswith('b乙') and za > 0:
                             nxt = '转乙ZA>0'
@@ -73,6 +68,7 @@ for fname in sorted(os.listdir('昭明算展/谕组日')):
                         tot[bucket] += 1
                 prev_dxab = dxab
                 prev_za = za
+                prev_dtab = dtab
     except Exception:
         pass
 

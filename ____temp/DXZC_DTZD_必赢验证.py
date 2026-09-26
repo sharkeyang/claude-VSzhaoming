@@ -21,16 +21,6 @@ with open(BOARD_MAP_PATH, 'r', encoding='utf-8') as f:
     board_map = json.load(f)
 高波池板块 = {'Qic', 'Qim', 'Qit'}
 
-def calc_ema60(prices):
-    """计算EMA60，α=2/61"""
-    if len(prices) == 0:
-        return []
-    alpha = 2/61
-    ema = [prices[0]]  # EMA初始值 = 第一个收盘价
-    for p in prices[1:]:
-        ema.append(alpha * p + (1-alpha) * ema[-1])
-    return ema
-
 # 统计：各条件组合的次日高幅分布
 # key = 条件标签, value = list of 次日高幅
 results = defaultdict(list)
@@ -48,45 +38,34 @@ for fname in os.listdir('昭明算展/谕组日'):
         with open(p, 'r', encoding='gbk', errors='replace') as f:
             r = csv.reader(f)
             header = next(r)
-            # 找列索引
-            try:
-                idx_close = header.index('收')
-                idx_zc = header.index('日ZC')
-                idx_ze = header.index('日ZE')
-                idx_next_hr = header.index('次日高幅')
-            except ValueError:
-                continue
+            # 固定列索引（对照 _产出物\_工具\元数据_vba数据映射_日类.md，勿信表头名）
+            idx_close = 1       # 收
+            idx_zc = 14         # 日ZC
+            idx_ze = 15         # 日ZE
+            idx_next_hr = 26    # 次日高幅
+            idx_dtzd = 63       # DTZD（JZ vs JD交叉天数，2026-09-24新增导出）
 
             prices = []
             rows_data = []
             for row in r:
-                if len(row) <= max(idx_close, idx_zc, idx_ze, idx_next_hr):
+                if len(row) <= max(idx_close, idx_zc, idx_ze, idx_next_hr, idx_dtzd):
                     continue
                 try:
                     close = float(row[idx_close])
                     zc = float(row[idx_zc])
                     ze = float(row[idx_ze])
                     next_hr = float(row[idx_next_hr])
+                    dtzd = float(row[idx_dtzd])
                 except (ValueError, IndexError):
                     continue
                 prices.append(close)
-                rows_data.append((zc, ze, next_hr))
+                rows_data.append((zc, ze, next_hr, dtzd))
 
-            if len(prices) < 61:  # 需要至少61个数据点才能算EMA60
+            if len(prices) < 1:
                 continue
 
-            # 计算EMA60
-            ema60 = calc_ema60(prices)
-
-            # 计算DTZD（站上DJD的天数）
-            dtzd = 0
             for i in range(len(prices)):
-                if prices[i] > ema60[i]:
-                    dtzd += 1
-                else:
-                    dtzd = 0
-
-                zc, ze, next_hr = rows_data[i]
+                zc, ze, next_hr, dtzd = rows_data[i]
 
                 # 记录各条件组合
                 cond_zc = zc > 0

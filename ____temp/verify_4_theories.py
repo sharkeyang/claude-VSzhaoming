@@ -13,18 +13,7 @@
 import csv, glob, sys, re, collections
 sys.stdout.reconfigure(encoding='utf-8')
 
-DATA_DIR = r'D:\@VSwork\VS昭明计划VBA优化\昭明算展\谕组日0911'
-
-def parse_dxab(s):
-    """解析DXAB护型字符串，返回(护型, DTAB)
-    格式: a甲↗上3.A4  -> 护型='甲', DTAB=3
-    """
-    if not s or len(s) < 2:
-        return None, None
-    hx = s[1]
-    m = re.search(r'(\d+)', s[3:])
-    dt = int(m.group(1)) if m else None
-    return hx, dt
+DATA_DIR = r'D:\@VSwork\VS昭明计划VBA优化\昭明算展\谕组日'
 
 def parse_ding(s):
     """解析顶型字符串，返回(顶态, 核心顶型)"""
@@ -46,14 +35,14 @@ for fp in glob.glob(DATA_DIR + '/*.csv'):
         r = csv.reader(f)
         next(r)
         for row in r:
-            if len(row) < 62:
+            if len(row) < 65:
                 continue
             try:
                 frows.append({
                     'zf': float(row[5]),
                     'dtza': int(row[13]),
                     'hx': row[9][1] if len(row[9]) > 1 else None,
-                    'dtab': parse_dxab(row[9])[1],
+                    'dtab': int(row[64]),  # DTAB[64]（JA vs JB交叉天数，2026-09-24新增导出）
                     'ding_state': parse_ding(row[43])[0],
                     'ding_core': parse_ding(row[43])[1],
                 })
