@@ -39,8 +39,8 @@ def main():
     files = sorted(os.listdir(DATA_DIR))
     files = [f for f in files if f.startswith('谕组周_') and f.endswith('.csv')]
 
-    # 统计：护型 -> [n, 1周转负, 3周转负, 5周转负, 10周转负, 转负周数和]
-    stat = defaultdict(lambda: [0, 0, 0, 0, 0, 0])
+    # 统计：护型 -> [n, 1周转负, 3周转负, 5周转负, 10周转负, 转负周数和, 5周内反向相交]
+    stat = defaultdict(lambda: [0, 0, 0, 0, 0, 0, 0])
     # 交叉次数分布
     cross_count = defaultdict(int)
 
@@ -79,17 +79,21 @@ def main():
                 # 3周内转负
                 if any(ab[idx + k] < 0 for k in range(1, min(4, n - idx))):
                     s[2] += 1
-                # 5周内转负
+                # 5周内转负（频繁相交定义：正交后5周期内反向相交）
                 if any(ab[idx + k] < 0 for k in range(1, min(6, n - idx))):
                     s[3] += 1
+                    s[6] += 1
                 # 10周内转负
                 if any(ab[idx + k] < 0 for k in range(1, min(11, n - idx))):
                     s[4] += 1
-                # 转负周数（到第一次转负）
-                for k in range(1, min(11, n - idx)):
+                # 转负周数（到第一次转负，不限10周，统计所有转负样本）
+                found = False
+                for k in range(1, n - idx):
                     if ab[idx + k] < 0:
                         s[5] += k
+                        found = True
                         break
+                # 如果到末尾都没转负，不计入平均（该样本未转负）
 
         # ===== WXAB 交叉次数分布 =====
         # 统计每只股票 WXAB 正负符号变化次数
@@ -99,15 +103,18 @@ def main():
 
     # 输出
     print(f'\n=== WXAB>0 后 N 周内转负概率（按护型）===')
-    print(f'{"护型":<8} {"n":>8} {"1周":>6} {"3周":>6} {"5周":>6} {"10周":>6} {"平均转负周数":>10}')
-    print('-' * 60)
+    print(f'{"护型":<8} {"n":>8} {"1周":>6} {"3周":>6} {"5周":>6} {"10周":>6} {"平均转负周数":>10} {"5周内反向相交%":>12}')
+    print('-' * 75)
     for h in ['甲', '乙', '丙']:
         s = stat[h]
         if s[0] == 0:
             continue
         n = s[0]
-        avg = s[5] / s[0] if s[0] else 0
-        print(f'{h:<8} {n:>8} {s[1]/n*100:>5.1f}% {s[2]/n*100:>5.1f}% {s[3]/n*100:>5.1f}% {s[4]/n*100:>5.1f}% {avg:>10.2f}周')
+        # 平均转负周数 = 转负周数和 / 转负样本数（只统计转负的）
+        n_turn = s[4]  # 10周内转负的样本（近似转负样本）
+        avg = s[5] / n_turn if n_turn else 0
+        freq = s[6] / n * 100
+        print(f'{h:<8} {n:>8} {s[1]/n*100:>5.1f}% {s[2]/n*100:>5.1f}% {s[3]/n*100:>5.1f}% {s[4]/n*100:>5.1f}% {avg:>10.2f}周 {freq:>12.1f}%')
 
     print(f'\n=== WXAB 交叉次数分布（每只股票）===')
     total = sum(cross_count.values())
