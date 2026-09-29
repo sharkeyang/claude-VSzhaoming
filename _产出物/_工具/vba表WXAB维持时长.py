@@ -39,8 +39,8 @@ def main():
     files = sorted(os.listdir(DATA_DIR))
     files = [f for f in files if f.startswith('谕组周_') and f.endswith('.csv')]
 
-    # 统计：护型 -> [n, 1周转负, 3周转负, 5周转负, 10周转负, 转负周数和, 5周内反向相交]
-    stat = defaultdict(lambda: [0, 0, 0, 0, 0, 0, 0])
+    # 统计：护型 -> [n, 1周转负, 3周转负, 5周转负, 10周转负, 转负周数和, 5周内反向相交, 转负样本数]
+    stat = defaultdict(lambda: [0, 0, 0, 0, 0, 0, 0, 0])
     # 交叉次数分布
     cross_count = defaultdict(int)
 
@@ -87,11 +87,10 @@ def main():
                 if any(ab[idx + k] < 0 for k in range(1, min(11, n - idx))):
                     s[4] += 1
                 # 转负周数（到第一次转负，不限10周，统计所有转负样本）
-                found = False
                 for k in range(1, n - idx):
                     if ab[idx + k] < 0:
                         s[5] += k
-                        found = True
+                        s[7] += 1  # 转负样本数
                         break
                 # 如果到末尾都没转负，不计入平均（该样本未转负）
 
@@ -110,8 +109,8 @@ def main():
         if s[0] == 0:
             continue
         n = s[0]
-        # 平均转负周数 = 转负周数和 / 转负样本数（只统计转负的）
-        n_turn = s[4]  # 10周内转负的样本（近似转负样本）
+        # 平均转负周数 = 转负周数和 / 转负样本数（s[7]，只统计转负的）
+        n_turn = s[7]
         avg = s[5] / n_turn if n_turn else 0
         freq = s[6] / n * 100
         print(f'{h:<8} {n:>8} {s[1]/n*100:>5.1f}% {s[2]/n*100:>5.1f}% {s[3]/n*100:>5.1f}% {s[4]/n*100:>5.1f}% {avg:>10.2f}周 {freq:>12.1f}%')
