@@ -1662,7 +1662,7 @@ Function 历研统码引擎4幅排序输程( _
     With WSSUM
         .Columns(位谕of日段柱符停).Hidden = True
         .Cells(1, 位谕始of族仓).Resize(1, 位谕终of族仓 - 位谕始of族仓 + 1).EntireColumn.Hidden = True
-        .Cells(1, 1).Resize(1, 位谕of周层三鳄 - 1).EntireColumn.Hidden = True
+        .Cells(1, 1).Resize(1, 位谕of周层势型 - 1).EntireColumn.Hidden = True
         '.Cells(1, 位qt代称).EntireColumn.Hidden = False
     End With
     '------------------------------------------------------------------------------------

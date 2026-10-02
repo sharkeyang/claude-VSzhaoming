@@ -444,11 +444,11 @@ Function IQQQ展擎筛程_出程更新通用( _
                     If 排序按周 = True Then
                             With 区域排序
                                 .Sort _
-                                    key1:=.Cells(1, 位谕of周层三鳄), order1:=xlDescending, _
+                                    key1:=.Cells(1, 位谕of周层势型), order1:=xlDescending, _
                                     key2:=.Cells(1, 位qt行业), order2:=xlDescending, _
                                     Header:=xlNo
                                 .Sort _
-                                    key1:=.Cells(1, 位谕of周层大局), order1:=xlAscending, _
+                                    key1:=.Cells(1, 位谕of周层波型), order1:=xlAscending, _
                                     key2:=.Cells(1, 位谕of周层护型), order2:=xlAscending, _
                                     key3:=.Cells(1, 位谕of周层柱型), order3:=xlDescending, _
                                     Header:=xlNo
@@ -458,7 +458,7 @@ Function IQQQ展擎筛程_出程更新通用( _
                     ElseIf 排序按日 = True Then
                             With 区域排序
                                 .Sort _
-                                    key1:=.Cells(1, 位谕of周层大局), order1:=xlAscending, _
+                                    key1:=.Cells(1, 位谕of周层波型), order1:=xlAscending, _
                                     key2:=.Cells(1, 位谕of周层护型), order2:=xlDescending, _
                                     Header:=xlNo
                                 .Sort _
@@ -471,7 +471,7 @@ Function IQQQ展擎筛程_出程更新通用( _
                     ElseIf 排序按仓 = True Then
                             With 区域排序
                                 .Sort _
-                                    key1:=.Cells(1, 位谕of周层大局), order1:=xlAscending, _
+                                    key1:=.Cells(1, 位谕of周层波型), order1:=xlAscending, _
                                     key2:=.Cells(1, 位谕of周层护型), order2:=xlAscending, _
                                     key3:=.Cells(1, 位谕of周层柱型), order3:=xlDescending, _
                                     Header:=xlNo

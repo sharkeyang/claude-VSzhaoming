@@ -505,7 +505,7 @@ End If
 '                    '------------------------------------------------------------------------
 '                    '针对三鳄：/__
 '                    '------------------------------------------------------------------------
-'                    If InStr(.Cells(1, 位谕of周层三鳄), "屎") > 0 Or InStr(.Cells(1, 位谕of周层三鳄), "尿") > 0 Then
+'                    If InStr(.Cells(1, 位谕of周层势型), "屎") > 0 Or InStr(.Cells(1, 位谕of周层势型), "尿") > 0 Then
 '                                    For Y = 位谕始of族周层 To 位谕终of族周层
 '                                        With .Cells(1, Y)
 '                                            值TintAndShade = .Interior.TintAndShade
@@ -513,7 +513,7 @@ End If
 '                                            .Interior.TintAndShade = 值TintAndShade
 '                                        End With
 '                                    Next
-'                    ElseIf InStr(.Cells(1, 位谕of周层三鳄), "嘘") > 0 Then
+'                    ElseIf InStr(.Cells(1, 位谕of周层势型), "嘘") > 0 Then
 '                                    For Y = 位谕始of族周层 To 位谕终of族周层
 '                                        With .Cells(1, Y)
 '                                            值TintAndShade = .Interior.TintAndShade
@@ -524,7 +524,7 @@ End If
 '                    '------------------------------------------------------------------------
 '                    '设置WJC之上
 '                    '------------------------------------------------------------------------
-'                    ElseIf InStr(.Cells(1, 位谕of周层三鳄), "唏") > 0 Then
+'                    ElseIf InStr(.Cells(1, 位谕of周层势型), "唏") > 0 Then
 '                                    For Y = 位谕始of族周层 To 位谕终of族周层
 '                                        With .Cells(1, Y)
 '                                            值TintAndShade = .Interior.TintAndShade
@@ -532,7 +532,7 @@ End If
 '                                            .Interior.TintAndShade = 值TintAndShade
 '                                        End With
 '                                    Next
-'                    ElseIf InStr(.Cells(1, 位谕of周层三鳄), "银") > 0 Then
+'                    ElseIf InStr(.Cells(1, 位谕of周层势型), "银") > 0 Then
 '                                    For Y = 位谕始of族周层 To 位谕终of族周层
 '                                        With .Cells(1, Y)
 '                                            值TintAndShade = .Interior.TintAndShade
@@ -692,89 +692,46 @@ End If
         '================================================================================
         With WS.Cells(行号遍历, 基列)
                 '========================================================================
-                '注20260305：应用（WXCD+WJB止损），按照周波型进行着色。
+                '注20261002：应用（WXCD区分WXZC之下 嘘尿屎），其余按照是否主升进行着色。
                 '颜色分配：破（二红）初（六紫）再（四紫）主龙猪0无（十靛）主龙猪栏栅杂（六靛）主龙猪蛀（43绿）震WXZA劫（四绿）
                 '========================================================================
-                    If InStr(.Cells(1, 位谕of周层三鳄), "屎") > 0 Or InStr(.Cells(1, 位谕of周层三鳄), "尿") > 0 Then
+                    If InStr(.Cells(1, 位谕of周层势型), "屎") > 0 Then
                                 For Y = 位谕始of族日层 To 位谕终of族日管
                                     值TintAndShade = .Cells(1, Y).Interior.TintAndShade
                                     .Cells(1, Y).Interior.Color = 常色一灰
                                     .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
                                 Next
-                    ElseIf InStr(.Cells(1, 位谕of周层三鳄), "嘘") > 0 Then
+                    ElseIf InStr(.Cells(1, 位谕of周层势型), "嘘") > 0 Or InStr(.Cells(1, 位谕of周层势型), "尿") > 0 Then
                                 For Y = 位谕始of族日层 To 位谕终of族日管
                                     值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色二橙
-                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
-                                Next
-                    ElseIf InStr(.Cells(1, 位谕of周层三鳄), "唏") > 0 Then
-                                For Y = 位谕始of族日层 To 位谕终of族日管
-                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色六蓝
+                                    .Cells(1, Y).Interior.Color = 常色三灰
                                     .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
                                 Next
                     '--------------------------------------------------------------------
                     '可持有，但存在瑕疵。铜，因为WXCD还未正交，必有震荡。银，处于WJB之下。
                     '--------------------------------------------------------------------
-                    ElseIf InStr(.Cells(1, 位谕of周层三鳄), "银") > 0 Then
+                    ElseIf Left$(.Cells(1, 位谕of周层波型), 2) = "NN" Then
                                 For Y = 位谕始of族日层 To 位谕终of族日管
                                     值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色四青
+                                    .Cells(1, Y).Interior.Color = 常色六蓝
                                     .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
                                 Next
-                    '--------------------------------------------------------------------
-                    '单列：过渡期
-                    '注20260303：因存续时间较短，且已经区分地型，不再对（再）区分是否为龙。
-                    '--------------------------------------------------------------------
-                    '以下为经历WJB劫后始终未触顶
-                    '注20260303：因存续时间较短，且已经区分地型，不再对（再）区分是否为龙。'包含：震负芽（/W3h/W3u）头负芽（/W2I/W2i）头正芽
-                    ElseIf InStr(.Cells(1, 位谕of周层波型), "破") > 0 _
-                        Or InStr(.Cells(1, 位谕of周层波型), "震负") > 0 Or InStr(.Cells(1, 位谕of周层波型), "头") > 0 _
-                        Or InStr(.Cells(1, 位谕of周层波型), "再B") > 0 _
-                        Or InStr(.Cells(1, 位谕of周层波型), "再C") > 0 _
-                        Or InStr(.Cells(1, 位谕of周层波型), "再") > 0 Then
+                    ElseIf Left$(.Cells(1, 位谕of周层波型), 2) = "NF" Then
                                 For Y = 位谕始of族日层 To 位谕终of族日管
                                     值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色四紫
+                                    .Cells(1, Y).Interior.Color = 常色六青
                                     .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
                                 Next
-                    ElseIf InStr(.Cells(1, 位谕of周层波型), "初") > 0 _
-                        Or InStr(.Cells(1, 位谕of周层波型), "储") > 0 Then
-                                For Y = 位谕始of族日层 To 位谕终of族日管
-                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色主碧
-                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
-                                Next
-                    '--------------------------------------------------------------------
-                    '以下均为：主
-                    '--------------------------------------------------------------------
-                    '应对WXZA劫
-                    '--------------------------------------------------------------------
-                    ElseIf InStr(.Cells(1, 位谕of周层波型), "龙管根") > 0 _
-                        Or InStr(.Cells(1, 位谕of周层波型), "震正芽") > 0 Or InStr(.Cells(1, 位谕of周层波型), "震正根") > 0 _
-                        Or InStr(.Cells(1, 位谕of周层波型), "4蛀") > 0 Then
+                    ElseIf Left$(.Cells(1, 位谕of周层波型), 2) = "FN" Then
                                 For Y = 位谕始of族日层 To 位谕终of族日管
                                     值TintAndShade = .Cells(1, Y).Interior.TintAndShade
                                     .Cells(1, Y).Interior.Color = 常色六黄
                                     .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
                                 Next
-                    '--------------------------------------------------------------------
-                    '单列：WJA之上管内
-                    '--------------------------------------------------------------------
-                    ElseIf InStr(.Cells(1, 位谕of周层波型), "震正〇") > 0 _
-                        Or InStr(.Cells(1, 位谕of周层波型), "龙管") > 0 Then
-                                For Y = 位谕始of族日层 To 位谕终of族日管
-                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色四靛
-                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
-                                Next
-                    '--------------------------------------------------------------------
-                    '单列：龙猪。地型（前四柱是否存在异常柱/跌连/跌吞）
-                    '--------------------------------------------------------------------
                     Else
                                 For Y = 位谕始of族日层 To 位谕终of族日管
                                     值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色十靛
+                                    .Cells(1, Y).Interior.Color = 常色六靛
                                     .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
                                 Next
                     End If
@@ -921,15 +878,29 @@ End If
 '配对操作：不同周期同类指标
 '########################################################################################
         With WS.Cells(行号遍历, 基列)
-'                '========================================================================
-'                '波型
-'                '========================================================================
-'                        With .Cells(1, 位谕of周层波型)
-'                                If .Value = "" Then
-'                                ElseIf InStr(.Value, "破") > 0 Then
-'                                    .Font.Color = 常色四红
-'                                End If
-'                        End With
+                '========================================================================
+                '波型
+                '========================================================================
+                        With .Cells(1, 位谕of周层波型)
+                                If .Value = "" Then
+                                ElseIf InStr(.Value, "NN") > 0 Then
+                                    .Font.Color = 常色四红
+                                ElseIf InStr(.Value, "NF") > 0 Then
+                                    .Font.Color = 常色六青
+                                ElseIf InStr(.Value, "FN") > 0 Then
+                                    .Font.Color = 常色六黄
+                                End If
+                        End With
+                        With .Cells(1, 位谕of日层波型)
+                                If .Value = "" Then
+                                ElseIf InStr(.Value, "NN") > 0 Then
+                                    .Font.Color = 常色四红
+                                ElseIf InStr(.Value, "NF") > 0 Then
+                                    .Font.Color = 常色六青
+                                ElseIf InStr(.Value, "FN") > 0 Then
+                                    .Font.Color = 常色六黄
+                                End If
+                        End With
 '                '========================================================================
 '                '层界
 '                '========================================================================
@@ -1041,12 +1012,6 @@ End If
         '================================================================================
         With WS.Cells(行号遍历, 基列)
                 '------------------------------------------------------------------------
-                With .Cells(1, 位谕of月策略周)
-                    If InStr(.Value, "NA") > 0 Then
-                        .Font.Color = 常色三红
-                    End If
-                End With
-                '------------------------------------------------------------------------
                 With .Cells(1, 位谕of月策略日)
                         If InStr(.Value, "弱") > 0 Then
                             .Font.Color = .Interior.Color
@@ -1108,12 +1073,6 @@ End If
                         .Font.Color = .Interior.Color
                     ElseIf InStr(.Value, "_") > 0 Then
                         .Font.Color = 常色二灰
-                    End If
-                End With
-                With .Cells(1, 位谕of月策分周)
-                    If .Value = 0 Then
-                        .Font.Color = .Interior.Color
-                        .Font.TintAndShade = -0.2
                     End If
                 End With
                 With .Cells(1, 位谕of日策分P2)

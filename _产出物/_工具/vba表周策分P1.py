@@ -41,8 +41,8 @@ def encode(p1, avg):
     else: g = '_'
     return f'{h}{g}{int(p1):02d}'
 
-def make_name(eq, d, zp, cd, ab):
-    return f'{eq}_{d}_{zp}_{{{cd}_{ab}}}'
+def make_name(wxab, d, eq, zp, cd):
+    return f'{wxab}{d}_{eq}_{zp}_{cd}'
 
 print('=== 生成 vba表周策分P1.txt ===')
 wk = load()
@@ -67,15 +67,21 @@ m_xi = wk['WXCD'].str.contains('唏', na=False)
 m_xu = wk['WXCD'].str.contains('嘘', na=False)
 m_niao = wk['WXCD'].str.contains('尿', na=False)
 m_shi = wk['WXCD'].str.contains('屎', na=False)
-m_ab_good = wk['WXAB'].str.contains('甲|乙|己', na=False)
-m_ab_bad = wk['WXAB'].str.contains('丙|丁|戊', na=False)
 
 za_configs = [
     ('ZA>0', m_za_pos, [('等3', m3), ('等2', m2), ('等1', m1)], ['0橅', '1柜', '2栅', '3桮']),
     ('ZA<0', m_za_neg, [('等7', m7), ('等6', m6), ('等5', m5)], ['6娝', '7姗', '8姖', '9妩']),
 ]
 wxcd_configs = [('金', m_gold), ('银', m_silver), ('唏', m_xi), ('嘘', m_xu), ('尿', m_niao), ('屎', m_shi)]
-wxab_configs = [('甲乙己', m_ab_good), ('丙丁戊', m_ab_bad)]
+# 具体WXAB名（20261002）：以WXAB为核心，细分甲/乙/己/丙/丁/戊
+wxab_configs = [
+    ('甲', wk['WXAB'].str.contains('甲', na=False)),
+    ('乙', wk['WXAB'].str.contains('乙', na=False)),
+    ('己', wk['WXAB'].str.contains('己', na=False)),
+    ('丙', wk['WXAB'].str.contains('丙', na=False)),
+    ('丁', wk['WXAB'].str.contains('丁', na=False)),
+    ('戊', wk['WXAB'].str.contains('戊', na=False)),
+]
 
 results = []
 for za_name, za_mask, eq_list, dx_list in za_configs:
@@ -83,15 +89,15 @@ for za_name, za_mask, eq_list, dx_list in za_configs:
         for d in dx_list:
             for zp_name, zp_mask in [('升排', m_up), ('人排', m_ren), ('跌排', m_dn)]:
                 for cd_name, cd_mask in wxcd_configs:
-                    for ab_name, ab_mask in wxab_configs:
-                        mask = za_mask & eq_mask & (wk['地型'] == d) & zp_mask & cd_mask & ab_mask
+                    for wxab_name, wxab_mask in wxab_configs:
+                        mask = za_mask & eq_mask & (wk['地型'] == d) & zp_mask & cd_mask & wxab_mask
                         n = mask.sum()
                         if n >= MIN_SAMPLE:
                             g = wk.loc[mask]
                             p1 = round((g['下周HR'] >= 1).mean() * 100, 1)
                             avg = g['下周HR'].mean()
                             code = encode(p1, avg)
-                            name = make_name(eq_name, d, zp_name, cd_name, ab_name)
+                            name = make_name(wxab_name, d, eq_name, zp_name, cd_name)
                             results.append((p1, code, name, n))
 
 results.sort(key=lambda x: -x[0])
