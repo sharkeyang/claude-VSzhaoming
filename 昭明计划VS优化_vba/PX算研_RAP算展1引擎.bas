@@ -1714,14 +1714,14 @@ Public Sub XL算展取样调程_谕组单股通用(被研代码 As String, Optio
         Dim 周文件 As String
         周文件 = 周路径 & "谕组周_" & 被研代码 & ".csv"
         Open 周文件 For Output As #1
-        Print #1, "主期,周涨,PR,HR,WXAB,波型,柱排周,柱型周,层界周,周势型,盈丘幅周,盈顶幅周,盈提示,WXCD,ZA周,ZB周,ZC周,ZD周,ZE周,ZF周,AB周,AC周,BC周,AD周,BD周,CD周,CE周,DE周,CF周,EF周,底周,哈周,哼周,顶周,合底周,合顶周,极折周,顶态周,顶型周,顶触周,上符范周,上符串周,宽符串周,宽哼JA周,撤哼JA周,中符串周,中符范周,BT鼎周,并符范周,并符串周,层类周,周龄,周键"
+        Print #1, "主期,周涨,PR,HR,护型,波型,柱排周,柱型周,层界周,周势型(WXCD护型),盈丘幅周,盈顶幅周,盈提示,ZA周,ZB周,ZC周,ZD周,ZE周,ZF周,AB周,AC周,BC周,AD周,BD周,CD周,CE周,DE周,CF周,EF周,底周,哈周,哼周,顶周,合底周,合顶周,极折周,顶态周,顶型周,顶触周,上符范周,上符串周,宽符串周,宽哼JA周,撤哼JA周,中符串周,中符范周,BT鼎周,并符范周,并符串周,层类周,四域,周龄,周键"
 
         Dim 基位日类 As Integer: 基位日类 = 0
         Dim 基位周类 As Integer: 基位周类 = 花宽单道
         Dim X As Integer
         For X = LBound(谕组, 1) To UBound(谕组, 1)
             If ARRLLL(X, 基位周类 + 位os结期) = ARRLLL(X, 基位日类 + 位os结期) Then
-                Dim 行尾2 As String
+                Dim 变量串1 As String, 变量串2 As String
                 行头 = ARRLLL(X, 基位日类 + 位os结期) & "," & _
                     谕组(X, 位谕of周波今涨幅) & "," & _
                     谕组(X, 位谕of周波临涨幅) & "," & _
@@ -1757,7 +1757,7 @@ Public Sub XL算展取样调程_谕组单股通用(被研代码 As String, Optio
                     谕组(X, 位谕of周龟BT顶) & "," & _
                     谕组(X, 位谕of周龟BT合底哈) & "," & _
                     谕组(X, 位谕of周龟BT合顶哼) & ","
-                行尾2 = 谕组(X, 位谕of周龟极折) & "," & _
+                变量串1 = 谕组(X, 位谕of周龟极折) & "," & _
                     谕组(X, 位谕of周龟顶态) & "," & _
                     Replace(谕组(X, 位谕of周龟顶型), ",", ";") & "," & _
                     谕组(X, 位谕of周龟顶触) & "," & _
@@ -1765,16 +1765,17 @@ Public Sub XL算展取样调程_谕组单股通用(被研代码 As String, Optio
                     Replace(谕组(X, 位谕of周管上符串), ",", ";") & "," & _
                     Replace(谕组(X, 位谕of周管宽符串), ",", ";") & "," & _
                     谕组(X, 位谕of周管宽哼JA) & "," & _
-                    谕组(X, 位谕of周管撤哼JA) & "," & _
-                    Replace(谕组(X, 位谕of周管中符串), ",", ";") & "," & _
+                    谕组(X, 位谕of周管撤哼JA)
+                变量串2 = Replace(谕组(X, 位谕of周管中符串), ",", ";") & "," & _
                     Replace(谕组(X, 位谕of周管中符范), ",", ";") & "," & _
                     谕组(X, 位谕of周管BT鼎) & "," & _
                     Replace(谕组(X, 位谕of周管并符范), ",", ";") & "," & _
                     Replace(谕组(X, 位谕of周管并符串), ",", ";") & "," & _
                     谕组(X, 位谕of周层类) & "," & _
+                    Replace(谕组(X, 位谕of周层四域), ",", ";") & "," & _
                     ARRLLL(X, 基位周类 + 位os基累龄) & "," & _
                     "True"
-                Print #1, 行头 & 行尾 & 行尾2
+                Print #1, 行头 & 行尾 & 变量串1 & 变量串2
             End If
         Next X
         Close #1
@@ -1797,7 +1798,7 @@ Public Sub XL算展取样调程_谕组单股通用(被研代码 As String, Optio
         Open 日文件 For Output As #1
         '等高线分类(6等)：等1=边,等2=近弱+回归,等3=远强,等5=下边,等6=下近+下回,等7=下远
         '详见 IQQQ跨码_D据擎2神谕.bas 中 位谕of日层等 的注释
-        Print #1, "日期,收,开,高,低,涨幅,高幅,日周联动,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日策略P2,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,管释,撤哼JC,类合,BSLA,宽哈JC,BT鼎,BTZA,BT连阳,顶型,日等型,仓日类,仓日期,日层赢,日BTEF,日BTZF,月策带日,日策分坏,日策分好,日龟BT顶,日龟BT哼,日龟顶触,日龟BT合顶哼,日基月局,日基周局,日基日局,日基乾局,日基坤局,DTZB,DTZD,DTAB,DTCD"
+        Print #1, "日期,收,开,高,低,涨幅,高幅,日周联动,DXCD,DXAB,柱排,波型,盈提示,日ZA,日ZC,日ZE,日策略P2,日机警,四域,BSHA,BSAC,脸哼JA,宽哼JC,偏顶JC,上身,叠幅,次日高幅,柱型,层界,上符范,上符串,宽符串,中符范,中符串,并符串,撤哼JC,层类,BSLA,宽哈JC,BT鼎,BTZA,BT连阳,顶型,日等型,仓日类,仓日期,日层赢,日BTEF,日BTZF,月策带日,日策分坏,日策分好,日龟BT顶,日龟BT哼,日龟顶触,日龟BT合顶哼,日基月局,日基周局,日基日局,日基乾局,日基坤局,DTZB,DTZD,DTAB,DTCD"
 
         For X = LBound(谕组, 1) To UBound(谕组, 1)
             Dim 日高幅 As Double
@@ -1854,23 +1855,26 @@ Public Sub XL算展取样调程_谕组单股通用(被研代码 As String, Optio
                 Replace(谕组(X, 位谕of仓日类), ",", ";") & "," & _
                 谕组(X, 位谕of仓日期) & "," & _
                 谕组(X, 位谕of日层赢)
-            行尾 = 行尾 & "," & ARRLLL(X, 基位日类 + 位osBTEF) & "," & ARRLLL(X, 基位日类 + 位osBTZF) & "," & Replace(谕组(X, 位谕of月策带日), ",", ";") & "," & 谕组(X, 位谕of日策分坏) & "," & 谕组(X, 位谕of日策分好)
+            行尾 = 行尾 & "," & ARRLLL(X, 基位日类 + 位osBTEF) & "," & _
+                ARRLLL(X, 基位日类 + 位osBTZF) & "," & _
+                Replace(谕组(X, 位谕of月策带日), ",", ";") & "," & _
+                谕组(X, 位谕of日策分坏) & "," & _
+                谕组(X, 位谕of日策分好)
             '--- 新增：日级龟指标（t顶/t哼/顶触/合顶哼）与日基六局 ---
-            Dim 龟顶 As String, 龟哼 As String, 龟触 As String, 龟合哼 As String
-            龟顶 = 谕组(X, 位谕of日龟BT顶)
-            龟哼 = 谕组(X, 位谕of日龟BT哼)
-            龟触 = 谕组(X, 位谕of日龟顶触)
-            龟合哼 = 谕组(X, 位谕of日龟BT合顶哼)
-            Dim 基月 As String, 基周 As String, 基日 As String, 基乾 As String, 基坤 As String
-            基月 = 谕组(X, 位谕of日基月局)
-            基周 = 谕组(X, 位谕of日基周局)
-            基日 = 谕组(X, 位谕of日基日局)
-            基乾 = 谕组(X, 位谕of日基乾局)
-            基坤 = 谕组(X, 位谕of日基坤局)
-            行尾 = 行尾 & "," & 龟顶 & "," & 龟哼 & "," & 龟触 & "," & 龟合哼
-            行尾 = 行尾 & "," & 基月 & "," & 基周 & "," & 基日 & "," & 基乾 & "," & 基坤
+            行尾 = 行尾 & "," & 谕组(X, 位谕of日龟BT顶) & "," & _
+                谕组(X, 位谕of日龟BT哼) & "," & _
+                谕组(X, 位谕of日龟顶触) & "," & _
+                谕组(X, 位谕of日龟BT合顶哼)
+            行尾 = 行尾 & "," & 谕组(X, 位谕of日基月局) & "," & _
+                谕组(X, 位谕of日基周局) & "," & _
+                谕组(X, 位谕of日基日局) & "," & _
+                谕组(X, 位谕of日基乾局) & "," & _
+                谕组(X, 位谕of日基坤局)
             '--- 新增：DT系列（交叉天数）DTZB/DTZD/DTAB/DTCD，追加到行尾末尾 ---
-            行尾 = 行尾 & "," & ARRLLL(X, 基位日类 + 位osBTZB) & "," & ARRLLL(X, 基位日类 + 位osBTZD) & "," & ARRLLL(X, 基位日类 + 位osBTAB) & "," & ARRLLL(X, 基位日类 + 位osBTCD)
+            行尾 = 行尾 & "," & ARRLLL(X, 基位日类 + 位osBTZB) & "," & _
+                ARRLLL(X, 基位日类 + 位osBTZD) & "," & _
+                ARRLLL(X, 基位日类 + 位osBTAB) & "," & _
+                ARRLLL(X, 基位日类 + 位osBTCD)
             Print #1, 行头 & 行尾
         Next X
         Close #1

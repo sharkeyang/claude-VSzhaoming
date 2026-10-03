@@ -6532,13 +6532,13 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of月策分日P2).HorizontalAlignment = xlLeft
         .Columns(位谕of月策分日P2).NumberFormat = "@"
         .Columns(位谕of日策略P2).HorizontalAlignment = xlLeft
-        .Columns(位谕of日策略P2).ColumnWidth = 8
+        .Columns(位谕of日策略P2).ColumnWidth = 11
         .Columns(位谕of日策分P2).ColumnWidth = 4
         .Columns(位谕of日策分P2).NumberFormat = "@"
         
         .Columns(位谕of日层机警).HorizontalAlignment = xlLeft
         .Columns(位谕of日层机警).ColumnWidth = 8
-        .Columns(位谕of日层漏提示).ColumnWidth = 6
+        .Columns(位谕of日层漏提示).ColumnWidth = 8
         .Columns(位谕of日层漏提示).HorizontalAlignment = xlLeft
         .Columns(位谕of日层联动).ColumnWidth = 11
 
