@@ -1,0 +1,4 @@
+表头: True
+配色: True
+列宽: True
+左对齐: True

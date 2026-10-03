@@ -1,0 +1,525 @@
+=== 删除行（非重命名）===
+DEL:     Dim 典筛复日_停今甲 As New Dictionary
+DEL:     Dim 典筛复日_停今乙 As New Dictionary
+DEL:     Dim 典筛复日_停今丙 As New Dictionary
+DEL:     Dim 典筛复日_停今丁 As New Dictionary
+DEL:     Dim 典筛复日_幅涨4 As New Dictionary
+DEL:     Dim 典筛复日_幅高4 As New Dictionary
+DEL:     Dim 典筛复日_停十数3 As New Dictionary
+DEL:     Dim 典月策略周_多长积极 As New Dictionary  '多长(积极) = 龙猪+升排
+DEL:     Dim 典月策略周_多长消极 As New Dictionary  '多长(消极) = 有消极信号
+DEL:     Dim 典月策略周_多长不定 As New Dictionary  '多长(不定) = 其他多长
+DEL:     Dim 典月策略周_多被金 As New Dictionary    '多被(金) = 金系ZB≤0
+DEL:     Dim 典月策略周_多被银 As New Dictionary    '多被(银) = 银系CD≤0
+DEL:     Dim 典月策略周_多被唏 As New Dictionary    '多被(唏) = 屎尿唏嘘
+DEL:     Dim 典月策略周_NA空看 As New Dictionary    'NA(空看) = ZC≤0但CD/ZB有正
+DEL:     Dim 典月策略周_NA空长 As New Dictionary    'NA(空长) = 三空全
+DEL:     '---------------------------------------
+DEL:     '日冲筛选（3类，按当前日策分类）
+DEL:     '月策略日（4个典码，按A-H匹配）
+DEL:     Dim 典月策略日_A As New Dictionary  'A级: 主(主动持仓)
+DEL:     Dim 典月策略日_B As New Dictionary  'B级: 被(被动持有)
+DEL:     Dim 典月策略日_C As New Dictionary  'C级: 试(试仓)
+DEL:     Dim 典月策略日_D As New Dictionary  'D级: 禁(禁止)
+DEL:     Dim 典月策略日_E As New Dictionary  'E级: 主(主动持仓)
+DEL:     Dim 典月策略日_F As New Dictionary  'F级: 被(被动持有)
+DEL:     Dim 典月策略日_G As New Dictionary  'G级: 试(试仓)
+DEL:     Dim 典月策略日_H As New Dictionary  'H级: 禁(禁止)
+DEL:     '---------------------------------------
+DEL:     '必赢策略（日策略第一轮筛选，按DXZE正负×DXCD护级细分）
+DEL:     'DXCD护级取 位谕of仓日类 第1位（上/中/下/忐/忠/忑）
+DEL:     Dim 典日必赢_DXZE之下DXCD上中 As New Dictionary  'DXZE<0 + DXCD护级上/中
+DEL:     Dim 典日必赢_DXZE之下DXCD忐忠 As New Dictionary  'DXZE<0 + DXCD护级忐/忠
+DEL:     Dim 典日必赢_DXZE之上DXCD忐忠 As New Dictionary  'DXZE≥0 + DXCD护级忐/忠
+DEL:     Dim 典日必赢_DXZE之上DXCD中 As New Dictionary  'DXZE≥0 + DXCD护级中
+DEL:     Dim 典日必赢_DXZE之上DXCD上DXZC初 As New Dictionary  'DXZE≥0 + DXCD护级上 + 日层界储/初
+DEL:     Dim 典日必赢_DXZE之上DXCD上DXAB护型甲 As New Dictionary
+DEL:     Dim 典周策_A金系P As New Dictionary  'A+ 金升非盈龙
+DEL:     Dim 典周策_A金系1 As New Dictionary  'A1 金升非+盈高
+DEL:     Dim 典周策_A金系2 As New Dictionary  'A2 金升非
+DEL:     Dim 典周策_A金系3 As New Dictionary  'A3 金升
+DEL:     Dim 典周策_A金系4 As New Dictionary  'A4 金长
+DEL:     Dim 典周策_B银盈 As New Dictionary   'B 银盈
+DEL:     Dim 典周策_C银猪 As New Dictionary   'C 银猪/龙猪+甲
+DEL:     Dim 典周策_D银升排 As New Dictionary 'D 银升
+DEL:     Dim 典周策_E银ZA As New Dictionary  'E1 银ZA
+DEL:     Dim 典周策_E银己 As New Dictionary   'E2 银己
+DEL:     Dim 典周策_E其他 As New Dictionary   'F 其他有策略的
+DEL:     '策日：日策略P2筛选（按等类分6组）
+DEL:     Dim 典集筛策日等1 As New Dictionary
+DEL:     Dim 典集筛策日等2 As New Dictionary
+DEL:     Dim 典集筛策日等3 As New Dictionary
+DEL:     Dim 典集筛策日等5 As New Dictionary
+DEL:     Dim 典集筛策日等6 As New Dictionary
+DEL:     Dim 典集筛策日等7 As New Dictionary
+DEL:     '------------------------------------------------------------------------------------
+DEL:     '周层
+DEL:     '------------------------------------------------------------------------------------
+DEL:     Dim 典集筛已在池持 As New Dictionary
+DEL:     Dim 典集筛已在池今 As New Dictionary
+DEL:     Dim 典集筛已在池白 As New Dictionary
+DEL:     Dim 典集筛股性非 As New Dictionary
+DEL:     Dim 典集筛股性微 As New Dictionary
+DEL:     Dim 典集筛股性萎 As New Dictionary
+DEL:     Dim 典集筛股性活 As New Dictionary
+DEL:     Dim 典集市板Qe As New Dictionary
+DEL:     Dim 典集市板Qe2 As New Dictionary
+DEL:     Dim 典集市板Qst As New Dictionary
+DEL:     Dim 典集市板Q8 As New Dictionary
+DEL:     Dim 典集市板Qb As New Dictionary
+DEL:     Dim 典筛日外仓月嘘X7 As New Dictionary
+DEL:     Dim 典筛日外A7常_主区龙猪地型4 As New Dictionary
+DEL:                                 典筛复日_停今甲.Add Item:=X, Key:=CIDL
+DEL:                                 典筛复日_停今乙.Add Item:=X, Key:=CIDL
+DEL:                                 典筛复日_停今丙.Add Item:=X, Key:=CIDL
+DEL:                                 典筛复日_停今丁.Add Item:=X, Key:=CIDL
+DEL:                                 典筛复日_停十数3.Add Item:=X, Key:=CIDL
+DEL:                                 典筛复日_幅涨4.Add Item:=X, Key:=CIDL
+DEL:                                 典筛复日_幅高4.Add Item:=X, Key:=CIDL
+DEL:                             '只选核心指基（核心宽基+核心行业），排除重复基金
+DEL:                             If 典核心指基.Exists(CIDL) Or 典核心行业.Exists(CIDL) Then
+DEL:                                 是否适合月策略 = True
+DEL:                             End If
+DEL:                     典月策略周_多长积极.Add Item:=X, Key:=CIDL
+DEL:                     典月策略周_多长消极.Add Item:=X, Key:=CIDL
+DEL:                     典月策略周_多长不定.Add Item:=X, Key:=CIDL
+DEL:                     典月策略周_多被金.Add Item:=X, Key:=CIDL
+DEL:                     典月策略周_多被银.Add Item:=X, Key:=CIDL
+DEL:                     典月策略周_多被唏.Add Item:=X, Key:=CIDL
+DEL:                     典月策略周_NA空看.Add Item:=X, Key:=CIDL
+DEL:                     典月策略周_NA空长.Add Item:=X, Key:=CIDL
+DEL:                     典周策_A金系P.Add Item:=X, Key:=CIDL
+DEL:                     典周策_A金系1.Add Item:=X, Key:=CIDL
+DEL:                     典周策_A金系2.Add Item:=X, Key:=CIDL
+DEL:                     典周策_A金系3.Add Item:=X, Key:=CIDL
+DEL:                     典周策_A金系4.Add Item:=X, Key:=CIDL
+DEL:                     典周策_B银盈.Add Item:=X, Key:=CIDL
+DEL:                     典周策_C银猪.Add Item:=X, Key:=CIDL
+DEL:                     典周策_D银升排.Add Item:=X, Key:=CIDL
+DEL:                     典周策_E银ZA.Add Item:=X, Key:=CIDL
+DEL:                     典周策_E银己.Add Item:=X, Key:=CIDL
+DEL:                     典周策_E其他.Add Item:=X, Key:=CIDL
+DEL:                         典日必赢_DXZE之下DXCD上中.Add Item:=X, Key:=CIDL
+DEL:                         典日必赢_DXZE之下DXCD忐忠.Add Item:=X, Key:=CIDL
+DEL:                         典日必赢_DXZE之上DXCD忐忠.Add Item:=X, Key:=CIDL
+DEL:                         典日必赢_DXZE之上DXCD中.Add Item:=X, Key:=CIDL
+DEL:                             典日必赢_DXZE之上DXCD上DXZC初.Add Item:=X, Key:=CIDL
+DEL:                             典日必赢_DXZE之上DXCD上DXAB护型甲.Add Item:=X, Key:=CIDL
+DEL:                     典月策略日_A.Add Item:=X, Key:=CIDL
+DEL:                     典月策略日_B.Add Item:=X, Key:=CIDL
+DEL:                     典月策略日_C.Add Item:=X, Key:=CIDL
+DEL:                     典月策略日_D.Add Item:=X, Key:=CIDL
+DEL:                     典月策略日_E.Add Item:=X, Key:=CIDL
+DEL:                     典月策略日_F.Add Item:=X, Key:=CIDL
+DEL:                     典月策略日_G.Add Item:=X, Key:=CIDL
+DEL:                     典月策略日_H.Add Item:=X, Key:=CIDL
+DEL:                         典集筛策日等1.Add Item:=X, Key:=CIDL
+DEL:                         典集筛策日等2.Add Item:=X, Key:=CIDL
+DEL:                         典集筛策日等3.Add Item:=X, Key:=CIDL
+DEL:                         典集筛策日等5.Add Item:=X, Key:=CIDL
+DEL:                         典集筛策日等6.Add Item:=X, Key:=CIDL
+DEL:                         典集筛策日等7.Add Item:=X, Key:=CIDL
+DEL:     '====================================================================================
+DEL:     '原有筛选
+DEL:     '====================================================================================
+DEL:     IS是否筛选下周冲高 = False
+DEL:     If 谕组(X, 位qt市板) = 常市板指 Then
+DEL:     ElseIf 谕组(X, 位qt市板) = 常市板基 Then
+DEL:     ElseIf 谕组(X, 位qt市板) = 常市板票Qst Then
+DEL:     ElseIf 谕组(X, 位qt市板) = 常市板票Qbj Then
+DEL:     ElseIf 谕组(X, 位谕of日段股性) = "12变活" Or 谕组(X, 位谕of日段股性) = "13变活" Or 谕组(X, 位谕of日段股性) = "0萎" Or 谕组(X, 位谕of日段股性) = "11蔫" Then
+DEL:     ElseIf 谕组(X, 位qt今池) <> "" Then
+DEL:     Else
+DEL:             '复盘：用于筛选"下周冲高"机会。
+DEL:             '--------------------------------------------------------------------
+DEL:             '--------------------------------------------------------------------
+DEL:             If 谕组(X, 位谕of日波龄BTPR9) >= 1 And InStr(出节模式, "日") > 0 Then
+DEL:             '--------------------------------------------------------------------
+DEL:                     '过滤：屎尿。仅有大于WJA或WXAB>0可进行观察，其余勿看勿入。
+DEL:                     '--------------------------------------------------------------------
+DEL:                     '过滤：嘘。
+DEL:                     '--------------------------------------------------------------------
+DEL:                                 If InStr(谕组(X, 位谕of周道月势), "X7") > 0 Then
+DEL:                                     典筛日外仓月嘘X7.Add Item:=X, Key:=CIDL
+DEL:                                 Else
+DEL:                                     典筛日外仓月嘘余.Add Item:=X, Key:=CIDL
+DEL:                     '--------------------------------------------------------------------
+DEL:                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "唏" Then
+DEL:                                     典筛日外仓月唏.Add Item:=X, Key:=CIDL
+DEL:                     '--------------------------------------------------------------------
+DEL:                                     典筛日外仓月银.Add Item:=X, Key:=CIDL
+DEL:                                     '应属于主升，但存续时间非常短。故统一提取出来，作为潜在主升。
+DEL:                                     典筛日外仓月A3.Add Item:=X, Key:=CIDL
+DEL:                                     典筛日外仓月A1.Add Item:=X, Key:=CIDL
+DEL:                                     典筛日外仓月余.Add Item:=X, Key:=CIDL
+DEL:                                     典筛日外仓月C7初储.Add Item:=X, Key:=CIDL
+DEL:                                     '注20260303：因存续时间较短，且已经区分地型，不再对（储初）区分是否为龙。
+DEL:                                     典筛日外仓月A7破.Add Item:=X, Key:=CIDL
+DEL:                                     典筛日外A7低波.Add Item:=X, Key:=CIDL
+DEL:                                     '过滤日波动过小，没有操作意义。
+DEL:                                     典筛日外A7低波_日高lt1.Add Item:=X, Key:=CIDL
+DEL:                                     典筛日外A7败多.Add Item:=X, Key:=CIDL
+DEL:                     ElseIf InStr(谕组(X, 位谕of周层波型), "_4") > 0 Then
+DEL:                                 典筛日外A7常_主区龙猪地型4.Add Item:=X, Key:=CIDL
+DEL:                         If InStr(谕组(X, 位谕of周层波型), "_0") > 0 Then
+DEL:                         ElseIf InStr(谕组(X, 位谕of周层波型), "_1") > 0 Then
+DEL:                         ElseIf InStr(谕组(X, 位谕of周层波型), "_2") > 0 Then
+DEL:                         ElseIf InStr(谕组(X, 位谕of周层波型), "_3") > 0 Then
+DEL:                 '------------------------------------------------------------------------
+DEL:             End If
+DEL:         表名 = ".M310"
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外仓月A3, 节签:="单列【仓月A3】WXCD正交.可能是主升")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外仓月A1, 节签:="单列【仓月A1】WXCD正交.可能是主升")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色十青, 典码输出:=典筛日外仓月银, 节签:="单列【仓月】银")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色四青, 典码输出:=典筛日外仓月唏, 节签:="单列【仓月】唏")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色十黄, 典码输出:=典筛日外仓月嘘余, 节签:="单列【仓月】嘘X3&X1")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色十黄, 典码输出:=典筛日外仓月嘘X7, 节签:="单列【仓月】嘘X7")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色四黄, 典码输出:=典筛日外仓月尿例外, 节签:="单列【仓月】尿例外.WJB之上或WXAB正交")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色四黄, 典码输出:=典筛日外仓月屎例外, 节签:="单列【仓月】屎例外.WJB之上或WXAB正交")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色十红, 典码输出:=典筛日外仓月余, 节签:="单列【仓月】余")
+DEL:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=True, 章色:=常色十橙, 章签:=表名)
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色十橙, 典码输出:=典筛日外A7常_主区龙猪首, 节签:="【A7常.主】龙猪.主首合顶")     '初合顶，必然前面经历离顶，包括（①从层再过渡②经历过WXZA劫③在WJA之上长久横盘）。所以此类别与"蛀（WXZA劫）""头（WXZB劫）"更为接近。
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7常_主区龙猪地型0, 节签:="【A7常.主】龙猪.<周地型>含0")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7常_主区龙猪地型1, 节签:="【A7常.主】龙猪.<周地型>含1（跌吞）") '前4柱有WJA之上跌吞
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7常_主区龙猪地型2, 节签:="【A7常.主】龙猪.<周地型>含2（跌连）") '前4柱有WJA之上跌连
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7常_主区龙猪地型3, 节签:="【A7常.主】龙猪.<周地型>含3（其他）")     '其他
+DEL:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="剔【主非龙猪】WJA之上")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色五黄, 典码输出:=典筛日外A7常_汇震正〇, 节签:="【A7常.主】汇.震正〇")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色七黄, 典码输出:=典筛日外A7常_主区龙管余, 节签:="【A7常.主】龙管（WJA之上）")    '很可能已经过最高点
+DEL:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="剔【主非龙猪】WJA劫")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7常_主区龙猪地型4, 节签:="【A7常.主】龙猪.<周地型>含4暂4蛀")     '前4柱中有WXZA劫
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色七黄, 典码输出:=典筛日外A7常_主区龙管根, 节签:="【A7常.主】龙管根")    '很可能已经过最高点
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色五黄, 典码输出:=典筛日外A7常_汇震WJA劫, 节签:="【A7常.主】汇.震WJA劫")
+DEL:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="【主升尾部嫌疑.再】月阶7.再B&再C。有可能再次形成主升")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色六紫, 典码输出:=典筛日外A7常_渡区再B, 节签:="【A7常.渡再】【再B】龙&震&头")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色六紫, 典码输出:=典筛日外A7常_渡区再C, 节签:="【A7常.渡再】【再C】龙&震&头")
+DEL:         '--------------------------------------------------------------------------------
+DEL:         '单列：顶部嫌疑。渡区（再储初）：_龙猪&龙管&震&头
+DEL:         '--------------------------------------------------------------------------------
+DEL:         '（1）WXAC劫：包含A7（再）
+DEL:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="【顶部嫌疑.再】月阶7.再D。不太可能再次形成主升")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色五黄, 典码输出:=典筛日外A7常_汇头WJB劫, 节签:="【外常再】汇.头WJB劫（长时间未触顶）")  '包含：虽经过WJB劫，但较长时间未触顶的情况。
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色六紫, 典码输出:=典筛日外A7常_渡区再D, 节签:="【A7常.渡再】【再D】龙&震&头")
+DEL:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="【顶部嫌疑.初】月阶7.WXBC劫")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色六绿, 典码输出:=典筛日外仓月C7初储, 节签:="【C7常.渡初】【初储】龙&震&头")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7败多, 节签:="剔【A7败多】失败太多")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7低波_日高lt1, 节签:="剔【A7低波】日级别.十均高≤1.2")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7低波, 节签:="剔【A7低波】周级别.波动太小")
+DEL:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="【主升尾部嫌疑.暴】月阶7.（暴）偏离太大")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色八红, 典码输出:=典筛日外A7常_剔周丘幅80, 节签:="【A7常.主】单列丘偏＞80%")
+DEL:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="【顶部嫌疑.破】月阶7.破WJB（可等待下破WJC退出）")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周地", 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外仓月A7破, 节签:="【仓月7】【破】")
+DEL:     '====================================================================================
+DEL:     '类别：今池
+DEL:     '====================================================================================
+DEL:         表名 = 常簿缀选临 & 常池名今
+DEL:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=True, 章色:=常色八橙, 章签:=表名)
+DEL:         Call IQQQ展擎筛程至C0章按通用(WB, 表名, 谕组, 出章模式:=出章模式, 出节模式:=出节模式, 出全是否:=True, 典码输出:=典集筛已在池今, 章色:=常色八红, 章签:="【今池】")
+DEL:         MSG = MSG & IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色十红, 典码输出:=典筛复日_停今甲, 节签:="【今涨停】三板")
+DEL:         MSG = MSG & IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色十红, 典码输出:=典筛复日_停今乙, 节签:="【今涨停】两板")
+DEL:         MSG = MSG & IQQQ展擎筛程至C0章按通用(WB, 表名, 谕组, 出章模式:="周仓", 出节模式:="日综", 出全是否:=True, 典码输出:=典筛复日_停今丙, 章色:=常色八红, 章签:="【今涨停】首板已封")
+DEL:         MSG = MSG & IQQQ展擎筛程至C0章按通用(WB, 表名, 谕组, 出章模式:="周仓", 出节模式:="日综", 出全是否:=True, 典码输出:=典筛复日_停今丁, 章色:=常色八红, 章签:="【今涨停】首板未封")
+DEL:         Call IQQQ展擎筛程至C0章按通用(WB, 表名, 谕组, 出章模式:="周仓", 出节模式:="日综", 出全是否:=True, 典码输出:=典筛复日_停十数3, 章色:=常色八红, 章签:="【日冲】十日涨停数≥3")
+DEL:         MSG = MSG & IQQQ展擎筛程至C0章按通用(WB, 表名, 谕组, 出章模式:="周仓", 出节模式:="日综", 出全是否:=True, 典码输出:=典筛复日_幅涨4, 章色:=常色八红, 章签:="【日冲】涨幅≥4")
+DEL:         MSG = MSG & IQQQ展擎筛程至C0章按通用(WB, 表名, 谕组, 出章模式:="周仓", 出节模式:="日综", 出全是否:=True, 典码输出:=典筛复日_幅高4, 章色:=常色八红, 章签:="【日冲】高幅≥4")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色一蓝, 典码输出:=典月策略周_多长积极, 节签:="?【月策略周】多长(积极)持有")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色二灰, 典码输出:=典月策略周_多长不定, 节签:="【月策略周】多长(不定)关注")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典月策略周_多长消极, 节签:="?【月策略周】多长(消极)准备减仓")
+DEL: '        call IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典月策略周_多被金, 节签:="?【月策略周】多被(金)ZB≤0")
+DEL: '        call IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典月策略周_多被银, 节签:="【月策略周】多被(银)CD≤0")
+DEL: '        call IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典月策略周_NA空看, 节签:="【月策略周】NA(空看)")
+DEL: '        call IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典月策略周_NA空长, 节签:="【月策略周】NA(空长)")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典周策_A金系P, 节签:="? ★ A+【二级】<金升非盈龙>")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典周策_A金系1, 节签:="? ★ A1【二级】<金升非盈>")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色主黄, 典码输出:=典周策_A金系2, 节签:="? ★ A2【三级】<金升>")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色主黄, 典码输出:=典周策_B银盈, 节签:="? ☆ B【二级】<银盈>")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色二灰, 典码输出:=典周策_A金系3, 节签:="? ☆ A3【三级】<金升非>")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色四灰, 典码输出:=典周策_A金系4, 节签:="? ☆ A4【三级】<金长>")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典周策_C银猪, 节签:="? ○ C【四级】<银猪>")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典周策_D银升排, 节签:="? ○ D【三级】<银升>")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典周策_E银ZA, 节签:="? ○ E【四级】<银ZA>")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典周策_E银己, 节签:="? ○ F【四级】<银己>")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典周策_E其他, 节签:="? △ G【三级】其他")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色六靛, 典码输出:=典日必赢_DXZE之上DXCD上DXAB护型甲, 节签:="【金银唏】DXZE之上·DXCD上DXAB护型甲")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色六靛, 典码输出:=典日必赢_DXZE之上DXCD上DXZC初, 节签:="【金银唏】DXZE之上·DXCD上DXZC初")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色六靛, 典码输出:=典日必赢_DXZE之上DXCD中, 节签:="【金银唏】DXZE之上·DXCD中")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色八靛, 典码输出:=典日必赢_DXZE之上DXCD忐忠, 节签:="【金银唏】DXZE之上·DXCD忐忠")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色十青, 典码输出:=典日必赢_DXZE之下DXCD上中, 节签:="【嘘尿屎】DXZE之下·DXCD上中")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色八青, 典码输出:=典日必赢_DXZE之下DXCD忐忠, 节签:="【嘘尿屎】DXZE之下·DXCD忐忠")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色十靛, 典码输出:=典月策略日_A, 节签:="A级(主动持仓)")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色八靛, 典码输出:=典月策略日_E, 节签:="E级(已满足DXZC)")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色六靛, 典码输出:=典月策略日_F, 节签:="F级(已满足DXZC弱)")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色十绿, 典码输出:=典月策略日_B, 节签:="B级(被动持有)")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色八绿, 典码输出:=典月策略日_C, 节签:="C级(被动持有)")
+DEL:         'Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色六绿, 典码输出:=典月策略日_D, 节签:="D级(被动持有)")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色深粪棕, 典码输出:=典月策略日_G, 节签:="G级(傻吃屎豆)")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色三红, 典码输出:=典月策略日_H, 节签:="H级(禁止)")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典集筛策日等1, 节签:="等1")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典集筛策日等2, 节签:="等2")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典集筛策日等3, 节签:="等3")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典集筛策日等5, 节签:="等5")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典集筛策日等6, 节签:="等6")
+DEL:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典集筛策日等7, 节签:="等7")
+DEL:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色主靛, 典码输出:=典周地型_甲乙含0, 区签:="【周地型】0橅", 区释:="")
+DEL:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六靛, 典码输出:=典周地型_甲乙含1, 区签:="【周地型】1柜", 区释:="")
+DEL:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六靛, 典码输出:=典周地型_甲乙含2, 区签:="【周地型】2栅", 区释:="")
+DEL:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六靛, 典码输出:=典周地型_甲乙含3, 区签:="【周地型】3桮", 区释:="")
+DEL:     '--------------------------------------------------------------------------------
+DEL:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六黄, 典码输出:=典周地型_甲乙含6, 区签:="【周地型】6娝", 区释:="")
+DEL:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六黄, 典码输出:=典周地型_甲乙含7, 区签:="【周地型】7姗", 区释:="")
+DEL:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六黄, 典码输出:=典周地型_甲乙含8, 区签:="【周地型】8姖", 区释:="")
+DEL:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六黄, 典码输出:=典周地型_甲乙含9, 区签:="【周地型】9妩", 区释:="")
+DEL:     '--------------------------------------------------------------------------------
+DEL:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六橙, 典码输出:=典周地型_丙, 区签:="【周护】丙", 区释:="")
+
+=== 新增行（非重命名）===
+ADD:     '------------------------------------------------------------------------------------
+ADD:     '单列
+ADD:     '------------------------------------------------------------------------------------
+ADD:     Dim 典集筛已在池持 As New Dictionary
+ADD:     Dim 典集筛已在池今 As New Dictionary
+ADD:     '---------------------------------------
+ADD:     Dim 典集市板Qe As New Dictionary
+ADD:     Dim 典集市板Qe2 As New Dictionary
+ADD:     Dim 典集市板Qst As New Dictionary
+ADD:     Dim 典集市板Q8 As New Dictionary
+ADD:     Dim 典集市板Qb As New Dictionary
+ADD:     Dim 典统复日_停今甲 As New Dictionary
+ADD:     Dim 典统复日_停今乙 As New Dictionary
+ADD:     Dim 典统复日_停今丙 As New Dictionary
+ADD:     Dim 典统复日_停今丁 As New Dictionary
+ADD:     Dim 典统复日_幅涨4 As New Dictionary
+ADD:     Dim 典统复日_幅高4 As New Dictionary
+ADD:     Dim 典统复日_停十数3 As New Dictionary
+ADD:     Dim 典策月周_多长积极 As New Dictionary  '多长(积极) = 龙猪+升排
+ADD:     Dim 典策月周_多长消极 As New Dictionary  '多长(消极) = 有消极信号
+ADD:     Dim 典策月周_多长不定 As New Dictionary  '多长(不定) = 其他多长
+ADD:     Dim 典策月周_多被金 As New Dictionary    '多被(金) = 金系ZB≤0
+ADD:     Dim 典策月周_多被银 As New Dictionary    '多被(银) = 银系CD≤0
+ADD:     Dim 典策月周_多被唏 As New Dictionary    '多被(唏) = 屎尿唏嘘
+ADD:     Dim 典策月周_NA空看 As New Dictionary    'NA(空看) = ZC≤0但CD/ZB有正
+ADD:     Dim 典策月周_NA空长 As New Dictionary    'NA(空长) = 三空全
+ADD:     Dim 典策周_A金系P As New Dictionary  'A+ 金升非盈龙
+ADD:     Dim 典策周_A金系1 As New Dictionary  'A1 金升非+盈高
+ADD:     Dim 典策周_A金系2 As New Dictionary  'A2 金升非
+ADD:     Dim 典策周_A金系3 As New Dictionary  'A3 金升
+ADD:     Dim 典策周_A金系4 As New Dictionary  'A4 金长
+ADD:     Dim 典策周_B银盈 As New Dictionary   'B 银盈
+ADD:     Dim 典策周_C银猪 As New Dictionary   'C 银猪/龙猪+甲
+ADD:     Dim 典策周_D银升排 As New Dictionary 'D 银升
+ADD:     Dim 典策周_E银ZA As New Dictionary  'E1 银ZA
+ADD:     Dim 典策周_E银己 As New Dictionary   'E2 银己
+ADD:     Dim 典策周_E其他 As New Dictionary   'F 其他有策略的
+ADD:     '必赢策略（日策略第一轮筛选，按DXZE正负×DXCD护级细分）
+ADD:     'DXCD护级取 位谕of仓日类 第1位（上/中/下/忐/忠/忑）
+ADD:     Dim 典策日必赢_DXZE之下DXCD上中 As New Dictionary  'DXZE<0 + DXCD护级上/中
+ADD:     Dim 典策日必赢_DXZE之下DXCD忐忠 As New Dictionary  'DXZE<0 + DXCD护级忐/忠
+ADD:     Dim 典策日必赢_DXZE之上DXCD忐忠 As New Dictionary  'DXZE≥0 + DXCD护级忐/忠
+ADD:     Dim 典策日必赢_DXZE之上DXCD中 As New Dictionary  'DXZE≥0 + DXCD护级中
+ADD:     Dim 典策日必赢_DXZE之上DXCD上DXZC初 As New Dictionary  'DXZE≥0 + DXCD护级上 + 日层界储/初
+ADD:     Dim 典策日必赢_DXZE之上DXCD上DXAB护型甲 As New Dictionary
+ADD:     '日冲筛选（3类，按当前日策分类）
+ADD:     '月策略日（4个典码，按A-H匹配）
+ADD:     Dim 典策月日_A As New Dictionary  'A级: 主(主动持仓)
+ADD:     Dim 典策月日_B As New Dictionary  'B级: 被(被动持有)
+ADD:     Dim 典策月日_C As New Dictionary  'C级: 试(试仓)
+ADD:     Dim 典策月日_D As New Dictionary  'D级: 禁(禁止)
+ADD:     Dim 典策月日_E As New Dictionary  'E级: 主(主动持仓)
+ADD:     Dim 典策月日_F As New Dictionary  'F级: 被(被动持有)
+ADD:     Dim 典策月日_G As New Dictionary  'G级: 试(试仓)
+ADD:     Dim 典策月日_H As New Dictionary  'H级: 禁(禁止)
+ADD:     '策日：日策略P2筛选（按等类分6组）
+ADD:     Dim 典策日等1 As New Dictionary
+ADD:     Dim 典策日等2 As New Dictionary
+ADD:     Dim 典策日等3 As New Dictionary
+ADD:     Dim 典策日等5 As New Dictionary
+ADD:     Dim 典策日等6 As New Dictionary
+ADD:     Dim 典策日等7 As New Dictionary
+ADD:     Dim 典筛日外仓月嘘X7例外 As New Dictionary
+ADD:                                 典统复日_停今甲.Add Item:=X, Key:=CIDL
+ADD:                                 典统复日_停今乙.Add Item:=X, Key:=CIDL
+ADD:                                 典统复日_停今丙.Add Item:=X, Key:=CIDL
+ADD:                                 典统复日_停今丁.Add Item:=X, Key:=CIDL
+ADD:                                 典统复日_停十数3.Add Item:=X, Key:=CIDL
+ADD:                                 典统复日_幅涨4.Add Item:=X, Key:=CIDL
+ADD:                                 典统复日_幅高4.Add Item:=X, Key:=CIDL
+ADD:                         '只选核心指基（核心宽基+核心行业），排除重复基金
+ADD:                         If 典核心指基.Exists(CIDL) Or 典核心行业.Exists(CIDL) Then
+ADD:                             是否适合月策略 = True
+ADD:                         End If
+ADD:                             是否适合周策略 = True
+ADD:                     典策月周_多长积极.Add Item:=X, Key:=CIDL
+ADD:                     典策月周_多长消极.Add Item:=X, Key:=CIDL
+ADD:                     典策月周_多长不定.Add Item:=X, Key:=CIDL
+ADD:                     典策月周_多被金.Add Item:=X, Key:=CIDL
+ADD:                     典策月周_多被银.Add Item:=X, Key:=CIDL
+ADD:                     典策月周_多被唏.Add Item:=X, Key:=CIDL
+ADD:                     典策月周_NA空看.Add Item:=X, Key:=CIDL
+ADD:                     典策月周_NA空长.Add Item:=X, Key:=CIDL
+ADD:                     典策周_A金系P.Add Item:=X, Key:=CIDL
+ADD:                     典策周_A金系1.Add Item:=X, Key:=CIDL
+ADD:                     典策周_A金系2.Add Item:=X, Key:=CIDL
+ADD:                     典策周_A金系3.Add Item:=X, Key:=CIDL
+ADD:                     典策周_A金系4.Add Item:=X, Key:=CIDL
+ADD:                     典策周_B银盈.Add Item:=X, Key:=CIDL
+ADD:                     典策周_C银猪.Add Item:=X, Key:=CIDL
+ADD:                     典策周_D银升排.Add Item:=X, Key:=CIDL
+ADD:                     典策周_E银ZA.Add Item:=X, Key:=CIDL
+ADD:                     典策周_E银己.Add Item:=X, Key:=CIDL
+ADD:                     典策周_E其他.Add Item:=X, Key:=CIDL
+ADD:                         典策日必赢_DXZE之下DXCD上中.Add Item:=X, Key:=CIDL
+ADD:                         典策日必赢_DXZE之下DXCD忐忠.Add Item:=X, Key:=CIDL
+ADD:                         典策日必赢_DXZE之上DXCD忐忠.Add Item:=X, Key:=CIDL
+ADD:                         典策日必赢_DXZE之上DXCD中.Add Item:=X, Key:=CIDL
+ADD:                             典策日必赢_DXZE之上DXCD上DXZC初.Add Item:=X, Key:=CIDL
+ADD:                             典策日必赢_DXZE之上DXCD上DXAB护型甲.Add Item:=X, Key:=CIDL
+ADD:                     典策月日_A.Add Item:=X, Key:=CIDL
+ADD:                     典策月日_B.Add Item:=X, Key:=CIDL
+ADD:                     典策月日_C.Add Item:=X, Key:=CIDL
+ADD:                     典策月日_D.Add Item:=X, Key:=CIDL
+ADD:                     典策月日_E.Add Item:=X, Key:=CIDL
+ADD:                     典策月日_F.Add Item:=X, Key:=CIDL
+ADD:                     典策月日_G.Add Item:=X, Key:=CIDL
+ADD:                     典策月日_H.Add Item:=X, Key:=CIDL
+ADD:                         典策日等1.Add Item:=X, Key:=CIDL
+ADD:                         典策日等2.Add Item:=X, Key:=CIDL
+ADD:                         典策日等3.Add Item:=X, Key:=CIDL
+ADD:                         典策日等5.Add Item:=X, Key:=CIDL
+ADD:                         典策日等6.Add Item:=X, Key:=CIDL
+ADD:                         典策日等7.Add Item:=X, Key:=CIDL
+ADD:             '周日联动筛选：用于筛选"下周冲高"机会。先按WXCD筛选，再按WXAB护型*地型进行展示。
+ADD:             '注20261001：已确认主升条件为（WXAB＞0且WXZB＞0）；主升前置条件为（WXAB＜0且WXZB＞0）。
+ADD:             '----------------------------------------------------------------------------
+ADD:             If 是否适合周策略 = False Then
+ADD:             ElseIf 谕组(X, 位谕of日波龄BTPR9) >= 1 And InStr(出节模式, "日") > 0 Then
+ADD:             '----------------------------------------------------------------------------
+ADD:             '----------------------------------------------------------------------------
+ADD:                     '过滤：屎尿嘘。仅有大于WJA或WXAB>0可进行观察，其余勿看勿入。
+ADD:                             '注20261001：现已转向以（WXAB＞0且WXZB＞0）为主升，（WXAB＜0且WXZB＞0）为主升前置。把筛选条件全面向新条件靠拢。
+ADD:                             '注20261001：此处筛选的是适合进入的机会，对于已经持仓但因为波动偶然下破重要均线要就事论事地处理，不要一概而论，或许下柱就可以恢复。
+ADD:                             If InStr(谕组(X, 位谕of周道月势), "X7") > 0 Then
+ADD:                                 If 谕组(X, 位谕of周类BTZB) > 0 Or 谕组(X, 位谕of周类BTAB) > 0 Then
+ADD:                                     典筛日外仓月嘘X7例外.Add Item:=X, Key:=CIDL
+ADD:                             Else
+ADD:                                     典筛日外仓月嘘余.Add Item:=X, Key:=CIDL
+ADD:                             End If
+ADD:                     ElseIf Mid$(谕组(X, 位谕of仓周类), 1, 1) = "唏" Then
+ADD:                                 典筛日外仓月唏.Add Item:=X, Key:=CIDL
+ADD:                                 典筛日外仓月银.Add Item:=X, Key:=CIDL
+ADD:                                 '应属于主升，但存续时间非常短。故统一提取出来，作为潜在主升。
+ADD:                                 典筛日外仓月A3.Add Item:=X, Key:=CIDL
+ADD:                                 典筛日外仓月A1.Add Item:=X, Key:=CIDL
+ADD:                                 典筛日外仓月余.Add Item:=X, Key:=CIDL
+ADD:                                 典筛日外仓月C7初储.Add Item:=X, Key:=CIDL
+ADD:                                 '注20260303：因存续时间较短，且已经区分地型，不再对（储初）区分是否为龙。
+ADD:                                 典筛日外仓月A7破.Add Item:=X, Key:=CIDL
+ADD:                                 典筛日外A7低波.Add Item:=X, Key:=CIDL
+ADD:                                 '过滤日波动过小，没有操作意义。
+ADD:                                 典筛日外A7低波_日高lt1.Add Item:=X, Key:=CIDL
+ADD:                                 典筛日外A7败多.Add Item:=X, Key:=CIDL
+ADD:                     '20260815地型改二元WTZA+纯并符8类：0橅/1柜/2栅/3桮/9妩/8姖/7姗/6娝
+ADD:                     '地型是波型首字符，非_N后缀。外池A7仅上端(BTZC>0)，龙猪只出地型0/1，2/3映射龙管栅/龙管杂。
+ADD:                         If Left$(谕组(X, 位谕of周层波型), 1) = "0" Then
+ADD:                         ElseIf Left$(谕组(X, 位谕of周层波型), 1) = "1" Then
+ADD:                         ElseIf Left$(谕组(X, 位谕of周层波型), 1) = "2" Then
+ADD:                         Else
+ADD:         表名 = ".Mx"
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外仓月A3, 节签:="单列【仓月A3】WXCD正交.可能是主升")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外仓月A1, 节签:="单列【仓月A1】WXCD正交.可能是主升")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色十青, 典码输出:=典筛日外仓月银, 节签:="单列【仓月】银")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色四青, 典码输出:=典筛日外仓月唏, 节签:="单列【仓月】唏")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色八红, 典码输出:=典筛日外仓月嘘余, 节签:="单列【仓月】嘘X3&X1")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色八红, 典码输出:=典筛日外仓月嘘X7例外, 节签:="单列【仓月】嘘X7.例外WJB之上或WXAB正交")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色四红, 典码输出:=典筛日外仓月尿例外, 节签:="单列【仓月】尿.例外WJB之上或WXAB正交")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色四红, 典码输出:=典筛日外仓月屎例外, 节签:="单列【仓月】屎.例外WJB之上或WXAB正交")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色十红, 典码输出:=典筛日外仓月余, 节签:="单列【仓月】余")
+ADD:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=True, 章色:=常色六橙, 章签:=表名)
+ADD:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="【A7常.主】龙猪")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色十橙, 典码输出:=典筛日外A7常_主区龙猪首, 节签:="【A7常.主】龙猪.主首合顶")     '初合顶，必然前面经历离顶，包括（①从层再过渡②经历过WXZA劫③在WJA之上长久横盘）。所以此类别与"蛀（WXZA劫）""头（WXZB劫）"更为接近。
+ADD:         '20260815地型改二元WTZA+纯并符：0橅无异常/1柜含1V(跌吞)/2栅含1W(跌连)/3桮杂
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7常_主区龙猪地型0, 节签:="【A7常.主】龙猪.<周地型>0橅无异常")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7常_主区龙猪地型1, 节签:="【A7常.主】龙猪.<周地型>1柜含1V(跌吞)") '前4柱有WJA之上跌吞
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7常_主区龙猪地型2, 节签:="【A7常.主】龙猪.<周地型>2栅含1W(跌连)")  '前4柱有WJA之上跌连
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7常_主区龙猪地型3, 节签:="【A7常.主】龙猪.<周地型>3桮杂")     '其他
+ADD:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="【A7常.主非龙猪】WJA之上")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色五黄, 典码输出:=典筛日外A7常_汇震正〇, 节签:="【A7常.主】汇.震正〇")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色七黄, 典码输出:=典筛日外A7常_主区龙管余, 节签:="【A7常.主】龙管（WJA之上）")    '很可能已经过最高点
+ADD:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="剔【A7常.主非龙猪】WJA劫")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色七黄, 典码输出:=典筛日外A7常_主区龙管根, 节签:="【A7常.主】龙管根")    '很可能已经过最高点
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色五黄, 典码输出:=典筛日外A7常_汇震WJA劫, 节签:="【A7常.主】汇.震WJA劫")
+ADD:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="【主升尾部嫌疑.再】月阶7.再B&再C&再D。有可能再次形成主升")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色六紫, 典码输出:=典筛日外A7常_渡区再B, 节签:="【A7常.渡再】【再B】龙&震&头")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色六紫, 典码输出:=典筛日外A7常_渡区再C, 节签:="【A7常.渡再】【再C】龙&震&头")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色五黄, 典码输出:=典筛日外A7常_汇头WJB劫, 节签:="【外常再】汇.头WJB劫（长时间未触顶）")  '包含：虽经过WJB劫，但较长时间未触顶的情况。
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色六紫, 典码输出:=典筛日外A7常_渡区再D, 节签:="【A7常.渡再】【再D】龙&震&头")
+ADD:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="【主升尾部嫌疑.初】月阶7.WXBC劫")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色六绿, 典码输出:=典筛日外仓月C7初储, 节签:="【C7常.渡初】【初储】龙&震&头")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7败多, 节签:="剔【A7败多】失败太多")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7低波_日高lt1, 节签:="剔【A7低波】日级别.十均高≤1.2")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外A7低波, 节签:="剔【A7低波】周级别.波动太小")
+ADD:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="【主升顶部嫌疑.暴】月阶7.（暴）偏离太大")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色八红, 典码输出:=典筛日外A7常_剔周丘幅80, 节签:="【A7常.主】单列丘偏＞80%")
+ADD:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色六灰, 章签:="【主升尾部嫌疑.破】月阶7.破WJB（可等待下破WJC退出）")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色主黄, 典码输出:=典筛日外仓月A7破, 节签:="【仓月7】【破】")
+ADD:         MSG = MSG & IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色十红, 典码输出:=典统复日_停今甲, 节签:="【今涨停】三板")
+ADD:         MSG = MSG & IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色十红, 典码输出:=典统复日_停今乙, 节签:="【今涨停】两板")
+ADD:         MSG = MSG & IQQQ展擎筛程至C0章按通用(WB, 表名, 谕组, 出章模式:="周仓", 出节模式:="日综", 出全是否:=True, 典码输出:=典统复日_停今丙, 章色:=常色八红, 章签:="【今涨停】首板已封")
+ADD:         MSG = MSG & IQQQ展擎筛程至C0章按通用(WB, 表名, 谕组, 出章模式:="周仓", 出节模式:="日综", 出全是否:=True, 典码输出:=典统复日_停今丁, 章色:=常色八红, 章签:="【今涨停】首板未封")
+ADD:         Call IQQQ展擎筛程至C0章按通用(WB, 表名, 谕组, 出章模式:="周仓", 出节模式:="日综", 出全是否:=True, 典码输出:=典统复日_停十数3, 章色:=常色八红, 章签:="【日冲】十日涨停数≥3")
+ADD:         MSG = MSG & IQQQ展擎筛程至C0章按通用(WB, 表名, 谕组, 出章模式:="周仓", 出节模式:="日综", 出全是否:=True, 典码输出:=典统复日_幅涨4, 章色:=常色八红, 章签:="【日冲】涨幅≥4")
+ADD:         MSG = MSG & IQQQ展擎筛程至C0章按通用(WB, 表名, 谕组, 出章模式:="周仓", 出节模式:="日综", 出全是否:=True, 典码输出:=典统复日_幅高4, 章色:=常色八红, 章签:="【日冲】高幅≥4")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色一蓝, 典码输出:=典策月周_多长积极, 节签:="?【月策略周】多长(积极)持有")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色二灰, 典码输出:=典策月周_多长不定, 节签:="【月策略周】多长(不定)关注")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典策月周_多长消极, 节签:="?【月策略周】多长(消极)准备减仓")
+ADD: '        call IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典策月周_多被金, 节签:="?【月策略周】多被(金)ZB≤0")
+ADD: '        call IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策月周_多被银, 节签:="【月策略周】多被(银)CD≤0")
+ADD: '        call IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策月周_NA空看, 节签:="【月策略周】NA(空看)")
+ADD: '        call IQQQ展擎筛程至D0节按通用(wb, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策月周_NA空长, 节签:="【月策略周】NA(空长)")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典策周_A金系P, 节签:="? ★ A+【二级】<金升非盈龙>")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色十红, 典码输出:=典策周_A金系1, 节签:="? ★ A1【二级】<金升非盈>")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色主黄, 典码输出:=典策周_A金系2, 节签:="? ★ A2【三级】<金升>")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色主黄, 典码输出:=典策周_B银盈, 节签:="? ☆ B【二级】<银盈>")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色二灰, 典码输出:=典策周_A金系3, 节签:="? ☆ A3【三级】<金升非>")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色四灰, 典码输出:=典策周_A金系4, 节签:="? ☆ A4【三级】<金长>")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策周_C银猪, 节签:="? ○ C【四级】<银猪>")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策周_D银升排, 节签:="? ○ D【三级】<银升>")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策周_E银ZA, 节签:="? ○ E【四级】<银ZA>")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策周_E银己, 节签:="? ○ F【四级】<银己>")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策周_E其他, 节签:="? △ G【三级】其他")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色六靛, 典码输出:=典策日必赢_DXZE之上DXCD上DXAB护型甲, 节签:="【金银唏】DXZE之上·DXCD上DXAB护型甲")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色六靛, 典码输出:=典策日必赢_DXZE之上DXCD上DXZC初, 节签:="【金银唏】DXZE之上·DXCD上DXZC初")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色六靛, 典码输出:=典策日必赢_DXZE之上DXCD中, 节签:="【金银唏】DXZE之上·DXCD中")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色八靛, 典码输出:=典策日必赢_DXZE之上DXCD忐忠, 节签:="【金银唏】DXZE之上·DXCD忐忠")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色十青, 典码输出:=典策日必赢_DXZE之下DXCD上中, 节签:="【嘘尿屎】DXZE之下·DXCD上中")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色八青, 典码输出:=典策日必赢_DXZE之下DXCD忐忠, 节签:="【嘘尿屎】DXZE之下·DXCD忐忠")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色十靛, 典码输出:=典策月日_A, 节签:="A级(主动持仓)")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色八靛, 典码输出:=典策月日_E, 节签:="E级(已满足DXZC)")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色六靛, 典码输出:=典策月日_F, 节签:="F级(已满足DXZC弱)")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色十绿, 典码输出:=典策月日_B, 节签:="B级(被动持有)")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色八绿, 典码输出:=典策月日_C, 节签:="C级(被动持有)")
+ADD:         'Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色六绿, 典码输出:=典策月日_D, 节签:="D级(被动持有)")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色深粪棕, 典码输出:=典策月日_G, 节签:="G级(傻吃屎豆)")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="日综", 出全是否:=True, 节色:=常色三红, 典码输出:=典策月日_H, 节签:="H级(禁止)")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策日等1, 节签:="等1")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策日等2, 节签:="等2")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策日等3, 节签:="等3")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策日等5, 节签:="等5")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策日等6, 节签:="等6")
+ADD:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:="周层", 出全是否:=True, 节色:=常色六灰, 典码输出:=典策日等7, 节签:="等7")
+ADD:     '类别：今池
+ADD:     '====================================================================================
+ADD:         表名 = 常簿缀选临 & 常池名今
+ADD:         Call IQQQ展擎出程至页(WB, 表名, 是否建表:=True, 章色:=常色指金, 章签:=表名)
+ADD:         Call IQQQ展擎筛程至C0章按通用(WB, 表名, 谕组, 出章模式:=出章模式, 出节模式:=出节模式, 出全是否:=True, 典码输出:=典集筛已在池今, 章色:=常色八红, 章签:="【今池】")
+ADD:     '====================================================================================
+ADD:         '注20261001：已确认主升条件为（WXAB＞0且WXZB＞0）；主升前置条件为（WXAB＜0且WXZB＞0）。按护型筛选就是依赖WXAB。
+ADD:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色主靛, 典码输出:=典周地型_甲乙含0, 区签:="【周地型】甲乙0橅", 区释:="")
+ADD:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六靛, 典码输出:=典周地型_甲乙含1, 区签:="【周地型】甲乙1柜", 区释:="")
+ADD:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六靛, 典码输出:=典周地型_甲乙含2, 区签:="【周地型】甲乙2栅", 区释:="")
+ADD:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六靛, 典码输出:=典周地型_甲乙含3, 区签:="【周地型】甲乙3桮", 区释:="")
+ADD:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六黄, 典码输出:=典周地型_甲乙含6, 区签:="【周地型】乙6娝", 区释:="")
+ADD:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六黄, 典码输出:=典周地型_甲乙含7, 区签:="【周地型】乙7姗", 区释:="")
+ADD:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六黄, 典码输出:=典周地型_甲乙含8, 区签:="【周地型】乙8姖", 区释:="")
+ADD:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六黄, 典码输出:=典周地型_甲乙含9, 区签:="【周地型】乙9妩", 区释:="")
+ADD:     '--------------------------------------------------------------------------------
+ADD:     Call IQQQ展擎出程至页(WB, 表名, 谕组, 区色:=常色六红, 典码输出:=典周地型_丙, 区签:="【周护】丙", 区释:="")

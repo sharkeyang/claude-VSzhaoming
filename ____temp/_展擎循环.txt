@@ -1,0 +1,23 @@
+L182: For X = LBound(谕组, 1) To UBound(谕组, 1)
+L183: CIDL = 谕组(X, 位qt代码)
+L581:                             If 谕组(X, 位谕of周类BTZB) > 0 Or 谕组(X, 位谕of周类BTAB) > 0 Then
+L585:                             If 谕组(X, 位谕of周类BTZB) > 0 Or 谕组(X, 位谕of周类BTAB) > 0 Then
+L592:                                 If 谕组(X, 位谕of周类BTZB) > 0 Or 谕组(X, 位谕of周类BTAB) > 0 Then
+L1175:         CIDL = 谕组(X, 位qt代码)
+L1351:     For X = LBound(谕组, 1) To UBound(谕组, 1)
+L1352:     CIDL = 谕组(X, 位qt代码)
+L1492:         CIDL = 谕组(X, 位qt代码)
+L1784:         CIDL = 谕组(X, 位qt代码)
+L2305:         CIDL = 谕组(X, 位qt代码)
+L2523:         CIDL = 谕组(X, 位qt代码)
+L2980:         CIDL = 谕组(X, 位qt代码)
+L3217:     For X = LBound(组花册, 1) To UBound(组花册, 1)
+L3218:             CIDL = 组花册(X, 位列花天CIDL)
+L3363:         CIDL = 谕组(X, 位qt代码)
+L3537:         CIDL = 谕组(X, 位qt代码)
+L3641:         CIDL = WSAS.Cells(行号遍历, 位qt代码)
+L3664:     For X = 1 To 典集本页.Count
+L3666:         CIDL = 典集本页.Keys(X - 1)
+L3689:     For X = LBound(元组被分, 1) To UBound(元组被分, 1)
+L3716:     For X = LBound(元组被分, 1) To UBound(元组被分, 1)
+L4055:     For X = 1 To 典码输出.Count

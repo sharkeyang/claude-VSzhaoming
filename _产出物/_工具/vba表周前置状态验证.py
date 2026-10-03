@@ -89,8 +89,16 @@ def main():
             s[1] += to_orth
 
         # ===== WXAB 由负转正前置状态 =====
-        # (1) 前周柱 WTAB=1
-        mark(df['prev_AB'] == 1, '转正_前周WTAB=1')
+        # (1) 前周柱 WTAB=1：直接看本周是否已是正交（甲/乙），而非"下周转正交"
+        #     因为前周AB=1（刚转正）时，本周绝大多数已是正交（甲88.8%），
+        #     不需要"转正交"；只有少数掉回非正交(丁/丙)才是异常。
+        prev_ab1 = df[df['prev_AB'] == 1]
+        if not prev_ab1.empty:
+            n = len(prev_ab1)
+            orth = int(prev_ab1['hx'].isin(['甲', '乙']).sum())
+            s = stat['前周WTAB=1_本周已是正交']
+            s[0] += n
+            s[1] += orth
         # (2) 己 + 前周 WTZB>0 + WJA之上升排
         mark((df['hx'] == '己') & (df['prev_WXZB'] > 0) & (df['WXZA'] > 0) & (df['升排']), '转正_己+前WTZB>0+升排')
         # 己 + 前周 WTZB>0 + 升排 + 跌孕
@@ -107,7 +115,7 @@ def main():
 
     # 输出
     print(f'\n=== WXAB 由负转正前置状态 ===')
-    print(f'{"场景":<30} {"n":>8} {"转正交":>7} {"转正交%":>8}')
+    print(f'{"场景":<30} {"n":>8} {"正交":>8} {"正交%":>9}')
     print('-' * 60)
     results = []
     for name, s in stat.items():
@@ -118,13 +126,13 @@ def main():
         results.append((name, n, s[1], pct))
     results.sort(key=lambda x: -x[3])
     for name, n, orth, pct in results:
-        print(f'{name:<30} {n:>8} {orth:>7} {pct:>7.2f}%')
+        print(f'{name:<30} {n:>8} {orth:>8} {pct:>8.2f}%')
 
     # 写 CSV
     os.makedirs(os.path.dirname(OUT_CSV), exist_ok=True)
     with io.open(OUT_CSV, 'w', encoding='utf-8-sig', newline='') as f:
         w = csv.writer(f)
-        w.writerow(['场景', 'n', '转正交', '转正交%'])
+        w.writerow(['场景', 'n', '正交', '正交%'])
         for name, n, orth, pct in results:
             w.writerow([name, n, orth, f'{pct:.2f}'])
     print(f'\n结果已写入: {OUT_CSV}')

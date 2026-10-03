@@ -1,0 +1,5 @@
+周层波型含4判断: False
+周层波型首字符0判断: True
+周层波型首字符2判断: True
+CSV表头三鳄周残留: False
+CSV表头周势型: True

@@ -1,0 +1,8 @@
+核心指基: ...                 If 典核心指基.Exists(CIDL) Or 典核心行业.Exists(CIDL) Then                             是否适合月策略 = True                             是否适合周策略 = True       ...
+---
+IS=False L558
+周策略=True L354
+周策略=True L374
+周策略=True L377
+周策略=True L380
+周策略=True L383

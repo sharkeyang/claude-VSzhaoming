@@ -1,0 +1,23 @@
+L49:     Dim 是否适合月策略 As Boolean
+L50:     Dim 是否适合周策略 As Boolean
+L336:     是否适合月策略 = False
+L337:     是否适合周策略 = False
+L355:                             是否适合月策略 = True
+L365:                             是否适合月策略 = True
+L374:                             是否适合月策略 = True
+L375:                             是否适合周策略 = True
+L377:                             是否适合月策略 = True
+L378:                             是否适合周策略 = True
+L381:                             是否适合周策略 = True
+L384:                             是否适合周策略 = True
+L399:                 If 是否适合月策略 = False Then
+L421:                 If 是否适合周策略 = False Then
+L559:             If 是否适合周策略 = False Then
+---
+L148:     Dim 典筛日外仓月嘘X7例外 As New Dictionary
+L593:                                     典筛日外仓月嘘X7例外.Add Item:=X, Key:=CIDL
+L774:         Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色八红, 典码输出:=典筛日外仓月嘘X7例外, 节签:="单列【仓月】嘘X7.例外WJB之上或WXAB正交")
+---
+L581:                             If 谕组(X, 位谕of周类BTZB) > 0 Or 谕组(X, 位谕of周类BTAB) > 0 Then
+L585:                             If 谕组(X, 位谕of周类BTZB) > 0 Or 谕组(X, 位谕of周类BTAB) > 0 Then
+L592:                                 If 谕组(X, 位谕of周类BTZB) > 0 Or 谕组(X, 位谕of周类BTAB) > 0 Then
