@@ -1,4 +1,4 @@
-"""周冲条件系统性搜索 — 银/龙猪/WXAB/条件组合 下周冲高概率全量测试
+"""周冲条件系统性搜索 — 银/龙扩/WXAB/条件组合 下周冲高概率全量测试
 
 扫描7673只×4227230周，输出所有具有统计意义的条件组合。
 """
@@ -24,22 +24,22 @@ for wxab_val in ['甲','乙','丙','丁','戊','己','']:
 for zhupai_dir in ['升', '跌', '人']:
     TESTS[f'银_柱排={zhupai_dir}'] = {'wxcd': '银', 'zhupai': zhupai_dir}
 
-# 银 + 波型
-for box in ['龙猪', '龙管', '头正', '头负', '震负', '震正']:
+# 银 + 波型（新四态：龙雀虎武+子类，20261003 重构后）
+for box in ['龙扩', '龙头', '龙震', '虎扩', '虎头', '虎震', '武', '雀']:
     TESTS[f'银_波型={box}'] = {'wxcd': '银', 'boxing_set': {box}}
 
 # 银 + ZA区间
 for za_range, za_min, za_max in [('ZA≤0', -999, 0), ('ZA1~3', 1, 3), ('ZA3~5', 3, 5), ('ZA5~10', 5, 10), ('ZA>10', 10, 999)]:
     TESTS[f'银_{za_range}'] = {'wxcd': '银', 'za_min': za_min, 'za_max': za_max}
 
-# ---- 2. 龙猪/龙管 波型系列 ----
-TESTS['金+甲乙己+龙猪/管'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'boxing_set': {'龙猪','龙管'}}
-TESTS['银猪/管'] = {'wxcd': '银', 'boxing_set': {'龙猪','龙管'}}
-TESTS['不限WXCD+龙猪/管'] = {'boxing_set': {'龙猪','龙管'}}
+# ---- 2. 龙扩（正主触顶，原龙猪/管） 波型系列 ----
+TESTS['金+甲乙己+龙扩'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'boxing_set': {'龙扩'}}
+TESTS['银龙扩'] = {'wxcd': '银', 'boxing_set': {'龙扩'}}
+TESTS['不限WXCD+龙扩'] = {'boxing_set': {'龙扩'}}
 
-# 龙猪/龙管 + 柱排方向
+# 龙扩 + 柱排方向
 for zhupai_dir in ['升', '跌', '人']:
-    TESTS[f'龙猪/管_柱排={zhupai_dir}'] = {'boxing_set': {'龙猪','龙管'}, 'zhupai': zhupai_dir}
+    TESTS[f'龙扩_柱排={zhupai_dir}'] = {'boxing_set': {'龙扩'}, 'zhupai': zhupai_dir}
 
 # ---- 3. WXAB 护型系列 ----
 for wxcd_val in ['金', '银', '']:
@@ -48,22 +48,22 @@ for wxcd_val in ['金', '银', '']:
         TESTS[label] = {'wxcd': wxcd_val, 'wxab': wxab_val}
 
 # ---- 4. 组合条件（多维度叠加） ----
-# 银猪/管+不同WXAB
+# 银龙扩+不同WXAB
 for wxab_val in ['甲','乙','己','丙','丁','戊']:
-    TESTS[f'银猪/管+WXAB={wxab_val}'] = {'wxcd': '银', 'boxing_set': {'龙猪','龙管'}, 'wxab': wxab_val}
+    TESTS[f'银龙扩+WXAB={wxab_val}'] = {'wxcd': '银', 'boxing_set': {'龙扩'}, 'wxab': wxab_val}
 
 # 银+升排+不同WXAB
 for wxab_val in ['甲','乙','己','丙','丁','戊']:
     TESTS[f'银+升排+WXAB={wxab_val}'] = {'wxcd': '银', 'zhupai': '升', 'wxab': wxab_val}
 
-# 金+不同WXAB+龙猪/管
+# 金+不同WXAB+龙扩
 for wxab_val in ['甲','乙','己','丙','丁','戊']:
-    TESTS[f'金+WXAB={wxab_val}+龙猪/管'] = {'wxcd': '金', 'wxab': wxab_val, 'boxing_set': {'龙猪','龙管'}}
+    TESTS[f'金+WXAB={wxab_val}+龙扩'] = {'wxcd': '金', 'wxab': wxab_val, 'boxing_set': {'龙扩'}}
 
 # ---- 5. 盈提示组合 ----
 TESTS['银盈'] = {'wxcd': '银', 'yingtishi_has': True}
 TESTS['金+甲乙己+盈提示有'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'yingtishi_has': True}
-TESTS['龙猪/管+盈提示有'] = {'boxing_set': {'龙猪','龙管'}, 'yingtishi_has': True}
+TESTS['龙扩+盈提示有'] = {'boxing_set': {'龙扩'}, 'yingtishi_has': True}
 
 # ---- 6. 最优条件组合 ----
 # 多长+各ZA区间
@@ -79,8 +79,8 @@ TESTS['金+甲乙己+升排+非孕'] = {'wxcd': '金', 'wxab_set': {'甲','乙',
 # 多长+升排+非孕+盈高
 TESTS['金+甲乙己+升排+非孕+盈高'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True, 'yingtishi_high': True}
 
-# 多长+升排+非孕+盈高+龙猪/管
-TESTS['最优(全部条件)'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True, 'yingtishi_high': True, 'boxing_set': {'龙猪','龙管'}}
+# 多长+升排+非孕+盈高+龙扩
+TESTS['最优(全部条件)'] = {'wxcd': '金', 'wxab_set': {'甲','乙','己'}, 'zhupai': '升', 'no_weifanyun': True, 'yingtishi_high': True, 'boxing_set': {'龙扩'}}
 
 # ============================================================
 # 统计结构
