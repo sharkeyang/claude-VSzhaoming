@@ -97,7 +97,7 @@ Public Const 位谕of周层盈丘幅 = 位谕始of族周层 + 0      'WJC丘根�
 Public Const 位谕of周层盈顶幅 = 位谕始of族周层 + 1
 Public Const 位谕of周层盈提示 = 位谕始of族周层 + 2
 '周机：包含下周冲高专项机会
-Public Const 位谕of周层势型 = 位谕始of族周层 + 3        '周势型：WXCD护型（方向+护级+护型+方向），20261001 由三鳄改存值WXCD护型
+Public Const 位谕of周层势型 = 位谕始of族周层 + 3        '周势型：WXCD护型（方向+护级+护型+方向），20261001 改存值WXCD护型
 Public Const 位谕of周层界 = 位谕始of族周层 + 4          'WJC丘优化一：限定可操作范围。
 Public Const 位谕of周层护型 = 位谕始of族周层 + 5        'WJC丘优化一：限定可操作范围。
 Public Const 位谕of周层地型 = 位谕始of族周层 + 6        '周地型：0橅/1柜/2栅/3桮/6娝/7姗/8姖/9妩（20261001 新增）
@@ -414,7 +414,7 @@ Public Const 位谕of仓赚收 = 位谕始of族仓 + 10
 Public Const 位谕of仓赚高 = 位谕始of族仓 + 11
 Public Const 位谕of仓赚低 = 位谕始of族仓 + 12
 Public Const 位谕of仓赚损 = 位谕始of族仓 + 13
-Public Const 位谕of仓限倍 = 位谕始of族仓 + 14    '由神谕生成（基于周层三鳄，第2889行），跨码管理读取
+Public Const 位谕of仓限倍 = 位谕始of族仓 + 14    '由神谕生成（基于周层势型，第2889行），跨码管理读取
 Public Const 位谕终of族仓 = 位谕of仓限倍
 '----------------------------------------------------------------------------------------
 'AI冲高信号列（在神谕列尾新增）
@@ -2127,19 +2127,23 @@ If UBCID是代码(CIDL) = True Then
                                         谕组(X, 位谕of周层波型) = 谕组(X, 位谕of周层波型) & "Ab龙扩杂"
                                 End If
                             ElseIf (组结算(X, 基位周类 + 位os龟BT顶) * -1 > 周类BTZB) Then
-                                    If 周类BTZA < 0 Then
-                                        谕组(X, 位谕of周层波型) = 谕组(X, 位谕of周层波型) & "De龙头根"
+                                    '注20261005：龙头分支（未触顶未进管）按 BTZB vs BTAB 分交/芽。
+                                    '  龙头交（BTZB>=BTAB）= WXAB由负到正（价格先于EMA5站上EMA12），后续更易形成触顶主升（进龙扩）。
+                                    '  龙头返（BTZB<BTAB）= WXZB劫后上破WJB（价格滞后上破EMA12，EMA5早已在上方），后续更易震荡/转坏。
+                                    '  数据验证（周类全量233952样本）：后续3周进龙扩率 龙头交55.2% vs 龙头返40.7%。
+                                    If 周类BTZB >= 周类BTAB Then
+                                        谕组(X, 位谕of周层波型) = 谕组(X, 位谕of周层波型) & "Ca龙头交"
                                     Else
-                                        谕组(X, 位谕of周层波型) = 谕组(X, 位谕of周层波型) & "Dd龙头芽"
+                                        谕组(X, 位谕of周层波型) = 谕组(X, 位谕of周层波型) & "Cb龙头返"
                                     End If
                             Else
                                 If 周类BTZA < 0 Then
-                                        谕组(X, 位谕of周层波型) = 谕组(X, 位谕of周层波型) & "Fe龙震根"
+                                        谕组(X, 位谕of周层波型) = 谕组(X, 位谕of周层波型) & "Be龙震根"
                                 ElseIf 周类BTZA >= -1 * 组结算(X, 基位周类 + 位os龟BT顶) Then
-                                        谕组(X, 位谕of周层波型) = 谕组(X, 位谕of周层波型) & "Fa龙震〇"
+                                        谕组(X, 位谕of周层波型) = 谕组(X, 位谕of周层波型) & "Ba龙震〇"
                                         '注20260131：要区分柱排，升排（可接受）人排（需谨慎）跌排（应退出）。
                                 Else
-                                        谕组(X, 位谕of周层波型) = 谕组(X, 位谕of周层波型) & "Fd龙震芽"
+                                        谕组(X, 位谕of周层波型) = 谕组(X, 位谕of周层波型) & "Bd龙震芽"
                                 End If
                             End If
                         '----------------------------------------------------------------
@@ -2231,18 +2235,21 @@ If UBCID是代码(CIDL) = True Then
                             谕组(X, 位谕of日层波型) = 谕组(X, 位谕of日层波型) & "Ab龙扩杂"
                         End If
                     ElseIf (组结算(X, 基位日类 + 位os龟BT顶) * -1 > 日类BTZB) Then
-                        If 日类BTZA < 0 Then
-                            谕组(X, 位谕of日层波型) = 谕组(X, 位谕of日层波型) & "De龙头根"
+                        '注20261005：龙头分支（未触顶未进管）按 BTZB vs BTAB 分交/芽（与周类一致）。
+                        '  龙头交（BTZB>=BTAB）= 价格先于EMA5站上EMA12，后续更易形成触顶主升（进龙扩）。
+                        '  龙头返（BTZB<BTAB）= 价格滞后上破EMA12，后续更易震荡/转坏。
+                        If 日类BTZB >= 日类BTAB Then
+                            谕组(X, 位谕of日层波型) = 谕组(X, 位谕of日层波型) & "Ca龙头交"
                         Else
-                            谕组(X, 位谕of日层波型) = 谕组(X, 位谕of日层波型) & "Dd龙头芽"
+                            谕组(X, 位谕of日层波型) = 谕组(X, 位谕of日层波型) & "Cb龙头返"
                         End If
                     Else
                         If 日类BTZA < 0 Then
-                            谕组(X, 位谕of日层波型) = 谕组(X, 位谕of日层波型) & "Fe龙震根"
+                            谕组(X, 位谕of日层波型) = 谕组(X, 位谕of日层波型) & "Be龙震根"
                         ElseIf 日类BTZA >= -1 * 组结算(X, 基位日类 + 位os龟BT顶) Then
-                            谕组(X, 位谕of日层波型) = 谕组(X, 位谕of日层波型) & "Fa龙震〇"
+                            谕组(X, 位谕of日层波型) = 谕组(X, 位谕of日层波型) & "Ba龙震〇"
                         Else
-                            谕组(X, 位谕of日层波型) = 谕组(X, 位谕of日层波型) & "Fd龙震芽"
+                            谕组(X, 位谕of日层波型) = 谕组(X, 位谕of日层波型) & "Bd龙震芽"
                         End If
                     End If
                 ElseIf (日类BTAB < 0 And 日类BTZB < 0) Then
