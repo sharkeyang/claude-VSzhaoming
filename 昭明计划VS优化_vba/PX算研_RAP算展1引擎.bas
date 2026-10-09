@@ -1677,7 +1677,9 @@ End Function
 '      Call XL算展取样调程_谕组单股通用("sz159919", , "周")    → 只周
 '      Call XL算展取样调程_谕组单股通用("sz159919", , "日")    → 只日
 '      Call XL算展取样调程_谕组单股通用("sz159919", "D:\p")    → 指定路径+周+日
-'参数：输出路径 — 可选，空=默认目录(ThisWorkbook.Path\昭明算展\谕组周\和\谕组日\)；指定则周/日CSV都写到该文件夹(不加子目录)
+'参数：输出路径 — 可选，空=默认目录(ThisWorkbook.Path\昭明算展\谕组导出\谕组周\和\谕组日\)；
+'                 指定则周/日CSV分别写到 输出路径\谕组周\ 和 输出路径\谕组日\ 两个子目录。
+'      新数据一律写入 谕组导出\ 下的子目录，绝不写回现有分析目录 昭明算展\谕组日\ 和 昭明算展\谕组周\。
 '      模式 — "周"/"日"/""，默认周+日
 '========================================================================================
 '=== 元数据说明（2026-09-26 更新）====================================================
@@ -1705,16 +1707,16 @@ Public Sub XL算展取样调程_谕组单股通用(被研代码 As String, Optio
     If 模式 = "周" Or 模式 = "周+日" Then
         Dim 周路径 As String
         If 输出路径 = "" Then
-            周路径 = ThisWorkbook.Path & "\昭明算展\谕组周\"
+            周路径 = ThisWorkbook.Path & "\昭明算展\谕组导出\谕组周\"
         Else
-            周路径 = 输出路径
+            周路径 = 输出路径 & "\谕组周\"
         End If
-        If Not FSO.FolderExists(周路径) Then FSO.CreateFolder 周路径
+        If Not FSO.FolderExists(周路径) Then Call UTL建目录逐层(周路径)
 
         Dim 周文件 As String
         周文件 = 周路径 & "谕组周_" & 被研代码 & ".csv"
         Open 周文件 For Output As #1
-        Print #1, "主期,周涨,PR,HR,护型,波型,柱排周,柱型周,层界周,周势型(WXCD护型),盈丘幅周,盈顶幅周,盈提示,ZA周,ZB周,ZC周,ZD周,ZE周,ZF周,AB周,AC周,BC周,AD周,BD周,CD周,CE周,DE周,CF周,EF周,底周,哈周,哼周,顶周,合底周,合顶周,极折周,顶态周,顶型周,顶触周,上符范周,上符串周,宽符串周,宽哼JA周,撤哼JA周,中符串周,中符范周,BT鼎周,并符范周,并符串周,层类周,四域,周策略P3,周策分P3,周策略P1,周策分P1,周策略ZA,周策分ZA,周策分坏,周策分好,月策分命,周龄,周键"
+        Print #1, "主期,周涨,PR,HR,护型,波型,柱排周,柱型周,层界周,周势型(WXCD护型),盈丘幅周,盈顶幅周,盈提示,ZA周,ZB周,ZC周,ZD周,ZE周,ZF周,AB周,AC周,BC周,AD周,BD周,CD周,CE周,DE周,CF周,EF周,底周,哈周,哼周,顶周,合底周,合顶周,极折周,顶态周,顶型周,顶触周,上符范周,上符串周,宽符串周,宽哼JA周,撤哼JA周,中符串周,中符范周,BT鼎周,并符范周,并符串周,层类周,四域,周策略P3,周策分P3,周策略P1,周策分P1,周策略ZA,周策分ZA,周策分坏,周策分好,月策分命"
 
         Dim 基位日类 As Integer: 基位日类 = 0
         Dim 基位周类 As Integer: 基位周类 = 花宽单道
@@ -1781,9 +1783,7 @@ Public Sub XL算展取样调程_谕组单股通用(被研代码 As String, Optio
                     谕组(X, 位谕of周策分ZA) & "," & _
                     谕组(X, 位谕of周策分坏) & "," & _
                     谕组(X, 位谕of周策分好) & "," & _
-                    谕组(X, 位谕of月策分命) & "," & _
-                    ARRLLL(X, 基位周类 + 位os基累龄) & "," & _
-                    "True"
+                    谕组(X, 位谕of月策分命)
                 Print #1, 行头 & 行尾 & 变量串1 & 变量串2 & 变量串3
             End If
         Next X
@@ -1796,11 +1796,11 @@ Public Sub XL算展取样调程_谕组单股通用(被研代码 As String, Optio
     If 模式 = "日" Or 模式 = "周+日" Then
         Dim 日路径 As String
         If 输出路径 = "" Then
-            日路径 = ThisWorkbook.Path & "\昭明算展\谕组日\"
+            日路径 = ThisWorkbook.Path & "\昭明算展\谕组导出\谕组日\"
         Else
-            日路径 = 输出路径
+            日路径 = 输出路径 & "\谕组日\"
         End If
-        If Not FSO.FolderExists(日路径) Then FSO.CreateFolder 日路径
+        If Not FSO.FolderExists(日路径) Then Call UTL建目录逐层(日路径)
 
         Dim 日文件 As String
         日文件 = 日路径 & "谕组日_" & 被研代码 & ".csv"
@@ -1924,7 +1924,9 @@ End Sub
 '参数：模式 — "周"/"日"/""，默认周+日
 '      花册名 — 花册表名，默认常花中股(花天)
 '      抽样数 — 0=全量，>0=每市板抽N只(仅取2010-2015年上市)
-'      输出路径 — 可选，空=默认目录(ThisWorkbook.Path\昭明算展\谕组周\和\谕组日\)；指定则周/日CSV都写到该文件夹
+'      输出路径 — 可选，空=默认目录(ThisWorkbook.Path\昭明算展\谕组导出\谕组周\和\谕组日\)；
+'                 指定则周/日CSV分别写到 输出路径\谕组周\ 和 输出路径\谕组日\ 两个子目录。
+'      注意：新数据一律写入 谕组导出\ 下的子目录，绝不写回现有分析目录 昭明算展\谕组日\ 和 昭明算展\谕组周\。
 '      注意：断点继续按"目标文件夹已有文件"跳过。若重新导出(如加了新列)，务必先清空目标文件夹，否则旧文件会被跳过、缺失新列。
 '========================================================================================
 Public Sub XL算展取样调程_谕组批量通用(Optional 模式 As String = "", Optional 花册名 As String = "", Optional 抽样数 As Long = 0, Optional 输出路径 As String = "")
@@ -1937,22 +1939,24 @@ Public Sub XL算展取样调程_谕组批量通用(Optional 模式 As String = "
     End If
 
     '=== 输出路径 — 集中定义，可随时修改；若传入 输出路径 参数则优先使用 ===
+    '新数据统一写入 昭明算展\谕组导出\ 下的 谕组周\ 和 谕组日\ 两个子目录，
+    '绝不写回现有分析目录 昭明算展\谕组日\ 和 昭明算展\谕组周\（保持分析数据源稳定）。
     Dim 周路径 As String, 日路径 As String
     If 输出路径 = "" Then
-        周路径 = ThisWorkbook.Path & "\昭明算展\谕组周\"
-        日路径 = ThisWorkbook.Path & "\昭明算展\谕组日\"
+        周路径 = ThisWorkbook.Path & "\昭明算展\谕组导出\谕组周\"
+        日路径 = ThisWorkbook.Path & "\昭明算展\谕组导出\谕组日\"
     Else
-        周路径 = 输出路径
-        日路径 = 输出路径
+        周路径 = 输出路径 & "\谕组周\"
+        日路径 = 输出路径 & "\谕组日\"
     End If
 
     Dim FSO As Object
     Set FSO = CreateObject("Scripting.FileSystemObject")
     If 模式 = "周" Or 模式 = "周+日" Then
-        If Not FSO.FolderExists(周路径) Then FSO.CreateFolder 周路径
+        Call UTL建目录逐层(周路径)
     End If
     If 模式 = "日" Or 模式 = "周+日" Then
-        If Not FSO.FolderExists(日路径) Then FSO.CreateFolder 日路径
+        Call UTL建目录逐层(日路径)
     End If
 
     '--------------------------------------------------------------------------------------
@@ -2250,6 +2254,30 @@ Public Sub XL算展取样调程_算展批量()
     Application.StatusBar = False
     Application.StatusBar = "批量算展完成! 生成:" & 总生成 & " 跳过:" & 总跳过 & " 失败:" & 总失败
     Debug.Print "批量算展完成! 生成:" & 总生成 & " 跳过:" & 总跳过 & " 失败:" & 总失败
+End Sub
+
+'========================================================================================
+'功能：逐层创建目录（父目录不存在时一并创建）
+'说明：FSO.CreateFolder 只能创建单层目录，若父目录不存在会报"路径未找到"。
+'      本函数按 "\" 逐层拆分，确保每一层都存在后再创建目标目录。
+'参数：目标路径 — 需创建的完整目录路径（可带或不带末尾反斜杠）
+'========================================================================================
+Private Sub UTL建目录逐层(目标路径 As String)
+    Dim FSO As Object
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    Dim 当前 As String, 段 As Variant
+    ' 去掉末尾反斜杠，避免空段
+    Do While Right(目标路径, 1) = "\"
+        目标路径 = Left(目标路径, Len(目标路径) - 1)
+    Loop
+    ' 逐层创建
+    For Each 段 In Split(目标路径, "\")
+        当前 = 当前 & 段 & "\"
+        If Len(当前) > 3 Then ' 跳过盘符根（如 "D:\"）
+            If Not FSO.FolderExists(当前) Then FSO.CreateFolder 当前
+        End If
+    Next
+    Set FSO = Nothing
 End Sub
 
 '########################################################################################
