@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 生成 vba表周策分P3.txt
-全量7461只周CSV → 按策略匹配计算P3概率
+全量7461只周CSV → 按四态策略匹配计算P3概率
 输出：策略\t编码（期望HR取整(截断9)+等级(A-F)+P3取整）
+四态（2026-10-07 替换金银）：龙/虎/武/雀
 """
 
 import glob, pandas as pd, os
@@ -37,28 +38,41 @@ def encode(p3, avg):
     return f'{h}{g}{int(p3):02d}'
 
 def match_strategy(row):
-    cd2 = str(row.get('WXCD', ''))[:2]
-    abh = str(row.get('WXAB', ''))[1:2] if pd.notna(row.get('WXAB')) else ''
+    """四态策略匹配（2026-10-07 替换金银）。
+    四态：龙=WXAB>0且WXZB>0、武=WXAB<0且WXZB>0、虎=WXAB<0且WXZB<0、雀=WXAB>0且WXZB<0。
+    每个四态叠加柱排/盈提示等条件形成策略。
+    """
+    wxab = row.get('AB周', 0)
+    wxzb = row.get('ZB周', 0)
+    if pd.isna(wxab): wxab = 0
+    if pd.isna(wxzb): wxzb = 0
     zp = str(row.get('柱排周', '')) if pd.notna(row.get('柱排周')) else ''
     zy = str(row.get('盈提示', '')) if pd.notna(row.get('盈提示')) else ''
-    bx = str(row.get('波型', '')) if pd.notna(row.get('波型')) else ''
-    za = row.get('ZA周', 0)
-    if pd.isna(za): za = 0
-    if '金' in cd2 and (abh in ['甲', '乙', '己']):
-        if zp.startswith('升') and '尾反孕' not in zp:
-            if '高' in str(zy):
-                if '龙猪' in str(bx) or '龙管' in str(bx): return '金升非盈龙'
-                else: return '金升非盈'
-            else: return '金升非'
-        elif zp.startswith('升'): return '金升'
-        else: return '金长'
-    elif '银' in cd2:
-        if '高' in str(zy) or '宽' in str(zy): return '银盈'
-        elif '己' in abh: return '银己'
-        elif zp.startswith('升'): return '银升'
-        elif '龙猪' in str(bx): return '银猪'
-        elif za > 5 and za <= 10: return '银ZA'
-    return ''
+    # 四态判定
+    if wxab > 0 and wxzb > 0:
+        sitai = '龙'  # 升主龙
+    elif wxab < 0 and wxzb > 0:
+        sitai = '武'  # 降转武
+    elif wxab < 0 and wxzb < 0:
+        sitai = '虎'  # 降主虎
+    elif wxab > 0 and wxzb < 0:
+        sitai = '雀'  # 升转雀
+    else:
+        return ''
+    # 四态策略：叠加柱排/盈提示
+    if sitai == '龙':
+        if zp.startswith('升'): return '龙升'
+        elif '高' in zy or '宽' in zy: return '龙盈'
+        else: return '龙长'
+    elif sitai == '武':
+        if zp.startswith('升'): return '武升'
+        elif '高' in zy or '宽' in zy: return '武盈'
+        else: return '武长'
+    elif sitai == '虎':
+        if zp.startswith('跌'): return '虎跌'
+        else: return '虎长'
+    else:  # 雀
+        return '雀'
 
 print('=== 生成 vba表周策分P3.txt ===')
 wk = load()
@@ -66,13 +80,13 @@ wk['策略'] = wk.apply(match_strategy, axis=1)
 valid = wk[wk['策略'] != '']
 print(f'  有策略: {len(valid)} 行')
 
-strategies = ['全量基准', '金最优(全部)', '金升非盈龙', '金升非盈', '金升非', '金升', '金长', '银盈', '银己', '银升', '银猪', '银ZA']
+strategies = ['全量基准', '龙最优(全部)', '龙升', '龙盈', '龙长', '武升', '武盈', '武长', '虎跌', '虎长', '雀']
 results = []
 for s in strategies:
     if s == '全量基准':
         m = wk  # 全量基准用全部行
-    elif s == '金最优(全部)':
-        m = valid[valid['策略'].isin(['金升非盈龙', '金升非盈', '金升非', '金升'])]
+    elif s == '龙最优(全部)':
+        m = valid[valid['策略'].isin(['龙升', '龙盈', '龙长'])]
     else:
         m = valid[valid['策略'] == s]
     n = len(m)

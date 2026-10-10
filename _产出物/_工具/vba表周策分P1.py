@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 生成 vba表周策分P1.txt
-全量7461只周CSV → 按完整梯度框架（ZA分段+等类+地型+柱排+WXCD+WXAB）计算P1概率
+全量7461只周CSV → 按完整梯度框架（ZA分段+等类+地型+柱排+四态）计算P1概率
 输出：名称\t编码（期望HR取整+等级(A-F)+P1取整）
+四态（WXAB&WXZB，2026-10-07 替换金银，简化为龙虎武雀）：龙/虎/武/雀
+策略编码格式：四态_地型_等N_柱排（2026-10-07 简化，去掉护型前缀）
 """
 
 import glob, pandas as pd, os
@@ -34,6 +36,15 @@ def seg(w, i):
     parts = str(w).split('.')
     return parts[i] if len(parts) > i else ''
 
+def 提取地型(p3):
+    """从 周策略P3 列提取地型。
+    周策略P3 结构：护型+地型_等N_柱排_金银（_分隔），字段0=护型(1字符)+地型(2字符)。
+    例：'甲0橅_等1_人排_金' -> 字段0='甲0橅' -> 地型='0橅'
+    """
+    if pd.isna(p3): return ''
+    f0 = str(p3).split('_')[0]
+    return f0[1:] if len(f0) > 1 else ''
+
 def encode(p1, avg):
     h = int(avg) if avg >= 0 else 0
     if h > 9: h = 9
@@ -41,12 +52,13 @@ def encode(p1, avg):
     else: g = '_'
     return f'{h}{g}{int(p1):02d}'
 
-def make_name(wxab, d, eq, zp, cd):
-    return f'{wxab}{d}_{eq}_{zp}_{cd}'
+def make_name(cd, d, eq, zp):
+    """策略编码：四态_地型_等N_柱排（2026-10-07 简化，去掉护型前缀）"""
+    return f'{cd}_{d}_{eq}_{zp}'
 
 print('=== 生成 vba表周策分P1.txt ===')
 wk = load()
-wk['地型'] = wk['波型'].apply(lambda w: seg(w, 0))
+wk['地型'] = wk['周策略P3'].apply(提取地型)
 wk['ZA周'] = pd.to_numeric(wk['ZA周'], errors='coerce')
 wk['末位'] = wk['中符串周'].astype(str).str[-1]
 
@@ -61,27 +73,20 @@ m6 = (wk['ZA周'] <= -2) & wk['末位'].isin(['A', 'B', 'C', 'D'])
 m7 = (wk['ZA周'] <= -2) & wk['末位'].isin(['E', 'F'])
 m_za_pos = wk['ZA周'] > 0
 m_za_neg = wk['ZA周'] < 0
-m_gold = wk['WXCD'].str.contains('金', na=False)
-m_silver = wk['WXCD'].str.contains('银', na=False)
-m_xi = wk['WXCD'].str.contains('唏', na=False)
-m_xu = wk['WXCD'].str.contains('嘘', na=False)
-m_niao = wk['WXCD'].str.contains('尿', na=False)
-m_shi = wk['WXCD'].str.contains('屎', na=False)
+# 四态（WXAB&WXZB，2026-10-07 替换金银）：升主龙/降主虎/降转武/升转雀
+wk['WXAB'] = pd.to_numeric(wk['AB周'], errors='coerce')
+wk['WXZB'] = pd.to_numeric(wk['ZB周'], errors='coerce')
+m_shengzhu = (wk['WXAB'] > 0) & (wk['WXZB'] > 0)   # 升主龙：WXAB>0且WXZB>0
+m_jiangzhu = (wk['WXAB'] < 0) & (wk['WXZB'] < 0)   # 降主虎：WXAB<0且WXZB<0
+m_jiangzhuan = (wk['WXAB'] < 0) & (wk['WXZB'] > 0) # 降转武：WXAB<0且WXZB>0
+m_shengzhuan = (wk['WXAB'] > 0) & (wk['WXZB'] < 0) # 升转雀：WXAB>0且WXZB<0
 
 za_configs = [
     ('ZA>0', m_za_pos, [('等3', m3), ('等2', m2), ('等1', m1)], ['0橅', '1柜', '2栅', '3桮']),
     ('ZA<0', m_za_neg, [('等7', m7), ('等6', m6), ('等5', m5)], ['6娝', '7姗', '8姖', '9妩']),
 ]
-wxcd_configs = [('金', m_gold), ('银', m_silver), ('唏', m_xi), ('嘘', m_xu), ('尿', m_niao), ('屎', m_shi)]
-# 具体WXAB名（20261002）：以WXAB为核心，细分甲/乙/己/丙/丁/戊
-wxab_configs = [
-    ('甲', wk['WXAB'].str.contains('甲', na=False)),
-    ('乙', wk['WXAB'].str.contains('乙', na=False)),
-    ('己', wk['WXAB'].str.contains('己', na=False)),
-    ('丙', wk['WXAB'].str.contains('丙', na=False)),
-    ('丁', wk['WXAB'].str.contains('丁', na=False)),
-    ('戊', wk['WXAB'].str.contains('戊', na=False)),
-]
+# 四态（2026-10-07 替换金银，简化为龙虎武雀）：龙/虎/武/雀
+wxcd_configs = [('龙', m_shengzhu), ('虎', m_jiangzhu), ('武', m_jiangzhuan), ('雀', m_shengzhuan)]
 
 results = []
 for za_name, za_mask, eq_list, dx_list in za_configs:
@@ -89,16 +94,15 @@ for za_name, za_mask, eq_list, dx_list in za_configs:
         for d in dx_list:
             for zp_name, zp_mask in [('升排', m_up), ('人排', m_ren), ('跌排', m_dn)]:
                 for cd_name, cd_mask in wxcd_configs:
-                    for wxab_name, wxab_mask in wxab_configs:
-                        mask = za_mask & eq_mask & (wk['地型'] == d) & zp_mask & cd_mask & wxab_mask
-                        n = mask.sum()
-                        if n >= MIN_SAMPLE:
-                            g = wk.loc[mask]
-                            p1 = round((g['下周HR'] >= 1).mean() * 100, 1)
-                            avg = g['下周HR'].mean()
-                            code = encode(p1, avg)
-                            name = make_name(wxab_name, d, eq_name, zp_name, cd_name)
-                            results.append((p1, code, name, n))
+                    mask = za_mask & eq_mask & (wk['地型'] == d) & zp_mask & cd_mask
+                    n = mask.sum()
+                    if n >= MIN_SAMPLE:
+                        g = wk.loc[mask]
+                        p1 = round((g['下周HR'] >= 1).mean() * 100, 1)
+                        avg = g['下周HR'].mean()
+                        code = encode(p1, avg)
+                        name = make_name(cd_name, d, eq_name, zp_name)
+                        results.append((p1, code, name, n))
 
 results.sort(key=lambda x: -x[0])
 lines = ['名称\t编码']
