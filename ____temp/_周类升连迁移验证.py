@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-周类升连研究迁移验证（2026-10-10）
+周类升连研究迁移验证（2026-10-11 重跑，完整数据7458文件）
 验证：①周类升连聚集性 ②周类升连后第1柱分布
-数据源：昭明算展/谕组导出/谕组周/（5789文件，GBK编码）
-字段：并符串周[48]、周涨[1]、主期[0]、AB周[19]、ZB周[14]
+数据源：昭明算展/谕组周/（7458文件，GBK编码）
+字段（权威元数据 _产出物/_工具/元数据_vba数据映射_周类.md）：
+    并符串周[48]、周涨[1]、主期[0]、AB周[19]、ZB周[14]
 升连判定：并符串周尾字符=Q（常枚并符升连）
 """
 import glob, csv, io, sys, collections, datetime
 from collections import defaultdict
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
-DATA_DIR = '昭明算展/谕组导出/谕组周'
+DATA_DIR = '昭明算展/谕组周'
 
 def load_data():
     files = glob.glob(DATA_DIR + '/*.csv')
@@ -20,16 +21,16 @@ def load_data():
         with open(f, encoding='gbk', errors='replace') as fh:
             r = csv.reader(fh)
             header = next(r)
-            idx = {c: header.index(c) for c in ['并符串周','周涨','主期','AB周','ZB周']}
+            # 用权威列索引（元数据表），勿信表头名
             for row in r:
-                if len(row) >= 60:
+                if len(row) >= 49:
                     rows.append({
                         'code': code,
-                        '并符': row[idx['并符串周']].strip(),
-                        '周涨': float(row[idx['周涨']].strip() or 0),
-                        '主期': row[idx['主期']].strip(),
-                        'AB': int(row[idx['AB周']].strip() or 0),
-                        'ZB': int(row[idx['ZB周']].strip() or 0),
+                        '并符': row[48].strip(),
+                        '周涨': float(row[1].strip() or 0),
+                        '主期': row[0].strip(),
+                        'AB': int(row[19].strip() or 0),
+                        'ZB': int(row[14].strip() or 0),
                     })
     return rows
 
@@ -56,7 +57,8 @@ def main():
         by_code[row['code']].append(row)
 
     # ① 周类升连聚集性（龙态）
-    print('\n=== ① 周类升连链长度(龙态) ===')
+    # 🔴 修正（2026-10-11）：升连=连续阳柱至少2周，链长1周=单周阳柱非升连，过滤 j-i>=2
+    print('\n=== ① 周类升连链长度(龙态，过滤链长1周) ===')
     链长 = collections.Counter()
     for code, lst in by_code.items():
         lst.sort(key=lambda x: parse_date(x['主期']))
@@ -67,14 +69,15 @@ def main():
                 j = i
                 while j < len(lst) and 升连标记[j] and 四态(lst[j]['AB'], lst[j]['ZB']) == '龙':
                     j += 1
-                链长[j-i] += 1
+                if j - i >= 2:  # 🔴 过滤链长1周（单周阳柱非升连）
+                    链长[j-i] += 1
                 i = j
             else:
                 i += 1
     total = sum(链长.values())
-    print(f'总链数: {total}')
+    print(f'总链数(≥2周): {total}')
     for k in sorted(链长.keys()):
-        if k >= 1:
+        if k >= 2:
             print(f'  链长{k}: {链长[k]} ({链长[k]/total:.1%})')
 
     # ② 周类升连后第1柱分布（龙态）

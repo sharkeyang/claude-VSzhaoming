@@ -94,40 +94,7 @@ PARTLINE(JC*1.2,  周期条件DT8, RGB(  99, 99, 0))     ,LAYER3,LINETHICK1;
 
 
 {===================================================================================}
-{=================================    四域   =====================================}
-{--- 月级别（周期条件DT9）---------------------------------------}
-四域月:=
-IFS(周期条件DT10 and 均线条件JZ上JA and  均线条件JA上JB, '多长',
-IFS(周期条件DT10 and 均线条件JZ上JA, '多被',
-IFS(周期条件DT10 and not(均线条件JZ上JA) and not(均线条件JA上JB) , '空长',
-IFS(周期条件DT10 , '空看',
-'')))),DRAWNULL,COLORwhite;
-{--- 周级别（周期条件DT9）---------------------------------------}
-四域周:=
-IFS(周期条件DT9 and 均线条件JZ上JC and 均线条件JC上JD and 均线条件JZ上JB, '多长',
-IFS(周期条件DT9 and 均线条件JZ上JC, '多被',
-IFS(周期条件DT9 and not(均线条件JZ上JC) and not(均线条件JC上JD) and not(均线条件JZ上JB), '空长',
-IFS(周期条件DT9, '空看',
-'')))),DRAWNULL,COLORwhite;
-{--- 日级别（周期条件DT8）---------------------------------------}
-四域日:=
-IFS(周期条件DT8 and 均线条件JZ上JE and 均线条件JE上JF and 均线条件JZ上JD, '多长',
-IFS(周期条件DT8 and 均线条件JZ上JE, '多被',
-IFS(周期条件DT8 and not(均线条件JZ上JE) and not(均线条件JE上JF) and not(均线条件JZ上JD), '空长',
-IFS(周期条件DT8, '空看',
-'')))),DRAWNULL,COLORwhite;
-{--- 合并输出 --------------------------------------------------}
-四域:=
-IFS(周期条件DT9, 四域周,
-IFS(周期条件DT8, 四域日,
-'')),DRAWNULL,COLORYELLOW;
-
-四域,DRAWNULL,COLORYELLOW;
 {===================================================================================}
-{--- 四域背景色 ---}
-DRAWGBK (四域='多长', RGB( 25, 40, 99)), LAYER7;
-DRAWGBK (四域='多被', RGB( 77,22,  0)), LAYER7;
-DRAWGBK (四域='空看', RGB( 33, 33, 33)), LAYER7;
 {===================================================================================}
 
 
@@ -135,21 +102,22 @@ DRAWGBK (四域='空看', RGB( 33, 33, 33)), LAYER7;
 {===================================================================================}
 {=================================   周仓类   =======================================}
 IFS(周期条件DT9 and 均线条件JC上JD and (均线条件JZ上JC), '金',
-IFS(周期条件DT9 and not(均线条件JC上JD) and 均线条件JZ上JD, '仅试_银',
+IFS(周期条件DT9 and not(均线条件JC上JD) and 均线条件JZ上JD, '银',
 '')),DRAWNULL,COLORyellow;
-IFS(周期条件DT9 and 均线条件JC上JD and not(均线条件JZ上JD), '勿_尿',
-IFS(周期条件DT9 and 均线条件JC上JD and not(均线条件JZ上JC), '仅观_嘘',
+IFS(周期条件DT9 and 均线条件JC上JD and not(均线条件JZ上JD), '尿',
+IFS(周期条件DT9 and 均线条件JC上JD and not(均线条件JZ上JC), '嘘',
 IFS(周期条件DT9 and 均线条件JC上JD, '',
 IFS(周期条件DT9 and 均线条件JZ上JD, '',
-IFS(周期条件DT9 and 均线条件JZ上JC, '仅观_唏',
-IFS(周期条件DT9 , '勿勿勿勿勿_屎',
+IFS(周期条件DT9 and 均线条件JZ上JC, '唏',
+IFS(周期条件DT9 , '屎',
 '')))))),DRAWNULL,COLORBROWN;
 
+周AB护级 :=
 IFS(周期条件DT9 and 均线条件JA上JB and not(均线条件JZ上JB), '下',
 IFS(周期条件DT9 and 均线条件JA上JB and not(均线条件JZ上JA), '中',
 IFS(周期条件DT9 and 均线条件JA上JB, '上',
-IFS(周期条件DT9 and 均线条件JZ上JD, '忐',
-IFS(周期条件DT9 and 均线条件JZ上JC, '忠',
+IFS(周期条件DT9 and 均线条件JZ上JB, '忐',
+IFS(周期条件DT9 and 均线条件JZ上JA, '忠',
 IFS(周期条件DT9 , '忑',
 '')))))),DRAWNULL,COLORwhite;
 {=================================   日仓类   =======================================}
@@ -161,18 +129,18 @@ IFS(周期条件DT8 and 均线条件JE上JF and not(均线条件JZ上JF), '尿',
 IFS(周期条件DT8 and 均线条件JE上JF and not(均线条件JZ上JE), '嘘',
 IFS(周期条件DT8 and not(均线条件JE上JF) and 均线条件JZ上JE, '唏',
 IFS(周期条件DT8 , '屎',
-'')))))),DRAWNULL,COLORwhite;
+'')))))),DRAWNULL,COLORgray;
 {--- 日仓类输出（引用日EF护级，颜色与原来一致）---}
 IFS(周期条件DT8 and 日EF护级='金', '金',
-IFS(周期条件DT8 and 日EF护级='银', '仅试_银',
+IFS(周期条件DT8 and 日EF护级='银', '银',
 '')),DRAWNULL,COLORyellow;
-IFS(周期条件DT8 and 日EF护级='尿', '勿_尿',
-IFS(周期条件DT8 and 日EF护级='嘘', '仅观_嘘',
-IFS(周期条件DT8 and 日EF护级='唏', '仅观_唏',
-IFS(周期条件DT8 and 日EF护级='屎', '勿_屎',
+IFS(周期条件DT8 and 日EF护级='尿', '尿',
+IFS(周期条件DT8 and 日EF护级='嘘', '嘘',
+IFS(周期条件DT8 and 日EF护级='唏', '唏',
+IFS(周期条件DT8 and 日EF护级='屎', '屎',
 '')
 ))),DRAWNULL,COLORBROWN;
-
+{===================================================================================}
 日CD护级 :=
 IFS(周期条件DT8 and 均线条件JC上JD and not(均线条件JZ上JD), '下',
 IFS(周期条件DT8 and 均线条件JC上JD and not(均线条件JZ上JC), '中',
@@ -181,7 +149,7 @@ IFS(周期条件DT8 and 均线条件JZ上JD, '忐',
 IFS(周期条件DT8 and 均线条件JZ上JC, '忠',
 IFS(周期条件DT8 , '忑',
 ''))))));
-日CD护级,DRAWNULL,COLORwhite;
+日CD护级,DRAWNULL,COLORgray;
 
 日AB护级 :=
 IFS(周期条件DT8 and 均线条件JA上JB and not(均线条件JZ上JB), '丙',
@@ -191,25 +159,55 @@ IFS(周期条件DT8 and 均线条件JZ上JB, '己',
 IFS(周期条件DT8 and 均线条件JZ上JA, '戊',
 IFS(周期条件DT8 , '丁',
 ''))))));
-日AB护级,DRAWNULL,COLORwhite;
+日AB护级,DRAWNULL,COLORgray;
 {===================================================================================}
-{=================================  四类区域  =========================================}
-{--- 四类区域：主战场/禁区/鸡肋/执念（替换原四级分类A-H，2026-09-20）---}
+{=================================  四土  =========================================}
+{--- 四土：沃土/鸡肋土/执念土/禁土（替换原四类区域，2026-10-12）---}
 DJE之上 := 均线条件JZ上JE;      {JZ >= JE，DXZE>0 近似}
 DJE之下 := NOT(DJE之上);        {JZ < JE，DXZE<0}
 
-{--- 四类区域输出 ---}
-四类区域:=
-IFS(周期条件DT8 and DJE之下 and (日CD护级='下' or 日CD护级='忑'), '禁区',
-IFS(周期条件DT8 and (日CD护级='中' or (DJE之上 and (日CD护级='下' or 日CD护级='忑'))), '执念',
-IFS(周期条件DT8 and (日CD护级='忠' or (DJE之下 and (日CD护级='上' or 日CD护级='忐'))), '鸡肋',
-IFS(周期条件DT8 and DJE之上 and (日CD护级='上' or 日CD护级='忐'), '主战场',
+{--- 四土：日级别 ---}
+四土日:=
+IFS(周期条件DT8 and DJE之下 and (日CD护级='下' or 日CD护级='忑'), '禁土',
+IFS(周期条件DT8 and (日CD护级='中' or (DJE之上 and (日CD护级='下' or 日CD护级='忑'))), '执念土',
+IFS(周期条件DT8 and (日CD护级='忠' or (DJE之下 and (日CD护级='上' or 日CD护级='忐'))), '鸡肋土',
+IFS(周期条件DT8 and DJE之上 and (日CD护级='上' or 日CD护级='忐'), '沃土',
 ''
 )))),DRAWNULL,COLORgray;
-四类区域,DRAWNULL,COLORgray;
-{================================  勿入提示  =======================================}
-{--- 四级分类：坚决禁止提示（红色X，比灰色x更醒目）---}
-DRAWTEXT(周期条件DT9 and not(均线条件JZ上JA), L*0.99, 'x'),COLORgray,LAYER1;
+
+{--- 四土：周级别 ---}
+周WXZC之上 := 均线条件JZ上JC;   {JZ >= JC，WXZC>0 近似}
+周WXZC之下 := NOT(周WXZC之上);
+四土周:=
+IFS(周期条件DT9 and 周WXZC之下 and (周AB护级='下' or 周AB护级='忑'), '禁土',
+IFS(周期条件DT9 and (周AB护级='中' or (周WXZC之上 and (周AB护级='下' or 周AB护级='忑'))), '执念土',
+IFS(周期条件DT9 and (周AB护级='忠' or (周WXZC之下 and (周AB护级='上' or 周AB护级='忐'))), '鸡肋土',
+IFS(周期条件DT9 and 周WXZC之上 and (周AB护级='上' or 周AB护级='忐'), '沃土',
+''
+)))),DRAWNULL,COLORgray;
+
+{--- 四土合并输出 ---}
+四土:=
+IFS(周期条件DT9, 四土周,
+IFS(周期条件DT8, 四土日,
+'')),DRAWNULL,COLORbrown;
+四土,DRAWNULL,COLORwhite;
+
+{--- 四土背景色 ---}
+DRAWGBK (四土='沃土', RGB( 25, 40, 99)), LAYER7;
+DRAWGBK (四土='执念土', RGB( 25, 40, 55)), LAYER7;
+DRAWGBK (四土='鸡肋土', RGB( 33,11,  0)), LAYER7;
+{DRAWGBK (四土='禁土', RGB( 60, 0, 0)), LAYER7;}
+{===================================================================================}
+{--- 四波：龙/武/虎/雀（WXAB×WXZB，2026-10-12）---}
+四波:=
+IFS(周期条件DT9 and 均线条件JA上JB and 均线条件JZ上JB, '龙',
+IFS(周期条件DT9 and not(均线条件JA上JB) and 均线条件JZ上JB, '武',
+IFS(周期条件DT9 and not(均线条件JA上JB) and not(均线条件JZ上JB), '虎',
+IFS(周期条件DT9 and 均线条件JA上JB and not(均线条件JZ上JB), '雀',
+''
+)))),DRAWNULL,COLORbrown;
+四波,DRAWNULL,COLORwhite;
 {===================================================================================}
 
 
@@ -516,6 +514,7 @@ DRAWTEXT(周期条件DT8 and 日层赢='_执念', JE, '_念'),COLOR800000,LAYER1
 DRAWTEXT(周期条件DT8 and (日层赢='持A' or 日层赢='持B' or 日层赢='_持A' or 日层赢='_持B'), JE, 日层赢),COLORCYAN,LAYER1;
 DRAWTEXT(周期条件DT8 and (日层赢='持v' or 日层赢='持z' or 日层赢='_持v' or 日层赢='_持z'), JE, 日层赢),COLORAAAA00,LAYER1;
 DRAWTEXT(周期条件DT8 and (日层赢='介A' or 日层赢='介B' or 日层赢='介v' or 日层赢='介z' or 日层赢='_介A' or 日层赢='_介B' or 日层赢='_介v' or 日层赢='_介z'), JE, 日层赢),COLORGREEN,LAYER1;
-DRAWTEXT(周期条件DT8 and (日层赢='肋介A' or 日层赢='肋介B' or 日层赢='肋介v' or 日层赢='肋介z' or 日层赢='_肋介A' or 日层赢='_肋介B' or 日层赢='_肋介v' or 日层赢='_肋介z'), JE, 日层赢),COLORFF8000,LAYER1;
+DRAWTEXT(周期条件DT8 and (日层赢='肋介A' or 日层赢='肋介B' or 日层赢='肋介v' or 日层赢='肋介z' or 日层赢='_肋介A' or 日层赢='_肋介B' or 日层赢='_肋介v' or 日层赢='_肋介z'), JE, 日层赢),COLORCC6600,LAYER1;
 DRAWTEXT(周期条件DT8 and (日层赢='肋持A' or 日层赢='肋持B' or 日层赢='肋持v' or 日层赢='肋持z' or 日层赢='_肋持A' or 日层赢='_肋持B' or 日层赢='_肋持v' or 日层赢='_肋持z'), JE, 日层赢),COLORFF8000,LAYER1;
+
 
