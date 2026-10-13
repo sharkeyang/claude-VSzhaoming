@@ -101,7 +101,7 @@ Public Const 位谕of周层势型 = 位谕始of族周层 + 3        '周势型�
 Public Const 位谕of周层界 = 位谕始of族周层 + 4          'WJC丘优化一：限定可操作范围。
 Public Const 位谕of周层护型 = 位谕始of族周层 + 5        'WJC丘优化一：限定可操作范围。
 Public Const 位谕of周层地型 = 位谕始of族周层 + 6        '周地型：0橅/1柜/2栅/3桮/6娝/7姗/8姖/9妩（20261001 新增）
-Public Const 位谕of周层等 = 位谕始of族周层 + 7          '等高线分类（预留，后续研究结束放入结算逻辑）
+Public Const 位谕of周层等型 = 位谕始of族周层 + 7          '等高线分类（预留，后续研究结束放入结算逻辑）
 Public Const 位谕of周层波型 = 位谕始of族周层 + 8        'WJC丘优化一：限定可操作范围。
 Public Const 位谕of周层柱型 = 位谕始of族周层 + 9        'WXAB护丘：围绕WXAB护丘提供信息，结合顶型与柱排列。
 Public Const 位谕of周层柱排 = 位谕始of族周层 + 10       'WJA柱排列。
@@ -123,7 +123,7 @@ Public Const 位谕of日层柱型 = 位谕始of族日层 + 3
 Public Const 位谕of日层界 = 位谕始of族日层 + 4
 '卖提示包含：/触顶否/高幅（偏幅）/管宽（哼JC）/陡（均线拉开距离）/叠（连续波幅）/连阳数
 Public Const 位谕of日层柱排 = 位谕始of族日层 + 5
-Public Const 位谕of日层等 = 位谕始of族日层 + 6
+Public Const 位谕of日层等型 = 位谕始of族日层 + 6
 '--------------------------
 Public Const 位谕终of族日层 = 位谕始of族日层 + 5
 '----------------------------------------------------
@@ -1545,7 +1545,7 @@ If UBCID是代码(CIDL) = True Then
                     周等类 = "等6"
                 End If
             End If
-            谕组(X, 位谕of周层等) = 周等类
+            谕组(X, 位谕of周层等型) = 周等类
             '============================================================================
             '日等类：日级别等高线分类（ZA分段 + 末符）
             '============================================================================
@@ -1569,7 +1569,7 @@ If UBCID是代码(CIDL) = True Then
                     日等类 = "等6"
                 End If
             End If
-            谕组(X, 位谕of日层等) = 日等类
+            谕组(X, 位谕of日层等型) = 日等类
             '============================================================================
 '########################################################################################
 '########################################################################################
@@ -2454,7 +2454,7 @@ If UBCID是代码(CIDL) = True Then
                             值柱排向 = "人"
                         End If
                         谕组(X, 位谕of周层大局) = 谕组(X, 位谕of周层大局) & "(" & 谕组(X, 位谕of周层地型) _
-                            & "_" & 谕组(X, 位谕of周层等) _
+                            & "_" & 谕组(X, 位谕of周层等型) _
                             & "_" & 值柱排向 & ")"
                     End If
                 '------------------------------------------------------------------------
@@ -2746,7 +2746,7 @@ If UBCID是代码(CIDL) = True Then
                     操作 = IIf(Right$(日向, 1) = "好", "持", "观")
                 End If
             ElseIf 周向 = "武" Then
-                操作 = IIf(Right$(日向, 1) = "好", "持", "观")
+                操作 = "观"
             ElseIf 周向 = "雀" Then
                 操作 = "观"
             ElseIf 周向 = "虎" Then
@@ -2789,11 +2789,7 @@ If UBCID是代码(CIDL) = True Then
             '主战场：①金②层段=甲乙（对于日级别，只针对WXAB＞0）
             '是否要求WXAB＞0：要求，只要"甲乙"就可以；"已"存续时间太短，且存在不确定性；"丙"属于已下破WJB，可能有机会，但更多机会存在于"甲乙"。
             '----------------------------------------------------------------------------
-            ElseIf 值四波 = "武" Then
-                    '武（己护型，WXAB<0且WXZB>0）：降转态，次强最稳（52.41%，诱多率最低13.78%），可做但标注
-                    值日层漏提示 = 值日层漏提示 & "武"
-                    是否提供日漏信息 = True
-            ElseIf 值四波 = "龙" Then
+            ElseIf 值四波 = "龙" And 周类BTZC > 0 Then
                 If InStr(谕组(X, 位谕of周层波型), "龙扩根") > 0 Then
                     '排除：龙扩根（下破WJA，下周冲高率48.80%低于基线，下周ZA<0高达75%）
                 ElseIf InStr(谕组(X, 位谕of周层波型), "龙震根") > 0 _
@@ -5197,7 +5193,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of周层界) = "层界=范围" & vbCrLf & "周"
         .Cells(1, 位谕of周层护型) = "护型WXAB" & vbCrLf & "周"
         .Cells(1, 位谕of周层地型) = "周地型" & vbCrLf & "周"
-        .Cells(1, 位谕of周层等) = "等" & vbCrLf & "周"
+        .Cells(1, 位谕of周层等型) = "等周"
         .Cells(1, 位谕of周层波型) = "波型（扩震头）" & vbCrLf & "周"
         .Cells(1, 位谕of周层柱型) = "柱型WJA" & vbCrLf & "周"
         .Cells(1, 位谕of周层柱排) = "柱排" & vbCrLf & "周"
@@ -5227,7 +5223,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周层界).Interior.TintAndShade = -0.2
         .Columns(位谕of周层大局).Interior.TintAndShade = 0.1
         .Columns(位谕of周层势型).Interior.TintAndShade = 0.1
-        .Columns(位谕of周层等).Interior.TintAndShade = -0.2
+        .Columns(位谕of周层等型).Interior.TintAndShade = -0.2
         .Columns(位谕of周层波型).Interior.TintAndShade = -0.3
         .Columns(位谕of周层护型).Interior.TintAndShade = -0.1
         .Columns(位谕of周层柱型).Interior.TintAndShade = -0.2
@@ -5243,7 +5239,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周层界).ColumnWidth = 7.5
         .Columns(位谕of周层大局).ColumnWidth = 13
         .Columns(位谕of周层势型).ColumnWidth = 8
-        .Columns(位谕of周层等).ColumnWidth = 3
+        .Columns(位谕of周层等型).ColumnWidth = 3
         .Columns(位谕of周层波型).ColumnWidth = 7
         .Columns(位谕of周层护型).ColumnWidth = 4
         .Columns(位谕of周层地型).ColumnWidth = 3
@@ -5265,7 +5261,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         '.Columns(位谕of周层波型).Hidden = True
         .Columns(位谕of周层护型).Hidden = True
         .Columns(位谕of周层界).Hidden = True
-        .Columns(位谕of周层等).Hidden = True
+        .Columns(位谕of周层等型).Hidden = True
         .Columns(位谕of周层地型).Hidden = True  '20261001：隐藏周地型
     End With
 '========================================================================================
@@ -5521,7 +5517,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of日层柱型) = "柱型DJA"
         .Cells(1, 位谕of日层界) = "层界"
         .Cells(1, 位谕of日层柱排) = "柱排"
-        .Cells(1, 位谕of日层等) = "日等型"
+        .Cells(1, 位谕of日层等型) = "等日"
     End With
     With WS.Columns(基列)
         With .Columns(位谕始of族日层).Borders(xlEdgeLeft)
