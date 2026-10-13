@@ -6,6 +6,7 @@
 输出：名称\t编码（期望HR取整+等级(A-F)+P1取整）
 四态（WXAB&WXZB，2026-10-07 替换金银，简化为龙虎武雀）：龙/虎/武/雀
 策略编码格式：四态_地型_等N_柱排（2026-10-07 简化，去掉护型前缀）
+地型来源：地型周列（2026-10-12 导出补全，原从周策略P3提取已失效）
 """
 
 import glob, pandas as pd, os
@@ -36,15 +37,6 @@ def seg(w, i):
     parts = str(w).split('.')
     return parts[i] if len(parts) > i else ''
 
-def 提取地型(p3):
-    """从 周策略P3 列提取地型。
-    周策略P3 结构：护型+地型_等N_柱排_金银（_分隔），字段0=护型(1字符)+地型(2字符)。
-    例：'甲0橅_等1_人排_金' -> 字段0='甲0橅' -> 地型='0橅'
-    """
-    if pd.isna(p3): return ''
-    f0 = str(p3).split('_')[0]
-    return f0[1:] if len(f0) > 1 else ''
-
 def encode(p1, avg):
     h = int(avg) if avg >= 0 else 0
     if h > 9: h = 9
@@ -58,7 +50,7 @@ def make_name(cd, d, eq, zp):
 
 print('=== 生成 vba表周策分P1.txt ===')
 wk = load()
-wk['地型'] = wk['周策略P3'].apply(提取地型)
+wk['地型'] = wk['地型周']   # 2026-10-12 导出补全地型列，直接读地型周
 wk['ZA周'] = pd.to_numeric(wk['ZA周'], errors='coerce')
 wk['末位'] = wk['中符串周'].astype(str).str[-1]
 
