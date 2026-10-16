@@ -41,10 +41,11 @@ def encode(p3, avg):
     return f'{h}{g}{int(p3):02d}'
 
 def match_strategy(row):
-    """金银×四波×柱型 策略匹配（2026-10-16 新设计）。
+    """金银×四波×柱型+盈提高 必杀技匹配（2026-10-16 新设计，只保留8组合）。
     金银：周势型[12]第2字符（金/银/唏）
     四波：龙=WXAB>0且WXZB>0、武=WXAB<0且WXZB>0、虎=WXAB<0且WXZB<0、雀=WXAB>0且WXZB<0
-    柱型：并符串周[51]尾字符（O升吞/Q升连/o升孕/V跌吞/W跌连/v跌孕）
+    柱型：并符串周[51]尾字符（O升吞/Q升连/o升孕/V跌吞/W跌连/v跌孕），策略名用字母
+    必杀技：金银×四波×柱型字母 + 盈提示含"高"（8组合，P≥3% 70-76%）
     """
     wxab = row.get('AB周', 0)
     wxzb = row.get('ZB周', 0)
@@ -66,14 +67,20 @@ def match_strategy(row):
         bo = '雀'
     else:
         return ''
-    # 柱型（并符串尾字符）
+    # 柱型（并符串尾字符，字母）
     bf = str(row.get('并符串周', '')) if pd.notna(row.get('并符串周')) else ''
     zx = bf[-1] if bf else ''
-    zx_map = {'O': '升吞', 'Q': '升连', 'o': '升孕', 'V': '跌吞', 'W': '跌连', 'v': '跌孕'}
-    zx_name = zx_map.get(zx, '')
-    if not zx_name:
+    if zx not in ('O', 'Q', 'o', 'V', 'W', 'v'):
         return ''
-    return f'{jy}{bo}{zx_name}'
+    # 盈提示含"高"
+    yt = str(row.get('盈提示', '')) if pd.notna(row.get('盈提示')) else ''
+    if '高' not in yt:
+        return ''
+    # 必杀技8组合
+    combo = f'{jy}{bo}{zx}'
+    if combo in ('金龙Q', '银龙Q', '金龙O', '唏龙Q', '金龙o', '金武Q', '银龙O', '金龙v'):
+        return f'{combo}高'
+    return ''
 
 print('=== 生成 vba表周策分P3.txt（金银×四波×柱型）===')
 wk = load()
