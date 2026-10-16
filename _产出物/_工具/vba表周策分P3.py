@@ -2,16 +2,19 @@
 # -*- coding: utf-8 -*-
 """
 生成 vba表周策分P3.txt
-全量7461只周CSV → 按四态策略匹配计算P3概率
-输出：策略\t编码（期望HR取整(截断9)+等级(A-F)+P3取整）
-四态（2026-10-07 替换金银）：龙/虎/武/雀
+全量周CSV → 按金银×四波×柱型 三维组合计算P3概率
+输出：策略\t编码（期望HR取整(截断9)+等级(G/_)+P3取整）
+金银：金/银/唏（WXZC>0下仅此三类）
+四波：龙/武/虎/雀（WXAB&WXZB）
+柱型：升吞O/升连Q/升孕o/跌吞V/跌连W/跌孕v（并符串周尾字符）
+2026-10-16 新设计：从第一性原理（金银区分度最高18pp）恢复金银维度
 """
 
 import glob, pandas as pd, os
 
 DATADIR = r'昭明算展/谕组周'
 OUTDIR = r'_产出物/_工具'
-MIN_SAMPLE = 100
+MIN_SAMPLE = 1000
 
 def load():
     files = sorted(glob.glob(os.path.join(DATADIR, '谕组周_*.csv')))
@@ -38,57 +41,55 @@ def encode(p3, avg):
     return f'{h}{g}{int(p3):02d}'
 
 def match_strategy(row):
-    """四态策略匹配（2026-10-07 替换金银）。
-    四态：龙=WXAB>0且WXZB>0、武=WXAB<0且WXZB>0、虎=WXAB<0且WXZB<0、雀=WXAB>0且WXZB<0。
-    每个四态叠加柱排/盈提示等条件形成策略。
+    """金银×四波×柱型 策略匹配（2026-10-16 新设计）。
+    金银：周势型[12]第2字符（金/银/唏）
+    四波：龙=WXAB>0且WXZB>0、武=WXAB<0且WXZB>0、虎=WXAB<0且WXZB<0、雀=WXAB>0且WXZB<0
+    柱型：并符串周[51]尾字符（O升吞/Q升连/o升孕/V跌吞/W跌连/v跌孕）
     """
     wxab = row.get('AB周', 0)
     wxzb = row.get('ZB周', 0)
     if pd.isna(wxab): wxab = 0
     if pd.isna(wxzb): wxzb = 0
-    zp = str(row.get('柱排周', '')) if pd.notna(row.get('柱排周')) else ''
-    zy = str(row.get('盈提示', '')) if pd.notna(row.get('盈提示')) else ''
-    # 四态判定
+    # 金银
+    jy = str(row.get('周势型(WXCD护型)', '')) if pd.notna(row.get('周势型(WXCD护型)')) else ''
+    jy = jy[1] if len(jy) >= 2 else ''
+    if jy not in ('金', '银', '唏'):
+        return ''
+    # 四波
     if wxab > 0 and wxzb > 0:
-        sitai = '龙'  # 升主龙
+        bo = '龙'
     elif wxab < 0 and wxzb > 0:
-        sitai = '武'  # 降转武
+        bo = '武'
     elif wxab < 0 and wxzb < 0:
-        sitai = '虎'  # 降主虎
+        bo = '虎'
     elif wxab > 0 and wxzb < 0:
-        sitai = '雀'  # 升转雀
+        bo = '雀'
     else:
         return ''
-    # 四态策略：叠加柱排/盈提示
-    if sitai == '龙':
-        if zp.startswith('升'): return '龙升'
-        elif '高' in zy or '宽' in zy: return '龙盈'
-        else: return '龙长'
-    elif sitai == '武':
-        if zp.startswith('升'): return '武升'
-        elif '高' in zy or '宽' in zy: return '武盈'
-        else: return '武长'
-    elif sitai == '虎':
-        if zp.startswith('跌'): return '虎跌'
-        else: return '虎长'
-    else:  # 雀
-        return '雀'
+    # 柱型（并符串尾字符）
+    bf = str(row.get('并符串周', '')) if pd.notna(row.get('并符串周')) else ''
+    zx = bf[-1] if bf else ''
+    zx_map = {'O': '升吞', 'Q': '升连', 'o': '升孕', 'V': '跌吞', 'W': '跌连', 'v': '跌孕'}
+    zx_name = zx_map.get(zx, '')
+    if not zx_name:
+        return ''
+    return f'{jy}{bo}{zx_name}'
 
-print('=== 生成 vba表周策分P3.txt ===')
+print('=== 生成 vba表周策分P3.txt（金银×四波×柱型）===')
 wk = load()
 wk['策略'] = wk.apply(match_strategy, axis=1)
 valid = wk[wk['策略'] != '']
-print(f'  有策略: {len(valid)} 行')
+print(f'  有策略: {len(valid)} 行 ({len(valid)/len(wk)*100:.1f}%)')
 
-strategies = ['全量基准', '龙最优(全部)', '龙升', '龙盈', '龙长', '武升', '武盈', '武长', '虎跌', '虎长', '雀']
 results = []
-for s in strategies:
-    if s == '全量基准':
-        m = wk  # 全量基准用全部行
-    elif s == '龙最优(全部)':
-        m = valid[valid['策略'].isin(['龙升', '龙盈', '龙长'])]
-    else:
-        m = valid[valid['策略'] == s]
+# 全量基准
+n = len(wk)
+p3 = round((wk['下周HR'] >= 3).mean() * 100, 1)
+avg = wk['下周HR'].mean()
+results.append(('全量基准', encode(p3, avg), n, p3, avg))
+
+# 各策略组合（样本>=1000）
+for s, m in valid.groupby('策略'):
     n = len(m)
     if n >= MIN_SAMPLE:
         p3 = round((m['下周HR'] >= 3).mean() * 100, 1)

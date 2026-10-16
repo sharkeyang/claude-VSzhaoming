@@ -2968,35 +2968,35 @@ If UBCID是代码(CIDL) = True Then
             ' 市板为空时，从花册单行查询
             If 周市板 = "" Then 周市板 = IQQQ跨码工具_查单码市板(CIDL)
         
-            '按四波匹配（2026-10-07 替换金银）：龙/武/虎/雀，叠加柱排/盈提示
+            '按金银×四波×柱型匹配（2026-10-16 新设计，第一性原理：金银区分度最高18pp）
+            '金银：周势型[12]第2字符（金/银/唏，WXZC>0下仅此三类）
+            '四波：龙/武/虎/雀（WXAB&WXZB）
+            '柱型：并符串周[51]尾字符（O升吞/Q升连/o升孕/V跌吞/W跌连/v跌孕）
+            Dim 周金银 As String: 周金银 = Mid$(谕组(X, 位谕of周层势型), 2, 1)
+            Dim 周柱型符 As String: 周柱型符 = Right$(谕组(X, 位谕of周管并符串), 1)
+            Dim 周柱型名 As String
+            Select Case 周柱型符
+                Case "O": 周柱型名 = "升吞"
+                Case "Q": 周柱型名 = "升连"
+                Case "o": 周柱型名 = "升孕"
+                Case "V": 周柱型名 = "跌吞"
+                Case "W": 周柱型名 = "跌连"
+                Case "v": 周柱型名 = "跌孕"
+                Case Else: 周柱型名 = ""
+            End Select
+            Dim 周P3四波名 As String
             If 谕组(X, 位谕of周类BTAB) > 0 And 谕组(X, 位谕of周类BTZB) > 0 Then
-                '龙（升主龙）：WXAB>0且WXZB>0
-                If Left$(周柱排, 1) = "升" Then
-                    周策略 = "龙升"
-                ElseIf InStr(周盈提, "高") > 0 Or InStr(周盈提, "宽") > 0 Then
-                    周策略 = "龙盈"
-                Else
-                    周策略 = "龙长"
-                End If
+                周P3四波名 = "龙"   '升主龙：WXAB>0且WXZB>0
             ElseIf 谕组(X, 位谕of周类BTAB) < 0 And 谕组(X, 位谕of周类BTZB) > 0 Then
-                '武（降转武）：WXAB<0且WXZB>0，回调买入
-                If Left$(周柱排, 1) = "升" Then
-                    周策略 = "武升"
-                ElseIf InStr(周盈提, "高") > 0 Or InStr(周盈提, "宽") > 0 Then
-                    周策略 = "武盈"
-                Else
-                    周策略 = "武长"
-                End If
+                周P3四波名 = "武"   '降转武：WXAB<0且WXZB>0
             ElseIf 谕组(X, 位谕of周类BTAB) < 0 And 谕组(X, 位谕of周类BTZB) < 0 Then
-                '虎（降主虎）：WXAB<0且WXZB<0，回避
-                If Left$(周柱排, 1) = "跌" Then
-                    周策略 = "虎跌"
-                Else
-                    周策略 = "虎长"
-                End If
+                周P3四波名 = "虎"   '降主虎：WXAB<0且WXZB<0
             ElseIf 谕组(X, 位谕of周类BTAB) > 0 And 谕组(X, 位谕of周类BTZB) < 0 Then
-                '雀（升转雀）：WXAB>0且WXZB<0，死猫反弹回避
-                周策略 = "雀"
+                周P3四波名 = "雀"   '升转雀：WXAB>0且WXZB<0
+            End If
+            '金银×四波×柱型（仅WXZC>0适用，金银为金/银/唏）
+            If 周金银 <> "" And 周P3四波名 <> "" And 周柱型名 <> "" Then
+                周策略 = 周金银 & 周P3四波名 & 周柱型名
             End If
         
             '查概率表并写入
