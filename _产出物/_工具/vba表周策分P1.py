@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 生成 vba表周策分P1.txt
-全量7461只周CSV → 按完整梯度框架（ZA分段+等类+地型+柱排+四态）计算P1概率
+全量7461只周CSV → 按完整梯度框架（ZA分段+等类+地型+柱排+四波）计算P1概率
 输出：名称\t编码（期望HR取整+等级(A-F)+P1取整）
-四态（WXAB&WXZB，2026-10-07 替换金银，简化为龙虎武雀）：龙/虎/武/雀
-策略编码格式：四态_地型_等N_柱排（2026-10-07 简化，去掉护型前缀）
+四波（WXAB&WXZB，2026-10-07 替换金银，简化为龙虎武雀）：龙/虎/武/雀
+策略编码格式：四波_地型_等N_柱排（2026-10-07 简化，去掉护型前缀）
 地型来源：地型周列（2026-10-12 导出补全，原从周策略P3提取已失效）
 """
 
@@ -45,7 +45,7 @@ def encode(p1, avg):
     return f'{h}{g}{int(p1):02d}'
 
 def make_name(cd, d, eq, zp):
-    """策略编码：四态_地型_等N_柱排（2026-10-07 简化，去掉护型前缀）"""
+    """策略编码：四波_地型_等N_柱排（2026-10-07 简化，去掉护型前缀）"""
     return f'{cd}_{d}_{eq}_{zp}'
 
 print('=== 生成 vba表周策分P1.txt ===')
@@ -54,8 +54,8 @@ wk['地型'] = wk['地型周']   # 2026-10-12 导出补全地型列，直接读�
 wk['ZA周'] = pd.to_numeric(wk['ZA周'], errors='coerce')
 wk['末位'] = wk['中符串周'].astype(str).str[-1]
 
-m_up = wk['柱排周'].str.contains('升', na=False)
-m_dn = wk['柱排周'].str.contains('跌', na=False)
+m_up = wk['柱排周'].str.startswith('升')   # 2026-10-16 修正：用startswith，contains会把(升)人误判为升排
+m_dn = wk['柱排周'].str.startswith('跌')
 m_ren = ~(m_up | m_dn)
 m1 = wk['ZA周'] == 1
 m2 = (wk['ZA周'] >= 2) & wk['末位'].isin(['C', 'D', 'E', 'F'])
@@ -65,7 +65,7 @@ m6 = (wk['ZA周'] <= -2) & wk['末位'].isin(['A', 'B', 'C', 'D'])
 m7 = (wk['ZA周'] <= -2) & wk['末位'].isin(['E', 'F'])
 m_za_pos = wk['ZA周'] > 0
 m_za_neg = wk['ZA周'] < 0
-# 四态（WXAB&WXZB，2026-10-07 替换金银）：升主龙/降主虎/降转武/升转雀
+# 四波（WXAB&WXZB，2026-10-07 替换金银）：升主龙/降主虎/降转武/升转雀
 wk['WXAB'] = pd.to_numeric(wk['AB周'], errors='coerce')
 wk['WXZB'] = pd.to_numeric(wk['ZB周'], errors='coerce')
 m_shengzhu = (wk['WXAB'] > 0) & (wk['WXZB'] > 0)   # 升主龙：WXAB>0且WXZB>0
@@ -77,7 +77,7 @@ za_configs = [
     ('ZA>0', m_za_pos, [('等3', m3), ('等2', m2), ('等1', m1)], ['0橅', '1柜', '2栅', '3桮']),
     ('ZA<0', m_za_neg, [('等7', m7), ('等6', m6), ('等5', m5)], ['6娝', '7姗', '8姖', '9妩']),
 ]
-# 四态（2026-10-07 替换金银，简化为龙虎武雀）：龙/虎/武/雀
+# 四波（2026-10-07 替换金银，简化为龙虎武雀）：龙/虎/武/雀
 wxcd_configs = [('龙', m_shengzhu), ('虎', m_jiangzhu), ('武', m_jiangzhuan), ('雀', m_shengzhuan)]
 
 results = []
