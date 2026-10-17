@@ -1,0 +1,1 @@
+    44: ('仓日类', lambda v: bool(re.match(r'^[一-鿿][a-zA-Z]', v.strip()))),

@@ -1,0 +1,21 @@
+禁(U+7981): True
+念(U+5FF5): True
+肋(U+808B): True
+上(U+4E0A): True
+忐(U+5FD0): True
+一(U+4E00): True
+鿿(U+9FFF): True
+中(U+4E2D): True
+下(U+4E0B): True
+忠(U+5FE0): True
+忑(U+5FD1): True
+--- 用 \u4e00-\u9fff ---
+禁(U+7981): True
+念(U+5FF5): True
+肋(U+808B): True
+上(U+4E0A): True
+忐(U+5FD0): True
+中(U+4E2D): True
+下(U+4E0B): True
+忠(U+5FE0): True
+忑(U+5FD1): True

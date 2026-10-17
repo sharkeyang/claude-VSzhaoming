@@ -1,0 +1,33 @@
+D:\@VSwork\VS�����ƻ�VBA�Ż�\____temp\_diag_zp.py:19: UserWarning: This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
+  print(f'  ��(��): {(s.str.contains("(��)")).sum()}')
+D:\@VSwork\VS�����ƻ�VBA�Ż�\____temp\_diag_zp.py:20: UserWarning: This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
+  print(f'  ��(��): {(s.str.contains("(��)")).sum()}')
+=== 柱排周 前20个不同值 ===
+  [首柱.Q1]
+  [升.尾反孕Qv]
+  [升.尾吞vO]
+  [升.尾连OQ.Q2]
+  [升.尾反孕vOv]
+  [跌.尾连vW.W2]
+  [跌.尾反孕Wo]
+  [升.尾连oQ.Q2]
+  [升.尾连QQ.Q3]
+  [(升)人.孕孕vo]
+  [跌.尾吞oV]
+  [跌.尾连VW.W2]
+  [(升)人.连后吞QV]
+  [跌.尾连WW.W3]
+  [(跌)人.孕孕ov]
+  [(升)人.吞吞vOV]
+  [升.尾连QQ.Q4]
+  [升.尾连QQ.Q5]
+  [升.尾连QQ.Q6]
+  [(人)人.吞吞* VO]
+
+=== 柱排周 是否含(升)/(跌)前缀 ===
+  含(升): 34264
+  含(跌): 29800
+  以升开头: 26540
+  以跌开头: 23257
+  含升(任意): 34264
+  含跌(任意): 29800

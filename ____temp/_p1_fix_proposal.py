@@ -1,0 +1,92 @@
+# -*- coding: utf-8 -*-
+# 修正后的 P1 脚本（地型提取逻辑重写）
+# 关键改动：地型从 地型周列[5] 读取（格式 0橅），不再从 周策略P1/P3 提取（2026-10-15 重导后不再含地型）
+import glob, pandas as pd, os, sys
+sys.stdout.reconfigure(encoding='utf-8')
+
+DATADIR = r'昭明算展/谕组周'
+OUTDIR = r'_产出物/_工具'
+MIN_SAMPLE = 1000
+
+def load():
+    files = sorted(glob.glob(os.path.join(DATADIR, '谕组周_*.csv')))
+    dfs = []
+    for i, f in enumerate(files):
+        if i % 1000 == 0: print(f'  [加载] {i}/{len(files)}...', flush=True)
+        try:
+            df = pd.read_csv(f, encoding='gbk')
+            if len(df) >= 2:
+                df['fid'] = i
+                dfs.append(df)
+        except: pass
+    wk = pd.concat(dfs, ignore_index=True)
+    wk['下周HR'] = wk.groupby('fid')['HR'].shift(-1)
+    wk = wk.dropna(subset=['下周HR'])
+    print(f'  完成: {len(wk)} 行')
+    return wk
+
+def encode(p1, avg):
+    h = int(avg) if avg >= 0 else 0
+    if h > 9: h = 9
+    if p1 >= 78: g = 'G'
+    else: g = '_'
+    return f'{h}{g}{int(p1):02d}'
+
+def make_name(cd, d, eq, zp):
+    return f'{cd}_{d}_{eq}_{zp}'
+
+print('=== 生成 vba表周策分P1.txt ===')
+wk = load()
+# 地型从地型周列[5]读取（格式 0橅，2026-10-15 重导后周策略P1不再含地型）
+wk['地型'] = wk['地型周'].astype(str)
+wk['ZA周'] = pd.to_numeric(wk['ZA周'], errors='coerce')
+wk['末位'] = wk['中符串周'].astype(str).str[-1]
+
+m_up = wk['柱排周'].str.startswith('升')   # 2026-10-16 修正：用startswith，contains会把(升)人误判为升排
+m_dn = wk['柱排周'].str.startswith('跌')
+m_ren = ~(m_up | m_dn)
+m1 = wk['ZA周'] == 1
+m2 = (wk['ZA周'] >= 2) & wk['末位'].isin(['C', 'D', 'E', 'F'])
+m3 = (wk['ZA周'] >= 2) & wk['末位'].isin(['A', 'B'])
+m5 = wk['ZA周'] == -1
+m6 = (wk['ZA周'] <= -2) & wk['末位'].isin(['A', 'B', 'C', 'D'])
+m7 = (wk['ZA周'] <= -2) & wk['末位'].isin(['E', 'F'])
+m_za_pos = wk['ZA周'] > 0
+m_za_neg = wk['ZA周'] < 0
+wk['WXAB'] = pd.to_numeric(wk['AB周'], errors='coerce')
+wk['WXZB'] = pd.to_numeric(wk['ZB周'], errors='coerce')
+m_shengzhu = (wk['WXAB'] > 0) & (wk['WXZB'] > 0)
+m_jiangzhu = (wk['WXAB'] < 0) & (wk['WXZB'] < 0)
+m_jiangzhuan = (wk['WXAB'] < 0) & (wk['WXZB'] > 0)
+m_shengzhuan = (wk['WXAB'] > 0) & (wk['WXZB'] < 0)
+
+za_configs = [
+    ('ZA>0', m_za_pos, [('等3', m3), ('等2', m2), ('等1', m1)], ['0橅', '1柜', '2栅', '3桮']),
+    ('ZA<0', m_za_neg, [('等7', m7), ('等6', m6), ('等5', m5)], ['6娝', '7姗', '8姖', '9妩']),
+]
+wxcd_configs = [('龙', m_shengzhu), ('虎', m_jiangzhu), ('武', m_jiangzhuan), ('雀', m_shengzhuan)]
+
+results = []
+for za_name, za_mask, eq_list, dx_list in za_configs:
+    for eq_name, eq_mask in eq_list:
+        for d in dx_list:
+            for zp_name, zp_mask in [('升排', m_up), ('人排', m_ren), ('跌排', m_dn)]:
+                for cd_name, cd_mask in wxcd_configs:
+                    mask = za_mask & eq_mask & (wk['地型'] == d) & zp_mask & cd_mask
+                    n = mask.sum()
+                    if n >= MIN_SAMPLE:
+                        g = wk.loc[mask]
+                        p1 = round((g['下周HR'] >= 1).mean() * 100, 1)
+                        avg = g['下周HR'].mean()
+                        code = encode(p1, avg)
+                        name = make_name(cd_name, d, eq_name, zp_name)
+                        results.append((p1, code, name, n))
+
+results.sort(key=lambda x: -x[0])
+lines = ['名称\t编码']
+for p1, code, name, n in results:
+    lines.append(f'{name}\t{code}')
+outpath = os.path.join(OUTDIR, 'vba表周策分P1.txt')
+with open(outpath, 'w', encoding='gbk') as f:
+    f.write('\n'.join(lines))
+print(f'  共{len(results)}个组合 -> {outpath}')

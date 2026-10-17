@@ -480,13 +480,14 @@ Public Const 位os基竖态 = 位os始算法类 + 10
 '------------------------
 Public Const 位os层界 = 位os始算法类 + 11
 Public Const 位os层地型 = 位os始算法类 + 12
-Public Const 位os层护型 = 位os始算法类 + 13
-Public Const 位os层护段AB = 位os始算法类 + 14
-Public Const 位os层护级AB = 位os始算法类 + 15
-Public Const 位os层护段CD = 位os始算法类 + 16
-Public Const 位os层护级CD = 位os始算法类 + 17
+Public Const 位os层等型 = 位os始算法类 + 13
+Public Const 位os层护型 = 位os始算法类 + 14
+Public Const 位os层护段AB = 位os始算法类 + 15
+Public Const 位os层护级AB = 位os始算法类 + 16
+Public Const 位os层护段CD = 位os始算法类 + 17
+Public Const 位os层护级CD = 位os始算法类 + 18
 '------------------------
-Public Const 位os终算法类 = 位os始算法类 + 17
+Public Const 位os终算法类 = 位os始算法类 + 18
 '----------------------------------------------
 '(9)统计信息
 '----------------------------------------------

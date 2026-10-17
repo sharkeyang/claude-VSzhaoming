@@ -1,0 +1,1 @@
+[(('both', False), 440), (('sx_jin', False), 383), (('jyj', False), 366), (('jyj', True), 257), (('sx_jin', True), 240), (('both', True), 183)]

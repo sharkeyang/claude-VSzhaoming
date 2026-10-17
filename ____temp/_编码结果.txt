@@ -1,0 +1,12 @@
+禁: U+7981
+念: U+5FF5
+肋: U+808B
+上: U+4E0A
+忐: U+5FD0
+一: U+4E00
+鿿: U+9FFF
+禁忑y: False
+念中z: False
+肋忠a: False
+上b: True
+忐a: True

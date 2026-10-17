@@ -1,0 +1,46 @@
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_±ØÉ±¼¼ÑéÖ¤.py:69: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  sub['Äê'] = sub['Ö÷ÆÚ'].astype(str).str[:4]
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_±ØÉ±¼¼ÑéÖ¤.py:69: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  sub['Äê'] = sub['Ö÷ÆÚ'].astype(str).str[:4]
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_±ØÉ±¼¼ÑéÖ¤.py:69: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  sub['Äê'] = sub['Ö÷ÆÚ'].astype(str).str[:4]
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_±ØÉ±¼¼ÑéÖ¤.py:69: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  sub['Äê'] = sub['Ö÷ÆÚ'].astype(str).str[:4]
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_±ØÉ±¼¼ÑéÖ¤.py:69: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  sub['Äê'] = sub['Ö÷ÆÚ'].astype(str).str[:4]
+==========================================================================================
+å¿…æ€æŠ€å€™é€‰ç»„åˆ éªŒè¯ï¼ˆPâ‰¥3% + ç¨³å®šæ€§ï¼‰
+==========================================================================================
+  é‡‘é¾™å‡è¿+å®½é«˜: P3=77.3%  æœŸæœ›HR=11.82%  n=31,841  æœ€å·®å¹´=69.0%  å¹´æ•°=29
+  é‡‘é¾™å‡è¿+å®½é«˜è¿3: P3=76.5%  æœŸæœ›HR=11.45%  n=8,004  æœ€å·®å¹´=62.1%  å¹´æ•°=23
+  å”é¾™è·Œå­•+å®½é«˜: P3=82.3%  æœŸæœ›HR=8.64%  n=509  æœ€å·®å¹´=89.7%  å¹´æ•°=1
+  é“¶é¾™è·Œå­•+å®½é«˜: P3=80.0%  æœŸæœ›HR=9.71%  n=891  æœ€å·®å¹´=55.4%  å¹´æ•°=4
+  é‡‘é¾™å‡è¿+å®½é«˜è¿4: P3=76.9%  æœŸæœ›HR=10.80%  n=5,363  æœ€å·®å¹´=68.4%  å¹´æ•°=21
+
+==========================================================================================
+é‡‘é¾™å‡è¿+å®½é«˜ åŸºç¡€ä¸Šå åŠ æ›´å¤šç»´åº¦ï¼ˆæ‰¾85%+ï¼‰
+==========================================================================================
+åŸºçº¿ é‡‘é¾™å‡è¿+å®½é«˜: P3=77.3%  n=31,841
+  +ç­‰ç±»=ç­‰1: P3=79.1%  n=1,664
+  +æŠ¤çº§=ä¸Š: P3=77.4%  n=31,738
+  +é¡¶è§¦=G1åˆé«˜: P3=79.1%  n=6,158

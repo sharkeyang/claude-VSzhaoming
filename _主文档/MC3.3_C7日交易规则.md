@@ -7980,7 +7980,9 @@ flowchart TD
 
 ---
 
-#### 8.9.8 🎯 周类操作规则定稿（2026-10-12 用户定稿，全量 430 万行验证）
+### 8.10 🎯 周类操作规则（2026-10-12 用户定稿，2026-10-17 从 8.9 独立）
+
+#### 8.10.1 🎯 周类操作规则定稿（2026-10-12 用户定稿，全量 430 万行验证）
 
 > [!IMPORTANT]
 > **🎯 周类操作规则总纲（以龙为必须介入，不以武）：**
@@ -8025,7 +8027,7 @@ flowchart TD
 
 ---
 
-#### 8.9.9 🎯 操作范围与三类介入点（2026-10-15 用户定稿，全量 236.3 万行验证）
+#### 8.10.2 🎯 操作范围与三类介入点（2026-10-15 用户定稿，全量 236.3 万行验证）
 
 <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;border:2px solid #888;margin:8px 0"><tr><td>
 
@@ -8102,7 +8104,7 @@ flowchart TD
 
 </td></tr></table>
 
-#### 8.9.10 🎯 退出条件框架验证（2026-10-15 用户定稿，全量 236.3 万行验证）
+#### 8.10.3 🎯 退出条件框架验证（2026-10-15 用户定稿，全量 236.3 万行验证）
 
 <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;border:2px solid #888;margin:8px 0"><tr><td>
 
@@ -8154,7 +8156,7 @@ flowchart TD
 
 </td></tr></table>
 
-#### 8.9.11 🎯 WXZC>0 非虎下柱冲高分析（2026-10-15 全量验证，2026-10-16 修正口径）
+#### 8.10.4 🎯 WXZC>0 非虎下柱冲高分析（2026-10-15 全量验证，2026-10-16 修正口径）
 
 <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;border:2px solid #888;margin:8px 0"><tr><td>
 
@@ -8248,7 +8250,7 @@ flowchart TD
 
 </td></tr></table>
 
-#### 8.9.11.1 🎯 WXZC>0 护型×柱型 下周冲高率交叉分析（2026-10-16 全量验证）
+#### 8.10.5 🎯 WXZC>0 护型×柱型 下周冲高率交叉分析（2026-10-16 全量验证）
 
 <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;border:2px solid #888;margin:8px 0"><tr><td>
 
@@ -8313,7 +8315,7 @@ flowchart TD
 
 </td></tr></table>
 
-### 8.10 🎯 最小阻力动向理论（2026-10-17 用户理论，全量 236.3 万行验证）
+### 8.11 🎯 最小阻力动向理论（2026-10-17 用户理论，全量 236.3 万行验证）
 
 <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;border:2px solid #888;margin:8px 0"><tr><td>
 

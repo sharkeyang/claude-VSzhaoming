@@ -17,12 +17,8 @@ wk['势型'] = wk['周势型(WXCD护型)'].astype(str)
 wk['WXAB'] = pd.to_numeric(wk['AB周'], errors='coerce')
 wk['WXZB'] = pd.to_numeric(wk['ZB周'], errors='coerce')
 
-# 地型（从周策略P3提取）
-def 提取地型(p3):
-    if pd.isna(p3): return ''
-    f0 = str(p3).split('_')[0]
-    return f0[1:] if len(f0) > 1 else ''
-wk['地型'] = wk['周策略P3'].apply(提取地型)
+# 地型（从地型周列[5]读取，格式 0橅，2026-10-15 重导后周策略P3不再含地型）
+wk['地型'] = wk['地型周'].astype(str)
 
 # 金银
 m_gold = wk['势型'].str.contains('金', na=False)
@@ -51,9 +47,9 @@ m6 = (wk['ZA周'] <= -2) & wk['末位'].isin(['A','B','C','D'])
 m7 = (wk['ZA周'] <= -2) & wk['末位'].isin(['E','F'])
 eqs = [('等1',m1),('等2',m2),('等3',m3),('等5',m5),('等6',m6),('等7',m7)]
 
-# 柱排
-m_up = wk['柱排周'].str.contains('升', na=False)
-m_dn = wk['柱排周'].str.contains('跌', na=False)
+# 柱排（用startswith，contains会把(升)人误判为升排，2026-10-16修正）
+m_up = wk['柱排周'].str.startswith('升')
+m_dn = wk['柱排周'].str.startswith('跌')
 m_ren = ~(m_up | m_dn)
 zp = [('升排',m_up),('人排',m_ren),('跌排',m_dn)]
 

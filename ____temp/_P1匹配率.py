@@ -22,11 +22,8 @@ for l in lines[1:]:
 print(f'P1.txt 共 {len(p1_keys)} 个 key')
 
 # 模拟 VBA 端构造周策略P1
-def 提取地型(p3):
-    if pd.isna(p3): return ''
-    f0 = str(p3).split('_')[0]
-    return f0[1:] if len(f0) > 1 else ''
-wk['地型'] = wk['周策略P3'].apply(提取地型)
+# 地型从地型周列[5]读取（格式 0橅，2026-10-15 重导后周策略P3不再含地型）
+wk['地型'] = wk['地型周'].astype(str)
 wk['WXAB'] = pd.to_numeric(wk['AB周'], errors='coerce')
 wk['WXZB'] = pd.to_numeric(wk['ZB周'], errors='coerce')
 
