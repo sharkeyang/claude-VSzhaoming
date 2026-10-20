@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 """
 生成 vba表周策分P3.txt
-全量周CSV → 按金银×四波×柱型 三维组合计算P3概率
+全量周CSV → 按金银×四波×柱型 计算P3概率，输出两个维度：
+  维度1（周策略P3列）：金银×四波×柱型（不含盈提示），P≥3%≥60% → 13组合，策略名如"金龙Q"
+  维度2（筛选）：金银×四波×柱型+盈提示"高"，P≥3%≥70% → 11组合，策略名如"金龙Q高"
 输出：策略\t编码（期望HR取整(截断9)+等级(G/_)+P3取整）
 金银：金/银/唏（WXZC>0下仅此三类）
 四波：龙/武/虎/雀（WXAB&WXZB）
 柱型：升吞O/升连Q/升孕o/跌吞V/跌连W/跌孕v（并符串周尾字符）
-2026-10-16 新设计：从第一性原理（金银区分度最高18pp）恢复金银维度
+2026-10-19 双维度分层：周策略P3列范围大(≥60%)，筛选把握大(≥70%)
 """
 
 import glob, pandas as pd, os
@@ -15,6 +17,13 @@ import glob, pandas as pd, os
 DATADIR = r'昭明算展/谕组周'
 OUTDIR = r'_产出物/_工具'
 MIN_SAMPLE = 1000
+
+# 维度1：13组合（不含盈提示，P≥3%≥60%）
+DIM1_BASE = ('金龙Q', '金龙O', '银龙Q', '金龙v', '银龙v', '金武Q', '金武O',
+             '金武v', '金武o', '银龙O', '银武Q', '唏龙Q', '唏武O')
+# 维度2：11组合（含盈提示"高"，P≥3%≥70%）
+DIM2_BASE = ('金龙Q', '银龙Q', '金龙O', '唏龙Q', '金龙o', '唏武Q', '金武Q',
+             '银龙O', '金武O', '金龙v', '唏龙O')
 
 def load():
     files = sorted(glob.glob(os.path.join(DATADIR, '谕组周_*.csv')))
@@ -40,13 +49,8 @@ def encode(p3, avg):
     else: g = '_'
     return f'{h}{g}{int(p3):02d}'
 
-def match_strategy(row):
-    """金银×四波×柱型+盈提高 必杀技匹配（2026-10-16 新设计，只保留8组合）。
-    金银：周势型[12]第2字符（金/银/唏）
-    四波：龙=WXAB>0且WXZB>0、武=WXAB<0且WXZB>0、虎=WXAB<0且WXZB<0、雀=WXAB>0且WXZB<0
-    柱型：并符串周[51]尾字符（O升吞/Q升连/o升孕/V跌吞/W跌连/v跌孕），策略名用字母
-    必杀技：金银×四波×柱型字母 + 盈提示含"高"（8组合，P≥3% 70-76%）
-    """
+def get_combo(row):
+    """计算金银×四波×柱型字母 组合名（不含盈提示）。"""
     wxab = row.get('AB周', 0)
     wxzb = row.get('ZB周', 0)
     if pd.isna(wxab): wxab = 0
@@ -72,21 +76,25 @@ def match_strategy(row):
     zx = bf[-1] if bf else ''
     if zx not in ('O', 'Q', 'o', 'V', 'W', 'v'):
         return ''
-    # 盈提示含"高"
-    yt = str(row.get('盈提示', '')) if pd.notna(row.get('盈提示')) else ''
-    if '高' not in yt:
-        return ''
-    # 必杀技8组合
-    combo = f'{jy}{bo}{zx}'
-    if combo in ('金龙Q', '银龙Q', '金龙O', '唏龙Q', '金龙o', '金武Q', '银龙O', '金龙v'):
-        return f'{combo}高'
-    return ''
+    return f'{jy}{bo}{zx}'
 
-print('=== 生成 vba表周策分P3.txt（金银×四波×柱型）===')
+def get_strategies(row):
+    """返回 (维度1策略名, 维度2策略名)。维度1不含盈提示，维度2含盈提示"高"。"""
+    combo = get_combo(row)
+    if not combo:
+        return ('', '')
+    # 维度1：combo 在13组合base名单中（不含盈提示）
+    s1 = combo if combo in DIM1_BASE else ''
+    # 维度2：combo 在11组合base名单中 且 盈提示含"高"
+    yt = str(row.get('盈提示', '')) if pd.notna(row.get('盈提示')) else ''
+    s2 = (combo + '高') if (combo in DIM2_BASE and '高' in yt) else ''
+    return (s1, s2)
+
+print('=== 生成 vba表周策分P3.txt（双维度：周策略P3列≥60% + 筛选≥70%）===')
 wk = load()
-wk['策略'] = wk.apply(match_strategy, axis=1)
-valid = wk[wk['策略'] != '']
-print(f'  有策略: {len(valid)} 行 ({len(valid)/len(wk)*100:.1f}%)')
+strat = wk.apply(get_strategies, axis=1)
+wk['策略1'] = [s[0] for s in strat]   # 维度1：周策略P3列
+wk['策略2'] = [s[1] for s in strat]   # 维度2：筛选
 
 results = []
 # 全量基准
@@ -95,8 +103,17 @@ p3 = round((wk['下周HR'] >= 3).mean() * 100, 1)
 avg = wk['下周HR'].mean()
 results.append(('全量基准', encode(p3, avg), n, p3, avg))
 
-# 各策略组合（样本>=1000）
-for s, m in valid.groupby('策略'):
+# 维度1：13组合（不含盈提示）
+for s, m in wk[wk['策略1'] != ''].groupby('策略1'):
+    n = len(m)
+    if n >= MIN_SAMPLE:
+        p3 = round((m['下周HR'] >= 3).mean() * 100, 1)
+        avg = m['下周HR'].mean()
+        code = encode(p3, avg)
+        results.append((s, code, n, p3, avg))
+
+# 维度2：11组合（含盈提示"高"）
+for s, m in wk[wk['策略2'] != ''].groupby('策略2'):
     n = len(m)
     if n >= MIN_SAMPLE:
         p3 = round((m['下周HR'] >= 3).mean() * 100, 1)
