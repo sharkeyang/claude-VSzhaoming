@@ -1,0 +1,31 @@
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_Ä©Öù·ÇÄ©Öù¶Ô±È.py:50: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  Ä©Öù['´¥ºß'] = Ä©Öù['ÉÏ·û´®ÖÜ'].astype(str).apply(´¥ºß)
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_Ä©Öù·ÇÄ©Öù¶Ô±È.py:51: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  ·ÇÄ©Öù['´¥ºß'] = ·ÇÄ©Öù['ÉÏ·û´®ÖÜ'].astype(str).apply(´¥ºß)
+æœ«æŸ±: 194,430  éžæœ«æŸ±: 183,214
+
+=== æœ«æŸ± vs éžæœ«æŸ± å®Œæ•´ç‰¹å¾åˆ†å¸ƒ ===
+ç‰¹å¾                          æœ«æŸ±       éžæœ«æŸ±        å·®å¼‚
+å·¨æŸ±(å‘¨æ¶¨>=5%)               44.6%     40.7%     +4.0pp
+ä¸­æŸ±(2-5%)                 29.1%     30.0%     -0.8pp
+å°æŸ±(<2%)                  26.3%     29.4%     -3.1pp
+HR>=20%                  10.9%      9.5%     +1.4pp
+HR>=15%                  19.9%     17.5%     +2.4pp
+HR>=10%                  38.3%     34.9%     +3.4pp
+HR>=5%                   73.9%     70.5%     +3.4pp
+è§¦é¡¶                       56.4%     55.0%     +1.5pp
+è§¦å“¼                       14.6%     15.1%     -0.5pp
+æœªè§¦                       28.0%     28.9%     -0.9pp
+å«4(>=40)                  4.1%      3.3%     +0.8pp
+å«3(>=30)                 10.2%      8.4%     +1.8pp
+å«2(>=20)                 28.9%     26.2%     +2.7pp
+å¹³å‡å‘¨æ¶¨                     6.61%     6.33%    +0.28pp
+å¹³å‡HR                    10.58%    10.00%    +0.58pp

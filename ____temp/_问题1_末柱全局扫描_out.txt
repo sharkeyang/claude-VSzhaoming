@@ -1,0 +1,37 @@
+所有升连柱: 377,877
+
+满足最优参数(HR>=15%,周涨>=HR*0.7)的升连柱: 38,311 (10.1%)
+
+其中是末柱(下周跌孕/跌吞): 20,119 (52.5%)
+其中非末柱(下周仍升连): 18,192 (47.5%)
+
+所有升连柱中末柱占比: 51.5%
+最优参数升连柱中末柱占比: 52.5%
+提升: 1.1pp
+
+=== 最优参数升连柱 下周表现 ===
+  下周跌孕: 47.2%
+  下周跌吞: 5.3%
+  下周仍升连: 47.5%
+Traceback (most recent call last):
+  File "C:\ProgramData\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 3791, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 152, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 181, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7080, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: '������'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\@VSwork\VS�����ƻ�VBA�Ż�\____temp\_����1_ĩ��ȫ��ɨ��.py", line 55, in <module>
+    print(f'  ��������: {(opt["������"]<0).mean()*100:.1f}%')
+                          ~~~^^^^^^^^^^
+  File "C:\ProgramData\anaconda3\Lib\site-packages\pandas\core\frame.py", line 3893, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\ProgramData\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 3798, in get_loc
+    raise KeyError(key) from err
+KeyError: '������'

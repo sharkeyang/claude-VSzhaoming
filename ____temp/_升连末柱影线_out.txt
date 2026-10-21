@@ -1,0 +1,45 @@
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_ÉıÁ¬Ä©ÖùÓ°Ïß.py:32: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  Ä©Öù['Ä©Î»Ó°'] = Ä©Öù['ÉÏ·û´®ÖÜ'].astype(str).apply(Ä©Î»Ó°)
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_ÉıÁ¬Ä©ÖùÓ°Ïß.py:33: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  ·ÇÄ©Öù['Ä©Î»Ó°'] = ·ÇÄ©Öù['ÉÏ·û´®ÖÜ'].astype(str).apply(Ä©Î»Ó°)
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_ÉıÁ¬Ä©ÖùÓ°Ïß.py:47: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  Ä©Öù['º¬³¤ÉÏÓ°'] = Ä©Öù['ÉÏ·û´®ÖÜ'].astype(str).apply(º¬³¤ÉÏÓ°)
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_ÉıÁ¬Ä©ÖùÓ°Ïß.py:48: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  ·ÇÄ©Öù['º¬³¤ÉÏÓ°'] = ·ÇÄ©Öù['ÉÏ·û´®ÖÜ'].astype(str).apply(º¬³¤ÉÏÓ°)
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_ÉıÁ¬Ä©ÖùÓ°Ïß.py:56: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  Ä©Öù['ÖÜÕÇ'] = pd.to_numeric(Ä©Öù['ÖÜÕÇ'], errors='coerce')
+D:\@VSwork\VSÕÑÃ÷¼Æ»®VBAÓÅ»¯\____temp\_ÉıÁ¬Ä©ÖùÓ°Ïß.py:57: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  ·ÇÄ©Öù['ÖÜÕÇ'] = pd.to_numeric(·ÇÄ©Öù['ÖÜÕÇ'], errors='coerce')
+=== å‡è¿æœ«æŸ± vs éæœ«æŸ± æœ«ä½å½±çº¿(ä¸Šç¬¦ä¸²å‘¨æœ«ä½) ===
+æœ«ä½å½±             æœ«æŸ±       éæœ«æŸ±        å·®å¼‚
+ä¸Šå½±           56.4%     55.0%     +1.5pp
+é•¿ä¸Šå½±          14.6%     15.1%     -0.5pp
+æ— ä¸Šå½±          28.0%     28.9%     -0.9pp
+
+å«é•¿ä¸Šå½±(B): æœ«æŸ±=42.5%  éæœ«æŸ±=42.5%  å·®å¼‚=-0.0pp
+
+åå­—æ˜Ÿ(|å‘¨æ¶¨|<0.5%): æœ«æŸ±=7.6%  éæœ«æŸ±=8.9%  å·®å¼‚=-1.3pp
