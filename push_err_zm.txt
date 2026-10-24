@@ -1,2 +1,0 @@
-To github.com:sharkeyang/claude-VSzhaoming.git
-   2173881c..08b1931c  master -> master
