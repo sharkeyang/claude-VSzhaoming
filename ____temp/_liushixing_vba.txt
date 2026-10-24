@@ -1,0 +1,66 @@
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: Public Const 位谕of月策略日 = 位谕始of族策 + 14     '月策略日: 龙/唏/嘘/屁 + 强/弱 + 甲后缀
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '注20260526：区分"金银铜屎尿屁"
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '20260526添加前缀：当WXZC＞0，若WXCD＜0，加前缀"铜"；若WXCD＞0，对（a甲b乙r己），加前缀"金"，其余加前缀"银"。对于WXZC＜0，镜面映射，加前缀"屎尿屁"。
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '注20260612：根据WXCD护型，凡是前缀为"屎尿"，都是下降趋势；前缀为"唏嘘"，都是选择方向区；只有"金银"，是上升趋势。
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '  末尾 WXCD前缀（金/银/屎/尿/唏/嘘）标注天时。四波已替代原周层波类列。
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '位1：先根据WXCD确定。【金银唏嘘屎尿】
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '按金银×四波×柱型 匹配（2026-10-19 双维度分层：周策略P3列范围大≥60%，不含盈提示）
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '金银：周势型[12]第2字符（金/银/唏，WXZC>0下仅此三类）
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '维度1：金银×四波×柱型字母（不含盈提示），P≥3%≥60% → 13组合，策略名如"金龙Q"
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: Dim 周金银 As String: 周金银 = Mid$(谕组(X, 位谕of周层势型), 2, 1)
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '金龙Q/金龙O/银龙Q/金龙v/银龙v/金武Q/金武O/金武v/金武o/银龙O/银武Q/唏龙Q/唏武O
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: If 周金银 <> "" And 周P3四波名 <> "" And 周柱型符 <> "" Then
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: Dim 周P3组合 As String: 周P3组合 = 周金银 & 周P3四波名 & 周柱型符
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: If 周P3组合 = "金龙Q" Or 周P3组合 = "金龙O" Or 周P3组合 = "银龙Q" Or 周P3组合 = "金龙v" Or 周P3组合 = "银龙v" Or 周P3组合 = "金武Q" Or 周P3组合 = "金武O" Or 周P3组合 = "金武v" Or 周P3组合 = "金武
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '四波名：基于WXAB&WXZB（龙/虎/武/雀，2026-10-07 替换金银）
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '新格式：四波_地型_等N_柱排（2026-10-07 简化，去掉护型/金银前缀）
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '周WXCD名：值WXCD护型第2位（金/银/屎/尿/唏/嘘）
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '  多被 = ZC>0但CD≤0或ZB≤0 → 子分类：多被(金)=WXCD含金, 多被(银)=WXCD含银, 多被(唏)=WXCD不含金银
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '  DXAB护级(上中下忐忠忑) → 带动 → DXCD护级(上中下忐忠忑) → 带动 → DXEF护级(金银唏嘘屎尿)
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '    同上：上游∈{上,忐} 且 下游∈{上,忐}（DXEF对应：金/银=上忐级）
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: '    同下：上游∈{下,忑} 且 下游∈{下,忑}（DXEF对应：唏嘘尿屎=下忑级）
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: 'DXEF护级：日类金银唏嘘尿屎（仿WXCD护型逻辑，用日类BTEF/日类BTZE/日类BTZF）
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: 'DXCD→DXEF 带动作用（金银唏嘘尿屎 ←→ 上忐下忑映射）
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: If InStr("上忐", 日CD护级) > 0 And InStr("金银", 日EF护级) > 0 Then
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: ElseIf InStr("下忑", 日CD护级) > 0 And InStr("尿屎", 日EF护级) > 0 Then
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: ' 月策略日：龙(金银)/雀(唏)/虎(嘘)/武(屎尿) + 强(上中忐)/弱(下忠忑)
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: ' 忠特殊处理: 嘘尿屎+忠+全部AB → G级
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: If 日EF护级 = "金" Or 日EF护级 = "银" Or 日EF护级 = "唏" Then
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: 'EF好(金银唏)
+昭明计划VS优化_vba\IQQQ跨码_D据擎2神谕.bas :: 'EF差(嘘/屎/尿)
+昭明计划VS优化_vba\IQQQ跨码_D据擎3格程.bas :: '池铜金类在池金银非持仓限额：设置金额上限为2500
+昭明计划VS优化_vba\IQQQ跨码_D据擎3格程.bas :: '                    If InStr(.Cells(1, 位谕of周层势型), "屎") > 0 Or InStr(.Cells(1, 位谕of周层势型), "尿") > 0 Then
+昭明计划VS优化_vba\IQQQ跨码_D据擎3格程.bas :: '注20261002：应用（WXCD区分WXZC之下 嘘尿屎），其余按照是否主升进行着色。
+昭明计划VS优化_vba\IQQQ跨码_D据擎3格程.bas :: 是否EF好 = (DXEF = "金" Or DXEF = "银" Or DXEF = "唏")
+昭明计划VS优化_vba\IQQQ跨码_D据擎4跨码管理.bas :: If ch = "金" Or ch = "银" Then 主升数 = 主升数 + 1
+昭明计划VS优化_vba\IQQQ跨码_D据擎4跨码管理.bas :: If ch = "屎" Or ch = "尿" Then 弱势数 = 弱势数 + 1
+昭明计划VS优化_vba\IQQQ跨码_D据擎4跨码管理.bas :: Dim 策表 As Variant: 策表 = Array("多长(积极)", "多长(消极)", "多长(不定)", "多被(金)", "多被(银)", "多被(唏)", "NA(空看)", "NA(空长)")
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: Dim 计码势型金 As Integer, 计码势型银 As Integer, 计码势型嘘 As Integer, 计码势型唏 As Integer, 计码势型屎 As Integer, 计码势型尿 As Integer
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '筛选=金银×四波×柱型字母+盈提示"高"（11组合，金龙Q高76.3%最强，P≥3% 70-76%）
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: Dim 典策周_必杀技 As New Dictionary   '筛选：金银×四波×柱型+盈提示"高"（11组合，金龙Q高76.3%最强，最高优先级）
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '注意20230101：仅排除（/池持/池黑/池金银非），非排斥性展示（/池今）
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '筛选（把握大，唯一档位）：金银×四波×柱型字母+盈提示"高"（11组合，P≥3% 70-76%）
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: Dim 筛金银 As String: 筛金银 = Mid$(谕组(X, 位谕of周层势型), 2, 1)
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: If 筛金银 <> "" And 筛四波名 <> "" And 筛柱型符 <> "" And InStr(谕组(X, 位谕of周层盈提示), "高") > 0 Then
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: Dim 筛组合 As String: 筛组合 = 筛金银 & 筛四波名 & 筛柱型符
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '金龙Q/银龙Q/金龙O/唏龙Q/金龙o/唏武Q/金武Q/银龙O/金武O/金龙v/唏龙O
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: If 筛组合 = "金龙Q" Or 筛组合 = "银龙Q" Or 筛组合 = "金龙O" Or 筛组合 = "唏龙Q" Or 筛组合 = "金龙o" Or 筛组合 = "唏武Q" Or 筛组合 = "金武Q" Or 筛组合 = "银龙O" Or 筛组合 = "金武O" Or 筛组合 = "金龙v" 
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '过滤：屎尿嘘。仅有大于WJA或WXAB>0可进行观察，其余勿看勿入。
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: MSG = MSG & "计码势型：" & 计码势型金 & "金 " & 计码势型银 & "银 " & 计码势型唏 & "唏 " & 计码势型嘘 & "嘘 " & (计码势型尿 + 计码势型屎) & "屎尿" & vbCrLf
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: Call IQQQ展擎出程至页(WB, 表名, 是否建表:=False, 章色:=常色二橙, 章签:="WXCD勿入：嘘&尿屎")
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '--- 筛选信号（把握大，唯一档位，金银×四波×柱型字母+盈提示"高"，金龙Q高76.3%最强）---
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色十红, 典码输出:=典策周_必杀技, 节签:="? ★★ 筛选【70-76%】<金银×四波×柱型+盈提示高>")
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色六靛, 典码输出:=典策日必赢_DXZE之上DXCD上DXAB护型甲, 节签:="【金银唏】DXZE之上·DXCD上DXAB护型甲")
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色六靛, 典码输出:=典策日必赢_DXZE之上DXCD上DXZC初, 节签:="【金银唏】DXZE之上·DXCD上DXZC初")
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色六靛, 典码输出:=典策日必赢_DXZE之上DXCD中, 节签:="【金银唏】DXZE之上·DXCD中")
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色八靛, 典码输出:=典策日必赢_DXZE之上DXCD忐忠, 节签:="【金银唏】DXZE之上·DXCD忐忠")
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色十青, 典码输出:=典策日必赢_DXZE之下DXCD上中, 节签:="【嘘尿屎】DXZE之下·DXCD上中")
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: Call IQQQ展擎筛程至D0节按通用(WB, 表名, 谕组, 出节模式:=出节模式, 出全是否:=True, 节色:=常色八青, 典码输出:=典策日必赢_DXZE之下DXCD忐忠, 节签:="【嘘尿屎】DXZE之下·DXCD忐忠")
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '    第1位（品质）：金/银/嘘/唏/屎/尿
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '  "周仓" → 按仓周类第2位(cyz)+周层波型(再震负头初储)分金，银始终输出
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '  第1位：金/银/嘘/唏/屎/尿（WXCD品质）
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '注20260614：按仓周类第1位替代原周道仓月InStr模糊匹配。金/银始终输出；嘘唏屎尿由出全是否控制。
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '始终输出（金/银）
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '出全是否控制（嘘/唏/屎/尿）
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '仓周类过滤输出（银始终；嘘唏屎尿由出全是否控制）
+昭明计划VS优化_vba\IQQQ跨码_P展擎1筛选.bas :: '注20230101：将池持放在金银非之后，不打乱池结构
