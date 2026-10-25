@@ -412,14 +412,10 @@ Else
                     Dim 筛金银 As String: 筛金银 = Mid$(谕组(X, 位谕of周层势型), 2, 1)
                     Dim 筛柱型符 As String: 筛柱型符 = Right$(谕组(X, 位谕of周管并符串), 1)
                     Dim 筛四波名 As String
-                    If 谕组(X, 位谕of周类BTAB) > 0 And 谕组(X, 位谕of周类BTZB) > 0 Then
-                        筛四波名 = "龙"
-                    ElseIf 谕组(X, 位谕of周类BTAB) < 0 And 谕组(X, 位谕of周类BTZB) > 0 Then
-                        筛四波名 = "武"
-                    ElseIf 谕组(X, 位谕of周类BTAB) < 0 And 谕组(X, 位谕of周类BTZB) < 0 Then
-                        筛四波名 = "虎"
-                    ElseIf 谕组(X, 位谕of周类BTAB) > 0 And 谕组(X, 位谕of周类BTZB) < 0 Then
-                        筛四波名 = "雀"
+                    If InStr(谕组(X, 位谕of周层波型), "虎") > 0 Then
+                        筛四波名 = Mid$(谕组(X, 位谕of周层波型), 5, 1)
+                    Else
+                        筛四波名 = Mid$(谕组(X, 位谕of周层波型), 3, 1)
                     End If
                     If 筛金银 <> "" And 筛四波名 <> "" And 筛柱型符 <> "" And InStr(谕组(X, 位谕of周层盈提示), "高") > 0 Then
                         Dim 筛组合 As String: 筛组合 = 筛金银 & 筛四波名 & 筛柱型符

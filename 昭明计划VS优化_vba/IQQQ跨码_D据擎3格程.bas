@@ -1002,6 +1002,21 @@ End If
                                 End If
                         End With
                 '========================================================================
+                        With .Cells(1, 位谕of周层Q链)
+                                If .Value = "" Then
+                                ElseIf InStr(.Value, "_") > 0 Then
+                                    .Font.Color = .Interior.Color
+                                    .Font.TintAndShade = -0.1
+                                End If
+                        End With
+                        With .Cells(1, 位谕of日层Q链)
+                                If .Value = "" Then
+                                ElseIf InStr(.Value, "_") > 0 Then
+                                    .Font.Color = .Interior.Color
+                                    .Font.TintAndShade = -0.1
+                                End If
+                        End With
+                '========================================================================
         End With
         '================================================================================
 '########################################################################################
@@ -1102,10 +1117,8 @@ End If
                     End If
                 End With
                 With .Cells(1, 位谕of日层赢)
-                        If .Value = "_禁区" Then
-                            .Font.Color = .Interior.Color
-                            .Font.TintAndShade = -0.1
-                        ElseIf .Value = "_执念" Then
+                        '区分下划线数量：双_=非操作区（禁/念/错）、单_=肋土（第一层必赢）、无_=沃土（第二层必赢，黑色不设置）
+                        If Left$(.Value, 2) = "__" Then
                             .Font.Color = .Interior.Color
                             .Font.TintAndShade = -0.3
                         ElseIf Left$(.Value, 1) = "_" Then

@@ -118,17 +118,19 @@ Public Const 位谕终of族周层 = 位谕始of族周层 + 13
 '指标群：族日层 总结具体买卖操作
 Public Const 位谕始of族日层 = 位谕终of族周层 + 1
 '--------------------------
-Public Const 位谕of日层土型 = 位谕始of族日层 + 0        '日层土型：四土（沃/禁/念/肋），复用仓日类四土部分（20261024 新增）
-Public Const 位谕of日层波型 = 位谕始of族日层 + 1
-Public Const 位谕of日层护型 = 位谕始of族日层 + 2
-Public Const 位谕of日层地型 = 位谕始of族日层 + 3        '日地型：0橅/1柜/2栅/3桮/6娝/7姗/8姖/9妩（20261001 新增）
-Public Const 位谕of日层柱型 = 位谕始of族日层 + 4
-Public Const 位谕of日层界 = 位谕始of族日层 + 5
+Public Const 位谕of日层Q链 = 位谕始of族日层 + 0        '日层Q链：方法日C冲（升连周边战法），基于并符串判断四类前柱排（20261025 新增）
+Public Const 位谕of日层大局 = 位谕始of族日层 + 1        '日层大局：方法日C冲（基于日类BTZC+日AB护级+日波+日层界），仿周层大局（20261025 新增）
+Public Const 位谕of日层土型 = 位谕始of族日层 + 2        '日层土型：四土（沃/禁/念/肋），复用仓日类四土部分（20261024 新增）
+Public Const 位谕of日层波型 = 位谕始of族日层 + 3
+Public Const 位谕of日层护型 = 位谕始of族日层 + 4
+Public Const 位谕of日层地型 = 位谕始of族日层 + 5        '日地型：0橅/1柜/2栅/3桮/6娝/7姗/8姖/9妩（20261001 新增）
+Public Const 位谕of日层柱型 = 位谕始of族日层 + 6
+Public Const 位谕of日层界 = 位谕始of族日层 + 7
 '卖提示包含：/触顶否/高幅（偏幅）/管宽（哼JC）/陡（均线拉开距离）/叠（连续波幅）/连阳数
-Public Const 位谕of日层柱排 = 位谕始of族日层 + 6
-Public Const 位谕of日层等型 = 位谕始of族日层 + 7
+Public Const 位谕of日层柱排 = 位谕始of族日层 + 8
+Public Const 位谕of日层等型 = 位谕始of族日层 + 9
 '--------------------------
-Public Const 位谕终of族日层 = 位谕始of族日层 + 7
+Public Const 位谕终of族日层 = 位谕始of族日层 + 9
 '----------------------------------------------------
 '指标群：族日管
 Public Const 位谕始of族日管 = 位谕终of族日层 + 1
@@ -439,9 +441,9 @@ Public Const 位谕of周策分好 = 位谕始of族策 + 8   '周策分好: 编�
 '--- 月策略
 Public Const 位谕of月策分命 = 位谕始of族策 + 9     '月策分命: 股性分(0~100)，从CSV查表，恶庄天然过滤
 '--- 仓日分类 ---
-Public Const 位谕of日层赢 = 位谕始of族策 + 10   '日层赢: 介A/介B(介入)/持A/持B(持有)/参A/参B(参考)/_弃(回避)，非弃且DXZE<0加前缀_
-Public Const 位谕of仓日期 = 位谕始of族策 + 11   '仓日期: min(DTZE,DTZC)，当前已持有天数。1=刚站上，值越大已持有越久
-Public Const 位谕of仓日类 = 位谕始of族策 + 12
+Public Const 位谕of日层赢 = 位谕始of族策 + 10   '日层赢: 介A/持A(沃土,第二层必赢)/_介A/_持B(肋土,第一层必赢)/__禁/__念/__错(非操作区)
+Public Const 位谕of仓日类 = 位谕始of族策 + 11
+Public Const 位谕of仓日期 = 位谕始of族策 + 12   '仓日期: min(DTZE,DTZC)，当前已持有天数。1=刚站上，值越大已持有越久
 '--- 月策略日 ---
 Public Const 位谕of月策带日 = 位谕始of族策 + 13    '月策带日: (DXAB)同上(DXCD)同上(DXEF) 日级别DXAB→DXCD→DXEF带动
 Public Const 位谕of月策略日 = 位谕始of族策 + 14     '月策略日: 龙/唏/嘘/屁 + 强/弱 + 甲后缀
@@ -497,12 +499,6 @@ Public Const 位谕列终全部 = 位谕终of族月类
 
 
 
-
-'V1 月策分命查表（几何均值）
-'设计思路：命分衡量"金升介入→持有→WXZC<0退出"平均每次能赚多少。
-'  几何均值自然惩罚波动，过滤假信号。命分低的股票天然不参与月策略周。
-'数据源：_产出物\_工具\vba表月策分命.txt（全量7463只回测生成）
-'评分公式：几何均值 = (∏(1+每次收益))^(1/交易次数) - 1
 
 
 
@@ -2161,6 +2157,15 @@ If UBCID是代码(CIDL) = True Then
                         谕组(X, 位谕of周层波型) = 谕组(X, 位谕of周层波型) & "." & Left$(谕组(X, 位谕of周层界), 2)
                 End If
            '============================================================================
+            '值周四波：复用周层波型（第5字符=虎系四波名，第3字符=龙/武/雀）
+            '注20261025：虎系波型带NN前缀（NNAe虎扩根），第5字符=虎；非虎系（Ae龙扩根/NF武/FN雀）第3字符=四波名。
+            '============================================================================
+                Dim 值周四波 As String
+                If InStr(谕组(X, 位谕of周层波型), "虎") > 0 Then
+                    值周四波 = Mid$(谕组(X, 位谕of周层波型), 5, 1)
+                Else
+                    值周四波 = Mid$(谕组(X, 位谕of周层波型), 3, 1)
+                End If
 '########################################################################################
             '============================================================================
             '位谕of日层波型
@@ -2254,7 +2259,6 @@ If UBCID是代码(CIDL) = True Then
                 Else
                         谕组(X, 位谕of日层波型) = 谕组(X, 位谕of日层波型) & "." & Left$(谕组(X, 位谕of日层界), 2)
                 End If
-            '============================================================================
 '########################################################################################
 
 
@@ -2437,7 +2441,7 @@ If UBCID是代码(CIDL) = True Then
             '注20261002：重构为「四波 + 波型前N位 + 龙括号细节 + WXCD前缀」。
             '注20261024：重构为基于周四土（周层土型）+ WXZC + 周波 + 周层界 的操作码判定。
             '  非A/H分支输出纯操作码（Z退/P备）；A入/H持分支在操作码后附加完整原周层大局信息
-            '  （值四波 & 值波型前N & (地型_等型_柱排向) & _WXCD前缀），供操作/持有细节参考。
+            '  （值周四波 & 值波型前N & (地型_等型_柱排向) & _WXCD前缀），供操作/持有细节参考。
             '============================================================================
                 谕组(X, 位谕of周层大局) = ""
                 '------------------------------------------------------------------------
@@ -2448,32 +2452,17 @@ If UBCID是代码(CIDL) = True Then
                     '  雀=升转（丙，WXAB>0且WXZB<0，朱雀转升）
                     '  虎=降主（丁/戊，WXAB<0且WXZB<0，白虎主跌）
                     '  武=降转（己，WXAB<0且WXZB>0，玄武转跌）
-                    Dim 值四波 As String
-                    If Left$(谕组(X, 位谕of周层护型), 1) = "a" Or Left$(谕组(X, 位谕of周层护型), 1) = "b" Then
-                        值四波 = "龙"
-                    ElseIf Left$(谕组(X, 位谕of周层护型), 1) = "r" Then
-                        值四波 = "武"
-                    ElseIf Left$(谕组(X, 位谕of周层护型), 1) = "c" Then
-                        值四波 = "雀"
-                    ElseIf Left$(谕组(X, 位谕of周层护型), 1) = "z" Or Left$(谕组(X, 位谕of周层护型), 1) = "y" Then
-                        值四波 = "虎"
-                    Else
-                        值四波 = "错误"
-                    End If
-                    '四波 + 周层波型前N位（直接相连；虎=降主取4位，其余取2位）
-                    Dim 值波型前N As String
-                    If 值四波 = "虎" Then
-                        值波型前N = Left$(谕组(X, 位谕of周层波型), 4)
-                    Else
-                        值波型前N = Left$(谕组(X, 位谕of周层波型), 2)
-                    End If
                 '------------------------------------------------------------------------
-                '原周层大局完整信息（A/H分支附加用）：值四波 & 值波型前N & (地型_等型_柱排向) & _WXCD前缀
+                '原周层大局完整信息（A/H分支附加用）：值周四波 & 值波型前N & (地型_等型_柱排向) & _WXCD前缀
                 '------------------------------------------------------------------------
                     Dim 值柱排向 As String
                     Dim 值原周层信息 As String
-                    值原周层信息 = 值四波 & 值波型前N
-                    If 值四波 = "龙" Then
+                    If InStr(谕组(X, 位谕of周层波型), "虎") > 0 Then
+                        值原周层信息 = Mid$(谕组(X, 位谕of周层波型), 5, 1) & Left$(谕组(X, 位谕of周层波型), 4)
+                    Else
+                        值原周层信息 = Mid$(谕组(X, 位谕of周层波型), 3, 1) & Left$(谕组(X, 位谕of周层波型), 2)
+                    End If
+                    If InStr(谕组(X, 位谕of周层波型), "龙") > 0 Then
                         '龙=升主时附加括号包裹的 地型_等类_柱排向（柱排向只取 升/跌/人 三类）
                         If Left$(谕组(X, 位谕of周层柱排), 1) = "升" Then
                             值柱排向 = "升"
@@ -2497,9 +2486,9 @@ If UBCID是代码(CIDL) = True Then
                         If InStr(谕组(X, 位谕of周层土型), "念") > 0 Then
                                 谕组(X, 位谕of周层大局) = "P备A2储" 'A2代表WXAB正交
                         ElseIf InStr(谕组(X, 位谕of周层土型), "肋") > 0 Then
-                            If 值四波 = "龙" Then
+                            If 值周四波 = "龙" Then
                                 谕组(X, 位谕of周层大局) = "P备A1储" 'A2代表WXAB正交
-                            ElseIf 值四波 = "武" Then
+                            ElseIf 值周四波 = "武" Then
                                 谕组(X, 位谕of周层大局) = "P备B3储" 'B代表WXAB负交
                             Else
                                 谕组(X, 位谕of周层大局) = "Z退x弃"
@@ -2509,7 +2498,7 @@ If UBCID是代码(CIDL) = True Then
                         If InStr(谕组(X, 位谕of周层土型), "肋") > 0 Then
                                 谕组(X, 位谕of周层大局) = "P备B2再" 'B代表WXAB负交
                         ElseIf InStr(谕组(X, 位谕of周层土型), "沃") > 0 Then
-                            If 值四波 = "武" Then
+                            If 值周四波 = "武" Then
                                 谕组(X, 位谕of周层大局) = "P备B1初" 'B代表WXAB负交
                             ElseIf Left$(谕组(X, 位谕of周层界), 1) = "初" Then
                                 谕组(X, 位谕of周层大局) = "A入A初"
@@ -2519,9 +2508,9 @@ If UBCID是代码(CIDL) = True Then
                                 谕组(X, 位谕of周层大局) = "H持G主"
                             End If
                         ElseIf InStr(谕组(X, 位谕of周层土型), "念") > 0 Then
-                            If 值四波 = "龙" Then
+                            If 值周四波 = "龙" Then
                                 谕组(X, 位谕of周层大局) = "H持e根"
-                            ElseIf 值四波 = "雀" Then
+                            ElseIf 值周四波 = "雀" Then
                                 谕组(X, 位谕of周层大局) = "H持v破"
                             Else
                                 谕组(X, 位谕of周层大局) = "Z退y虎"
@@ -2561,6 +2550,82 @@ If UBCID是代码(CIDL) = True Then
                     ElseIf Right$(值并符串, 3) = 常枚并符升连 & 常枚并符跌孕 & 常枚并符跌连 _
                         Or Right$(值并符串, 3) = 常枚并符升连 & 常枚并符跌吞 & 常枚并符跌连 Then
                         谕组(X, 位谕of周层Q链) = Left$(谕组(X, 位谕of周层大局), 1) & "④"
+                    End If
+                End If
+            '============================================================================
+'########################################################################################
+            '============================================================================
+            '位谕of日层大局（方法日C冲：基于日类BTZC + 日AB护级 + 日波 + 日层界）
+            '注20261025：仿周层大局，不用日层土型映射，直接用 日类BTZC + 位os层护级AB 判断四土（照搬周层土型逻辑）。
+            '============================================================================
+                谕组(X, 位谕of日层大局) = ""
+                Dim 日AB护级 As String
+                日AB护级 = Left$(组结算(X, 基位日类 + 位os层护级AB), 1)   '上/中/下/忐/忠/忑
+                Dim 值日四波 As String
+                If InStr(谕组(X, 位谕of日层波型), "虎") > 0 Then
+                    值日四波 = Mid$(谕组(X, 位谕of日层波型), 5, 1)
+                Else
+                    值日四波 = Mid$(谕组(X, 位谕of日层波型), 3, 1)
+                End If
+                If 日类BTZC < 0 And InStr("下忑", 日AB护级) > 0 Then
+                    谕组(X, 位谕of日层大局) = "Z退z禁"
+                ElseIf 日类BTZC < 0 Then
+                    If InStr("中下忑", 日AB护级) > 0 Then
+                        谕组(X, 位谕of日层大局) = "P备A2储"
+                    ElseIf InStr("忠上忐", 日AB护级) > 0 Then
+                        If 值日四波 = "龙" Then
+                            谕组(X, 位谕of日层大局) = "P备A1储"
+                        ElseIf 值日四波 = "武" Then
+                            谕组(X, 位谕of日层大局) = "P备B3储"
+                        Else
+                            谕组(X, 位谕of日层大局) = "Z退x弃"
+                        End If
+                    End If
+                Else
+                    If InStr("忠", 日AB护级) > 0 Then
+                        谕组(X, 位谕of日层大局) = "P备B2再"
+                    ElseIf InStr("上忐", 日AB护级) > 0 Then
+                        If 值日四波 = "武" Then
+                            谕组(X, 位谕of日层大局) = "P备B1初"
+                        ElseIf Left$(谕组(X, 位谕of日层界), 1) = "初" Then
+                            谕组(X, 位谕of日层大局) = "A入A初"
+                        ElseIf Left$(谕组(X, 位谕of日层界), 1) = "再" Then
+                            谕组(X, 位谕of日层大局) = "A入B再"
+                        Else
+                            谕组(X, 位谕of日层大局) = "H持G主"
+                        End If
+                    ElseIf InStr("中下忑", 日AB护级) > 0 Then
+                        If 值日四波 = "龙" Then
+                            谕组(X, 位谕of日层大局) = "H持e根"
+                        ElseIf 值日四波 = "雀" Then
+                            谕组(X, 位谕of日层大局) = "H持v破"
+                        Else
+                            谕组(X, 位谕of日层大局) = "Z退y虎"
+                        End If
+                    End If
+                End If
+            '============================================================================
+            '位谕of日层Q链（方法日C冲：升连周边战法）
+            '注20261025：仿周层Q链，基于日类并符串判断四类前柱排，输出 日层大局首字符+①/②/③/④。
+            '  前提：日层大局首字符 = A/H/P（介入/持有/备选，可操作范围）。
+            '============================================================================
+                谕组(X, 位谕of日层Q链) = "_"
+                If Left$(谕组(X, 位谕of日层大局), 1) = "A" Or Left$(谕组(X, 位谕of日层大局), 1) = "H" Or Left$(谕组(X, 位谕of日层大局), 1) = "P" Then
+                    Dim 值日并符串 As String
+                    值日并符串 = 组结算(X, 基位日类 + 位os具并符串)
+                    If Right$(值日并符串, 3) = 常枚并符升连 & 常枚并符跌孕 & 常枚并符升吞 _
+                    Or Right$(值日并符串, 3) = 常枚并符升连 & 常枚并符跌孕 & 常枚并符升孕 _
+                    Or Right$(值日并符串, 3) = 常枚并符升连 & 常枚并符跌吞 & 常枚并符升吞 _
+                    Or Right$(值日并符串, 3) = 常枚并符升连 & 常枚并符跌吞 & 常枚并符升孕 Then
+                        谕组(X, 位谕of日层Q链) = Left$(谕组(X, 位谕of日层大局), 1) & "③"
+                    ElseIf Right$(值日并符串, 1) = 常枚并符升连 Then
+                        谕组(X, 位谕of日层Q链) = Left$(谕组(X, 位谕of日层大局), 1) & "①" & 组结算(X, 基位日类 + 位osBTPR0)
+                    ElseIf Right$(值日并符串, 2) = 常枚并符升连 & 常枚并符跌孕 _
+                        Or Right$(值日并符串, 2) = 常枚并符升连 & 常枚并符跌吞 Then
+                        谕组(X, 位谕of日层Q链) = Left$(谕组(X, 位谕of日层大局), 1) & "②"
+                    ElseIf Right$(值日并符串, 3) = 常枚并符升连 & 常枚并符跌孕 & 常枚并符跌连 _
+                        Or Right$(值日并符串, 3) = 常枚并符升连 & 常枚并符跌吞 & 常枚并符跌连 Then
+                        谕组(X, 位谕of日层Q链) = Left$(谕组(X, 位谕of日层大局), 1) & "④"
                     End If
                 End If
             '============================================================================
@@ -2666,6 +2731,7 @@ If UBCID是代码(CIDL) = True Then
                         If 日类BTZE < 0 Then
                             值日层赢 = 值日层赢 & "_" 
                         End If
+                        '重视DXBC的作用，对于初始介入进行提示
                         If Left$(谕组(X, 位谕of日层界), 1) = "储" Or Left$(谕组(X, 位谕of日层界), 1) = "初" Then
                             值日层赢 = 值日层赢 & "介"
                         Else
@@ -2746,9 +2812,9 @@ If UBCID是代码(CIDL) = True Then
             '============================================================================
             '日层赢：综合DXZE×DXCD×DXAB，先定第2位分类，再按DXZE加前缀
             '--------------------------------------------------------------------
-            '位1：周方向（四波：龙/雀/虎/武，复用周层大局的值四波）
+            '位1：周方向（四波：龙/雀/虎/武，复用周层大局的值周四波）
             '--------------------------------------------------------------------
-            Dim 周向 As String: 周向 = 值四波
+            Dim 周向 As String: 周向 = 值周四波
             '--------------------------------------------------------------------
             '位2：临幅（两位：周高幅态 + 周涨跌向）
             '--------------------------------------------------------------------
@@ -2851,7 +2917,7 @@ If UBCID是代码(CIDL) = True Then
             '主战场：①金②层段=甲乙（对于日级别，只针对WXAB＞0）
             '是否要求WXAB＞0：要求，只要"甲乙"就可以；"已"存续时间太短，且存在不确定性；"丙"属于已下破WJB，可能有机会，但更多机会存在于"甲乙"。
             '----------------------------------------------------------------------------
-            ElseIf 值四波 = "龙" And 周类BTZC > 0 Then
+            ElseIf 值周四波 = "龙" And 周类BTZC > 0 Then
                 If InStr(谕组(X, 位谕of周层波型), "龙扩根") > 0 Then
                     '排除：龙扩根（下破WJA，下周冲高率48.80%低于基线，下周ZA<0高达75%）
                 ElseIf InStr(谕组(X, 位谕of周层波型), "龙震根") > 0 Then
@@ -2874,7 +2940,7 @@ If UBCID是代码(CIDL) = True Then
                     是否提供日漏信息 = True
                 Else
                     '龙扩猪/栅/杂 ：首选/可靠（下周冲高率>53%）
-                    '注：本分支在值四波="龙"内，护型首字母=a/b（甲/乙），故护型第2位只可能是甲/乙，不可能是己（己=武态）或丙（丙=WXAB>0且WXZB<0，不在龙分支）。
+                    '注：本分支在值周四波="龙"内，护型首字母=a/b（甲/乙），故护型第2位只可能是甲/乙，不可能是己（己=武态）或丙（丙=WXAB>0且WXZB<0，不在龙分支）。
                     '护型第2位（甲/乙）+ WTZA位置分级：WTZA≥2→"②"，WTZA=1→"①"。②/①是WTZA位置分级，非护型（WTZA≥2时甲乙都可能，WTZA=1时护型仍为甲/乙）。
                     值日层漏提示 = 值日层漏提示 & "扩"
                     If 周类BTZA >= 2 Then
@@ -3093,15 +3159,7 @@ If UBCID是代码(CIDL) = True Then
             Dim 周金银 As String: 周金银 = Mid$(谕组(X, 位谕of周层势型), 2, 1)
             Dim 周柱型符 As String: 周柱型符 = Right$(谕组(X, 位谕of周管并符串), 1)
             Dim 周P3四波名 As String
-            If 谕组(X, 位谕of周类BTAB) > 0 And 谕组(X, 位谕of周类BTZB) > 0 Then
-                周P3四波名 = "龙"   '升主龙：WXAB>0且WXZB>0
-            ElseIf 谕组(X, 位谕of周类BTAB) < 0 And 谕组(X, 位谕of周类BTZB) > 0 Then
-                周P3四波名 = "武"   '降转武：WXAB<0且WXZB>0
-            ElseIf 谕组(X, 位谕of周类BTAB) < 0 And 谕组(X, 位谕of周类BTZB) < 0 Then
-                周P3四波名 = "虎"   '降主虎：WXAB<0且WXZB<0
-            ElseIf 谕组(X, 位谕of周类BTAB) > 0 And 谕组(X, 位谕of周类BTZB) < 0 Then
-                周P3四波名 = "雀"   '升转雀：WXAB>0且WXZB<0
-            End If
+            周P3四波名 = 值周四波   '复用值周四波（基于周层波型）
             '维度1：13组合（不含盈提示，P≥3%≥60%）
             '金龙Q/金龙O/银龙Q/金龙v/银龙v/金武Q/金武O/金武v/金武o/银龙O/银武Q/唏龙Q/唏武O
             If 周金银 <> "" And 周P3四波名 <> "" And 周柱型符 <> "" Then
@@ -3142,15 +3200,7 @@ If UBCID是代码(CIDL) = True Then
             End If
             '四波名：基于WXAB&WXZB（龙/虎/武/雀，2026-10-07 替换金银）
             Dim 周P1四波名 As String
-            If 谕组(X, 位谕of周类BTAB) > 0 And 谕组(X, 位谕of周类BTZB) > 0 Then
-                周P1四波名 = "龙"   '升主龙：WXAB>0且WXZB>0
-            ElseIf 谕组(X, 位谕of周类BTAB) < 0 And 谕组(X, 位谕of周类BTZB) > 0 Then
-                周P1四波名 = "武"   '降转武：WXAB<0且WXZB>0
-            ElseIf 谕组(X, 位谕of周类BTAB) < 0 And 谕组(X, 位谕of周类BTZB) < 0 Then
-                周P1四波名 = "虎"   '降主虎：WXAB<0且WXZB<0
-            ElseIf 谕组(X, 位谕of周类BTAB) > 0 And 谕组(X, 位谕of周类BTZB) < 0 Then
-                周P1四波名 = "雀"   '升转雀：WXAB>0且WXZB<0
-            End If
+            周P1四波名 = 值周四波   '复用值周四波（基于周层波型）
             '新格式：四波_地型_等N_柱排（2026-10-07 简化，去掉护型/金银前缀）
             '2026-10-16 修复：原用未赋值变量"周等类"(VBA默认空串)导致P1策略名等类为空,查表永远失败→P1为空。改用谕组(X,位谕of周层等型)(等周[6]列,格式"等1")
             周策略P1 = 周P1四波名 & "_" & 组结算(X, 基位周类 + 位os层地型) & "_" & 谕组(X, 位谕of周层等型) & "_" & 周P1柱排向
@@ -3334,6 +3384,8 @@ If UBCID是代码(CIDL) = True Then
             Dim 月策分命 As Double: 月策分命 = 0
 
             'V1 月策分命（几何均值）— 从CSV查表
+            '设计思路：命分衡量"金升介入→持有→WXZC<0退出"平均每次能赚多少。
+            '  几何均值自然惩罚波动，过滤假信号。命分低的股票天然不参与月策略周。
             'CSV路径：_产出物\_工具\vba表月策分命.txt，按代码(CIDL)匹配
             '评分公式：几何均值 = (∏(1+每次收益))^(1/交易次数) - 1
             '评级：仁慈>=20分 / 正常10~20分 / 震荡0~10分
@@ -3353,7 +3405,7 @@ If UBCID是代码(CIDL) = True Then
             '    压：  上游∈{下,忑} 但 下游不在{下,忑}
             '    待定：上游∈{中,忠}
             '============================================================================
-            Dim 日AB护级 As String, 日EF护级 As String
+            Dim 日EF护级 As String
             Dim 日AB促CD As String, 日CD促EF As String
             '--------------------------------------------------------------------
             '取三级护级
@@ -5325,7 +5377,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '------------------------------------------------------------------------------------
     With WS.Columns(基列)
         .Columns(位谕of周层界).ColumnWidth = 7.5
-        .Columns(位谕of周层Q链).ColumnWidth = 5
+        .Columns(位谕of周层Q链).ColumnWidth = 4
         .Columns(位谕of周层大局).ColumnWidth = 21
         .Columns(位谕of周层势型).ColumnWidth = 8
         .Columns(位谕of周层土型).ColumnWidth = 2
@@ -5605,6 +5657,8 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of日层护型) = "护型DXAB"
         .Cells(1, 位谕of日层地型) = "日地型"
         .Cells(1, 位谕of日层土型) = "土型" & vbCrLf & "日"
+        .Cells(1, 位谕of日层大局) = "大局" & vbCrLf & "日"
+        .Cells(1, 位谕of日层Q链) = "Q链" & vbCrLf & "日"
         .Cells(1, 位谕of日层波型) = "波型"
         .Cells(1, 位谕of日层柱型) = "柱型DJA"
         .Cells(1, 位谕of日层界) = "层界"
@@ -5638,6 +5692,8 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层界).Interior.TintAndShade = -0.6
         .Columns(位谕of日层护型).Interior.TintAndShade = -0.1
         .Columns(位谕of日层土型).Interior.TintAndShade = 0.2
+        .Columns(位谕of日层Q链).Interior.TintAndShade = 0.2
+        .Columns(位谕of日层大局).Interior.TintAndShade = 0.1
         .Columns(位谕of日层波型).Interior.TintAndShade = -0.3
         .Columns(位谕of日层柱型).Interior.TintAndShade = -0.5
         .Columns(位谕of日层柱排).Interior.TintAndShade = -0.5
@@ -5646,6 +5702,8 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层护型).ColumnWidth = 8
         .Columns(位谕of日层地型).ColumnWidth = 3
         .Columns(位谕of日层土型).ColumnWidth = 2
+        .Columns(位谕of日层Q链).ColumnWidth = 4
+        .Columns(位谕of日层大局).ColumnWidth = 6
         .Columns(位谕of日层波型).ColumnWidth = 9
         .Columns(位谕of日层柱型).ColumnWidth = 6
         .Columns(位谕of日层界).ColumnWidth = 6
@@ -6656,8 +6714,9 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周策分好).Interior.Color = 常色五灰
         .Columns(位谕of日策分坏).Interior.Color = 常色四灰
         .Columns(位谕of日策分好).Interior.Color = 常色五灰
-        .Columns(位谕of仓日类).Interior.TintAndShade = -0.3
-        .Columns(位谕of日层赢).Interior.TintAndShade = -0.2
+        .Columns(位谕of日层赢).Interior.TintAndShade = -0.3
+        .Columns(位谕of仓日类).Interior.TintAndShade = -0.2
+        .Columns(位谕of仓日期).Interior.TintAndShade = -0.1
         .Columns(位谕of策传).Interior.Color = 常色四灰
         .Columns(位谕of月策分命).Interior.Color = 常色五碧
         .Columns(位谕of月策带日).Interior.Color = 常色四碧
