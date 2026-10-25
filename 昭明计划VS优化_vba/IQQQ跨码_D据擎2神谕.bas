@@ -3638,6 +3638,7 @@ If UBCID是代码(CIDL) = True Then
                     Dim 等策分 As Double: 等策分 = 0
                     '第3级：等高线 + 第4级：条件评分
                     '注20260907：等值变量在fe4ac68重构中被删除，改用日等类（等高线分类，逻辑等价）
+                    日等类 = 谕组(X, 位谕of日层等型)   '修复20261025：日等类从未赋值，导致等高线分支全部不匹配
                     If 日等类 = "等3" Then
                         If 等BSHA5 And 等连阳2 Then
                             等策略名 = "等3.偏5连门": 等策分 = 58
@@ -5175,7 +5176,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
     With WS.Cells(基行, 基列)
         .Cells(1, 位谕of周龟极折) = "极折" & vbCrLf & "周今"
         .Cells(1, 位谕of周龟顶态) = "顶态" & vbCrLf & "周今"
-        .Cells(1, 位谕of周龟顶触) = "顶触类" & vbCrLf & "周"
+        .Cells(1, 位谕of周龟顶触) = "顶触" & vbCrLf & "周"
         .Cells(1, 位谕of周龟顶型) = "顶型" & vbCrLf & "周今"
         
         .Cells(1, 位谕of周龟BT顶) = "顶t" & vbCrLf & "周今"
@@ -5339,14 +5340,14 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '------------------------------------------------------------------------------------
      With WS.Cells(基行, 基列)
         .Cells(1, 位谕of周层Q链) = "Q链" & vbCrLf & "周"
-        .Cells(1, 位谕of周层大局) = "大局(四波+波型+WXCD)" & vbCrLf & "周"
-        .Cells(1, 位谕of周层势型) = "周势型" & vbCrLf & "周"
+        .Cells(1, 位谕of周层大局) = "大局" & vbCrLf & "周"
+        .Cells(1, 位谕of周层势型) = "势型" & vbCrLf & "周"
         .Cells(1, 位谕of周层土型) = "土型" & vbCrLf & "周"
-        .Cells(1, 位谕of周层界) = "层界=范围" & vbCrLf & "周"
+        .Cells(1, 位谕of周层界) = "层界" & vbCrLf & "周"
         .Cells(1, 位谕of周层护型) = "护型WXAB" & vbCrLf & "周"
-        .Cells(1, 位谕of周层地型) = "周地型" & vbCrLf & "周"
+        .Cells(1, 位谕of周层地型) = "地型" & vbCrLf & "周"
         .Cells(1, 位谕of周层等型) = "等周"
-        .Cells(1, 位谕of周层波型) = "波型（扩震头）" & vbCrLf & "周"
+        .Cells(1, 位谕of周层波型) = "波型" & vbCrLf & "周"
         .Cells(1, 位谕of周层柱型) = "柱型WJA" & vbCrLf & "周"
         .Cells(1, 位谕of周层柱排) = "柱排" & vbCrLf & "周"
         .Cells(1, 位谕of周层盈提示) = "盈提示" & vbCrLf & "周"
@@ -5373,7 +5374,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
     End With
     With WS.Columns(基列)
         .Columns(位谕of周层界).Interior.TintAndShade = -0.2
-        .Columns(位谕of周层Q链).Interior.TintAndShade = 0.15
+        .Columns(位谕of周层Q链).Interior.TintAndShade = -0.5
         .Columns(位谕of周层大局).Interior.TintAndShade = 0.1
         .Columns(位谕of周层势型).Interior.TintAndShade = 0.1
         .Columns(位谕of周层土型).Interior.TintAndShade = 0.2
@@ -5668,16 +5669,16 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '列：日层
     '------------------------------------------------------------------------------------
     With WS.Cells(基行, 基列)
-        .Cells(1, 位谕of日层护型) = "护型DXAB"
-        .Cells(1, 位谕of日层地型) = "日地型"
+        .Cells(1, 位谕of日层护型) = "护型DXAB" & vbCrLf & "日"
+        .Cells(1, 位谕of日层地型) = "地型" & vbCrLf & "日"
         .Cells(1, 位谕of日层土型) = "土型" & vbCrLf & "日"
         .Cells(1, 位谕of日层大局) = "大局" & vbCrLf & "日"
         .Cells(1, 位谕of日层Q链) = "Q链" & vbCrLf & "日"
-        .Cells(1, 位谕of日层波型) = "波型"
+        .Cells(1, 位谕of日层波型) = "波型" & vbCrLf & "日"
         .Cells(1, 位谕of日层柱型) = "柱型DJA"
-        .Cells(1, 位谕of日层界) = "层界"
-        .Cells(1, 位谕of日层柱排) = "柱排"
-        .Cells(1, 位谕of日层等型) = "等日"
+        .Cells(1, 位谕of日层界) = "层界" & vbCrLf & "日"
+        .Cells(1, 位谕of日层柱排) = "柱排" & vbCrLf & "日"
+        .Cells(1, 位谕of日层等型) = "等型" & vbCrLf & "日"
     End With
     With WS.Columns(基列)
         With .Columns(位谕始of族日层).Borders(xlEdgeLeft)
@@ -5706,7 +5707,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层界).Interior.TintAndShade = -0.6
         .Columns(位谕of日层护型).Interior.TintAndShade = -0.1
         .Columns(位谕of日层土型).Interior.TintAndShade = 0.2
-        .Columns(位谕of日层Q链).Interior.TintAndShade = 0.2
+        .Columns(位谕of日层Q链).Interior.TintAndShade = -0.05
         .Columns(位谕of日层大局).Interior.TintAndShade = 0.1
         .Columns(位谕of日层波型).Interior.TintAndShade = -0.3
         .Columns(位谕of日层柱型).Interior.TintAndShade = -0.5
@@ -5866,8 +5867,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of日道护周部) = "周部" & vbCrLf & "日"
         .Cells(1, 位谕of日道护日部) = "地部" & vbCrLf & "日"
         .Cells(1, 位谕of日道护日龄) = "龄龙" & vbCrLf & "日"
-        .Cells(1, 位谕of日道护日护) = "地护" & vbCrLf & "日"
-        
+        .Cells(1, 位谕of日道护日护) = "地护" & vbCrLf & "日"        
         .Cells(1, 位谕of日道奏启) = "启丘" & vbCrLf & "风险部DE"
         .Cells(1, 位谕of日道奏数DE叉DC) = "#DC" & vbCrLf & "上DE"
         .Cells(1, 位谕of日道奏数DE叉CB) = "#CB" & vbCrLf & "上DE"
@@ -6229,7 +6229,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '首行
     '------------------------------------------------------------------------------------
     With WS.Cells(基行, 基列)
-        .Cells(1, 位谕of周基乾局) = "周乾局"
+        .Cells(1, 位谕of周基乾局) = "乾局" & vbCrLf & "周"
         .Cells(1, 位谕of周基月局) = "月局" & vbCrLf & "周"
         .Cells(1, 位谕of周基周局) = "周局" & vbCrLf & "周"
     End With
@@ -6773,7 +6773,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         
         .Columns(位谕of日层机警).HorizontalAlignment = xlLeft
         .Columns(位谕of日层机警).ColumnWidth = 8
-        .Columns(位谕of日层漏提示).ColumnWidth = 16
+        .Columns(位谕of日层漏提示).ColumnWidth = 20
         .Columns(位谕of日层漏提示).HorizontalAlignment = xlLeft
         .Columns(位谕of日层联动).ColumnWidth = 11
 
