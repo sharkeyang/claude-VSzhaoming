@@ -891,6 +891,14 @@ End If
                                     .Font.Color = 常色六黄
                                 End If
                         End With
+                        With .Cells(1, 位谕of周层联动)
+                                If .Value = "" Then
+                                ElseIf InStr(.Value, "×") > 0 Then
+                                    .Font.Color = 常色三红
+                                ElseIf InStr(.Value, "截") > 0 Then
+                                    .Font.Color = 常色五红
+                                End If
+                        End With
                         With .Cells(1, 位谕of日层波型)
                                 If .Value = "" Then
                                 ElseIf InStr(.Value, "NN") > 0 Then
