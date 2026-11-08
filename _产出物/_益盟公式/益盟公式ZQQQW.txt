@@ -62,7 +62,7 @@ PARTLINE(JA,  1, RGB(  0,111,111))     ,LAYER3,LINETHICK2,dotline;
 PARTLINE(JZ,  1, RGB( 66,  0,  0))     ,LAYER3,LINETHICK1;
 
 PARTLINE(JG,  周期条件DT8,  RGB(77, 99,99))     ,LAYER4,LINETHICK6;
-PARTLINE(JF,  周期条件DT8,  RGB(88,  0,  0))     ,LAYER4,LINETHICK7;
+PARTLINE(JF,  周期条件DT8,  RGB(77,  0,  0))     ,LAYER4,LINETHICK9;
 PARTLINE(JE,  周期条件DT8L, RGB(88,88,  0))     ,LAYER4,LINETHICK9;
 PARTLINE(JD,  周期条件DT8L, RGB(166,0,  0))     ,LAYER4,LINETHICK5;
 PARTLINE(JC,  周期条件DT8L, RGB(166,166,0))     ,LAYER4,LINETHICK5;
@@ -193,7 +193,7 @@ IFS(周期条件DT8, 四土日,
 {--- 四土背景色 ---}
 DRAWGBK (四土='沃', RGB( 20, 45, 20)), LAYER7;
 DRAWGBK (四土='念', RGB( 20, 20, 45)), LAYER7;
-DRAWGBK (四土='肋', RGB( 33, 33, 33)), LAYER7;
+DRAWGBK (四土='肋', RGB( 11, 11, 11)), LAYER7;
 DRAWGBK (四土='禁', RGB( 55, 0, 0)), LAYER7;
 {===================================================================================}
 {--- 四波：龙/武/虎/雀（WXAB×WXZB，2026-10-12）---}
@@ -466,5 +466,40 @@ STICKLINE(周期条件DT9 and ref(month,1)<>month,JA,JC,0.1,-1000),COLORblue,lay
 {--- DJEDC之上仓位操作分类（仅日线）---}
 DDJA之上 := 均线条件JZ上JA;
 上破DJA三柱内 := DDJA之上 and REF(NOT(DDJA之上), 1) and NOT(REF(NOT(DDJA之上), 2));
+
+{===================================================================================}
+{=================================  §6.8 方法日X四土  ==============================}
+{--- 镜面操作规则（仅日线DT8）：C+D持有、C-D退出、中间区不变、DJE降级试仓 ---}
+{--- 两线边界：C+D(两线之上)=持有侧，C-D(两线之下)=退出侧，中间区不变 ---}
+{--- DJE降级：C+D但破DJE(ZE-)降为试仓（半仓），C+D且DJE在上(ZE+)持有 ---}
+{===================================================================================}
+{--- 状态判定 ---}
+日X_CD之上 := 均线条件JZ上JC and 均线条件JZ上JD;       {C+D：DJC和DJD都在上}
+日X_CD之下 := NOT(均线条件JZ上JC) and NOT(均线条件JZ上JD); {C-D：DJC和DJD都在下}
+日X_中间区 := (均线条件JZ上JC or 均线条件JZ上JD) and NOT(日X_CD之上) and NOT(日X_CD之下);
+日X_ZE之上 := DJE之上;                                   {DJE在上}
+日X_ZE之下 := DJE之下;                                   {DJE在下}
+
+{--- 镜面操作规则：路径跟踪（用BARSLAST判断从哪边进入中间区）---}
+{--- 距上次C+D更近=从持有侧降入=持有；距上次C-D更近=从退出侧升入=退出 ---}
+日X_距CD上 := BARSLAST(日X_CD之上);   {距上次C+D的K线数}
+日X_距CD下 := BARSLAST(日X_CD之下);   {距上次C-D的K线数}
+日X_从持有侧 := 日X_中间区 and (日X_距CD上 < 日X_距CD下);  {距C+D更近=从持有侧降入}
+日X_从退出侧 := 日X_中间区 and (日X_距CD上 > 日X_距CD下);  {距C-D更近=从退出侧升入}
+
+{--- DJE降级：C+D但破DJE=试仓（半仓）---}
+日X_试仓 := 日X_CD之上 and 日X_ZE之下;                        {C+D+ZE-试仓}
+日X_持有 := 日X_CD之上 and 日X_ZE之上;                         {C+D+ZE+（3线）持有}
+
+{--- 操作信号输出（一个变量显示）---}
+日X操作 :=
+IFS(周期条件DT8 and 日X_持有, '持',
+IFS(周期条件DT8 and 日X_试仓, '试',
+IFS(周期条件DT8 and 日X_从持有侧, '持',     {中间区保持持有}
+IFS(周期条件DT8 and 日X_从退出侧, '退',     {中间区保持退出}
+IFS(周期条件DT8 and 日X_CD之下, '退',       {C-D退出}
+'')))));
+日X操作,DRAWNULL,COLORgray;
+{===================================================================================}
 
 
