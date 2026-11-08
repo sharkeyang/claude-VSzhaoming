@@ -2743,36 +2743,45 @@ If UBCID是代码(CIDL) = True Then
                 Dim DXAB护段 As String
                 If Len(日层护型) >= 2 Then DXAB护段 = Mid$(日层护型, 2, 1)
                 '日CD护级已由仓日类块（line 2525）从原始源 组结算(X, 基位日类 + 位os层护级CD) 取值，此处不再重复提取
-    
-                '异常处理：月策带日格式异常或DXCD护级为空 → _弃
-                If 日CD护级 = "" Then
-                    值日层赢 = "__错"
+                Dim 日X土型 As String: 日X土型 = 谕组(X, 位谕of日层土型)   '沃/禁/念/肋
+
+                '§6.8 方法日X四土：镜面操作规则（2026-11-08 改造）
+                'C+D（两线之上）+ DXZE>0 → 持（持有，3线）
+                'C+D（两线之上）+ DXZE<0 → 试（试仓，2线破DJE）
+                'C-D（两线之下）→ _（退出/禁止）
+                '中间区 → 按DXZE：DXZE>0=持，DXZE<0=试
+                '输出格式：操作+四土+护段（如 持沃B / 试肋B / _禁 / _念）
+                Dim 日X_CD之上 As Boolean: 日X_CD之上 = (日类BTZC > 0 And 日类BTZD > 0)
+                Dim 日X_CD之下 As Boolean: 日X_CD之下 = (日类BTZC < 0 And 日类BTZD < 0)
+
+                '护段映射（保留原逻辑）
+                Dim 日X护段码 As String: 日X护段码 = ""
+                If InStr("己戊", DXAB护段) > 0 And 日类BTZA > 0 Then
+                    日X护段码 = "A"
+                ElseIf InStr("甲乙", DXAB护段) > 0 Then
+                    日X护段码 = "B"
+                ElseIf InStr("丙", DXAB护段) > 0 Then
+                    日X护段码 = "v"
                 Else
-                    If InStr(谕组(X, 位谕of日层土型), "禁") > 0 Then
-                        值日层赢 = "__禁"
-                    '第2位：综合分类
-                    ElseIf InStr(谕组(X, 位谕of日层土型), "念") > 0 Then
-                        值日层赢 = "__念"
-                    Else  '沃土或肋土（介/持，第一层必赢）
-                        '前缀：肋土中 DXZE<0（肋土）加 "_"（第一层必赢；沃土 DXZE>0 不加 _，第二层必赢）
-                        If 日类BTZE < 0 Then
-                            值日层赢 = 值日层赢 & "_"
-                        End If
-                        '重视DXBC的作用，对于初始介入进行提示
-                        If Left$(谕组(X, 位谕of日层界), 1) = "储" Or Left$(谕组(X, 位谕of日层界), 1) = "初" Then
-                            值日层赢 = 值日层赢 & "介"
-                        Else
-                            值日层赢 = 值日层赢 & "持"
-                        End If
-                        If InStr("己戊", DXAB护段) > 0 And 日类BTZA > 0 Then
-                            值日层赢 = 值日层赢 & "A"
-                        ElseIf InStr("甲乙", DXAB护段) > 0 Then
-                            值日层赢 = 值日层赢 & "B"
-                        ElseIf InStr("丙", DXAB护段) > 0 Then
-                            值日层赢 = 值日层赢 & "v"
-                        Else
-                            值日层赢 = 值日层赢 & "z"
-                        End If
+                    日X护段码 = "z"
+                End If
+
+                If 日CD护级 = "" Then
+                    值日层赢 = "_错"
+                ElseIf 日X_CD之下 Then
+                    值日层赢 = "_" & 日X土型              'C-D退出+四土
+                ElseIf 日X_CD之上 Then
+                    If 日类BTZE > 0 Then
+                        值日层赢 = "持" & 日X土型 & 日X护段码   'C+D+ZE+持有
+                    Else
+                        值日层赢 = "试" & 日X土型 & 日X护段码   'C+D+ZE-试仓
+                    End If
+                Else
+                    '中间区：按DXZE区分持/试
+                    If 日类BTZE > 0 Then
+                        值日层赢 = "持" & 日X土型 & 日X护段码   '中间区+DXZE>0持有
+                    Else
+                        值日层赢 = "试" & 日X土型 & 日X护段码   '中间区+DXZE<0试仓
                     End If
                 End If
                 谕组(X, 位谕of日层赢) = 值日层赢
@@ -6807,7 +6816,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层漏提示).HorizontalAlignment = xlLeft
         .Columns(位谕of日层联动).ColumnWidth = 11
 
-        .Columns(位谕of日层赢).ColumnWidth = 4
+        .Columns(位谕of日层赢).ColumnWidth = 5
         .Columns(位谕of日层盈提示).ColumnWidth = 4
         .Columns(位谕of日层盈提示).HorizontalAlignment = xlRight
         .Columns(位谕of仓日类).ColumnWidth = 5
