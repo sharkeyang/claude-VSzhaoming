@@ -37,6 +37,7 @@ Public Sub UTL宏工具_显示工作簿()
     ThisWorkbook.Windows(1).WindowState = xlNormal
     ThisWorkbook.Activate
     On Error GoTo 0
+    UGSOP_MENU_生成
 End Sub
 Sub 后台辅程操作_激活前台()
         Application.ScreenUpdating = True

@@ -1125,12 +1125,14 @@ End If
                     End If
                 End With
                 With .Cells(1, 位谕of日层赢)
-                        '§6.8：单_=退出（禁/念/错/沃/肋，灰色隐藏）、持=持有（默认）、试=试仓（红色）
-                        If Left$(.Value, 1) = "_" Then
+                        '§6.8（双向策略）：多持=黑色（默认）、多截=四红、空持=灰色、空截=青色
+                        If Left$(.Value, 2) = "多截" Then
+                            .Font.Color = 常色四红
+                        ElseIf Left$(.Value, 2) = "空持" Then
                             .Font.Color = .Interior.Color
-                            .Font.TintAndShade = -0.3
-                        ElseIf Left$(.Value, 1) = "试" Then
-                            .Font.Color = 常色三红
+                            .Font.TintAndShade = -0.2
+                        ElseIf Left$(.Value, 2) = "空截" Then
+                            .Font.Color = 常色四青
                         End If
                 End With
                 With .Cells(1, 位谕of日层联动)
