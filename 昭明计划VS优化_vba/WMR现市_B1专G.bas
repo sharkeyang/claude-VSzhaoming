@@ -48,8 +48,6 @@ Function 现市基程_全局全球( _
     Dim CIDL As String
     Dim 值日层联类 As String
     Dim 值仓日类 As String
-    Dim 值日层赢 As String
-    Dim 值仓日类色度 As Long
     Dim 目行 As Integer
     Dim 目列 As Integer
     '------------------------------------------------------------------------------------
@@ -63,83 +61,33 @@ Function 现市基程_全局全球( _
                 '底色下半部：按照局势 上证指数
                 '------------------------------------------------------------------------
                 CIDL = "sh000001"
-                值日层赢 = STCALL花册工具_花天查询神谕字段(CIDL, "sSCC", 位谕of日层赢)
+                值仓日类 = STCALL花册工具_花天查询神谕字段(CIDL, "sSCC", 位谕of仓日类)
                 With MS.Cells.Interior
-                    .Color = STBASE结算工具_衍生色度按日层赢(值日层赢)
+                    .Color = STBASE结算工具_衍生色度按仓日类(值仓日类)
                     .TintAndShade = 0.1
                 End With
                 '给与清仓警告：
                 With MS.Cells(首行号上部, 目列).Cells(1, 位简式量比).Offset(0, 2)
-                    If Left$(值日层赢, 2) = "多持" Then
-                        .Value = "上证指数：日层赢=" & 值日层赢 & "→使用所有仓位"
-                    ElseIf Left$(值日层赢, 2) = "多截" Then
-                        .Value = "上证指数：日层赢=" & 值日层赢 & "→使用所有仓位1/4"
-                    ElseIf Left$(值日层赢, 2) = "空截" Then
-                        .Value = "上证指数：日层赢=" & 值日层赢 & "→使用所有仓位1/2"
+                    If Left$(值仓日类, 2) = "多持" Then
+                        .Value = "上证指数：仓日类=" & 值仓日类 & "→使用所有仓位"
+                    ElseIf Left$(值仓日类, 2) = "多截" Then
+                        .Value = "上证指数：仓日类=" & 值仓日类 & "→使用所有仓位1/4"
+                    ElseIf Left$(值仓日类, 2) = "空截" Then
+                        .Value = "上证指数：仓日类=" & 值仓日类 & "→使用所有仓位1/2"
                     Else
-                        .Value = "上证指数：日层赢=" & 值日层赢 & "→不介入"
+                        .Value = "上证指数：仓日类=" & 值仓日类 & "→不介入"
                     End If
                     .Font.Bold = True
                 End With
                 '------------------------------------------------------------------------
-                '底色上半部：按照局势 中证1000（用日层赢控制）
+                '底色上半部：按照局势 中证1000（用仓日类控制）
                 '------------------------------------------------------------------------
                 CIDL = "sh000852"
-                值日层赢 = STCALL花册工具_花天查询神谕字段(CIDL, "sSCC", 位谕of日层赢)
+                值仓日类 = STCALL花册工具_花天查询神谕字段(CIDL, "sSCC", 位谕of仓日类)
                 With MS.Cells(1, 1).Resize(首行号下部 - 1, 1).EntireRow.Interior
-                    .Color = STBASE结算工具_衍生色度按日层赢(值日层赢)
+                    .Color = STBASE结算工具_衍生色度按仓日类(值仓日类)
                     .TintAndShade = 0.1
                 End With
-'        '--------------------------------------------------------------------------------
-'        '各指数情况（批量预查：一次数程生成全息覆盖所有指数，避免每码调两次）
-'        '--------------------------------------------------------------------------------
-'        Dim 采样典码 As New Dictionary
-'        Dim 末行 As Long
-'        末行 = PBASE格程工具_表参末行指定(MS, 目列)
-'        For I = 目行 To 末行
-'            CIDL = MS.Cells(I, 目列)
-'            If Len(CIDL) > 0 And Not 采样典码.Exists(CIDL) Then
-'                采样典码.Add CIDL, CIDL
-'            End If
-'        Next
-'        Dim 谕组 As Variant, 行位典 As New Dictionary
-'        If 采样典码.Count > 0 Then
-'            Call IQQQ跨码据擎_数程生成全息(谕组, 常花中股, 实结类型:="sSCC", 采样典码:=采样典码)
-'            If Not VBA.IsEmpty(谕组) Then
-'                Dim K As Long
-'                For K = LBound(谕组, 1) To UBound(谕组, 1)
-'                    行位典.Add 谕组(K, 位qt代码), K
-'                Next
-'            End If
-'        End If
-'        Dim 谕行 As Long
-'        For I = 目行 To 末行
-'            CIDL = MS.Cells(I, 目列)
-'            If Len(CIDL) > 0 Then
-'                If 行位典.Exists(CIDL) Then
-'                    谕行 = 行位典(CIDL)
-'                    值日层联类 = 谕组(谕行, 位谕of日层联动)
-'                    值仓日类 = 谕组(谕行, 位谕of仓日类)
-'                Else
-'                    值日层联类 = ""
-'                    值仓日类 = ""
-'                End If
-'                If Len(值日层联类) > 0 Then
-'                    With MS.Cells(I, 目列).Cells(1, 位简式量比)
-'                        .Value = 值日层联类
-'                        .Interior.Color = STBASE结算工具_衍生色度按仓日类(值仓日类)
-'                        .Offset(0, 1) = STBASE结算工具_衍生目标涨幅按仓日类(值仓日类)
-'                    End With
-'                Else
-'                    MS.Cells(I, 目列).Cells(1, 位简式量比) = ""
-'                End If
-'            End If
-'        Next
-'        '--------------------------------------------------------------------------------
-'    MS.Columns(目列).Columns(位简式量比).ColumnWidth = 15.3
-'    MS.Columns(目列).Columns(位简式量比).HorizontalAlignment = xlLeft
-'    MS.Columns(目列).Columns(位简式量比 + 1).ColumnWidth = 8
-'    MS.Columns(目列).Columns(位简式量比 + 1).HorizontalAlignment = xlLeft
 '========================================================================================
 '展示：中国 金融期货
 '========================================================================================

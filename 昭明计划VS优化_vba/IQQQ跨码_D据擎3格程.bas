@@ -752,12 +752,12 @@ End If
         '================================================================================
         With WS.Cells(行号遍历, 基列)
                 '========================================================================
-                '注20261114：改为统一按【日层赢】进行标注。
+                '注20261114：改为统一按【仓日类】进行标注。
                 '========================================================================
                             For Y = 位谕始of族日层 To 位谕终of族日管
                                 With .Cells(1, Y)
                                     值TintAndShade = .Interior.TintAndShade
-                                    .Interior.Color = STBASE结算工具_衍生色度按日层赢(WS.Cells(行号遍历, 基列).Cells(1, 位谕of日层赢).Value)
+                                    .Interior.Color = STBASE结算工具_衍生色度按仓日类(WS.Cells(行号遍历, 基列).Cells(1, 位谕of仓日类).Value)
                                     .Interior.TintAndShade = 值TintAndShade
                                 End With
                             Next
@@ -1184,18 +1184,7 @@ End If
                         End If
                 End With
                 With .Cells(1, 位谕of仓日类)
-                    If InStr(.Value, "禁") > 0 Then
-                        .Font.Color = .Interior.Color
-                        .Font.TintAndShade = -0.1
-                    ElseIf InStr(.Value, "念") > 0 Then
-                        .Font.Color = .Interior.Color
-                        .Font.TintAndShade = -0.3
-                    ElseIf InStr(.Value, "肋") > 0 Then
-                        .Font.Color = 常色四黄
-                    End If
-                End With
-                With .Cells(1, 位谕of日层赢)
-                        '§6.8（双向策略）：多持=黑色（默认）、多截=四红、空持=灰色、空截=青色
+                        '注20261114'§6.8（双向策略）：多持=黑色（默认）、多截=四红、空持=灰色、空截=青色
                         If Left$(.Value, 2) = "多截" Then
                             .Font.Color = 常色四红
                         ElseIf Left$(.Value, 2) = "空持" Then
