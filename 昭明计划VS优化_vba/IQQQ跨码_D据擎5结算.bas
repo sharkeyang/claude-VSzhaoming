@@ -1682,7 +1682,9 @@ Function STBASE结算工具_衍生色度按仓日类(值仓日类 As String) As 
         If InStr(值仓日类, "禁") > 0 Then
                 值色数 = 常色二灰
         ElseIf InStr(值仓日类, "念") > 0 Then
-                值色数 = 常色四灰
+                值色数 = 常色四红
+        ElseIf InStr(值仓日类, "肋") > 0 Then
+                值色数 = 常色四紫
         Else
                 Select Case 值仓日类
                 '系列D：靛绿色 (与本系统日类色系相符)

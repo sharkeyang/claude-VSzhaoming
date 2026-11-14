@@ -2736,90 +2736,90 @@ If UBCID是代码(CIDL) = True Then
             '  护段后缀（保留原逻辑）：DXAB∈{己戊}且BTZA>0→A，{甲乙}→B，{丙}→v，其他→z
             '  与周层联动的关系：周层联动日类部分直接引用日层赢首字符（持/试/_），不再按CD护级六态重复判定。
             '============================================================================
-                Dim 值日层赢 As String: 值日层赢 = ""
-                Dim 日层护型 As String: 日层护型 = 谕组(X, 位谕of日层护型)
-                Dim DXAB护段 As String
-                If Len(日层护型) >= 2 Then DXAB护段 = Mid$(日层护型, 2, 1)
-                '日CD护级已由仓日类块（line 2525）从原始源 组结算(X, 基位日类 + 位os层护级CD) 取值，此处不再重复提取
-                Dim 日X土型 As String: 日X土型 = 谕组(X, 位谕of日层土型)   '沃/禁/念/肋
-
-                '§6.8 方法日X四土：镜面操作规则（2026-11-12 改造，双向策略）
-                'DTZE>0（多头策略）：DTZD<0且DTZC<0→多截；DTZD>0且DTZC>0→多持；中间→按路径衍生多持/多截
-                'DTZE<0（空头策略）：DTZD<0且DTZC<0→空持；DTZD>0且DTZC>0→空截；中间→按路径衍生空持/空截
-                '中间区路径判断：用DTCD区分情况，比较|DTZC|/|DTZD|（谁小谁就是刚穿越的线）
-                '  多头情况1（DTCD>0，DTZC<0，DTZD>0）：|DTZC|<|DTZD|→多持(刚跌破DJC)；|DTZC|>|DTZD|→多截(刚站上DJD)
-                '  多头情况2（DTCD<0，DTZD<0，DTZC>0）：|DTZD|<|DTZC|→多持(刚跌破DJD)；|DTZD|>|DTZC|→多截(刚站上DJC)
-                '  空头情况1（DTCD<0，DTZC>0，DTZD<0）：|DTZD|<|DTZC|→空持(刚站上DJD)；|DTZD|>|DTZC|→空截(刚跌破DJC)
-                '  空头情况2（DTCD>0，DTZD>0，DTZC<0）：|DTZC|<|DTZD|→空持(刚站上DJC)；|DTZC|>|DTZD|→空截(刚跌破DJD)
-                '输出格式：操作+四土+护段（如 多持沃B / 多截肋B / 空持肋B / 空截沃B）
-
-                '护段映射（保留原逻辑）
-                Dim 日X护段码 As String: 日X护段码 = ""
-                If InStr("己戊", DXAB护段) > 0 And 日类BTZA > 0 Then
-                    日X护段码 = "A"
-                ElseIf InStr("甲乙", DXAB护段) > 0 Then
-                    日X护段码 = "B"
-                ElseIf InStr("丙", DXAB护段) > 0 Then
-                    日X护段码 = "v"
-                Else
-                    日X护段码 = "z"
-                End If
-
-                Dim 日X操作 As String: 日X操作 = ""
-                If 日CD护级 = "" Then
-                    日X操作 = "_错"
-                ElseIf 日类BTZE > 0 Then
-                    '多头策略
-                    If 日类BTZD < 0 And 日类BTZC < 0 Then
-                        日X操作 = "多截"                    '两线之下，多头截断
-                    ElseIf 日类BTZD > 0 And 日类BTZC > 0 Then
-                        日X操作 = "多持"                    '两线之上，多头持有
+                    Dim 日层护型 As String: 日层护型 = 谕组(X, 位谕of日层护型)
+                    Dim DXAB护段 As String
+                    If Len(日层护型) >= 2 Then DXAB护段 = Mid$(日层护型, 2, 1)
+                    '护段映射（保留原逻辑）
+                    Dim 日X护段码 As String: 日X护段码 = ""
+                    If InStr("己戊", DXAB护段) > 0 And 日类BTZA > 0 Then
+                        日X护段码 = "A"
+                    ElseIf InStr("甲乙", DXAB护段) > 0 Then
+                        日X护段码 = "B"
+                    ElseIf InStr("丙", DXAB护段) > 0 Then
+                        日X护段码 = "v"
                     Else
-                        '中间区：按路径衍生
-                        If 日类BTCD > 0 Then
-                            '情况1：DTCD>0，DTZC<0，DTZD>0（多头排列，价格在DJC下、DJD上）
-                            If Abs(日类BTZC) < Abs(日类BTZD) Then
-                                日X操作 = "多持"            '刚跌破DJC，从C+D降入
-                            Else
-                                日X操作 = "多截"            '刚站上DJD，从C-D升入
-                            End If
+                        日X护段码 = "z"
+                    End If
+                    '--------------------------------------------------------------------
+                    '日CD护级已由仓日类块（line 2525）从原始源 组结算(X, 基位日类 + 位os层护级CD) 取值，此处不再重复提取
+                    Dim 日X土型 As String: 日X土型 = 谕组(X, 位谕of日层土型)   '沃/禁/念/肋
+                    '--------------------------------------------------------------------
+                    '操作判断
+                    '--------------------------------------------------------------------
+                    '§6.8 方法日X四土：镜面操作规则（2026-11-12 改造，双向策略）
+                    'DTZE>0（多头策略）：DTZD<0且DTZC<0→多截；DTZD>0且DTZC>0→多持；中间→按路径衍生多持/多截
+                    'DTZE<0（空头策略）：DTZD<0且DTZC<0→空持；DTZD>0且DTZC>0→空截；中间→按路径衍生空持/空截
+                    '中间区路径判断：用DTCD区分情况，比较|DTZC|/|DTZD|（谁小谁就是刚穿越的线）
+                    '  多头情况1（DTCD>0，DTZC<0，DTZD>0）：|DTZC|<|DTZD|→多持(刚跌破DJC)；|DTZC|>|DTZD|→多截(刚站上DJD)
+                    '  多头情况2（DTCD<0，DTZD<0，DTZC>0）：|DTZD|<|DTZC|→多持(刚跌破DJD)；|DTZD|>|DTZC|→多截(刚站上DJC)
+                    '  空头情况1（DTCD<0，DTZC>0，DTZD<0）：|DTZD|<|DTZC|→空持(刚站上DJD)；|DTZD|>|DTZC|→空截(刚跌破DJC)
+                    '  空头情况2（DTCD>0，DTZD>0，DTZC<0）：|DTZC|<|DTZD|→空持(刚站上DJC)；|DTZC|>|DTZD|→空截(刚跌破DJD)
+                    '输出格式：操作+四土+护段（如 多持沃B / 多截肋B / 空持肋B / 空截沃B）
+                    Dim 日X操作 As String: 日X操作 = ""
+                    If 日CD护级 = "" Then
+                        日X操作 = "_错"
+                    ElseIf 日类BTZE > 0 Then
+                        '多头策略
+                        If 日类BTZD > 0 And 日类BTZC > 0 Then
+                            日X操作 = "多持"                    '两线之上，多头持有
+                        ElseIf 日类BTZD < 0 And 日类BTZC < 0 Then
+                            日X操作 = "多截"                    '两线之下，多头截断
                         Else
-                            '情况2：DTCD<0，DTZD<0，DTZC>0（空头排列，价格在DJD下、DJC上）
-                            If Abs(日类BTZD) < Abs(日类BTZC) Then
-                                日X操作 = "多持"            '刚跌破DJD，从C+D降入
+                            '中间区：按路径衍生
+                            If 日类BTCD > 0 Then
+                                '情况1：DTCD>0，DTZC<0，DTZD>0（多头排列，价格在DJC下、DJD上）
+                                If Abs(日类BTZC) < Abs(日类BTZD) Then
+                                    日X操作 = "多持"            '刚跌破DJC，从C+D降入
+                                Else
+                                    日X操作 = "多截"            '刚站上DJD，从C-D升入
+                                End If
                             Else
-                                日X操作 = "多截"            '刚站上DJC，从C-D升入
+                                '情况2：DTCD<0，DTZD<0，DTZC>0（空头排列，价格在DJD下、DJC上）
+                                If Abs(日类BTZD) < Abs(日类BTZC) Then
+                                    日X操作 = "多持"            '刚跌破DJD，从C+D降入
+                                Else
+                                    日X操作 = "多截"            '刚站上DJC，从C-D升入
+                                End If
+                            End If
+                        End If
+                    Else
+                        '空头策略
+                        If 日类BTZD < 0 And 日类BTZC < 0 Then
+                            日X操作 = "空持"                    '两线之下，空头持有
+                        ElseIf 日类BTZD > 0 And 日类BTZC > 0 Then
+                            日X操作 = "空截"                    '两线之上，空头截断
+                        Else
+                            '中间区：按路径衍生（镜面对称）
+                            '空头：从C+D降入（刚跌破）→空截（延续空截）；从C-D升入（刚站上）→空持（延续空持）
+                            If 日类BTCD < 0 Then
+                                '情况1：DTCD<0，DTZC>0，DTZD<0（空头排列，价格在DJC上、DJD下）
+                                If Abs(日类BTZD) < Abs(日类BTZC) Then
+                                    日X操作 = "空截"            '刚跌破DJD，从C+D降入
+                                Else
+                                    日X操作 = "空持"            '刚站上DJC，从C-D升入
+                                End If
+                            Else
+                                '情况2：DTCD>0，DTZD>0，DTZC<0（多头排列，价格在DJD上、DJC下）
+                                If Abs(日类BTZC) < Abs(日类BTZD) Then
+                                    日X操作 = "空截"            '刚跌破DJC，从C+D降入
+                                Else
+                                    日X操作 = "空持"            '刚站上DJD，从C-D升入
+                                End If
                             End If
                         End If
                     End If
-                Else
-                    '空头策略
-                    If 日类BTZD < 0 And 日类BTZC < 0 Then
-                        日X操作 = "空持"                    '两线之下，空头持有
-                    ElseIf 日类BTZD > 0 And 日类BTZC > 0 Then
-                        日X操作 = "空截"                    '两线之上，空头截断
-                    Else
-                        '中间区：按路径衍生（镜面对称）
-                        '空头：从C+D降入（刚跌破）→空截（延续空截）；从C-D升入（刚站上）→空持（延续空持）
-                        If 日类BTCD < 0 Then
-                            '情况1：DTCD<0，DTZC>0，DTZD<0（空头排列，价格在DJC上、DJD下）
-                            If Abs(日类BTZD) < Abs(日类BTZC) Then
-                                日X操作 = "空截"            '刚跌破DJD，从C+D降入
-                            Else
-                                日X操作 = "空持"            '刚站上DJC，从C-D升入
-                            End If
-                        Else
-                            '情况2：DTCD>0，DTZD>0，DTZC<0（多头排列，价格在DJD上、DJC下）
-                            If Abs(日类BTZC) < Abs(日类BTZD) Then
-                                日X操作 = "空截"            '刚跌破DJC，从C+D降入
-                            Else
-                                日X操作 = "空持"            '刚站上DJD，从C-D升入
-                            End If
-                        End If
-                    End If
-                End If
-                值日层赢 = 日X操作 & 日X土型 & 日X护段码
-                谕组(X, 位谕of日层赢) = 值日层赢
+                    '--------------------------------------------------------------------
+                    谕组(X, 位谕of日层赢) = 日X操作 & 日X土型 & 日X护段码
             '============================================================================
             '虚拟权重（@20240111：不要更改。可以不持有，但不要重仓或过快砍仓）
             '思路：仅利用系统性重要均线WXCD决定权重，具体操作由非权重指标（WJCBA、BTZA、触顶、叭宽）决定。
