@@ -50,15 +50,15 @@ Public Function IQQQ跨码据擎_数程生成跨码管理1仓位管理( _
     '根据位qt仓主判断用哪个账户
     If 谕组(X, 位qt仓主) = 常仓名宝福 Then
         '福仓：只读福仓列
-        If InStr(组结算(X, 位列花天仓宝福), ",") > 0 Then
-            值仓福数 = Val(Left$(组结算(X, 位列花天仓宝福), InStr(组结算(X, 位列花天仓宝福), ",") - 1))
-            值仓福本 = Val(Mid$(组结算(X, 位列花天仓宝福), InStr(组结算(X, 位列花天仓宝福), ",") + 1))
+        If InStr(组结算(X, 位列花天仓宝福), "|") > 0 Then
+            值仓福数 = Val(Left$(组结算(X, 位列花天仓宝福), InStr(组结算(X, 位列花天仓宝福), "|") - 1))
+            值仓福本 = Val(Mid$(组结算(X, 位列花天仓宝福), InStr(组结算(X, 位列花天仓宝福), "|") + 1))
         End If
     ElseIf 谕组(X, 位qt仓主) = 常仓名宝彦 Then
         '彦仓：只读彦仓列
-        If InStr(组结算(X, 位列花天仓宝彦), ",") > 0 Then
-            值仓彦数 = Val(Left$(组结算(X, 位列花天仓宝彦), InStr(组结算(X, 位列花天仓宝彦), ",") - 1))
-            值仓彦本 = Val(Mid$(组结算(X, 位列花天仓宝彦), InStr(组结算(X, 位列花天仓宝彦), ",") + 1))
+        If InStr(组结算(X, 位列花天仓宝彦), "|") > 0 Then
+            值仓彦数 = Val(Left$(组结算(X, 位列花天仓宝彦), InStr(组结算(X, 位列花天仓宝彦), "|") - 1))
+            值仓彦本 = Val(Mid$(组结算(X, 位列花天仓宝彦), InStr(组结算(X, 位列花天仓宝彦), "|") + 1))
         End If
     Else
         '位qt仓主为空，不做仓位计算
@@ -412,8 +412,8 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
                 行号 = 典码位花册(CIDL)
                 福仓字 = Trim(WS花册.Cells(行号, 位列花天仓宝福).Value)
                 彦仓字 = Trim(WS花册.Cells(行号, 位列花天仓宝彦).Value)
-                If InStr(福仓字, ",") > 0 Then 福仓数 = Val(Left$(福仓字, InStr(福仓字, ",") - 1))
-                If InStr(彦仓字, ",") > 0 Then 彦仓数 = Val(Left$(彦仓字, InStr(彦仓字, ",") - 1))
+                If InStr(福仓字, "|") > 0 Then 福仓数 = Val(Left$(福仓字, InStr(福仓字, "|") - 1))
+                If InStr(彦仓字, "|") > 0 Then 彦仓数 = Val(Left$(彦仓字, InStr(彦仓字, "|") - 1))
             End If
             '--- 有持仓时才统计 ---
             If 福仓数 > 0 Or 彦仓数 > 0 Then
@@ -1404,7 +1404,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             If 典码位花册.Exists(CIDL) Then
                 行号 = 典码位花册(CIDL)
                 福仓字 = Trim(WS花册.Cells(行号, 位列花天仓宝福).Value)
-                If InStr(福仓字, ",") > 0 Then 福仓数 = Val(Left$(福仓字, InStr(福仓字, ",") - 1))
+                If InStr(福仓字, "|") > 0 Then 福仓数 = Val(Left$(福仓字, InStr(福仓字, "|") - 1))
         End If
             If 福仓数 > 0 Then
                 WSTO.Cells(明细行, 1).Value = CIDL
@@ -1491,7 +1491,7 @@ Public Function IQQQ展擎筛程至A2组合管理检查( _
             If 典码位花册.Exists(CIDL) Then
                 行号 = 典码位花册(CIDL)
                 彦仓字 = Trim(WS花册.Cells(行号, 位列花天仓宝彦).Value)
-                If InStr(彦仓字, ",") > 0 Then 彦仓数 = Val(Left$(彦仓字, InStr(彦仓字, ",") - 1))
+                If InStr(彦仓字, "|") > 0 Then 彦仓数 = Val(Left$(彦仓字, InStr(彦仓字, "|") - 1))
         End If
             If 彦仓数 > 0 Then
                 WSTO.Cells(明细行, 1).Value = CIDL

@@ -487,7 +487,7 @@ Public Function STCALL花册管理_重制花天P3正程导入华宝(Optional ByR
             If 值交易所名 = "上海A股" Or 值交易所名 = "深圳A股" Or 值交易所名 = "北交所" Then
                 If 典集花册行号.Exists(CIDL) = True Then
                     定位花册行号 = 典集花册行号(CIDL)
-                    组花册(定位花册行号, 指定列仓) = (ARRTS(X, 位列TS持仓数量)) & "," & (ARRTS(X, 位列TS摊薄成本))
+                    组花册(定位花册行号, 指定列仓) = Format(ARRTS(X, 位列TS持仓数量), "0") & "|" & Format(ARRTS(X, 位列TS摊薄成本), "0.00")
 
                 Else
                     定位花册行号 = -1

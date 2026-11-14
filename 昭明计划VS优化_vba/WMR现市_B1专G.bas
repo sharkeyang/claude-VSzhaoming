@@ -48,6 +48,7 @@ Function 现市基程_全局全球( _
     Dim CIDL As String
     Dim 值日层联类 As String
     Dim 值仓日类 As String
+    Dim 值日层赢 As String
     Dim 值仓日类色度 As Long
     Dim 目行 As Integer
     Dim 目列 As Integer
@@ -62,29 +63,31 @@ Function 现市基程_全局全球( _
                 '底色下半部：按照局势 上证指数
                 '------------------------------------------------------------------------
                 CIDL = "sh000001"
-                值仓日类 = STCALL花册工具_花天查询神谕字段(CIDL, "sSCC", 位谕of仓日类)
+                值日层赢 = STCALL花册工具_花天查询神谕字段(CIDL, "sSCC", 位谕of日层赢)
                 With MS.Cells.Interior
-                    .Color = STBASE结算工具_衍生色度按仓日类(值仓日类)
+                    .Color = STBASE结算工具_衍生色度按日层赢(值日层赢)
                     .TintAndShade = 0.1
                 End With
                 '给与清仓警告：
                 With MS.Cells(首行号上部, 目列).Cells(1, 位简式量比).Offset(0, 2)
-                    If Left$(值仓日类, 1) = "禁" Or Left$(值仓日类, 1) = "念" Then
-                        .Value = "上证指数已下破DJC→使用所有仓位1/4"
-                    ElseIf InStr("cyz", Right$(值仓日类, 1)) > 0 Then
-                        .Value = "上证指数已下破DJB→使用所有仓位1/2"
-                    Else
-                        .Value = "上证指数在DJB之上→使用所有仓位"
+                    If Left$(值日层赢, 2) = "多持" Then
+                        .Value = "上证指数多头持有→使用所有仓位"
+                    ElseIf Left$(值日层赢, 2) = "多截" Then
+                        .Value = "上证指数多头截断→使用所有仓位1/4"
+                    ElseIf Left$(值日层赢, 2) = "空截" Then
+                        .Value = "上证指数空头截断→使用所有仓位1/2"
+                    ElseIf Left$(值日层赢, 2) = "空持" Then
+                        .Value = "上证指数空头持有→不介入"
                     End If
                     .Font.Bold = True
                 End With
                 '------------------------------------------------------------------------
-                '底色上半部：按照局势 中证1000
+                '底色上半部：按照局势 中证1000（用日层赢控制）
                 '------------------------------------------------------------------------
                 CIDL = "sh000852"
-                值仓日类 = STCALL花册工具_花天查询神谕字段(CIDL, "sSCC", 位谕of仓日类)
+                值日层赢 = STCALL花册工具_花天查询神谕字段(CIDL, "sSCC", 位谕of日层赢)
                 With MS.Cells(1, 1).Resize(首行号下部 - 1, 1).EntireRow.Interior
-                    .Color = STBASE结算工具_衍生色度按仓日类(值仓日类)
+                    .Color = STBASE结算工具_衍生色度按日层赢(值日层赢)
                     .TintAndShade = 0.1
                 End With
 '        '--------------------------------------------------------------------------------
