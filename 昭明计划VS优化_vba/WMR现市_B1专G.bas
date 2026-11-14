@@ -71,13 +71,13 @@ Function 现市基程_全局全球( _
                 '给与清仓警告：
                 With MS.Cells(首行号上部, 目列).Cells(1, 位简式量比).Offset(0, 2)
                     If Left$(值日层赢, 2) = "多持" Then
-                        .Value = "上证指数多头持有→使用所有仓位"
+                        .Value = "上证指数：日层赢=" & 值日层赢 & "→使用所有仓位"
                     ElseIf Left$(值日层赢, 2) = "多截" Then
-                        .Value = "上证指数多头截断→使用所有仓位1/4"
+                        .Value = "上证指数：日层赢=" & 值日层赢 & "→使用所有仓位1/4"
                     ElseIf Left$(值日层赢, 2) = "空截" Then
-                        .Value = "上证指数空头截断→使用所有仓位1/2"
-                    ElseIf Left$(值日层赢, 2) = "空持" Then
-                        .Value = "上证指数空头持有→不介入"
+                        .Value = "上证指数：日层赢=" & 值日层赢 & "→使用所有仓位1/2"
+                    Else
+                        .Value = "上证指数：日层赢=" & 值日层赢 & "→不介入"
                     End If
                     .Font.Bold = True
                 End With

@@ -575,16 +575,76 @@ End If
 '                            End If
 '                            '----------------------------------------------------------------
 '                    End If
+                '========================================================================
+'                    '------------------------------------------------------------------------
+'                    '整体上色：STBASE结算工具_衍生色度按仓周类
+'                    '------------------------------------------------------------------------
+'                            For Y = 位谕始of族周层 To 位谕终of族周层
+'                                With .Cells(1, Y)
+'                                    值TintAndShade = .Interior.TintAndShade
+'                                    .Interior.Color = STBASE结算工具_衍生色度按仓周类(WS.Cells(行号遍历, 基列).Cells(1, 位谕of仓周类).Value)
+'                                    .Interior.TintAndShade = 值TintAndShade
+'                                End With
+'                            Next
+                '========================================================================
                     '------------------------------------------------------------------------
-                    '整体上色：STBASE结算工具_衍生色度按仓周类
+                    '针对势型：可持有
                     '------------------------------------------------------------------------
-                            For Y = 位谕始of族周层 To 位谕终of族周层
-                                With .Cells(1, Y)
-                                    值TintAndShade = .Interior.TintAndShade
-                                    .Interior.Color = STBASE结算工具_衍生色度按仓周类(WS.Cells(行号遍历, 基列).Cells(1, 位谕of仓周类).Value)
-                                    .Interior.TintAndShade = 值TintAndShade
-                                End With
-                            Next
+                    If InStr(.Cells(1, 位谕of周层大局), "H持G主") > 0 Then
+                                    For Y = 位谕始of族周层 To 位谕终of族周层
+                                        With .Cells(1, Y)
+                                            值TintAndShade = .Interior.TintAndShade
+                                            .Interior.Color = 常色八靛
+                                            .Interior.TintAndShade = 值TintAndShade
+                                        End With
+                                    Next
+                    ElseIf Left(.Cells(1, 位谕of周层大局), 1) = "H" Then
+                                    For Y = 位谕始of族周层 To 位谕终of族周层
+                                        With .Cells(1, Y)
+                                            值TintAndShade = .Interior.TintAndShade
+                                            .Interior.Color = 常色五靛
+                                            .Interior.TintAndShade = 值TintAndShade
+                                        End With
+                                    Next
+                    ElseIf Left(.Cells(1, 位谕of周层大局), 1) = "A" Then
+                                    For Y = 位谕始of族周层 To 位谕终of族周层
+                                        With .Cells(1, Y)
+                                            值TintAndShade = .Interior.TintAndShade
+                                            .Interior.Color = 常色五43
+                                            .Interior.TintAndShade = 值TintAndShade
+                                        End With
+                                    Next
+                    '------------------------------------------------------------------------
+                    '针对势型：备
+                    '------------------------------------------------------------------------                                    Next
+                    ElseIf Left(.Cells(1, 位谕of周层大局), 1) = "P" Then
+                                    For Y = 位谕始of族周层 To 位谕终of族周层
+                                        With .Cells(1, Y)
+                                            值TintAndShade = .Interior.TintAndShade
+                                            .Interior.Color = 常色四青
+                                            .Interior.TintAndShade = 值TintAndShade
+                                        End With
+                                    Next
+                    '------------------------------------------------------------------------
+                    '针对势型：非可持有
+                    '------------------------------------------------------------------------                                    Next
+                    ElseIf InStr(.Cells(1, 位谕of周层大局), "Z退y虎") > 0 Then
+                                    For Y = 位谕始of族周层 To 位谕终of族周层
+                                        With .Cells(1, Y)
+                                            值TintAndShade = .Interior.TintAndShade
+                                            .Interior.Color = 常色二红
+                                            .Interior.TintAndShade = 值TintAndShade
+                                        End With
+                                    Next
+                    Else
+                                    For Y = 位谕始of族周层 To 位谕终of族周层
+                                        With .Cells(1, Y)
+                                            值TintAndShade = .Interior.TintAndShade
+                                            .Interior.Color = 常色一灰
+                                            .Interior.TintAndShade = 值TintAndShade
+                                        End With
+                                    Next
+                    End If
                 '========================================================================
                 '标注：周管
                 '========================================================================
@@ -692,49 +752,59 @@ End If
         '================================================================================
         With WS.Cells(行号遍历, 基列)
                 '========================================================================
-                '注20261002：应用（WXCD区分WXZC之下 嘘尿屎），其余按照是否主升进行着色。
-                '颜色分配：破（二红）初（六紫）再（四紫）主龙猪0无（十靛）主龙猪栏栅杂（六靛）主龙猪蛀（43绿）震WXZA劫（四绿）
+                '注20261114：改为统一按【日层赢】进行标注。
                 '========================================================================
-                    If InStr(.Cells(1, 位谕of周层势型), "屎") > 0 Then
-                                For Y = 位谕始of族日层 To 位谕终of族日管
-                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色一灰
-                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
-                                Next
-                    ElseIf InStr(.Cells(1, 位谕of周层势型), "嘘") > 0 Or InStr(.Cells(1, 位谕of周层势型), "尿") > 0 Then
-                                For Y = 位谕始of族日层 To 位谕终of族日管
-                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色三灰
-                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
-                                Next
-                    '--------------------------------------------------------------------
-                    '可持有，但存在瑕疵。铜，因为WXCD还未正交，必有震荡。银，处于WJB之下。
-                    '--------------------------------------------------------------------
-                    ElseIf Left$(.Cells(1, 位谕of周层波型), 2) = "NN" Then
-                                For Y = 位谕始of族日层 To 位谕终of族日管
-                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色六蓝
-                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
-                                Next
-                    ElseIf Left$(.Cells(1, 位谕of周层波型), 2) = "NF" Then
-                                For Y = 位谕始of族日层 To 位谕终of族日管
-                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色六青
-                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
-                                Next
-                    ElseIf Left$(.Cells(1, 位谕of周层波型), 2) = "FN" Then
-                                For Y = 位谕始of族日层 To 位谕终of族日管
-                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色六黄
-                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
-                                Next
-                    Else
-                                For Y = 位谕始of族日层 To 位谕终of族日管
-                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
-                                    .Cells(1, Y).Interior.Color = 常色六靛
-                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
-                                Next
-                    End If
+                            For Y = 位谕始of族日层 To 位谕终of族日管
+                                With .Cells(1, Y)
+                                    值TintAndShade = .Interior.TintAndShade
+                                    .Interior.Color = STBASE结算工具_衍生色度按日层赢(WS.Cells(行号遍历, 基列).Cells(1, 位谕of日层赢).Value)
+                                    .Interior.TintAndShade = 值TintAndShade
+                                End With
+                            Next
+'                '========================================================================
+'                '注20261002：应用（WXCD区分WXZC之下 嘘尿屎），其余按照是否主升进行着色。
+'                '颜色分配：破（二红）初（六紫）再（四紫）主龙猪0无（十靛）主龙猪栏栅杂（六靛）主龙猪蛀（43绿）震WXZA劫（四绿）
+'                '========================================================================
+'                    If InStr(.Cells(1, 位谕of周层势型), "屎") > 0 Then
+'                                For Y = 位谕始of族日层 To 位谕终of族日管
+'                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
+'                                    .Cells(1, Y).Interior.Color = 常色一灰
+'                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
+'                                Next
+'                    ElseIf InStr(.Cells(1, 位谕of周层势型), "嘘") > 0 Or InStr(.Cells(1, 位谕of周层势型), "尿") > 0 Then
+'                                For Y = 位谕始of族日层 To 位谕终of族日管
+'                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
+'                                    .Cells(1, Y).Interior.Color = 常色三灰
+'                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
+'                                Next
+'                    '--------------------------------------------------------------------
+'                    '可持有，但存在瑕疵。铜，因为WXCD还未正交，必有震荡。银，处于WJB之下。
+'                    '--------------------------------------------------------------------
+'                    ElseIf Left$(.Cells(1, 位谕of周层波型), 2) = "NN" Then
+'                                For Y = 位谕始of族日层 To 位谕终of族日管
+'                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
+'                                    .Cells(1, Y).Interior.Color = 常色六蓝
+'                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
+'                                Next
+'                    ElseIf Left$(.Cells(1, 位谕of周层波型), 2) = "NF" Then
+'                                For Y = 位谕始of族日层 To 位谕终of族日管
+'                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
+'                                    .Cells(1, Y).Interior.Color = 常色六青
+'                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
+'                                Next
+'                    ElseIf Left$(.Cells(1, 位谕of周层波型), 2) = "FN" Then
+'                                For Y = 位谕始of族日层 To 位谕终of族日管
+'                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
+'                                    .Cells(1, Y).Interior.Color = 常色六黄
+'                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
+'                                Next
+'                    Else
+'                                For Y = 位谕始of族日层 To 位谕终of族日管
+'                                    值TintAndShade = .Cells(1, Y).Interior.TintAndShade
+'                                    .Cells(1, Y).Interior.Color = 常色六靛
+'                                    .Cells(1, Y).Interior.TintAndShade = 值TintAndShade
+'                                Next
+'                    End If
                 '========================================================================
                 '检验：日层系
                 '========================================================================

@@ -2741,15 +2741,10 @@ If UBCID是代码(CIDL) = True Then
             '============================================================================
                     Dim 日层护型 As String: 日层护型 = 谕组(X, 位谕of日层护型)
                     '--------------------------------------------------------------------
-                    '日CD护级已由仓日类块（line 2525）从原始源 组结算(X, 基位日类 + 位os层护级CD) 取值，此处不再重复提取
-                    Dim 日X土型 As String: 日X土型 = 谕组(X, 位谕of日层土型)   '沃/禁/念/肋
-                    '--------------------------------------------------------------------
                     '操作判断（双向策略，详见上方块注释）
                     '--------------------------------------------------------------------
                     Dim 日X操作 As String: 日X操作 = ""
-                    If 日CD护级 = "" Then
-                        日X操作 = "_错"
-                    ElseIf 日类BTZE > 0 Then
+                    If 日类BTZE > 0 Then
                         '多头策略
                         If 日类BTZD > 0 And 日类BTZC > 0 Then
                             日X操作 = "多持"                    '两线之上，多头持有
@@ -2800,7 +2795,7 @@ If UBCID是代码(CIDL) = True Then
                         End If
                     End If
                     '--------------------------------------------------------------------
-                    谕组(X, 位谕of日层赢) = 日X操作 & 日X土型
+                    谕组(X, 位谕of日层赢) = 日X操作 & 谕组(X, 位谕of日层土型) & 日CD护级 & Left$(组结算(X, 基位日类 + 位os层护段AB), 1)
             '============================================================================
             '虚拟权重（@20240111：不要更改。可以不持有，但不要重仓或过快砍仓）
             '思路：仅利用系统性重要均线WXCD决定权重，具体操作由非权重指标（WJCBA、BTZA、触顶、叭宽）决定。
@@ -5451,7 +5446,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
     With WS.Columns(基列)
         .Columns(位谕of周层界).ColumnWidth = 7.5
         .Columns(位谕of周层Q链).ColumnWidth = 4
-        .Columns(位谕of周层大局).ColumnWidth = 21
+        .Columns(位谕of周层大局).ColumnWidth = 17
         .Columns(位谕of周层联动).ColumnWidth = 7.5
         .Columns(位谕of周层势型).ColumnWidth = 8
         .Columns(位谕of周层土型).ColumnWidth = 2
@@ -6836,7 +6831,7 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层漏提示).HorizontalAlignment = xlLeft
         .Columns(位谕of日层联动).ColumnWidth = 11
 
-        .Columns(位谕of日层赢).ColumnWidth = 7
+        .Columns(位谕of日层赢).ColumnWidth = 8
         .Columns(位谕of日层盈提示).ColumnWidth = 4
         .Columns(位谕of日层盈提示).HorizontalAlignment = xlRight
         .Columns(位谕of仓日类).ColumnWidth = 5
