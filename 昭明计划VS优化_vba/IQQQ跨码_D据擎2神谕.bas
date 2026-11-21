@@ -119,19 +119,21 @@ Public Const 位谕终of族周层 = 位谕始of族周层 + 14
 '指标群：族日层 总结具体买卖操作
 Public Const 位谕始of族日层 = 位谕终of族周层 + 1
 '--------------------------
-Public Const 位谕of日层大局 = 位谕始of族日层 + 0        '日层大局：方法日C冲（基于日类BTZC+日AB护级+日波+日层界），仿周层大局（20261025 新增）
-Public Const 位谕of日层Q链 = 位谕始of族日层 + 1        '日层Q链：方法日C冲（升连周边战法），基于并符串判断四类前柱排（20261025 新增）
-Public Const 位谕of日层土型 = 位谕始of族日层 + 2        '日层土型：四土（沃/禁/念/肋），复用仓日类四土部分（20261024 新增）
-Public Const 位谕of日层波型 = 位谕始of族日层 + 3
-Public Const 位谕of日层护型 = 位谕始of族日层 + 4
-Public Const 位谕of日层地型 = 位谕始of族日层 + 5        '日地型：0橅/1柜/2栅/3桮/6娝/7姗/8姖/9妩（20261001 新增）
-Public Const 位谕of日层柱型 = 位谕始of族日层 + 6
-Public Const 位谕of日层界 = 位谕始of族日层 + 7
+Public Const 位谕of仓日类 = 位谕始of族日层 + 0   '注：操作+四土+护级+护段（操作逻辑合并，见仓日类生成处）
+Public Const 位谕of仓日期 = 位谕始of族日层 + 1   '注：min(DTZE,DTZC)，当前已持有天数。1=刚站上，值越大已持有越久
+Public Const 位谕of日层大局 = 位谕始of族日层 + 2        '日层大局：方法日C冲（基于日类BTZC+日AB护级+日波+日层界），仿周层大局（20261025 新增）
+Public Const 位谕of日层Q链 = 位谕始of族日层 + 3        '日层Q链：方法日C冲（升连周边战法），基于并符串判断四类前柱排（20261025 新增）
+Public Const 位谕of日层土型 = 位谕始of族日层 + 4        '日层土型：四土（沃/禁/念/肋），复用仓日类四土部分（20261024 新增）
+Public Const 位谕of日层波型 = 位谕始of族日层 + 5
+Public Const 位谕of日层护型 = 位谕始of族日层 + 6
+Public Const 位谕of日层地型 = 位谕始of族日层 + 7        '日地型：0橅/1柜/2栅/3桮/6娝/7姗/8姖/9妩（20261001 新增）
+Public Const 位谕of日层柱型 = 位谕始of族日层 + 8
+Public Const 位谕of日层界 = 位谕始of族日层 + 9
 '卖提示包含：/触顶否/高幅（偏幅）/管宽（哼JC）/陡（均线拉开距离）/叠（连续波幅）/连阳数
-Public Const 位谕of日层柱排 = 位谕始of族日层 + 8
-Public Const 位谕of日层等型 = 位谕始of族日层 + 9
+Public Const 位谕of日层柱排 = 位谕始of族日层 + 10
+Public Const 位谕of日层等型 = 位谕始of族日层 + 11
 '--------------------------
-Public Const 位谕终of族日层 = 位谕始of族日层 + 9
+Public Const 位谕终of族日层 = 位谕始of族日层 + 11
 '----------------------------------------------------
 '指标群：族日管
 Public Const 位谕始of族日管 = 位谕终of族日层 + 1
@@ -441,28 +443,25 @@ Public Const 位谕of周策分坏 = 位谕始of族策 + 7   '注：编码(如"W3
 Public Const 位谕of周策分好 = 位谕始of族策 + 8   '注：编码(如"G83")，G=转好率≥30%值得关注，_=低于阈值。转好率=转为甲或乙(ZA>0)的概率
 '--- 月策略
 Public Const 位谕of月策分命 = 位谕始of族策 + 9     '注：股性分(0~100)，从CSV查表，恶庄天然过滤
-'--- 仓日分类 ---
-Public Const 位谕of仓日类 = 位谕始of族策 + 10   '注：操作+四土+护级+护段（操作逻辑合并，见仓日类生成处）
-Public Const 位谕of仓日期 = 位谕始of族策 + 11   '注：min(DTZE,DTZC)，当前已持有天数。1=刚站上，值越大已持有越久
 '--- 月策略日 ---
-Public Const 位谕of月策带日 = 位谕始of族策 + 12    '注：(DXAB)同上(DXCD)同上(DXEF) 日级别DXAB→DXCD→DXEF带动
-Public Const 位谕of月策略日 = 位谕始of族策 + 13     '注：龙/唏/嘘/屁 + 强/弱 + 甲后缀
-Public Const 位谕of月策分日P2 = 位谕始of族策 + 14   '注：编码(如"4G39")，期望HR取整+G/_+概率取整。G=下日冲高≥2%概率≥30(查表下限)，_=低于下限
+Public Const 位谕of月策带日 = 位谕始of族策 + 10    '注：(DXAB)同上(DXCD)同上(DXEF) 日级别DXAB→DXCD→DXEF带动
+Public Const 位谕of月策略日 = 位谕始of族策 + 11     '注：龙/唏/嘘/屁 + 强/弱 + 甲后缀
+Public Const 位谕of月策分日P2 = 位谕始of族策 + 12   '注：编码(如"4G39")，期望HR取整+G/_+概率取整。G=下日冲高≥2%概率≥30(查表下限)，_=低于下限
 '--- 日策分好/坏（基于DXCD×日护型，查表） ---
-Public Const 位谕of日策分坏 = 位谕始of族策 + 15   '注：编码(如"W78")，W=转坏率≥30%危险，_=安全。转坏率=向更差护型转移或维持在最差的概率
-Public Const 位谕of日策分好 = 位谕始of族策 + 16   '注：编码(如"G83")，G=转好率≥30%值得关注，_=低于阈值。转好率=转为甲或乙(ZA>0)的概率
+Public Const 位谕of日策分坏 = 位谕始of族策 + 13   '注：编码(如"W78")，W=转坏率≥30%危险，_=安全。转坏率=向更差护型转移或维持在最差的概率
+Public Const 位谕of日策分好 = 位谕始of族策 + 14   '注：编码(如"G83")，G=转好率≥30%值得关注，_=低于阈值。转好率=转为甲或乙(ZA>0)的概率
 '--- 日策略 P2 ---
-Public Const 位谕of日策分P2 = 位谕始of族策 + 17     '注：编码(如"5G58")，期望HR取整+G/_+评分取整。G=评分≥50(B级)，_=低于50。注意：数值是评分(37~61)非概率
-Public Const 位谕of日策略P2 = 位谕始of族策 + 18     '注：三级策略名称(如"等2A")
-Public Const 位谕of日层机警 = 位谕始of族策 + 19
+Public Const 位谕of日策分P2 = 位谕始of族策 + 15     '注：编码(如"5G58")，期望HR取整+G/_+评分取整。G=评分≥50(B级)，_=低于50。注意：数值是评分(37~61)非概率
+Public Const 位谕of日策略P2 = 位谕始of族策 + 16     '注：三级策略名称(如"等2A")
+Public Const 位谕of日层机警 = 位谕始of族策 + 17
 '-----------
-Public Const 位谕of日层漏提示 = 位谕始of族策 + 20
-Public Const 位谕of日层联动 = 位谕始of族策 + 21
-Public Const 位谕of日层盈提示 = 位谕始of族策 + 22
+Public Const 位谕of日层漏提示 = 位谕始of族策 + 18
+Public Const 位谕of日层联动 = 位谕始of族策 + 19
+Public Const 位谕of日层盈提示 = 位谕始of族策 + 20
 '-----------
-Public Const 位谕of周层四域 = 位谕始of族策 + 23
-Public Const 位谕of策传 = 位谕始of族策 + 24
-Public Const 位谕of日层四域 = 位谕始of族策 + 25
+Public Const 位谕of周层四域 = 位谕始of族策 + 21
+Public Const 位谕of策传 = 位谕始of族策 + 22
+Public Const 位谕of日层四域 = 位谕始of族策 + 23
 Public Const 位谕终of族策 = 位谕of日层四域
 '----------------------------------------------------------------------------------------
 '----------------------------------------------------------------------------------------
@@ -5706,6 +5705,8 @@ Function IQQQ跨码展擎_按列神谕区域( _
     '列：日层
     '------------------------------------------------------------------------------------
     With WS.Cells(基行, 基列)
+        .Cells(1, 位谕of仓日类) = "日仓类"
+        .Cells(1, 位谕of仓日期) = "期仓"
         .Cells(1, 位谕of日层护型) = "护型DXAB" & vbCrLf & "日"
         .Cells(1, 位谕of日层地型) = "地型" & vbCrLf & "日"
         .Cells(1, 位谕of日层土型) = "土型" & vbCrLf & "日"
@@ -5741,6 +5742,8 @@ Function IQQQ跨码展擎_按列神谕区域( _
 '        End With
     End With
     With WS.Columns(基列)
+        .Columns(位谕of仓日类).Interior.TintAndShade = -0.3
+        .Columns(位谕of仓日期).Interior.TintAndShade = -0.1
         .Columns(位谕of日层界).Interior.TintAndShade = -0.6
         .Columns(位谕of日层护型).Interior.TintAndShade = -0.1
         .Columns(位谕of日层土型).Interior.TintAndShade = 0.2
@@ -5751,6 +5754,9 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of日层柱排).Interior.TintAndShade = -0.5
     End With
     With WS.Columns(基列)
+        .Columns(位谕of仓日类).ColumnWidth = 8.5
+        .Columns(位谕of仓日期).ColumnWidth = 3
+        .Columns(位谕of仓日期).HorizontalAlignment = xlRight
         .Columns(位谕of日层护型).ColumnWidth = 8
         .Columns(位谕of日层地型).ColumnWidth = 3
         .Columns(位谕of日层土型).ColumnWidth = 2
@@ -6708,7 +6714,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of策传) = "策传"
         '仓类
         .Cells(1, 位谕of仓周类) = "仓周"
-        .Cells(1, 位谕of仓日类) = "仓日"
         '周策略P3
         .Cells(1, 位谕of周策略P3) = "周策略P3"
         .Cells(1, 位谕of周策分P3) = "周策分P3"
@@ -6733,7 +6738,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Cells(1, 位谕of周层四域) = "四域周"
         .Cells(1, 位谕of日层四域) = "四域日"
         .Cells(1, 位谕of日层联动) = "日周联动"
-        .Cells(1, 位谕of仓日期) = "仓日期"
         .Cells(1, 位谕of日层机警) = "日机警"
         .Cells(1, 位谕of日层盈提示) = "盈提示"
         .Cells(1, 位谕of日层漏提示) = "漏提示（金+甲乙）"
@@ -6766,8 +6770,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
         .Columns(位谕of周策分好).Interior.Color = 常色五灰
         .Columns(位谕of日策分坏).Interior.Color = 常色四灰
         .Columns(位谕of日策分好).Interior.Color = 常色五灰
-        .Columns(位谕of仓日类).Interior.TintAndShade = -0.3
-        .Columns(位谕of仓日期).Interior.TintAndShade = -0.1
         .Columns(位谕of策传).Interior.Color = 常色四灰
         .Columns(位谕of月策分命).Interior.Color = 常色五碧
         .Columns(位谕of月策带日).Interior.Color = 常色四碧
@@ -6816,7 +6818,6 @@ Function IQQQ跨码展擎_按列神谕区域( _
 
         .Columns(位谕of日层盈提示).ColumnWidth = 4
         .Columns(位谕of日层盈提示).HorizontalAlignment = xlRight
-        .Columns(位谕of仓日类).ColumnWidth = 8
         .Columns(位谕of周层四域).ColumnWidth = 4
         .Columns(位谕of日层四域).ColumnWidth = 4
         .Columns(位谕of策传).ColumnWidth = 0.2
